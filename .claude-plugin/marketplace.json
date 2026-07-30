@@ -1,0 +1,13 @@
+{
+  "name": "getokui-marketplace",
+  "owner": {
+    "name": "getokui"
+  },
+  "plugins": [
+    {
+      "name": "getokui",
+      "source": "./",
+      "description": "A curated design taste library for Claude Code — suggests references, adapts them into your own UI (HTML/React/Next.js)."
+    }
+  ]
+}

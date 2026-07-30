@@ -1,0 +1,28 @@
+# --- getokui PLUGIN repo ---
+# Everything here is the small, fast-to-install plugin only.
+# The reference library, source templates, and build scripts are NOT part of it.
+
+# The reference library is its own repo (getokui-references) — do not nest it here.
+getokui-references/
+
+# Source material: 213 raw templates (~43MB) used only to curate the library.
+template/
+
+# Thumbnail-generation scripts (dev-only, need Playwright + the source templates).
+scripts/
+
+# Empty scratch folder.
+references/
+
+# Personal brainstorm scratch (Indonesian drafts, image prompts, source docx) —
+# not part of the published plugin. The clean spec + visual live under
+# docs/superpowers/specs/.
+docs/00-konsep.md
+docs/image-prompts.md
+docs/*.docx
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
