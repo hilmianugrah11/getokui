@@ -1,78 +1,67 @@
 ---
 name: setup
-description: Prepare or update the getokui reference library locally. Clone the getokui-references repo to ~/.getokui/references (once, upfront), or git pull when the user asks to "update getokui references". MUST run before the pick skill if the library folder doesn't exist yet. Triggers: "setup getokui", "install getokui references", "update getokui references", or automatically invoked by the pick skill when it detects the library isn't cloned yet.
+description: Verify the getokui reference library is present. The library is BUNDLED inside the plugin (ships with `/plugin install`), so there is no separate clone step — this skill just confirms the bundled references exist and reports the template count. Triggers: "setup getokui", "is getokui ready", "check getokui". For "update getokui references", explain that updating the library = updating the plugin (`/plugin marketplace update` then `/reload-plugins`).
 ---
 
-# getokui setup — Prepare the Reference Library
+# getokui setup — Verify the Bundled Library
 
-This skill has exactly one job: make sure the getokui reference library exists
-locally and is up to date. It does **not** pick templates and does **not**
-generate UI — those are the jobs of `pick` and `build`.
+This skill has exactly one job: confirm the getokui reference library is
+available. Unlike the old two-repo design, the library now **ships inside the
+plugin** — it's already on disk the moment the plugin is installed. There is
+**no clone and no internet needed**. This skill does **not** pick templates and
+does **not** generate UI — those are the jobs of `pick` and `build`.
 
-Local library location (standard): `~/.getokui/references/`
-Source: `https://github.com/hilmianugrah11/getokui-references`
+Bundled library location: `${CLAUDE_PLUGIN_ROOT}/references/`
 
 ## Steps
 
-### 1. Check whether the library already exists
-Check whether `~/.getokui/references/index.json` exists.
+### 1. Verify the bundled library exists
+Check that these are present under `${CLAUDE_PLUGIN_ROOT}/references/`:
+- `index.json`
+- `templates/` (folder of `*.html`)
+- `thumbs/` (folder of `*.webp`)
 
-- **Already exists** → the library is installed. If the user only said "setup"
-  (not "update"), tell them the library is ready plus the template count, then
-  STOP. Don't re-clone or overwrite.
-- **Doesn't exist** → continue to Step 2 (clone).
-
-Use cross-platform commands (the agent may run on Windows/Mac/Linux). Example
-check in a POSIX shell:
+POSIX shell:
 ```bash
-test -f "$HOME/.getokui/references/index.json" && echo EXISTS || echo MISSING
-```
-On Windows PowerShell:
-```powershell
-Test-Path "$env:USERPROFILE\.getokui\references\index.json"
-```
-
-### 2. Clone the library (if missing)
-```bash
-git clone --depth 1 https://github.com/hilmianugrah11/getokui-references "$HOME/.getokui/references"
+test -f "${CLAUDE_PLUGIN_ROOT}/references/index.json" && echo EXISTS || echo MISSING
 ```
 Windows PowerShell:
 ```powershell
-git clone --depth 1 https://github.com/hilmianugrah11/getokui-references "$env:USERPROFILE\.getokui\references"
+Test-Path "$env:CLAUDE_PLUGIN_ROOT\references\index.json"
 ```
 
-If the clone **fails** (no connection / wrong repo / git not installed):
-- Don't stay silent. Tell the user what the error is (network / repo not found
-  / git missing).
-- Offer options: check the connection and retry, or provide a local path
-  manually if the user already has the folder themselves.
-- Don't proceed to `pick` before the library actually exists.
+### 2. Report
+- **Present** → read `index.json`, count entries in `templates[]`, and tell the
+  user:
+  > "getokui is ready — <N> reference templates bundled with the plugin. Just
+  > say something like 'getokui, build a SaaS landing page'."
+  Then STOP — let the user start their next brief.
+- **Missing** (unexpected — the bundled files should always be there) → this
+  means a broken/partial install. Tell the user plainly and suggest reinstalling
+  the plugin:
+  ```
+  /plugin install getokui@getokui-marketplace
+  /reload-plugins
+  ```
+  Don't proceed to `pick` until the library is present.
 
-### 3. Verify the clone
-After cloning, make sure at minimum these exist:
-- `~/.getokui/references/index.json`
-- `~/.getokui/references/templates/` (folder of `*.html`)
-- `~/.getokui/references/thumbs/` (folder of `*.webp`)
-
-Read `index.json`, count the entries in `templates[]`, and report to the user:
-> "getokui library ready — <N> templates cloned to ~/.getokui/references.
-> Now just say something like 'getokui, build a login page'."
-
-### 4. Update (when the user asks to "update getokui references")
-```bash
-git -C "$HOME/.getokui/references" pull --ff-only
+### 3. "Update getokui references"
+There is no separate library repo to `git pull` anymore — the library is part of
+the plugin. To get newer templates, the user updates the **plugin**:
 ```
-Windows PowerShell:
-```powershell
-git -C "$env:USERPROFILE\.getokui\references" pull --ff-only
+/plugin marketplace update
+/reload-plugins
 ```
-Report the changes (how many new templates, if visible from the output). If the
-folder doesn't exist at all, treat it like Step 2 (clone first).
+If the version was bumped and the old cache is still active, reinstall:
+```
+/plugin install getokui@getokui-marketplace
+/reload-plugins
+```
+Explain this to the user rather than trying to clone or pull anything.
 
 ## What this skill must NOT do
+- Clone or `git pull` anything — the library is bundled, not fetched.
 - Pick / rank templates — that's `pick`'s job.
 - Generate or write UI files — that's `build`'s job.
-- Overwrite an existing library without reason (unless the user explicitly asks
-  to re-clone/reset).
 - Auto-continue to `pick` — confirm the library is ready first, and let the
   user start the next brief.

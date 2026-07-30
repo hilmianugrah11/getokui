@@ -23,39 +23,45 @@ local and curated.
 
 ---
 
-## 2. Architecture: Two Repos
+## 2. Architecture: One Bundled Repo
 
-The plugin is separated from the reference library so the plugin stays **small &
-fast to install**, while the library (heavier assets) lives separately and can
-be updated independently.
-
-### Repo 1 — `getokui` (plugin, small)
+The reference library ships **inside the plugin** under `references/`. A single
+`/plugin install` pulls the manifest, the three skills, and the whole library
+together — one repo, one install step, works offline immediately. The library is
+only ~2MB, so bundling keeps install trivially fast while removing the separate
+clone that could fail during a live demo.
 
 ```
 getokui/
 ├── .claude-plugin/
 │   ├── plugin.json          # plugin manifest
 │   └── marketplace.json     # so it can be installed via a GitHub marketplace
+├── references/              # BUNDLED library — ships with the plugin
+│   ├── index.json           # metadata for all templates (read by the agent)
+│   ├── templates/
+│   │   └── <slug>.html      # 20 curated templates
+│   └── thumbs/
+│       └── <slug>.webp      # self-screenshotted, WebP, compressed
 └── skills/
-    ├── setup/SKILL.md       # clone/update the reference library (once upfront)
+    ├── setup/SKILL.md       # verify the bundled library + report count
     ├── pick/SKILL.md        # read index → rank 5 candidates → checkpoint
     └── build/SKILL.md       # mix → adapt → convert format → output file
 ```
 
-### Repo 2 — `getokui-references` (library, separate)
+Skills read the bundled files via the `${CLAUDE_PLUGIN_ROOT}/references/` path
+(`${CLAUDE_PLUGIN_ROOT}` is the plugin's install directory — an official Claude
+Code plugin variable that expands in skill instructions).
 
-```
-getokui-references/
-├── index.json               # metadata for all templates (read by the agent)
-├── templates/
-│   └── <slug>.html          # 15-25 curated templates
-└── thumbs/
-    └── <slug>.webp          # self-screenshotted, WebP, compressed
-```
+**Why bundled (not a second repo):** one public repo, one install step, no
+network dependency at demo time. Newer templates ship by updating the plugin
+(`/plugin marketplace update`) — the user doesn't manage a separate library
+folder.
 
-**Why split them:** the plugin is installed once & rarely changes; the library
-can add templates anytime without the user reinstalling the plugin. Just
-`git pull` in the library folder.
+> **History:** an earlier design used two repos (`getokui` +
+> `getokui-references`) with a `setup` skill that `git clone`d the library to
+> `~/.getokui/references/`. That was collapsed into this single bundled repo to
+> simplify install and de-risk the demo. The `setup` skill was repurposed from
+> "clone" to "verify the bundled library".
 
 ---
 
@@ -68,7 +74,7 @@ and build. This pattern is adapted from the `ajisss/design-agent` plugin
 
 | Skill | Job | Checkpoint |
 |---|---|---|
-| **setup** | `git clone` the library to `~/.getokui/references/` (once). "update references" → `git pull`. | — |
+| **setup** | Verify the bundled library at `${CLAUDE_PLUGIN_ROOT}/references/` + report the template count. "update references" → update the plugin. | — |
 | **pick** | Parse request → filter `index.json` → present **5 ranked candidates** (name+description+thumbnail). | **HARD STOP** — wait for the user to choose. Won't continue to build on its own. |
 | **build** | Mix picks → adapt (style, not content) → convert format → write file. | Confirm format if ambiguous. |
 
@@ -96,28 +102,30 @@ what keeps the user in control (safe demos) + satisfies the agentic requirement
 under `enabledPlugins`. If it's not there → `/plugin install` didn't run.
 
 > **Don't test by typing `/getokui` in the prompt.** Skills are invoked
-> automatically by Claude from natural language (e.g. *"getokui, build a login
-> page"*), NOT a manual slash command. `/getokui` → "No commands match" is
+> automatically by Claude from natural language (e.g. *"getokui, build a SaaS
+> landing page"*), NOT a manual slash command. `/getokui` → "No commands match" is
 > **normal**, not a failed install.
 
-When the `setup` skill runs for the first time, the agent **auto-clones** the
-reference library locally:
+The reference library is **bundled inside the plugin** (`references/`), so
+`/plugin install` already puts all templates + thumbnails on disk — there's no
+separate clone step. The `setup` skill just **verifies** the bundled library is
+present and reports the template count:
 
 ```
-git clone https://github.com/hilmianugrah11/getokui-references ~/.getokui/references
+${CLAUDE_PLUGIN_ROOT}/references/index.json   ← already there after install
 ```
 
-- Clone once → all templates + thumbnails are local.
-- Safe demo: no internet needed during the presentation (library already
-  cloned).
-- Update: user says *"update getokui references"* → agent `git pull`s in that
-  folder.
+- Install once → all templates + thumbnails are local (bundled).
+- Safe demo: no internet needed at all — nothing is fetched at runtime.
+- Update: newer templates ship by updating the plugin
+  (*"update getokui references"* → `/plugin marketplace update` +
+  `/reload-plugins`).
 
-**Why clone-to-local (not fetch per-request):** lighter at use time (reads local
-files, no network latency), and demos don't depend on connectivity. Total
-library size is small (~1-2MB, see §7). This is also the core difference from
-`design-agent`, which searches for live references from the web on every request
-— getokui is offline & curated.
+**Why bundle (not fetch per-request, not a second repo):** lighter at use time
+(reads local files, no network latency), one public repo, one install step, and
+demos don't depend on connectivity. Total library size is small (~2MB, see §7).
+This is also the core difference from `design-agent`, which searches for live
+references from the web on every request — getokui is offline & curated.
 
 ---
 
@@ -147,8 +155,9 @@ to *match* without having to read the HTML first.
 
 Fields:
 - `slug` — unique id, same as the `.html` & `.webp` filename.
-- `category` — main bucket for fast filtering: `landing`, `login`, `dashboard`,
-  `pricing`, etc.
+- `category` — main bucket for fast filtering: `landing`, `fintech`,
+  `real-estate`, `portfolio`, `ecommerce`, `restaurant`, `wellness`, `gaming`,
+  `agency`, `architecture`.
 - `tags` — keywords for finer matching.
 - `description` — one sentence, so the agent understands the "feel" without
   reading the HTML.
@@ -161,9 +170,9 @@ Fields:
 ## 6. Agent Workflow
 
 ```
-1. User asks           "getokui, build a login page"
+1. User asks           "getokui, build a SaaS landing page"
         │
-2. Parse request       detect: category=login, format=HTML (default)
+2. Parse request       detect: category=landing, format=HTML (default)
         │
 3. Filter index.json   pull candidates by category + tags
         │
@@ -200,7 +209,8 @@ it fit.
 
 References are prepared **manually** (quality guaranteed, stable demos). Initial
 source: 213 templates scraped in `template/aura` — pick the **15-25 best & most
-varied** (landing, login, dashboard, pricing, etc.).
+varied** (landing pages across verticals: SaaS/AI, fintech, real-estate,
+portfolio, e-commerce, restaurant, wellness, gaming, agency, architecture).
 
 **Thumbnails are made by us (NO supabase / external URLs):**
 
@@ -216,8 +226,8 @@ Result: ~20-50KB per thumbnail. 25 thumbnails ≈ ~1MB. The library repo stays
 light.
 
 **Why screenshot ourselves:** all assets are our own production, living in the
-repo, cloned locally along with everything else. No dependency on an external
-URL that could die/change.
+repo, bundled with the plugin along with everything else. No dependency on an
+external URL that could die/change.
 
 ---
 
@@ -232,7 +242,7 @@ The user can choose the output format (default: HTML). Always uses the **latest
 | **React** | React 19 + Vite 6 + TypeScript + Tailwind v4 | For interactive components / React app integration. |
 | **Next.js** | Next.js 15 (App Router, Server Components) + TypeScript + Tailwind v4 | For routing/SSR/production-ready. |
 
-The agent detects the format from the request (e.g. "build a login **in
+The agent detects the format from the request (e.g. "build a landing **in
 react**"), falling back to HTML if unspecified.
 
 ---
@@ -264,7 +274,7 @@ genuinely "belongs to the user", not a paste-up.
 
 | Condition | Agent behavior |
 |---|---|
-| Library clone fails (network) | Tell the user + offer retry. Don't stay silent. |
+| Bundled library missing (broken/partial install) | Tell the user plainly + suggest reinstalling the plugin (`/plugin install` → `/reload-plugins`). Don't stay silent. |
 | Category not found in index | Offer the nearest category / related templates, don't force it. |
 | Thumbnail missing/corrupt | Keep going — present candidates using text (name + description) only. |
 | User rejects all candidates | Search again with looser filters / show another category. |
@@ -276,9 +286,9 @@ genuinely "belongs to the user", not a paste-up.
 
 Before the presentation, test **3 end-to-end scenarios**:
 
-1. `"getokui, build a login page"` → **HTML** output done & openable.
-2. `"getokui, build a landing page in react"` → valid **React 19** output.
-3. `"getokui, build a dashboard in next"` → valid **Next.js 15** output.
+1. `"getokui, build a SaaS landing page"` → **HTML** output done & openable.
+2. `"getokui, build a fintech landing in react"` → valid **React 19** output.
+3. `"getokui, build a restaurant landing in next"` → valid **Next.js 15** output.
 
 Passes if: all three produce correctly-formatted files, look clearly better than
 plain AI output, and the pick flow works (5 candidates appear, hard stop,
@@ -288,9 +298,9 @@ multi-pick, mix).
 
 ## 12. Success Criteria
 
-Given the command `"getokui, build a login page"`, the agent can:
+Given the command `"getokui, build a SaaS landing page"`, the agent can:
 
-1. Read `index.json` from the local library, filter candidates in the `login`
+1. Read `index.json` from the local library, filter candidates in the `landing`
    category.
 2. Present **5 ranked candidates** (name + description + thumbnail), **stop** and
    wait for the user; the user can multi-pick / reject all.
@@ -302,7 +312,7 @@ Given the command `"getokui, build a login page"`, the agent can:
 **Passing criteria:** all four steps run without crashing, the resulting UI is
 clearly more *polished* than reference-less AI output, the checkpoint flow works
 (agent stops at candidates, doesn't auto-build), and the whole process can be
-demoed offline (library already cloned).
+demoed offline (library bundled with the plugin).
 
 ---
 
@@ -324,7 +334,7 @@ For transparency (we learned from a plugin that already works):
 
 **Core difference:** design-agent **searches for live references from the web**
 (Dribbble/Mobbin/Land-book) each request; getokui uses a **curated local
-library** cloned once — offline, demo-safe, quality guaranteed.
+library** bundled with the plugin — offline, demo-safe, quality guaranteed.
 
 ---
 

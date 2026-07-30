@@ -22,8 +22,9 @@ go back to `pick` first.
 
 ### 1. Read the chosen template(s)
 For each slug, read its HTML file from
-`~/.getokui/references/templates/<slug>.html`. Also read its entry in
-`index.json` (to know `colors`, `fonts`, `sections`).
+`${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html`. Also read its entry in
+`${CLAUDE_PLUGIN_ROOT}/references/index.json` (to know `colors`, `fonts`,
+`sections`).
 
 If an HTML file is missing → tell the user, offer to go back to `pick` to choose
 another. Don't proceed on a guess.
@@ -92,8 +93,8 @@ placeholder or ask the user.
 > Tailwind v4). Don't downgrade without a reason.
 
 ### 5. Write the file & report
-- Write the output file(s) to the user's working directory (NOT into the library
-  folder `~/.getokui/references/` — that's read-only for us).
+- Write the output file(s) to the user's working directory (NOT into the bundled
+  library folder `${CLAUDE_PLUGIN_ROOT}/references/` — that's read-only for us).
 - Report to the user: the path(s) created, which reference is the base + style
   sources, and how to preview:
   - HTML → "open `index.html` in a browser".
@@ -110,5 +111,5 @@ placeholder or ask the user.
 - Reproduce brand assets exactly (logos, photos, illustrations) from the
   template.
 - Downgrade framework versions without a reason (default is always latest).
-- Write output into the library folder `~/.getokui/references/`.
+- Write output into the bundled library folder `${CLAUDE_PLUGIN_ROOT}/references/`.
 - Build before the user has chosen via `pick`.

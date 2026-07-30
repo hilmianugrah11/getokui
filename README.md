@@ -15,15 +15,18 @@ good".
 
 ---
 
-## Architecture: two repos
+## Architecture: one bundled repo
 
-| Repo | Contents | Size |
+| Part | Contents | Size |
 |---|---|---|
-| **getokui** (this) | Plugin: manifest + 3 skills (`setup`, `pick`, `build`) | Small |
-| **getokui-references** | Library: `index.json`, `templates/*.html`, `thumbs/*.webp` | ~1–2MB |
+| Plugin | manifest + 3 skills (`setup`, `pick`, `build`) | Small |
+| `references/` (bundled) | Library: `index.json`, `templates/*.html`, `thumbs/*.webp` | ~2MB |
 
-The plugin is installed once. The library is cloned to `~/.getokui/references/`
-and can be updated independently (`git pull`) without reinstalling the plugin.
+The library **ships inside the plugin** under `references/`, so a single
+`/plugin install` pulls everything — no separate clone, works offline
+immediately. To get newer templates you just update the plugin (`/plugin
+marketplace update`). Skills read the bundled files via
+`${CLAUDE_PLUGIN_ROOT}/references/`.
 
 ---
 
@@ -47,24 +50,21 @@ Run in **order** — don't jump to `/plugin install` before
 > are invoked **automatically** by Claude based on natural language, NOT via a
 > manual slash command. So `/getokui` → "No commands match" is **normal**, not
 > a sign of a failed install. The correct test: type a normal brief, e.g.
-> *"getokui, build a login page"*, and see whether the `pick` skill triggers.
+> *"getokui, build a SaaS landing page"*, and see whether the `pick` skill triggers.
 
 ---
 
 ## How to use
 
-1. **Once, upfront** — prepare the reference library. Type a normal sentence:
-   > "setup getokui"
+The reference library is bundled with the plugin, so there's **nothing to set
+up** — just start building right after install.
 
-   The `setup` skill will `git clone` the library to `~/.getokui/references/`.
-   Needs internet just this once; after that it works offline.
+1. **Start building UI** — type a natural brief, e.g.:
+   > "getokui, build a SaaS landing page"
+   > "getokui, build a dark fintech landing in react"
+   > "getokui, build a restaurant landing in next"
 
-2. **Start building UI** — type a natural brief, e.g.:
-   > "getokui, build a login page"
-   > "getokui, build a dark SaaS landing page in react"
-   > "getokui, build a dashboard in next"
-
-3. **Follow the flow:**
+2. **Follow the flow:**
    - The `pick` skill presents **5 candidates** (name + description +
      thumbnail).
    - You **choose** — one, several (e.g. "layout #2, colors from #4"), or
@@ -73,8 +73,9 @@ Run in **order** — don't jump to `/plugin install` before
    - The `build` skill mixes your picks → adapts → writes the file in your
      requested format.
 
-4. **Update the library** anytime:
-   > "update getokui references"
+3. **Optional** — say *"setup getokui"* any time to confirm the library is
+   present and see the template count. To get newer templates, update the plugin
+   (see *Updating the plugin* below).
 
 ---
 
@@ -84,8 +85,12 @@ Run in **order** — don't jump to `/plugin install` before
 .claude-plugin/
   ├── plugin.json        ← plugin manifest
   └── marketplace.json   ← lets this repo be added as a marketplace
+references/              ← bundled library (ships with the plugin)
+  ├── index.json         ← metadata for every template (read by the agent)
+  ├── templates/*.html   ← 20 curated templates
+  └── thumbs/*.webp      ← preview thumbnail per template
 skills/
-  ├── setup/SKILL.md      ← clone/update the reference library (~/.getokui/references)
+  ├── setup/SKILL.md      ← verify the bundled library + report template count
   ├── pick/SKILL.md       ← read index → rank 5 candidates → checkpoint (hard stop)
   └── build/SKILL.md      ← mix → adapt (style, not content) → convert format → output
 ```
@@ -101,8 +106,8 @@ skills/
   colors/spacing/structure/component shapes — NOT the original headlines/copy/
   brand assets. Sections the user hasn't filled in → clearly-marked
   placeholders.
-- **Offline & curated.** The library is cloned once, quality guaranteed (manual
-  curation). Demos don't depend on internet.
+- **Offline & curated.** The library is bundled with the plugin, quality
+  guaranteed (manual curation). Demos don't depend on internet.
 - **Always the latest versions.** React/Next output always uses the latest 2026
   stack (React 19, Next.js 15, Tailwind v4).
 
@@ -125,9 +130,9 @@ mentioned.
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Typing `/getokui` → "No commands match" | **Normal** — skills are invoked via natural language, not a slash command | Test with a normal sentence, e.g. "getokui, build a login page" |
+| Typing `/getokui` → "No commands match" | **Normal** — skills are invoked via natural language, not a slash command | Test with a normal sentence, e.g. "getokui, build a SaaS landing page" |
 | Skill doesn't trigger even with a normal sentence | Plugin not installed (only the marketplace was added) | Check `~/.claude/settings.json` → `enabledPlugins` must have `"getokui@getokui-marketplace": true` |
-| "Library not found" / index.json missing | Haven't run `setup` | Type "setup getokui" first to clone the library |
+| "Library not found" / index.json missing | Broken/partial install — bundled `references/` didn't land | Reinstall: `/plugin install getokui@getokui-marketplace` then `/reload-plugins` |
 | Clone fails | No connection / wrong repo | Check internet, confirm the references repo URL is correct, then retry |
 | Thumbnail doesn't show | webp file missing / didn't render | Not a problem — candidates are still presented as text (name + description) |
 

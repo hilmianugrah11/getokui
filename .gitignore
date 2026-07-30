@@ -1,8 +1,9 @@
-# --- getokui PLUGIN repo ---
-# Everything here is the small, fast-to-install plugin only.
-# The reference library, source templates, and build scripts are NOT part of it.
+# --- getokui PLUGIN repo (single bundled repo) ---
+# The reference library lives INSIDE this plugin under references/ so it ships
+# with `/plugin install` — one repo, one step, no separate clone.
+# Only dev-only source material and scratch are excluded below.
 
-# The reference library is its own repo (getokui-references) — do not nest it here.
+# The old two-repo working copy — kept locally for curation, NOT part of the plugin.
 getokui-references/
 
 # Source material: 213 raw templates (~43MB) used only to curate the library.
@@ -10,9 +11,6 @@ template/
 
 # Thumbnail-generation scripts (dev-only, need Playwright + the source templates).
 scripts/
-
-# Empty scratch folder.
-references/
 
 # Personal brainstorm scratch (Indonesian drafts, image prompts, source docx) —
 # not part of the published plugin. The clean spec + visual live under

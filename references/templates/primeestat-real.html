@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+  <head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PrimeEstates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Instrument+Serif:ital,wght@0,400;1,400&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap"
+rel="stylesheet"
+/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<style>
+@keyframes prime-testimonial-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}.prime-testimonial-track{display:flex;width:max-content;animation:prime-testimonial-marquee 42s linear infinite;will-change:transform}.prime-testimonial-track.prime-testimonial-reverse{animation-direction:reverse;animation-duration:48s}.prime-testimonial-track:hover{animation-play-state:paused}@media (prefers-reduced-motion:reduce){.prime-testimonial-track{animation:none}}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+  <body
+    class="antialiased relative selection:bg-[#eab308] selection:text-white text-white overflow-x-hidden"
+    style="font-family: 'Inter', sans-serif; background-color: #1a1a1a; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.012) 0, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 12px), linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px); background-size: auto, 3rem 3rem, 3rem 3rem;"
+  >
+    <!-- PrimeEstates landing page -->
+    <canvas
+      id="webgl-canvas"
+      class="fixed inset-0 pointer-events-none z-0 opacity-40"
+    ></canvas>
+
+    <div
+      id="mobileMenu"
+      class="fixed inset-0 z-[70] hidden bg-[#1a1a1a]/95 backdrop-blur-xl"
+    >
+      <div
+        class="flex items-center justify-between px-6 py-5 border-b border-white/10"
+      >
+        <div class="text-xl font-medium tracking-tight">Prime</div>
+        <button
+          id="closeMenu"
+          class="w-10 h-10 inline-flex items-center justify-center border border-white/10 text-white"
+        >
+          <iconify-icon
+            icon="solar:close-circle-linear"
+            width="24"
+            height="24"
+          ></iconify-icon>
+        </button>
+      </div>
+      <div class="px-6 py-10 flex flex-col gap-6">
+        <a
+          href="#start"
+          class="text-3xl tracking-tight"
+          style="font-family: 'Instrument Serif', serif;"
+        >
+          Start
+        </a>
+        <a
+          href="#process"
+          class="text-3xl tracking-tight text-neutral-300"
+          style="font-family: 'Instrument Serif', serif;"
+        >
+          Process
+        </a>
+        <a
+          href="#assets"
+          class="text-3xl tracking-tight text-neutral-300"
+          style="font-family: 'Instrument Serif', serif;"
+        >
+          Assets
+        </a>
+        <a
+          href="#firm"
+          class="text-3xl tracking-tight text-neutral-300"
+          style="font-family: 'Instrument Serif', serif;"
+        >
+          Firm
+        </a>
+        <a
+          href="#insights"
+          class="text-3xl tracking-tight text-neutral-300"
+          style="font-family: 'Instrument Serif', serif;"
+        >
+          Insights
+        </a>
+        <a
+          href="#contact"
+          class="mt-6 inline-flex items-center justify-center bg-[#eab308] text-[#1a1a1a] px-6 py-4 text-sm font-medium"
+        >
+          Schedule call
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="relative z-10 w-full max-w-[100rem] mx-auto border-x border-white/10 min-h-screen flex flex-col"
+    >
+      <nav
+        class="flex items-center justify-between px-6 lg:px-10 py-5 border border-white/[0.05] bg-[#1a1a1a]/90 backdrop-blur-md sticky top-0 z-50"
+      >
+        <a href="#start" class="text-xl font-medium tracking-tight">Prime</a>
+
+        <ul class="hidden lg:flex gap-10 text-sm text-neutral-400 font-medium">
+          <li>
+            <a
+              href="#start"
+              class="text-white relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-full after:h-[0.125rem] after:bg-[#eab308]"
+            >
+              Start
+            </a>
+          </li>
+          <li>
+            <a href="#process" class="hover:text-white transition-colors">
+              Process
+            </a>
+          </li>
+          <li>
+            <a href="#assets" class="hover:text-white transition-colors">
+              Assets
+            </a>
+          </li>
+          <li>
+            <a href="#firm" class="hover:text-white transition-colors">Firm</a>
+          </li>
+          <li>
+            <a href="#insights" class="hover:text-white transition-colors">
+              Insights
+            </a>
+          </li>
+          <li>
+            <a href="#contact" class="hover:text-white transition-colors">
+              Reach out
+            </a>
+          </li>
+        </ul>
+
+        <a
+          href="#contact"
+          class="relative group p-[1px] overflow-hidden hidden sm:block"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent -z-10 transition-colors group-hover:from-white/60"
+          ></span>
+          <span
+            class="block bg-[#f4f4f4] text-neutral-900 px-5 py-2 text-sm font-medium relative z-10 transition-colors group-hover:bg-white"
+          >
+            Schedule call
+          </span>
+        </a>
+
+        <button
+          id="openMenu"
+          class="sm:hidden text-white w-10 h-10 inline-flex items-center justify-center border border-white/10"
+        >
+          <iconify-icon
+            icon="solar:hamburger-menu-linear"
+            width="24"
+            height="24"
+          ></iconify-icon>
+        </button>
+      </nav>
+
+      <main class="flex-grow flex flex-col relative" id="start">
+        <div
+          class="w-full h-[50vh] md:h-[60vh] relative border-b border-white/10 overflow-hidden"
+        >
+          <div
+            class="bracket absolute w-2 h-2 border-white/30 z-20"
+            style="top: -1px; left: -1px; border-width: 1px 0 0 1px; border-style: solid;"
+          ></div>
+          <div
+            class="bracket absolute w-2 h-2 border-white/30 z-20"
+            style="top: -1px; right: -1px; border-width: 1px 1px 0 0; border-style: solid;"
+          ></div>
+          <div
+            class="absolute left-6 lg:left-10 top-6 z-20 hidden md:flex items-center gap-2 text-xs uppercase tracking-[0.18rem] text-white/70"
+            style="font-family: 'JetBrains Mono', monospace;"
+          >
+            <span class="w-2 h-2 bg-[#eab308] rounded-full"></span>
+            Curated private-market property access
+          </div>
+          <img
+            src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/99ba349f-6119-4d26-b759-12862567fbc0_3840w.webp"
+            alt="Modern estate architecture"
+            class="w-full h-full object-cover object-center grayscale-[15%] contrast-110 brightness-90 scale-105 hero-image"
+          />
+          <canvas
+            id="intro-webgl-image"
+            aria-hidden="true"
+            class="absolute inset-0 w-full h-full pointer-events-none"
+            style="opacity: 0; transition: opacity .45s ease;"
+          ></canvas>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-[#1a1a1a]/25"
+          ></div>
+        </div>
+
+        <section
+          class="px-6 lg:px-10 pt-16 pb-24 lg:pb-32 relative z-20 flex-grow"
+        >
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            <div class="lg:col-span-7 relative pt-4">
+              <div
+                class="bracket absolute w-2 h-2 border-white/30 z-20"
+                style="top: -1px; left: -1px; border-width: 1px 0 0 1px; border-style: solid;"
+              ></div>
+              <div
+                class="bracket absolute w-2 h-2 border-white/30 z-20"
+                style="bottom: -1px; left: -1px; border-width: 0 0 1px 1px; border-style: solid;"
+              ></div>
+
+              <div
+                class="mb-6 inline-flex items-center gap-3 text-xs uppercase tracking-[0.18rem] text-neutral-500"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                <span>PRM-01</span>
+                <span class="h-px w-10 bg-white/15"></span>
+                <span>Real estate advisory</span>
+              </div>
+
+              <h1
+                class="text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.02] mb-8 text-reveal"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                Expand your portfolio
+                <span class="inline-flex items-center align-middle mx-2 -mt-3">
+                  <img
+                    src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/005600e5-f6ab-4e59-bc86-eaeb02797dfa_1600w.jpg"
+                    class="w-12 h-12 md:w-16 md:h-16 object-cover transform -rotate-3 shadow-lg border border-white/20 rounded-sm"
+                    alt="Residential asset"
+                  />
+                  <img
+                    src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/724142aa-44a6-48d3-9cf3-761e00d05b78_1600w.jpg"
+                    class="w-12 h-12 md:w-16 md:h-16 object-cover transform rotate-6 -ml-3 shadow-md border border-neutral-300 rounded-sm"
+                    alt="Commercial asset"
+                  />
+                </span>
+                with prime real estate assets.
+              </h1>
+
+              <p
+                class="text-lg md:text-xl text-neutral-400 max-w-xl mb-12 font-normal text-reveal leading-relaxed"
+              >
+                At PrimeEstates, we facilitate your growth through carefully
+                vetted properties, data-backed strategies, and end-to-end
+                investment support.
+              </p>
+
+              <div
+                class="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-2xl gap-8"
+              >
+                <form
+                  class="flex w-full sm:w-auto items-stretch relative group p-[1px] flex-grow max-w-[25rem]"
+                  onsubmit="event.preventDefault(); document.getElementById('formStatus').textContent='Request received — our advisory desk will follow up shortly.';"
+                >
+                  <span
+                    class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent -z-10 transition-opacity opacity-50 group-hover:opacity-100"
+                  ></span>
+                  <span class="bg-[#f4f4f4] flex w-full relative z-10">
+                    <input
+                      type="email"
+                      required=""
+                      placeholder="Book a session"
+                      class="bg-transparent text-neutral-900 px-5 py-4 w-full outline-none text-sm placeholder-neutral-500 font-medium"
+                    />
+                    <button
+                      class="bg-[#eab308] text-white px-6 flex items-center justify-center hover:bg-yellow-600 transition-colors"
+                      aria-label="Submit booking request"
+                    >
+                      <iconify-icon
+                        icon="solar:arrow-right-linear"
+                        width="20"
+                        height="20"
+                      ></iconify-icon>
+                    </button>
+                  </span>
+                </form>
+
+                <div class="flex items-center gap-4 flex-shrink-0">
+                  <div class="flex -space-x-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3ef87ef2-3b8d-4459-a9ef-5c7b64ad9e1b_320w.jpg"
+                      class="w-10 h-10 rounded-full border-2 border-[#1a1a1a] object-cover grayscale-[30%]"
+                      alt="Investor"
+                    />
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ef8b45e-c678-465f-8372-c36234710b39_320w.webp"
+                      class="w-10 h-10 rounded-full border-2 border-[#1a1a1a] object-cover grayscale-[30%]"
+                      alt="Investor"
+                    />
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bac6570-3bee-4c9c-a3a7-ad80b0766eb3_320w.jpg"
+                      class="w-10 h-10 rounded-full border-2 border-[#1a1a1a] object-cover grayscale-[30%]"
+                      alt="Investor"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-sm font-medium tracking-tight">
+                      15k +
+                    </span>
+                    <span class="text-xs text-neutral-500 font-normal">
+                      Active investors
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <p
+                id="formStatus"
+                class="mt-5 text-xs text-[#eab308]"
+                style="font-family: 'JetBrains Mono', monospace;"
+              ></p>
+            </div>
+
+            <div class="lg:col-span-5 relative mt-16 lg:mt-0 z-30">
+              <div
+                class="lg:absolute lg:-top-56 lg:right-0 w-full relative p-[1px] group"
+              >
+                <span
+                  class="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent -z-10"
+                ></span>
+
+                <div
+                  class="w-full h-full relative z-10 flex flex-col"
+                  style="box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6);"
+                >
+                  <div
+                    class="bracket absolute w-2 h-2 border-neutral-300 z-20"
+                    style="top: -1px; left: -1px; border-width: 1px 0 0 1px; border-style: solid;"
+                  ></div>
+                  <div
+                    class="bracket absolute w-2 h-2 border-neutral-300 z-20"
+                    style="top: -1px; right: -1px; border-width: 1px 1px 0 0; border-style: solid;"
+                  ></div>
+                  <div
+                    class="bracket absolute w-2 h-2 border-neutral-300 z-20"
+                    style="bottom: -1px; left: -1px; border-width: 0 0 1px 1px; border-style: solid;"
+                  ></div>
+                  <div
+                    class="bracket absolute w-2 h-2 border-neutral-300 z-20"
+                    style="bottom: -1px; right: -1px; border-width: 0 1px 1px 0; border-style: solid;"
+                  ></div>
+
+                  <div class="bg-white p-10 md:p-14 pb-6 md:pb-8 flex-1">
+                    <div class="mb-6 opacity-20 text-neutral-800">
+                      <iconify-icon
+                        icon="solar:quote-left-linear"
+                        width="48"
+                        height="48"
+                      ></iconify-icon>
+                    </div>
+                    <p
+                      class="text-2xl md:text-3xl leading-[1.2] tracking-tight font-medium text-neutral-800"
+                    >
+                      PrimeEstates transformed my approach to property.
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-[#f4f4f4] p-10 md:p-14 pt-6 md:pt-8 flex-1 flex flex-col justify-between border-t border-neutral-100"
+                  >
+                    <p
+                      class="text-xl md:text-2xl leading-[1.3] tracking-tight font-medium text-neutral-600 mb-10"
+                    >
+                      The yields appeared quicker than anticipated, and their
+                      advisors ensured total transparency throughout the
+                      journey.
+                    </p>
+                    <div
+                      class="flex items-center justify-between border-t border-neutral-200 pt-6"
+                    >
+                      <div>
+                        <div
+                          class="text-base font-medium tracking-tight text-neutral-900"
+                        >
+                          Sarah Jenkins
+                        </div>
+                        <div
+                          class="text-sm text-neutral-500 font-normal mt-0.5"
+                        >
+                          Seattle, WA
+                        </div>
+                      </div>
+                      <img
+                        src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/70f42fcd-9df2-4ed0-aaa4-6582ce1171fa_320w.jpg"
+                        alt="Sarah Jenkins"
+                        class="w-12 h-12 rounded-full object-cover border border-neutral-200"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="border-t border-white/10 grid grid-cols-2 lg:grid-cols-4"
+        >
+          <div
+            class="p-6 lg:p-10 border-r border-b lg:border-b-0 border-white/10"
+          >
+            <div
+              class="text-4xl md:text-5xl tracking-tight"
+              style="font-family: 'Instrument Serif', serif;"
+            >
+              $4.8B
+            </div>
+            <p
+              class="mt-3 text-xs uppercase tracking-[0.16rem] text-neutral-500"
+              style="font-family: 'JetBrains Mono', monospace;"
+            >
+              Assets reviewed
+            </p>
+          </div>
+          <div
+            class="p-6 lg:p-10 border-r-0 lg:border-r border-b lg:border-b-0 border-white/10"
+          >
+            <div
+              class="text-4xl md:text-5xl tracking-tight"
+              style="font-family: 'Instrument Serif', serif;"
+            >
+              31
+            </div>
+            <p
+              class="mt-3 text-xs uppercase tracking-[0.16rem] text-neutral-500"
+              style="font-family: 'JetBrains Mono', monospace;"
+            >
+              Growth markets
+            </p>
+          </div>
+          <div class="p-6 lg:p-10 border-r border-white/10">
+            <div
+              class="text-4xl md:text-5xl tracking-tight"
+              style="font-family: 'Instrument Serif', serif;"
+            >
+              8.7%
+            </div>
+            <p
+              class="mt-3 text-xs uppercase tracking-[0.16rem] text-neutral-500"
+              style="font-family: 'JetBrains Mono', monospace;"
+            >
+              Target net yield
+            </p>
+          </div>
+          <div class="p-6 lg:p-10">
+            <div
+              class="text-4xl md:text-5xl tracking-tight"
+              style="font-family: 'Instrument Serif', serif;"
+            >
+              92%
+            </div>
+            <p
+              class="mt-3 text-xs uppercase tracking-[0.16rem] text-neutral-500"
+              style="font-family: 'JetBrains Mono', monospace;"
+            >
+              Repeat partners
+            </p>
+          </div>
+        </section>
+
+        <section
+          id="process"
+          class="px-6 lg:px-10 py-20 lg:py-28 border-t border-white/10"
+        >
+          <div class="grid lg:grid-cols-12 gap-10 lg:gap-16">
+            <div class="lg:col-span-4">
+              <div
+                class="text-xs uppercase tracking-[0.18rem] text-[#eab308] mb-5"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Process
+              </div>
+              <h2
+                class="text-4xl md:text-6xl tracking-tight leading-[1.02]"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                A disciplined path from sourcing to ownership.
+              </h2>
+            </div>
+            <div
+              class="lg:col-span-8 grid md:grid-cols-3 border border-white/10 bg-white/[0.02]"
+            >
+              <article
+                class="p-8 border-b md:border-b-0 md:border-r border-white/10 reveal-card"
+              >
+                <div
+                  class="w-11 h-11 bg-[#eab308] text-[#1a1a1a] inline-flex items-center justify-center mb-8"
+                >
+                  <iconify-icon
+                    icon="solar:magnifer-linear"
+                    width="22"
+                    height="22"
+                  ></iconify-icon>
+                </div>
+                <div
+                  class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-4"
+                  style="font-family: 'JetBrains Mono', monospace;"
+                >
+                  01 / Source
+                </div>
+                <h3 class="text-xl tracking-tight font-medium mb-3">
+                  Private-market access
+                </h3>
+                <p class="text-sm leading-6 text-neutral-400">
+                  We screen off-market residential, hospitality, and mixed-use
+                  opportunities before they reach broader channels.
+                </p>
+              </article>
+              <article
+                class="p-8 border-b md:border-b-0 md:border-r border-white/10 reveal-card"
+              >
+                <div
+                  class="w-11 h-11 bg-[#f4f4f4] text-[#1a1a1a] inline-flex items-center justify-center mb-8"
+                >
+                  <iconify-icon
+                    icon="solar:chart-2-linear"
+                    width="22"
+                    height="22"
+                  ></iconify-icon>
+                </div>
+                <div
+                  class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-4"
+                  style="font-family: 'JetBrains Mono', monospace;"
+                >
+                  02 / Model
+                </div>
+                <h3 class="text-xl tracking-tight font-medium mb-3">
+                  Data-backed diligence
+                </h3>
+                <p class="text-sm leading-6 text-neutral-400">
+                  Each asset is evaluated across cash flow, rent growth,
+                  liquidity, local policy, and exit sensitivity.
+                </p>
+              </article>
+              <article class="p-8 reveal-card">
+                <div
+                  class="w-11 h-11 bg-[#1a1a1a] text-[#eab308] border border-white/10 inline-flex items-center justify-center mb-8"
+                >
+                  <iconify-icon
+                    icon="solar:shield-check-linear"
+                    width="22"
+                    height="22"
+                  ></iconify-icon>
+                </div>
+                <div
+                  class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-4"
+                  style="font-family: 'JetBrains Mono', monospace;"
+                >
+                  03 / Manage
+                </div>
+                <h3 class="text-xl tracking-tight font-medium mb-3">
+                  Operator oversight
+                </h3>
+                <p class="text-sm leading-6 text-neutral-400">
+                  Our team coordinates legal, financing, reporting, and asset
+                  management after acquisition.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="assets" class="border-t border-white/10">
+          <div class="grid lg:grid-cols-12">
+            <div
+              class="lg:col-span-5 p-6 lg:p-10 flex flex-col justify-between min-h-[34rem] border-b lg:border-b-0 lg:border-r border-white/10"
+            >
+              <div>
+                <div
+                  class="text-xs uppercase tracking-[0.18rem] text-[#eab308] mb-5"
+                  style="font-family: 'JetBrains Mono', monospace;"
+                >
+                  Assets
+                </div>
+                <h2
+                  class="text-4xl md:text-6xl tracking-tight leading-[1.02]"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  Selective exposure to properties with durable demand.
+                </h2>
+              </div>
+              <p class="text-neutral-400 leading-7 max-w-md mt-10">
+                PrimeEstates prioritizes locations with constrained supply,
+                employment momentum, infrastructure investment, and resilient
+                renter or buyer depth.
+              </p>
+            </div>
+
+            <div class="lg:col-span-7 grid md:grid-cols-2">
+              <article
+                class="group relative min-h-[28rem] overflow-hidden border-b md:border-r border-white/10"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&amp;w=1200&amp;auto=format&amp;fit=crop"
+                  alt="Urban residences"
+                  class="absolute inset-0 w-full h-full object-cover grayscale-[20%] brightness-75 group-hover:scale-105 transition-transform duration-700"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/20 to-transparent"
+                ></div>
+                <div class="absolute bottom-0 left-0 right-0 p-8">
+                  <div
+                    class="text-xs uppercase tracking-[0.16rem] text-[#eab308] mb-4"
+                    style="font-family: 'JetBrains Mono', monospace;"
+                  >
+                    Urban residences
+                  </div>
+                  <h3
+                    class="text-3xl tracking-tight mb-3"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    Core multifamily
+                  </h3>
+                  <p class="text-sm text-neutral-300 leading-6">
+                    Stabilized communities in employment corridors with
+                    disciplined expense controls.
+                  </p>
+                </div>
+              </article>
+              <article
+                class="group relative min-h-[28rem] overflow-hidden border-b border-white/10"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&amp;w=1200&amp;auto=format&amp;fit=crop"
+                  alt="Hospitality property"
+                  class="absolute inset-0 w-full h-full object-cover grayscale-[20%] brightness-75 group-hover:scale-105 transition-transform duration-700"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/20 to-transparent"
+                ></div>
+                <div class="absolute bottom-0 left-0 right-0 p-8">
+                  <div
+                    class="text-xs uppercase tracking-[0.16rem] text-[#eab308] mb-4"
+                    style="font-family: 'JetBrains Mono', monospace;"
+                  >
+                    Hospitality
+                  </div>
+                  <h3
+                    class="text-3xl tracking-tight mb-3"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    Boutique stays
+                  </h3>
+                  <p class="text-sm text-neutral-300 leading-6">
+                    Design-led assets in destination markets supported by
+                    professional operators.
+                  </p>
+                </div>
+              </article>
+              <article
+                class="md:col-span-2 p-8 lg:p-10 bg-[#f4f4f4] text-neutral-900 grid md:grid-cols-3 gap-8 items-end"
+              >
+                <div class="md:col-span-2">
+                  <div
+                    class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-4"
+                    style="font-family: 'JetBrains Mono', monospace;"
+                  >
+                    Current focus
+                  </div>
+                  <h3
+                    class="text-3xl md:text-5xl tracking-tight leading-[1.05]"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    Austin, Charlotte, Nashville, Raleigh, Denver.
+                  </h3>
+                </div>
+                <a
+                  href="#contact"
+                  class="inline-flex items-center justify-between gap-4 border border-neutral-300 px-5 py-4 text-sm font-medium hover:bg-white transition-colors"
+                >
+                  Request pipeline
+                  <iconify-icon
+                    icon="solar:arrow-right-linear"
+                    width="20"
+                    height="20"
+                  ></iconify-icon>
+                </a>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="firm"
+          class="px-6 lg:px-10 py-20 lg:py-28 border-t border-white/10"
+        >
+          <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            <div class="lg:col-span-7">
+              <div class="relative p-[1px]">
+                <span
+                  class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent -z-10"
+                ></span>
+                <div class="bg-[#1a1a1a] border border-white/10 p-8 lg:p-10">
+                  <div class="grid sm:grid-cols-2 gap-8">
+                    <div>
+                      <div
+                        class="text-xs uppercase tracking-[0.16rem] text-[#eab308] mb-4"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Firm
+                      </div>
+                      <h2
+                        class="text-4xl md:text-6xl tracking-tight leading-[1.02]"
+                        style="font-family: 'Instrument Serif', serif;"
+                      >
+                        Built for patient capital.
+                      </h2>
+                    </div>
+                    <p class="text-neutral-400 leading-7">
+                      We operate as a long-horizon advisory desk for investors
+                      who value quality basis, transparent reporting, and
+                      conservative underwriting over speculative volume.
+                    </p>
+                  </div>
+                  <div class="grid sm:grid-cols-3 gap-4 mt-12">
+                    <div class="border border-white/10 p-5 bg-white/[0.02]">
+                      <iconify-icon
+                        icon="solar:document-text-linear"
+                        width="24"
+                        height="24"
+                        class="text-[#eab308]"
+                      ></iconify-icon>
+                      <p class="mt-6 text-sm text-neutral-300">
+                        Quarterly investor reporting
+                      </p>
+                    </div>
+                    <div class="border border-white/10 p-5 bg-white/[0.02]">
+                      <iconify-icon
+                        icon="solar:buildings-2-linear"
+                        width="24"
+                        height="24"
+                        class="text-[#eab308]"
+                      ></iconify-icon>
+                      <p class="mt-6 text-sm text-neutral-300">
+                        Operator and sponsor review
+                      </p>
+                    </div>
+                    <div class="border border-white/10 p-5 bg-white/[0.02]">
+                      <iconify-icon
+                        icon="solar:lock-keyhole-linear"
+                        width="24"
+                        height="24"
+                        class="text-[#eab308]"
+                      ></iconify-icon>
+                      <p class="mt-6 text-sm text-neutral-300">
+                        Secure deal room access
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="lg:col-span-5 bg-white text-neutral-900 p-8 lg:p-10">
+              <div
+                class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-8"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Investment memo
+              </div>
+              <div class="space-y-6">
+                <div
+                  class="flex items-start justify-between gap-6 pb-6 border-b border-neutral-200"
+                >
+                  <div>
+                    <h3 class="font-medium tracking-tight">Risk posture</h3>
+                    <p class="text-sm text-neutral-500 mt-2 leading-6">
+                      Moderate leverage, reserve planning, diversified tenancy.
+                    </p>
+                  </div>
+                  <span class="text-[#eab308] font-medium">A-</span>
+                </div>
+                <div
+                  class="flex items-start justify-between gap-6 pb-6 border-b border-neutral-200"
+                >
+                  <div>
+                    <h3 class="font-medium tracking-tight">Hold period</h3>
+                    <p class="text-sm text-neutral-500 mt-2 leading-6">
+                      Typical target horizon across recommended assets.
+                    </p>
+                  </div>
+                  <span class="font-medium">5-7Y</span>
+                </div>
+                <div class="flex items-start justify-between gap-6">
+                  <div>
+                    <h3 class="font-medium tracking-tight">
+                      Minimum allocation
+                    </h3>
+                    <p class="text-sm text-neutral-500 mt-2 leading-6">
+                      Varies by strategy, structure, and investor profile.
+                    </p>
+                  </div>
+                  <span class="font-medium">$250k</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="insights" class="border-t border-white/10">
+          <div
+            class="p-6 lg:p-10 border-b border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-6"
+          >
+            <div>
+              <div
+                class="text-xs uppercase tracking-[0.18rem] text-[#eab308] mb-5"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Insights
+              </div>
+              <h2
+                class="text-4xl md:text-6xl tracking-tight leading-[1.02]"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                Market notes from the advisory desk.
+              </h2>
+            </div>
+            <a
+              href="#contact"
+              class="text-sm text-neutral-300 hover:text-white inline-flex items-center gap-2"
+            >
+              Speak with an advisor
+              <iconify-icon
+                icon="solar:arrow-right-linear"
+                width="18"
+                height="18"
+              ></iconify-icon>
+            </a>
+          </div>
+
+          <div class="grid md:grid-cols-3">
+            <article
+              class="p-8 lg:p-10 border-b md:border-b-0 md:border-r border-white/10 hover:bg-white/[0.03] transition-colors"
+            >
+              <div
+                class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-8"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Rental demand
+              </div>
+              <h3
+                class="text-2xl tracking-tight mb-4"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                Why job migration is reshaping Sun Belt underwriting.
+              </h3>
+              <p class="text-sm text-neutral-400 leading-6">
+                Population growth is only useful when paired with wage
+                resilience and supply constraints.
+              </p>
+            </article>
+            <article
+              class="p-8 lg:p-10 border-b md:border-b-0 md:border-r border-white/10 hover:bg-white/[0.03] transition-colors"
+            >
+              <div
+                class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-8"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Capital stack
+              </div>
+              <h3
+                class="text-2xl tracking-tight mb-4"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                The new discipline of conservative leverage.
+              </h3>
+              <p class="text-sm text-neutral-400 leading-6">
+                Rate volatility rewards sponsors who model multiple exits before
+                acquiring the asset.
+              </p>
+            </article>
+            <article
+              class="p-8 lg:p-10 hover:bg-white/[0.03] transition-colors"
+            >
+              <div
+                class="text-xs uppercase tracking-[0.16rem] text-neutral-500 mb-8"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Design premium
+              </div>
+              <h3
+                class="text-2xl tracking-tight mb-4"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                Where hospitality-grade living creates durable rent lift.
+              </h3>
+              <p class="text-sm text-neutral-400 leading-6">
+                Amenities, finishes, and operations increasingly define asset
+                performance.
+              </p>
+            </article>
+          </div>
+        </section>
+        <section
+          id="testimonials"
+          class="border-t border-white/10 overflow-hidden bg-[#111111]"
+        >
+          <div
+            class="p-6 lg:p-10 border-b border-white/10 text-center relative"
+          >
+            <div
+              class="absolute inset-0 pointer-events-none opacity-40"
+              style="background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 10rem 10rem;"
+            ></div>
+            <div class="relative z-10 max-w-3xl mx-auto">
+              <div
+                class="text-xs uppercase tracking-[0.18rem] text-[#eab308] mb-5"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Testimonials
+              </div>
+              <h2
+                class="text-4xl md:text-6xl tracking-tight leading-[1.02]"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                Trusted by private investors and family offices.
+              </h2>
+            </div>
+          </div>
+          <div class="py-10 lg:py-14 space-y-6">
+            <div class="prime-testimonial-track gap-6 pr-6">
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.05] transition-colors"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3ef87ef2-3b8d-4459-a9ef-5c7b64ad9e1b_320w.jpg"
+                      alt="Marcus Lee"
+                      class="w-10 h-10 rounded-sm object-cover grayscale-[25%]"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Marcus Lee
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Family office, CA
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight text-neutral-100"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  PrimeEstates gave us sharper underwriting, cleaner reporting,
+                  and access to assets we would not have seen alone.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.05] transition-colors"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ef8b45e-c678-465f-8372-c36234710b39_320w.webp"
+                      alt="Priya Raman"
+                      class="w-10 h-10 rounded-sm object-cover grayscale-[25%]"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Priya Raman
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Investor, NY
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight text-neutral-100"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  Their advisory team made complex market data feel practical,
+                  helping us move with confidence and patience.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.05] transition-colors"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/70f42fcd-9df2-4ed0-aaa4-6582ce1171fa_320w.jpg"
+                      alt="Sarah Jenkins"
+                      class="w-10 h-10 rounded-sm object-cover grayscale-[25%]"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Sarah Jenkins
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Seattle, WA
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight text-neutral-100"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  The process was transparent from sourcing through close, with
+                  every assumption clearly documented.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.05] transition-colors"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3ef87ef2-3b8d-4459-a9ef-5c7b64ad9e1b_320w.jpg"
+                      alt="Marcus Lee"
+                      class="w-10 h-10 rounded-sm object-cover grayscale-[25%]"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Marcus Lee
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Family office, CA
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight text-neutral-100"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  PrimeEstates gave us sharper underwriting, cleaner reporting,
+                  and access to assets we would not have seen alone.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.05] transition-colors"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ef8b45e-c678-465f-8372-c36234710b39_320w.webp"
+                      alt="Priya Raman"
+                      class="w-10 h-10 rounded-sm object-cover grayscale-[25%]"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Priya Raman
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Investor, NY
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight text-neutral-100"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  Their advisory team made complex market data feel practical,
+                  helping us move with confidence and patience.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.05] transition-colors"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/70f42fcd-9df2-4ed0-aaa4-6582ce1171fa_320w.jpg"
+                      alt="Sarah Jenkins"
+                      class="w-10 h-10 rounded-sm object-cover grayscale-[25%]"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Sarah Jenkins
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Seattle, WA
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight text-neutral-100"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  The process was transparent from sourcing through close, with
+                  every assumption clearly documented.
+                </p>
+              </article>
+            </div>
+            <div
+              class="prime-testimonial-track prime-testimonial-reverse gap-6 pr-6"
+            >
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-[#f4f4f4] text-neutral-900 p-6"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bac6570-3bee-4c9c-a3a7-ad80b0766eb3_320w.jpg"
+                      alt="Daniel Hart"
+                      class="w-10 h-10 rounded-sm object-cover"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Daniel Hart
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Principal, TX
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  We appreciated the disciplined pace. No pressure, just
+                  thoughtful analysis and a clear view of the downside.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-[#f4f4f4] text-neutral-900 p-6"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3ef87ef2-3b8d-4459-a9ef-5c7b64ad9e1b_320w.jpg"
+                      alt="Olivia Chen"
+                      class="w-10 h-10 rounded-sm object-cover"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Olivia Chen
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Partner, IL
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  The deal room and quarterly memos keep our team aligned
+                  without adding administrative noise.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-[#f4f4f4] text-neutral-900 p-6"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ef8b45e-c678-465f-8372-c36234710b39_320w.webp"
+                      alt="Nora Walsh"
+                      class="w-10 h-10 rounded-sm object-cover"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Nora Walsh
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Advisor, FL
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  Their market selection work helped us avoid crowded
+                  opportunities and focus on durable demand.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-[#f4f4f4] text-neutral-900 p-6"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bac6570-3bee-4c9c-a3a7-ad80b0766eb3_320w.jpg"
+                      alt="Daniel Hart"
+                      class="w-10 h-10 rounded-sm object-cover"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Daniel Hart
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Principal, TX
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  We appreciated the disciplined pace. No pressure, just
+                  thoughtful analysis and a clear view of the downside.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-[#f4f4f4] text-neutral-900 p-6"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3ef87ef2-3b8d-4459-a9ef-5c7b64ad9e1b_320w.jpg"
+                      alt="Olivia Chen"
+                      class="w-10 h-10 rounded-sm object-cover"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Olivia Chen
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Partner, IL
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  The deal room and quarterly memos keep our team aligned
+                  without adding administrative noise.
+                </p>
+              </article>
+              <article
+                class="w-[22rem] md:w-[28rem] flex-none border border-white/10 bg-[#f4f4f4] text-neutral-900 p-6"
+              >
+                <div class="flex items-center justify-between gap-4 mb-8">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ef8b45e-c678-465f-8372-c36234710b39_320w.webp"
+                      alt="Nora Walsh"
+                      class="w-10 h-10 rounded-sm object-cover"
+                    />
+                    <div>
+                      <h3 class="text-sm font-medium tracking-tight">
+                        Nora Walsh
+                      </h3>
+                      <p
+                        class="text-[0.65rem] uppercase tracking-[0.12rem] text-neutral-500"
+                        style="font-family: 'JetBrains Mono', monospace;"
+                      >
+                        Advisor, FL
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[#eab308] text-2xl"
+                    style="font-family: 'Instrument Serif', serif;"
+                  >
+                    “
+                  </span>
+                </div>
+                <p
+                  class="text-xl md:text-2xl leading-[1.15] tracking-tight"
+                  style="font-family: 'Instrument Serif', serif;"
+                >
+                  Their market selection work helped us avoid crowded
+                  opportunities and focus on durable demand.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="contact"
+          class="px-6 lg:px-10 py-20 lg:py-28 border-t border-white/10"
+        >
+          <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div class="lg:col-span-7">
+              <div
+                class="text-xs uppercase tracking-[0.18rem] text-[#eab308] mb-5"
+                style="font-family: 'JetBrains Mono', monospace;"
+              >
+                Reach out
+              </div>
+              <h2
+                class="text-5xl md:text-7xl tracking-tight leading-[1.02]"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                Start with a private portfolio review.
+              </h2>
+            </div>
+            <div class="lg:col-span-5">
+              <form
+                class="bg-[#f4f4f4] text-neutral-900 p-6 md:p-8"
+                onsubmit="event.preventDefault(); document.getElementById('contactStatus').textContent='Thank you — your review request has been queued.';"
+              >
+                <div class="grid gap-4">
+                  <input
+                    required=""
+                    type="text"
+                    placeholder="Name"
+                    class="w-full bg-white border border-neutral-200 px-4 py-4 text-sm outline-none focus:border-[#eab308]"
+                  />
+                  <input
+                    required=""
+                    type="email"
+                    placeholder="Email"
+                    class="w-full bg-white border border-neutral-200 px-4 py-4 text-sm outline-none focus:border-[#eab308]"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Target allocation"
+                    class="w-full bg-white border border-neutral-200 px-4 py-4 text-sm outline-none focus:border-[#eab308]"
+                  />
+                  <button
+                    class="mt-2 bg-[#eab308] text-[#1a1a1a] px-5 py-4 text-sm font-medium inline-flex items-center justify-center gap-2 hover:bg-yellow-500 transition-colors"
+                  >
+                    Schedule portfolio review
+                    <iconify-icon
+                      icon="solar:calendar-add-linear"
+                      width="20"
+                      height="20"
+                    ></iconify-icon>
+                  </button>
+                  <p
+                    id="contactStatus"
+                    class="text-xs text-neutral-600 min-h-4"
+                    style="font-family: 'JetBrains Mono', monospace;"
+                  ></p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="border-t border-white/10 px-6 lg:px-10 py-8">
+        <div
+          class="bg-[#f4f4f4] text-neutral-900 p-8 lg:p-10 grid lg:grid-cols-12 gap-8 items-start"
+        >
+          <div class="lg:col-span-5">
+            <h2
+              class="text-3xl md:text-5xl tracking-tight leading-[1.05] mb-4"
+              style="font-family: 'Instrument Serif', serif;"
+            >
+              Ready to personalize your portfolio?
+            </h2>
+            <p class="text-sm leading-6 text-neutral-600 max-w-md">
+              Share your target allocation and our advisory desk will prepare a
+              focused review of current private-market opportunities.
+            </p>
+          </div>
+          <form
+            class="lg:col-span-7 grid md:grid-cols-2 gap-x-6 gap-y-4"
+            onsubmit="event.preventDefault(); document.getElementById('footerStatus').textContent='Request received — we will follow up shortly.';"
+          >
+            <input
+              required=""
+              type="text"
+              placeholder="Name"
+              class="bg-transparent border-b border-neutral-400 px-1 py-3 text-sm outline-none focus:border-[#eab308]"
+            />
+            <input
+              required=""
+              type="email"
+              placeholder="Email"
+              class="bg-transparent border-b border-neutral-400 px-1 py-3 text-sm outline-none focus:border-[#eab308]"
+            />
+            <input
+              type="text"
+              placeholder="Phone number"
+              class="md:col-span-2 bg-transparent border-b border-neutral-400 px-1 py-3 text-sm outline-none focus:border-[#eab308]"
+            />
+            <input
+              type="text"
+              placeholder="Anything we should know?"
+              class="md:col-span-2 bg-transparent border-b border-neutral-400 px-1 py-3 text-sm outline-none focus:border-[#eab308]"
+            />
+            <div
+              class="md:col-span-2 flex items-center justify-between gap-4 mt-2"
+            >
+              <p
+                id="footerStatus"
+                class="text-xs text-neutral-600 min-h-4"
+                style="font-family: 'JetBrains Mono', monospace;"
+              ></p>
+              <button
+                class="bg-[#1a1a1a] text-white px-5 py-3 text-sm font-medium hover:bg-neutral-800 transition-colors"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+        <div
+          class="bg-[#c9b49a] text-[#111111] p-8 lg:p-10 border-t border-neutral-900/20"
+        >
+          <div class="grid lg:grid-cols-12 gap-10 items-start">
+            <div class="lg:col-span-4 flex items-center gap-8">
+              <div
+                class="grid grid-cols-3 gap-2 w-20 h-20 place-content-center"
+              >
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-[#111111] rounded-full"></span>
+              </div>
+              <div
+                class="text-3xl tracking-tight"
+                style="font-family: 'Instrument Serif', serif;"
+              >
+                PrimeEstates
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <h3 class="text-sm font-medium mb-5">About Us</h3>
+              <ul class="space-y-3 text-xs">
+                <li><a href="#process" class="hover:underline">Process</a></li>
+                <li><a href="#assets" class="hover:underline">Assets</a></li>
+                <li><a href="#firm" class="hover:underline">Firm</a></li>
+              </ul>
+            </div>
+            <div class="lg:col-span-2">
+              <h3 class="text-sm font-medium mb-5">Support</h3>
+              <ul class="space-y-3 text-xs">
+                <li><a href="#contact" class="hover:underline">Contact</a></li>
+                <li>
+                  <a href="#insights" class="hover:underline">Insights</a>
+                </li>
+                <li><a href="#contact" class="hover:underline">FAQ's</a></li>
+              </ul>
+            </div>
+            <div class="lg:col-span-2">
+              <h3 class="text-sm font-medium mb-5">Social</h3>
+              <ul class="space-y-3 text-xs">
+                <li><a href="#" class="hover:underline">LinkedIn</a></li>
+                <li><a href="#" class="hover:underline">Instagram</a></li>
+                <li><a href="#" class="hover:underline">YouTube</a></li>
+              </ul>
+            </div>
+            <div class="lg:col-span-2 text-xs leading-6">
+              Private real estate opportunities involve risk and may be
+              illiquid. All investments require independent review.
+            </div>
+          </div>
+          <div
+            class="mt-10 pt-5 border-t border-neutral-900/25 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs"
+          >
+            <div>Copyright © PrimeEstates 2026</div>
+            <a
+              href="#start"
+              class="inline-flex items-center gap-2 hover:underline"
+            >
+              Back to top
+              <span
+                class="border border-neutral-900/40 w-4 h-4 inline-flex items-center justify-center text-[0.6rem]"
+              >
+                ↑
+              </span>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      function setupMobileMenu() {
+        const openMenu = document.getElementById('openMenu');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const links = mobileMenu.querySelectorAll('a');
+
+        openMenu.addEventListener('click', () => {
+          mobileMenu.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        });
+
+        function hideMenu() {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+
+        closeMenu.addEventListener('click', hideMenu);
+        links.forEach(link => link.addEventListener('click', hideMenu));
+      }
+
+      function setupTextReveal() {
+        const elements = document.querySelectorAll('.text-reveal');
+
+        elements.forEach(el => {
+          const childNodes = Array.from(el.childNodes);
+          el.innerHTML = '';
+
+          childNodes.forEach(node => {
+            if (node.nodeType === 3) {
+              const words = node.textContent.trim().split(/\s+/);
+              if (words.length === 1 && words[0] === '') return;
+
+              words.forEach(word => {
+                const mask = document.createElement('span');
+                mask.style.cssText = 'overflow: hidden; display: inline-flex; vertical-align: top; margin-right: 0.25em; padding-bottom: 0.1em; margin-bottom: -0.1em;';
+
+                const inner = document.createElement('span');
+                inner.className = 'word-inner';
+                inner.style.cssText = 'display: inline-block; transform: translateY(110%); opacity: 0;';
+                inner.textContent = word;
+
+                mask.appendChild(inner);
+                el.appendChild(mask);
+              });
+            } else if (node.nodeType === 1) {
+              const mask = document.createElement('span');
+              mask.style.cssText = 'overflow: hidden; display: inline-flex; vertical-align: middle; margin-right: 0.25em;';
+
+              const inner = document.createElement('span');
+              inner.className = 'word-inner block';
+              inner.style.cssText = 'display: inline-block; transform: translateY(110%); opacity: 0;';
+              inner.appendChild(node.cloneNode(true));
+
+              mask.appendChild(inner);
+              el.appendChild(mask);
+            }
+          });
+        });
+      }
+
+      function initAnimations() {
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray('.text-reveal').forEach(container => {
+          const words = container.querySelectorAll('.word-inner');
+          gsap.to(words, {
+            y: '0%',
+            opacity: 1,
+            duration: 1.2,
+            ease: 'power4.out',
+            stagger: 0.04,
+            delay: 0.1,
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 90%'
+            }
+          });
+        });
+
+        gsap.fromTo('.bracket',
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.6, stagger: 0.05, ease: 'back.out(1.5)', delay: 0.5 }
+        );
+
+        gsap.fromTo('.reveal-card',
+          { y: 36, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: 'power3.out',
+            stagger: 0.12,
+            scrollTrigger: {
+              trigger: '#process',
+              start: 'top 70%'
+            }
+          }
+        );
+
+        gsap.to('.hero-image', {
+          scale: 1,
+          duration: 1.4,
+          ease: 'power3.out'
+        });
+      }
+
+      function initWebGL() {
+        const canvas = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const geometry = new THREE.BufferGeometry();
+        const particlesCount = 420;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+          posArray[i] = (Math.random() - 0.5) * 20;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const material = new THREE.PointsMaterial({
+          size: 0.015,
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.3,
+          blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(geometry, material);
+        scene.add(particlesMesh);
+        camera.position.z = 4;
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', event => {
+          mouseX = (event.clientX - window.innerWidth / 2) * 0.0003;
+          mouseY = (event.clientY - window.innerHeight / 2) * 0.0003;
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+          requestAnimationFrame(animate);
+          const elapsedTime = clock.getElapsedTime();
+
+          particlesMesh.rotation.y += 0.0005;
+          particlesMesh.rotation.x += 0.0002;
+
+          const positions = geometry.attributes.position.array;
+          for (let i = 0; i < particlesCount; i++) {
+            const i3 = i * 3;
+            const x = positions[i3];
+            positions[i3 + 1] += Math.sin(elapsedTime * 0.5 + x) * 0.0005;
+          }
+
+          geometry.attributes.position.needsUpdate = true;
+          particlesMesh.rotation.y += 0.02 * (mouseX * 0.5 - particlesMesh.rotation.y);
+          particlesMesh.rotation.x += 0.02 * (mouseY * 0.5 - particlesMesh.rotation.x);
+
+          renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        setupMobileMenu();
+        setupTextReveal();
+        setTimeout(() => {
+          initAnimations();
+          initWebGL();
+        }, 100);
+      });
+    </script>
+    <!-- Complete landing page -->
+
+    <script>
+      (function(){
+        function onReady(fn){
+          if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+          else fn();
+        }
+
+        onReady(function(){
+          var revealTargets = document.querySelectorAll('#process, #assets, #firm, #insights, #contact, footer, #assets article, #insights article, #firm aside');
+          if('IntersectionObserver' in window){
+            revealTargets.forEach(function(el, i){
+              el.style.opacity = '0';
+              el.style.transform = 'translateY(34px)';
+              el.style.transition = 'opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)';
+              el.style.transitionDelay = (Math.min(i % 3, 2) * 80) + 'ms';
+            });
+
+            var observer = new IntersectionObserver(function(entries){
+              entries.forEach(function(entry){
+                if(entry.isIntersecting){
+                  entry.target.style.opacity = '1';
+                  entry.target.style.transform = 'translateY(0)';
+                  observer.unobserve(entry.target);
+                }
+              });
+            }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
+
+            revealTargets.forEach(function(el){ observer.observe(el); });
+          }
+
+          setTimeout(function(){
+            var headingWords = document.querySelectorAll('h1.text-reveal .word-inner');
+            if(window.gsap && headingWords.length){
+              gsap.fromTo(headingWords,
+                { filter: 'blur(10px)', rotateX: 16, transformOrigin: '50% 100%' },
+                { filter: 'blur(0px)', rotateX: 0, duration: 1.15, stagger: 0.035, ease: 'power3.out', delay: 0.05 }
+              );
+            }
+          }, 130);
+
+          initIntroImageWebGL();
+        });
+
+        function initIntroImageWebGL(){
+          var canvas = document.getElementById('intro-webgl-image');
+          var img = document.querySelector('#start > div:first-of-type > img[alt="Modern estate architecture"]');
+          if(!canvas || !img || !window.THREE) return;
+
+          var parent = canvas.parentElement;
+          var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+          var scene = new THREE.Scene();
+          var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+          var loader = new THREE.TextureLoader();
+          loader.setCrossOrigin('anonymous');
+
+          loader.load(img.currentSrc || img.src, function(texture){
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+
+            var uniforms = {
+              uTexture: { value: texture },
+              uTime: { value: 0 },
+              uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+              uIntro: { value: 0 },
+              uResolution: { value: new THREE.Vector2(1, 1) },
+              uImageResolution: { value: new THREE.Vector2(img.naturalWidth || 1600, img.naturalHeight || 900) }
+            };
+
+            var material = new THREE.ShaderMaterial({
+              transparent: true,
+              uniforms: uniforms,
+              vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }',
+              fragmentShader: 'precision highp float; uniform sampler2D uTexture; uniform float uTime; uniform float uIntro; uniform vec2 uMouse; uniform vec2 uResolution; uniform vec2 uImageResolution; varying vec2 vUv; vec2 coverUv(vec2 uv, vec2 screen, vec2 image){ float rs = screen.x / screen.y; float ri = image.x / image.y; vec2 s = vec2(1.0); if(rs > ri){ s.y = ri / rs; } else { s.x = rs / ri; } return (uv - 0.5) * s + 0.5; } void main(){ vec2 uv = coverUv(vUv, uResolution, uImageResolution); float d = distance(vUv, uMouse); float wave = sin((vUv.y + uTime * 0.13) * 18.0) * 0.012 + sin((vUv.x - uTime * 0.11) * 13.0) * 0.008; vec2 warp = vec2(wave * (1.0 - d), wave * 0.55); float intro = smoothstep(0.0, 1.0, uIntro); vec2 split = warp * (0.25 + 0.75 * (1.0 - intro)); vec4 base = texture2D(uTexture, uv + warp * intro); float r = texture2D(uTexture, uv + split).r; float b = texture2D(uTexture, uv - split).b; vec4 color = vec4(r, base.g, b, 1.0); float scan = smoothstep(-0.18, 0.72, vUv.y + (1.0 - intro) * 1.2); color.rgb = mix(color.rgb * 0.72, color.rgb, scan); color.rgb += (1.0 - intro) * 0.08; gl_FragColor = color; }'
+            });
+
+            scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+            function resize(){
+              var rect = parent.getBoundingClientRect();
+              renderer.setSize(rect.width, rect.height, false);
+              uniforms.uResolution.value.set(rect.width, rect.height);
+            }
+
+            resize();
+            window.addEventListener('resize', resize);
+
+            parent.addEventListener('mousemove', function(event){
+              var rect = parent.getBoundingClientRect();
+              uniforms.uMouse.value.set((event.clientX - rect.left) / rect.width, 1 - ((event.clientY - rect.top) / rect.height));
+            });
+
+            if(window.gsap) gsap.to(uniforms.uIntro, { value: 1, duration: 1.8, ease: 'power3.out' });
+            else uniforms.uIntro.value = 1;
+
+            var clock = new THREE.Clock();
+            function render(){
+              uniforms.uTime.value = clock.getElapsedTime();
+              renderer.render(scene, camera);
+              requestAnimationFrame(render);
+            }
+            render();
+          }, undefined, function(){
+            canvas.style.display = 'none';
+          });
+        }
+      })();
+    </script>
+
+    <script>
+      (function(){
+        function setupHoverOnlyIntroWebGL(){
+          var canvas = document.getElementById('intro-webgl-image');
+          if(!canvas || !canvas.parentElement) return;
+          var parent = canvas.parentElement;
+          canvas.style.opacity = '0';
+          canvas.style.transition = 'opacity .45s ease';
+          parent.addEventListener('mouseenter', function(){
+            canvas.style.opacity = '1';
+          });
+          parent.addEventListener('mouseleave', function(){
+            canvas.style.opacity = '0';
+          });
+        }
+
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setupHoverOnlyIntroWebGL);
+        else setupHoverOnlyIntroWebGL();
+      })();
+    </script>
+  </body>
+</html>

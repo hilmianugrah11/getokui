@@ -227,7 +227,7 @@
     <div class="h-row"><span class="n-tag">2</span><h2 class="title">From command → finished file</h2></div>
     <p class="lead">Eight steps, with one <b>hard stop</b> in the middle: the agent suggests, the user decides. That's what makes it agentic and keeps the demo safe.</p>
     <div class="flow">
-      <div class="step"><span class="sn c-blue">1</span><h4>User Request</h4><p>"getokui, build a login page"</p></div>
+      <div class="step"><span class="sn c-blue">1</span><h4>User Request</h4><p>"getokui, build a SaaS landing page"</p></div>
       <div class="arrow">→</div>
       <div class="step"><span class="sn c-navy">2</span><h4>Parse</h4><p>Detect category + format (default HTML)</p></div>
       <div class="arrow">→</div>
@@ -251,26 +251,26 @@
   <div class="wrap">
     <span class="eyebrow">Technical architecture</span>
     <div class="h-row"><span class="n-tag">3</span><h2 class="title">Plugin ⇄ Library ⇄ Output</h2></div>
-    <p class="lead">Two separate repos: the plugin stays small & fast to install, the reference library lives on its own and can be updated without reinstalling the plugin.</p>
+    <p class="lead">One bundled repo: the reference library ships inside the plugin under <code>references/</code>, so a single install pulls everything and it works offline immediately — no separate clone.</p>
     <div class="arch">
       <div class="node dev">
         <div class="cap">Developer</div>
         <h4>👤 You</h4>
-        <div class="bubble">"getokui, build a login"</div>
+        <div class="bubble">"getokui, build a SaaS landing"</div>
       </div>
       <div class="arrow-h">→</div>
       <div class="node skill">
         <div class="cap">Plugin · Skill Pipeline</div>
         <h4>🧠 getokui</h4>
         <ul>
-          <li>setup — clone library</li>
+          <li>setup — verify bundled library</li>
           <li>pick — rank 5 + hard stop</li>
           <li>build — mix · adapt · convert</li>
         </ul>
       </div>
       <div class="arrow-h">→</div>
       <div class="node lib">
-        <div class="cap">GitHub · getokui-references</div>
+        <div class="cap">Bundled · references/</div>
         <h4>📚 Library</h4>
         <ul>
           <li>index.json</li>
@@ -287,7 +287,7 @@
     </div>
     <div class="legend">
       <span><i class="sw" style="background:var(--navy)"></i> Plugin (small, installed)</span>
-      <span><i class="sw" style="background:#fff;border:1px solid var(--line)"></i> Library (cloned to ~/.getokui/references)</span>
+      <span><i class="sw" style="background:#fff;border:1px solid var(--line)"></i> Library (bundled at references/)</span>
       <span><i class="sw" style="background:var(--green)"></i> Output (finished file)</span>
     </div>
   </div>
@@ -299,7 +299,7 @@
     <span class="eyebrow">The agent's source of truth</span>
     <div class="h-row"><span class="n-tag">4</span><h2 class="title">index.json — curated metadata</h2></div>
     <p class="lead">The agent reads this to <i>match</i> without opening every HTML file. Detail level: rich + thumbnail.</p>
-<pre><span class="c">// getokui-references/index.json</span>
+<pre><span class="c">// references/index.json</span>
 {
   <span class="k">"version"</span>: 1,
   <span class="k">"templates"</span>: [
@@ -324,7 +324,7 @@
   <div class="wrap">
     <span class="eyebrow">Made ourselves, no supabase</span>
     <div class="h-row"><span class="n-tag">5</span><h2 class="title">Thumbnail pipeline</h2></div>
-    <p class="lead">Thumbnails are screenshotted from local HTML files, converted to WebP + compressed. All assets are our own production, cloned locally — zero dependency on external URLs.</p>
+    <p class="lead">Thumbnails are screenshotted from local HTML files, converted to WebP + compressed. All assets are our own production, bundled with the plugin — zero dependency on external URLs.</p>
     <div class="pipe">
       <div class="pstep"><div class="ico">🌐</div><h4>1. Render</h4><p>Open local HTML via <code>Playwright</code> headless</p></div>
       <div class="arrow">→</div>

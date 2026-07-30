@@ -1,6 +1,6 @@
 ---
 name: pick
-description: Pick a design reference from the getokui library. Invoked whenever the user asks to build/develop a UI via getokui — landing page, login, dashboard, pricing, component, etc. (e.g. "getokui, build a login page", "getokui build a SaaS landing in react"). This skill reads the local index.json, filters & ranks candidates, then presents the 5 BEST CANDIDATES (name + description + thumbnail) and STOPS to wait for the user to choose (may pick more than one, may reject all). This skill ONLY picks — it does NOT write code or generate UI (that's the build skill). Do not start building UI for any getokui request before going through this skill.
+description: Pick a design reference from the getokui library. Invoked whenever the user asks to build/develop a UI via getokui — a landing page in any vertical (SaaS/AI, fintech, real-estate, portfolio, e-commerce, restaurant, wellness, gaming, agency, architecture), e.g. "getokui, build a SaaS landing page", "getokui build a fintech landing in react". This skill reads the local index.json, filters & ranks candidates, then presents the 5 BEST CANDIDATES (name + description + thumbnail) and STOPS to wait for the user to choose (may pick more than one, may reject all). This skill ONLY picks — it does NOT write code or generate UI (that's the build skill). Do not start building UI for any getokui request before going through this skill.
 ---
 
 # getokui pick — Suggest References & Checkpoint
@@ -15,29 +15,34 @@ the `build` skill.
 
 ## Prerequisite
 
-The library must already be cloned at `~/.getokui/references/` (see the `setup`
-skill). Check `~/.getokui/references/index.json`:
-- **Missing** → invoke/redirect to the `setup` skill to clone first. Don't
-  proceed.
+The library ships **inside this plugin** at `${CLAUDE_PLUGIN_ROOT}/references/`
+— it's bundled, so it's present as soon as the plugin is installed (no separate
+clone). Sanity-check that `${CLAUDE_PLUGIN_ROOT}/references/index.json` exists:
 - **Present** → continue to Step 1.
+- **Missing** (unexpected — broken install) → tell the user the bundled library
+  wasn't found and suggest reinstalling the plugin (`/plugin install`). Don't
+  proceed on a guess.
 
 ## Steps
 
 ### 1. Parse the user's request
 From the user's sentence, determine:
-- **Primary category** (e.g. `login`, `landing`, `dashboard`, `pricing`,
-  `portfolio`, etc.) — match against the `category` field in the index.
+- **Primary category** — match against the `category` field in the index. The
+  library is all **landing pages across verticals**: `landing` (SaaS/AI),
+  `fintech`, `real-estate`, `portfolio`, `ecommerce`, `restaurant`, `wellness`,
+  `gaming`, `agency`, `architecture`.
 - **Tags/mood** mentioned (e.g. "dark", "minimal", "saas", "fintech",
   "gradient") — match against `tags`, `description`, `colors`.
 - **Output format** if mentioned (`html` default, `react`, `next`). Save this
   to pass on to `build` — BUT don't generate anything now.
 
-If the request is too vague (unclear what page they want), ask one short
-question first: "what page do you want to build? (e.g. login / landing /
-dashboard)". Don't guess the category if there's genuinely no signal.
+If the request is too vague (unclear what kind of landing they want), ask one
+short question first: "what kind of landing do you want? (e.g. SaaS / fintech /
+restaurant / portfolio)". Don't guess the category if there's genuinely no
+signal.
 
 ### 2. Read & filter index.json
-Read `~/.getokui/references/index.json`. Filter `templates[]`:
+Read `${CLAUDE_PLUGIN_ROOT}/references/index.json`. Filter `templates[]`:
 1. Priority 1 — `category` matches exactly what was requested.
 2. Priority 2 — if same-category candidates < 5, fill in with ones whose
    `tags`/`description` overlap the mood the user mentioned.
@@ -59,7 +64,7 @@ Show each candidate concisely and readably:
 - One-sentence description.
 - Category + a few relevant tags.
 - Thumbnail: display it using the local path
-  `~/.getokui/references/thumbs/<slug>.webp`. If the thumbnail file is missing
+  `${CLAUDE_PLUGIN_ROOT}/references/thumbs/<slug>.webp`. If the thumbnail file is missing
   or can't be displayed, DON'T fail — just present the text (name +
   description) and note "(thumbnail unavailable)".
 

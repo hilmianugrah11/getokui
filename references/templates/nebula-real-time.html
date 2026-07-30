@@ -1,0 +1,2676 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nebula — Everything platform for your data teams</title>
+<meta name="description" content="Nebula is the all-in-one data platform — ingest, model, and act on your events in real time. One clean workspace replacing a dozen dashboards.">
+<meta name="theme-color" content="#090a0c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#090a0c;
+--bg-2:#0c0e12;
+--panel:#0f1217;
+--panel-2:#131720;
+--line:rgba(255,255,255,.08);
+--line-soft:rgba(255,255,255,.05);
+--text:#f4f5f7;
+--muted:#9598a3;
+--faint:#6b6e78;
+--accent:#6b7cff;     /* muted periwinkle */
+--accent-2:#8e7bff;   /* soft violet */
+--accent-3:#4fd1e0;   /* soft cyan, used sparingly */
+--r:16px;
+--r-lg:24px;
+--maxw:1140px;
+--font:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:var(--font);
+background:var(--bg);
+color:var(--text);
+line-height:1.6;
+overflow-x:hidden;
+-webkit-font-smoothing:antialiased;
+letter-spacing:-.011em;
+}
+::selection{background:rgba(107,124,255,.32)}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{line-height:1.1;letter-spacing:-.03em;font-weight:600}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.accent{color:var(--accent)}
+.grad-text{background:linear-gradient(100deg,#fff 30%,#9aa6ff 70%,#67d6e6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:11px;font-weight:550;font-size:14.5px;cursor:pointer;border:1px solid transparent;transition:background .2s,border-color .2s,transform .2s,box-shadow .2s;white-space:nowrap}
+.btn-primary{background:#fff;color:#0a0b0e}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,255,255,.12)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
+.btn-accent{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(107,124,255,.4)}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--accent);margin-bottom:16px}
+.sec-head{max-width:660px;margin:0 auto 56px;text-align:center}
+.sec-head h2{font-size:clamp(28px,4.2vw,46px);margin-bottom:16px;font-weight:600}
+.sec-head p{color:var(--muted);font-size:18px;font-weight:400}
+/* backdrop: extremely subtle */
+.bg-fx{position:fixed;inset:0;z-index:-2;background:
+radial-gradient(70% 50% at 50% -10%,rgba(107,124,255,.16),transparent 70%),
+radial-gradient(50% 40% at 85% 8%,rgba(79,209,224,.07),transparent 70%);}
+.grid-bg{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,#000 35%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,#000 35%,transparent 100%)}
+/* nav */
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+header.scrolled{background:rgba(9,10,12,.72);backdrop-filter:blur(16px);border-color:var(--line-soft)}
+nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px}
+.logo .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(140deg,var(--accent),var(--accent-2));position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.logo .mark::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff;opacity:.9}
+.nav-links{display:flex;gap:28px;font-size:14.5px;color:var(--muted)}
+.nav-links a{transition:color .2s}.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:10px;align-items:center}
+@media(max-width:880px){.nav-links{display:none}.nav-cta .ghost-hide{display:none}}
+/* hero */
+.hero{padding:148px 0 70px;text-align:center;position:relative}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;color:var(--muted);margin-bottom:28px}
+.badge b{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.02em}
+.hero h1{font-size:clamp(38px,6vw,72px);font-weight:600;letter-spacing:-.035em;margin-bottom:22px}
+.hero p.lead{font-size:clamp(16px,2vw,20px);color:var(--muted);max-width:600px;margin:0 auto 32px;font-weight:400}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-note{margin-top:18px;font-size:13px;color:var(--faint)}
+/* product mockup frame (huly-style) */
+.shot{position:relative;margin:64px auto 0;max-width:1000px}
+.shot::after{content:"";position:absolute;inset:-6% -4% -30% -4%;background:radial-gradient(60% 60% at 50% 0%,rgba(107,124,255,.22),transparent 70%);z-index:-1;filter:blur(20px)}
+.frame{border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden;backdrop-filter:blur(8px)}
+.frame-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line-soft)}
+.frame-bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14)}
+.frame-bar span{margin-left:12px;font-size:12px;color:var(--faint)}
+.app{display:grid;grid-template-columns:188px 1fr;min-height:340px}
+.app-side{border-right:1px solid var(--line-soft);padding:16px 12px;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.012)}
+.app-side .grp{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin:12px 8px 4px}
+.app-side .it{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;font-size:13.5px;color:var(--muted)}
+.app-side .it.on{background:rgba(255,255,255,.06);color:var(--text)}
+.app-side .it .d{width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,.1)}
+.app-side .it.on .d{background:linear-gradient(140deg,var(--accent),var(--accent-2))}
+.app-main{padding:20px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:rgba(255,255,255,.025);border:1px solid var(--line-soft);border-radius:12px;padding:14px}
+.kpi .lab{font-size:11.5px;color:var(--faint);margin-bottom:6px}
+.kpi .val{font-size:23px;font-weight:600;letter-spacing:-.02em}
+.kpi .val small{font-size:12px;color:var(--accent-3);font-weight:500;margin-left:6px}
+.chart{height:176px;border:1px solid var(--line-soft);border-radius:12px;background:rgba(255,255,255,.02);padding:14px}
+.chart svg{width:100%;height:100%;overflow:visible}
+@media(max-width:620px){.app{grid-template-columns:1fr}.app-side{display:none}.kpis{grid-template-columns:1fr 1fr}}
+/* logos */
+.logos{padding:60px 0 24px;text-align:center}
+.logos p{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:scrollx 32s linear infinite}
+.marquee-track span{font-weight:600;font-size:19px;color:var(--faint);white-space:nowrap;opacity:.6}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+section{position:relative}
+.section{padding:96px 0}
+/* alternating feature rows */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.row+.row{margin-top:108px}
+.row.flip .copy{order:2}
+.copy .eyebrow{margin-bottom:14px}
+.copy h2{font-size:clamp(26px,3.6vw,38px);margin-bottom:16px;font-weight:600}
+.copy p{color:var(--muted);font-size:16.5px;margin-bottom:22px}
+.ticks{list-style:none;display:flex;flex-direction:column;gap:12px}
+.ticks li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:var(--muted)}
+.ticks li b{color:var(--text);font-weight:550}
+.ticks svg{width:18px;height:18px;flex:none;margin-top:2px;stroke:var(--accent);stroke-width:2.2;fill:none}
+.visual{border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));padding:22px;position:relative;overflow:hidden;min-height:300px}
+.visual::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 0%,rgba(107,124,255,.1),transparent 70%)}
+@media(max-width:840px){.row{grid-template-columns:1fr;gap:30px}.row+.row{margin-top:72px}.row.flip .copy{order:0}}
+/* mini mock widgets inside visuals */
+.mini{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px}
+.mini .bar{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:11px;padding:11px 13px}
+.mini .bar .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.mini .bar .dot.c{background:var(--accent-3)}.mini .bar .dot.v{background:var(--accent-2)}
+.mini .bar .t{font-size:13.5px;color:var(--text)}
+.mini .bar .t small{display:block;color:var(--faint);font-size:11.5px}
+.mini .bar .pill{margin-left:auto;font-size:11px;color:var(--accent-3);background:rgba(79,209,224,.1);padding:3px 9px;border-radius:999px}
+.mini .bars{display:flex;align-items:flex-end;gap:8px;height:90px;padding:6px 2px}
+.mini .bars span{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--accent),rgba(107,124,255,.15))}
+/* feature grid (small icons) */
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:var(--r-lg);overflow:hidden}
+.cell{background:var(--bg);padding:30px 26px;transition:background .3s}
+.cell:hover{background:var(--panel)}
+.cell .ico{width:38px;height:38px;border-radius:10px;background:rgba(107,124,255,.12);border:1px solid rgba(107,124,255,.2);display:grid;place-items:center;margin-bottom:16px}
+.cell .ico svg{width:18px;height:18px;stroke:var(--accent);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cell h3{font-size:16px;margin-bottom:7px;font-weight:600}
+.cell p{color:var(--muted);font-size:14px}
+@media(max-width:840px){.grid6{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid6{grid-template-columns:1fr}}
+/* schema */
+.schema-wrap{position:relative;border-radius:var(--r-lg);border:1px solid var(--line);background:radial-gradient(ellipse at 50% -10%,rgba(107,124,255,.1),transparent 60%),var(--bg-2);padding:30px}
+.schema-svg{width:100%;height:auto;display:block}
+.node-label{font-size:13px;fill:var(--text);font-weight:600}
+.node-sub{font-size:10px;fill:var(--muted)}
+.flow{stroke:rgba(255,255,255,.14);stroke-width:1.6;fill:none;stroke-linecap:round}
+.flow-dash{stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round}
+.legend{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:8px;vertical-align:middle}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:var(--r-lg);overflow:hidden}
+.stat{background:var(--bg);padding:34px 22px;text-align:center}
+.stat .num{font-size:clamp(30px,4.4vw,46px);font-weight:600;letter-spacing:-.03em}
+.stat .lab{color:var(--muted);font-size:13.5px;margin-top:8px}
+@media(max-width:680px){.stats{grid-template-columns:1fr 1fr}}
+/* testimonials */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.quote{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--r);padding:26px;font-size:15px}
+.quote p{color:var(--text);margin-bottom:20px;font-weight:400}
+.quote .who{display:flex;align-items:center;gap:11px}
+.quote .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--accent-2));flex:none}
+.quote .who b{font-size:14px;display:block;font-weight:600}
+.quote .who span{font-size:12.5px;color:var(--faint)}
+@media(max-width:840px){.quotes{grid-template-columns:1fr}}
+/* pricing */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.plan{position:relative;background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:30px;display:flex;flex-direction:column}
+.plan.feature{border-color:rgba(107,124,255,.4);background:linear-gradient(180deg,rgba(107,124,255,.08),rgba(255,255,255,.012))}
+.plan .tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff;font-size:11.5px;font-weight:600;padding:4px 13px;border-radius:999px}
+.plan h3{font-size:16px;margin-bottom:6px;color:var(--muted);font-weight:550}
+.plan .price{font-size:40px;font-weight:600;letter-spacing:-.03em;margin:8px 0}
+.plan .price small{font-size:14px;color:var(--faint);font-weight:400}
+.plan .desc{color:var(--muted);font-size:13.5px;margin-bottom:22px;min-height:38px}
+.plan ul{list-style:none;margin-bottom:24px;flex:1}
+.plan li{display:flex;gap:9px;align-items:flex-start;padding:6px 0;font-size:14px;color:var(--muted)}
+.plan li svg{width:16px;height:16px;flex:none;margin-top:3px;stroke:var(--accent);stroke-width:2.4;fill:none}
+@media(max-width:840px){.pricing{grid-template-columns:1fr}}
+/* cta */
+.cta-box{position:relative;text-align:center;border-radius:28px;border:1px solid var(--line);padding:76px 28px;overflow:hidden;background:radial-gradient(ellipse at 50% 130%,rgba(107,124,255,.3),transparent 62%),var(--bg-2)}
+.cta-box h2{font-size:clamp(30px,4.6vw,50px);margin-bottom:16px;font-weight:600}
+.cta-box p{color:var(--muted);font-size:17px;max-width:480px;margin:0 auto 30px}
+/* footer */
+footer{border-top:1px solid var(--line-soft);padding:56px 0 40px;margin-top:30px}
+.foot{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:32px}
+.foot p{color:var(--muted);font-size:13.5px;margin-top:14px;max-width:270px}
+.foot h4{font-size:12.5px;letter-spacing:.04em;color:var(--faint);margin-bottom:13px;font-weight:600}
+.foot a{display:block;color:var(--muted);font-size:14px;padding:5px 0;transition:color .2s}
+.foot a:hover{color:var(--text)}
+.foot-bot{display:flex;justify-content:space-between;align-items:center;margin-top:46px;padding-top:24px;border-top:1px solid var(--line-soft);color:var(--faint);font-size:13px;flex-wrap:wrap;gap:10px}
+@media(max-width:680px){.foot{grid-template-columns:1fr 1fr}}
+/* ===== manifesto (word-highlight scrub) ===== */
+.manifesto{padding:130px 0;text-align:center}
+.manifesto .eyebrow{display:block;text-align:center}
+.manifesto .big{font-size:clamp(26px,4.6vw,52px);font-weight:600;line-height:1.28;letter-spacing:-.03em;max-width:940px;margin:0 auto}
+.manifesto .big .w{color:#33353d;transition:color .15s linear;will-change:color}
+/* ===== pinned horizontal modules ===== */
+.hscroll{position:relative;background:linear-gradient(180deg,transparent,rgba(255,255,255,.012),transparent)}
+.hhead{max-width:var(--maxw);margin:0 auto;padding:90px 24px 0}
+.hpin{height:100vh;display:flex;align-items:center;overflow:hidden}
+.htrack{display:flex;gap:22px;padding:0 max(24px,calc((100vw - var(--maxw))/2 + 24px));will-change:transform}
+.hcard{flex:0 0 360px;background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:28px;min-height:400px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.hcard::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 50% at 50% 0%,rgba(107,124,255,.1),transparent 70%);opacity:0;transition:opacity .4s}
+.hcard:hover::before{opacity:1}
+.hcard .num{font-size:13px;font-weight:600;color:var(--accent);position:relative;z-index:1}
+.hcard .vis{position:relative;z-index:1;height:160px;border-radius:14px;border:1px solid var(--line-soft);background:rgba(255,255,255,.02);margin:18px 0 22px;display:grid;place-items:center;overflow:hidden}
+.hcard .vis svg{width:80%;height:70%}
+.hcard h3{font-size:21px;margin-bottom:10px;position:relative;z-index:1}
+.hcard p{color:var(--muted);font-size:14.5px;position:relative;z-index:1}
+@media(max-width:840px){.hpin{height:auto;display:block;padding:30px 0 90px}.htrack{transform:none!important;flex-direction:column;padding:0 24px}.hcard{flex:none;min-height:0}}
+/* ===== scrub timeline ===== */
+.timeline{position:relative;max-width:760px;margin:0 auto;padding-left:54px}
+.tl-line{position:absolute;left:18px;top:6px;bottom:6px;width:2px;background:var(--line);overflow:hidden}
+.tl-line span{position:absolute;left:0;top:0;width:100%;height:0;background:linear-gradient(180deg,var(--accent),var(--accent-2))}
+.tl-step{position:relative;padding:0 0 52px}
+.tl-step:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:-45px;top:2px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--line);transition:border-color .3s,box-shadow .3s,background .3s}
+.tl-step.on .tl-dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 5px rgba(107,124,255,.18)}
+.tl-step h3{font-size:20px;margin-bottom:8px}
+.tl-step p{color:var(--muted);font-size:15.5px}
+.tl-step .k{font-size:12.5px;font-weight:600;color:var(--accent);margin-bottom:6px;display:block}
+/* ===== How it works: unique "x-ray" timeline ===== */
+.timeline.timeline-xray{padding-left:64px}
+.timeline.timeline-xray::before{content:"";position:absolute;inset:-18px -18px -18px -28px;border-radius:26px;background:radial-gradient(70% 80% at 20% 0%,rgba(107,124,255,.12),transparent 55%),radial-gradient(60% 70% at 75% 20%,rgba(79,209,224,.08),transparent 60%);border:1px solid rgba(255,255,255,.06);pointer-events:none}
+.timeline.timeline-xray .tl-top{position:sticky;top:84px;z-index:3;margin:0 0 20px -10px;padding:10px 10px 10px 0;display:flex;align-items:center;justify-content:flex-start;gap:12px;pointer-events:none}
+.timeline.timeline-xray .tl-readout{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px)}
+.timeline.timeline-xray .tl-readout .t{font-size:11.5px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+.timeline.timeline-xray .tl-readout .v{font-size:12.5px;color:var(--muted)}
+.timeline.timeline-xray .tl-readout b{color:var(--text);font-weight:600}
+.timeline.timeline-xray .tl-readout .dot{width:7px;height:7px;border-radius:50%;background:var(--accent-3);display:inline-block;box-shadow:0 0 0 0 rgba(79,209,224,.45);animation:tlblink 1.4s infinite}
+@keyframes tlblink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(79,209,224,.5)}50%{opacity:.45;box-shadow:0 0 0 7px rgba(79,209,224,0)}}
+.timeline.timeline-xray .tl-pulse{position:absolute;left:18px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,rgba(107,124,255,0),rgba(107,124,255,.25),rgba(79,209,224,0));filter:blur(.2px);opacity:.75}
+.timeline.timeline-xray .tl-scan{position:absolute;left:10px;right:10px;height:34px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(107,124,255,.10),rgba(79,209,224,.08),transparent);filter:blur(.1px);opacity:.55;transform:translateY(0)}
+.timeline.timeline-xray .tl-line{left:22px;top:10px;bottom:10px;width:2px;background:rgba(255,255,255,.08);border-radius:999px}
+.timeline.timeline-xray .tl-line .tl-glow{position:absolute;left:50%;transform:translateX(-50%);top:0;width:22px;height:0;border-radius:999px;background:radial-gradient(circle at 50% 10%,rgba(107,124,255,.35),rgba(107,124,255,0) 60%);filter:blur(6px);opacity:.9;pointer-events:none}
+.timeline.timeline-xray .tl-step{padding:18px 18px 56px 0}
+.timeline.timeline-xray .tl-step::before{content:"";position:absolute;left:-18px;right:0;top:-10px;bottom:20px;border-radius:18px;background:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.05);opacity:.0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease,border-color .35s ease,background .35s ease}
+.timeline.timeline-xray .tl-step.on::before{opacity:1;transform:translateY(0);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border-color:rgba(107,124,255,.22)}
+.timeline.timeline-xray .tl-dot{left:-49px;top:22px;width:18px;height:18px;background:var(--bg);border:2px solid rgba(255,255,255,.14)}
+.timeline.timeline-xray .tl-step.on .tl-dot{border-color:rgba(107,124,255,.9);background:linear-gradient(140deg,var(--accent),var(--accent-2));box-shadow:0 0 0 6px rgba(107,124,255,.14),0 0 24px rgba(107,124,255,.22)}
+.timeline.timeline-xray .tl-ghost{position:absolute;left:-6px;top:10px;font-size:42px;font-weight:600;letter-spacing:-.06em;color:rgba(255,255,255,.04);pointer-events:none}
+.timeline.timeline-xray .tl-chip{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px; font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+.timeline.timeline-xray .tl-step.on .tl-chip{color:rgba(255,255,255,.82);border-color:rgba(107,124,255,.25);background:rgba(107,124,255,.08)}
+.timeline.timeline-xray .k{color:var(--accent);opacity:.95}
+.timeline.timeline-xray h3{font-size:20px;letter-spacing:-.02em}
+.timeline.timeline-xray p{color:var(--muted)}
+@media(max-width:680px){.timeline.timeline-xray{padding-left:54px}.timeline.timeline-xray .tl-top{top:74px}}
+/* ===== clip-path wipe comparison ===== */
+.compare{position:relative;border-radius:var(--r-lg);border:1px solid var(--line);overflow:hidden;min-height:420px;background:var(--bg-2)}
+.compare .layer{position:absolute;inset:0;padding:46px;display:flex;flex-direction:column;justify-content:center}
+.compare .before{background:repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 12px,transparent 12px 24px),var(--bg-2)}
+.compare .after{background:radial-gradient(80% 90% at 50% 50%,rgba(107,124,255,.16),transparent 70%),var(--bg-2);clip-path:inset(0 100% 0 0)}
+.compare .tagx{display:inline-block;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:999px;margin-bottom:16px;width:max-content}
+.compare .before .tagx{background:rgba(255,255,255,.06);color:var(--muted)}
+.compare .after .tagx{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff}
+.compare h3{font-size:clamp(22px,3vw,34px);margin-bottom:12px;max-width:440px}
+.compare p{color:var(--muted);font-size:15.5px;max-width:420px}
+.compare .handle{position:absolute;top:0;bottom:0;left:0;width:2px;background:linear-gradient(180deg,transparent,var(--accent),transparent);box-shadow:0 0 16px var(--accent);z-index:3}
+.compare .handle::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:14px}
+/* ===== integrations parallax grid ===== */
+.integ{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;max-width:760px;margin:0 auto}
+.chip{aspect-ratio:1;border-radius:18px;background:var(--panel);border:1px solid var(--line-soft);display:grid;place-items:center;font-weight:600;font-size:13px;color:var(--muted);transition:border-color .3s,color .3s,transform .3s;will-change:transform}
+.chip:hover{border-color:rgba(107,124,255,.4);color:var(--text);transform:translateY(-4px)}
+.chip .d{width:22px;height:22px;border-radius:7px;background:linear-gradient(140deg,var(--accent),var(--accent-2));opacity:.85}
+@media(max-width:680px){.integ{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:440px){.integ{grid-template-columns:repeat(3,1fr)}}
+/* ===== FAQ ===== */
+.faq{max-width:780px;margin:0 auto}
+.qa{border-bottom:1px solid var(--line-soft)}
+.qa button{width:100%;text-align:left;background:none;border:none;color:var(--text);font-family:inherit;font-size:17px;font-weight:550;padding:22px 40px 22px 0;cursor:pointer;position:relative;letter-spacing:-.01em}
+.qa button::after{content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--accent);transition:transform .3s;font-weight:400}
+.qa.open button::after{transform:translateY(-50%) rotate(45deg)}
+.qa .a{max-height:0;overflow:hidden;transition:max-height .4s ease;color:var(--muted);font-size:15px}
+.qa .a p{padding:0 0 22px}
+/* ===== three.js hero canvas ===== */
+#bgGL{position:fixed;inset:0;width:100%;height:100%;z-index:-3;pointer-events:none;display:block}
+/* ===== compare split visuals ===== */
+.compare .layer{display:grid;grid-template-columns:1fr 1.05fr;gap:30px;align-items:center}
+.compare .layer .txt{min-width:0}
+.cv-card{background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:14px;padding:16px;backdrop-filter:blur(4px)}
+.cv-head{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--faint);margin-bottom:14px}
+.live-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--accent-3)}
+.live-badge .ld{width:7px;height:7px;border-radius:50%;background:var(--accent-3);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(79,209,224,.5)}50%{opacity:.4;box-shadow:0 0 0 6px rgba(79,209,224,0)}}
+.cv-card svg{display:block;width:100%}
+.flowmini{stroke:var(--accent);stroke-width:2;fill:none;stroke-dasharray:5 8;animation:flowmove 1.4s linear infinite}
+@keyframes flowmove{to{stroke-dashoffset:-26}}
+.pulsem{transform-box:fill-box;transform-origin:center;animation:pulsem 1.5s ease-in-out infinite}
+@keyframes pulsem{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.7);opacity:.45}}
+.spark .ln{fill:none;stroke:url(#sgrad);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:7 7;animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-14}}
+.stale{filter:grayscale(.8);opacity:.62}
+.bars2{display:flex;align-items:flex-end;gap:7px;height:64px;margin-bottom:6px}
+.bars2 span{flex:1;background:rgba(255,255,255,.16);border-radius:4px 4px 0 0}
+.prog{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:14px}
+.prog i{display:block;height:100%;width:42%;background:rgba(255,255,255,.28)}
+@media(max-width:760px){.compare .layer{grid-template-columns:1fr;gap:20px}.compare .layer .cv{display:none}}
+/* ===== kinetic typography fixed ===== */
+.kinetic{padding:128px 0;overflow:hidden}
+.kinetic .lines{text-align:center}
+.kinetic .line{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:0;
+width:auto!important;
+max-width:none!important;
+font-size:clamp(46px,13.5vw,184px);
+font-weight:700;
+line-height:.9;
+letter-spacing:-.045em;
+text-transform:uppercase;
+perspective:700px;
+border:0!important;
+outline:0!important;
+box-shadow:none!important;
+background:transparent!important;
+}
+.kinetic .line::before,
+.kinetic .line::after,
+.kinetic .line.outline::before,
+.kinetic .line.outline::after{
+content:none!important;
+display:none!important;
+}
+.kinetic .line .ch{
+display:inline-block;
+transform-style:preserve-3d;
+will-change:transform,opacity;
+border:0!important;
+outline:0!important;
+box-shadow:none!important;
+background:transparent!important;
+}
+.kinetic .line.fill .ch{
+background:linear-gradient(100deg,#8e7bff,#6b7cff 40%,#4fd1e0);
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+}
+.kinetic .line.outline .ch{
+color:transparent;
+-webkit-text-stroke:1.6px rgba(255,255,255,.32);
+}
+.kinetic .line.solid .ch{color:var(--text)}
+.vmarq{margin-top:48px;overflow:hidden;white-space:nowrap;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:18px 0}
+.vtrack{display:inline-flex;gap:0;will-change:transform}
+.vtrack span{font-size:clamp(18px,2.4vw,30px);font-weight:600;letter-spacing:-.01em;color:var(--muted);padding:0 26px;display:inline-flex;align-items:center;gap:26px}
+.vtrack span::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.vtrack span.hl{color:var(--text)}
+/* ===== particle text canvas ===== */
+.particles{padding:120px 0;text-align:center}
+.stage{position:relative;height:400px;max-width:1000px;margin:0 auto}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage .fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:clamp(54px,15vw,180px);font-weight:800;letter-spacing:-.04em}
+.no-js .stage canvas{display:none}
+.no-js .stage .fallback{display:flex}
+.particles .hint{margin-top:20px;font-size:13px;color:var(--faint)}
+.reveal{opacity:0;transform:translateY(26px)}
+.no-js .reveal{opacity:1;transform:none}
+.no-js .compare .after{clip-path:none}
+.no-js .compare .handle{display:none}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* 3D Transform utilities */
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="">
+    <canvas id="bgGL" width="3024" height="1636" style="width: 1512px; height: 818px;" class=""></canvas>
+    <div class="bg-fx"></div>
+    <div class="grid-bg"></div>
+
+    <!-- NAV -->
+    <header id="header" class="">
+      <div class="wrap">
+        <nav class="">
+          <div class="logo">
+            <span class="mark"></span>
+            Nebula
+          </div>
+          <div class="nav-links">
+            <a href="#platform">Platform</a>
+            <a href="#schema">Architecture</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#testimonials">Customers</a>
+          </div>
+          <div class="nav-cta">
+            <a href="#" class="btn btn-ghost ghost-hide">Sign in</a>
+            <a href="#cta" class="btn btn-primary">Get started</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="badge reveal">
+          <b>New</b>
+          Real-time AI agents in Nebula 3.0
+        </div>
+        <h1 class="reveal">
+          The everything platform
+          <br>
+          for your
+          <span class="grad-text">data teams</span>
+        </h1>
+        <p class="lead reveal">
+          Nebula ingests, models, and acts on your events in real time — an
+          all-in-one replacement for the dozen dashboards your team juggles
+          today.
+        </p>
+        <div class="hero-cta reveal">
+          <a href="#cta" class="btn btn-primary">Start for free</a>
+          <a href="#schema" class="btn btn-ghost">See how it works</a>
+        </div>
+        <div class="hero-note reveal">
+          Free for small teams · SOC 2 Type II · 99.99% uptime
+        </div>
+
+        <div class="shot reveal" id="shot">
+          <div class="frame">
+            <div class="frame-bar">
+              <i></i>
+              <i></i>
+              <i class=""></i>
+              <span>app.nebula.io / overview</span>
+            </div>
+            <div class="app">
+              <div class="app-side">
+                <div class="grp">Workspace</div>
+                <div class="it on">
+                  <span class="d"></span>
+                  Overview
+                </div>
+                <div class="it">
+                  <span class="d"></span>
+                  Pipelines
+                </div>
+                <div class="it">
+                  <span class="d"></span>
+                  Models
+                </div>
+                <div class="grp">Intelligence</div>
+                <div class="it">
+                  <span class="d"></span>
+                  AI Agents
+                </div>
+                <div class="it">
+                  <span class="d"></span>
+                  Alerts
+                </div>
+                <div class="it">
+                  <span class="d"></span>
+                  Settings
+                </div>
+              </div>
+              <div class="app-main">
+                <div class="kpis">
+                  <div class="kpi">
+                    <div class="lab">Events / sec</div>
+                    <div class="val" data-count="184000">
+                      0
+                      <small>▲ 12%</small>
+                    </div>
+                  </div>
+                  <div class="kpi">
+                    <div class="lab">Active models</div>
+                    <div class="val" data-count="37">
+                      0
+                      <small>live</small>
+                    </div>
+                  </div>
+                  <div class="kpi">
+                    <div class="lab">Anomalies (24h)</div>
+                    <div class="val" data-count="912">
+                      0
+                      <small>caught</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart">
+                  <svg viewBox="0 0 600 150" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#6b7cff" stop-opacity=".35"></stop>
+                        <stop offset="100%" stop-color="#6b7cff" stop-opacity="0"></stop>
+                      </linearGradient>
+                      <linearGradient id="lineG" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#8e7bff"></stop>
+                        <stop offset="100%" stop-color="#4fd1e0"></stop>
+                      </linearGradient>
+                    </defs>
+                    <path id="areaPath" d="M0,120 C60,90 90,60 150,80 C220,103 250,40 320,55 C390,70 420,30 480,42 C540,52 570,70 600,60 L600,150 L0,150 Z" fill="url(#areaG)" opacity="0"></path>
+                    <path id="linePath" d="M0,120 C60,90 90,60 150,80 C220,103 250,40 320,55 C390,70 420,30 480,42 C540,52 570,70 600,60" stroke="url(#lineG)" stroke-width="2" fill="none" style="stroke-dashoffset: 622px; stroke-dasharray: 622.341;"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOGOS -->
+    <div class="logos">
+      <div class="wrap"><p class="reveal">Trusted by data teams at</p></div>
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>Northwind</span>
+          <span>Quantel</span>
+          <span class="">Lumen Labs</span>
+          <span>Vertex</span>
+          <span>Polaris</span>
+          <span>Driftwood</span>
+          <span>Halcyon</span>
+          <span>Apex Grid</span>
+          <span>Northwind</span>
+          <span>Quantel</span>
+          <span>Lumen Labs</span>
+          <span>Vertex</span>
+          <span>Polaris</span>
+          <span>Driftwood</span>
+          <span>Halcyon</span>
+          <span>Apex Grid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANIFESTO (word-highlight scrub) -->
+    <section class="manifesto" id="manifesto">
+      <div class="wrap">
+        <span class="eyebrow reveal">Why Nebula</span>
+        <p class="big" id="manifestoText"><span class="w" style="color: rgb(244, 245, 247);">Most</span> <span class="w" style="color: rgb(244, 245, 247);">teams</span> <span class="w" style="color: rgb(244, 245, 247);">drown</span> <span class="w" style="color: rgb(244, 245, 247);">in</span> <span class="w" style="color: rgb(244, 245, 247);">dashboards</span> <span class="w" style="color: rgb(244, 245, 247);">that</span> <span class="w" style="color: rgb(244, 245, 247);">only</span> <span class="w" style="color: rgb(244, 245, 247);">tell</span> <span class="w" style="color: rgb(244, 245, 247);">them</span> <span class="w" style="color: rgb(244, 245, 247);">what</span> <span class="w" style="color: rgb(244, 245, 247);">already</span> <span class="w" style="color: rgb(244, 245, 247);">went</span> <span class="w" style="color: rgb(244, 245, 247);">wrong.</span> <span class="w" style="color: rgb(244, 245, 247);">Nebula</span> <span class="w" style="color: rgb(244, 245, 247);">flips</span> <span class="w" style="color: rgb(244, 245, 247);">that</span> <span class="w" style="color: rgb(244, 245, 247);">—</span> <span class="w" style="color: rgb(244, 245, 247);">it</span> <span class="w" style="color: rgb(244, 245, 247);">watches</span> <span class="w" style="color: rgb(244, 245, 247);">every</span> <span class="w" style="color: rgb(244, 245, 247);">signal</span> <span class="w" style="color: rgb(244, 245, 247);">in</span> <span class="w" style="color: rgb(244, 245, 247);">real</span> <span class="w" style="color: rgb(244, 245, 247);">time,</span> <span class="w" style="color: rgb(244, 245, 247);">finds</span> <span class="w" style="color: rgb(244, 245, 247);">the</span> <span class="w" style="color: rgb(244, 245, 247);">cause,</span> <span class="w" style="color: rgb(244, 245, 247);">and</span> <span class="w" style="color: rgb(244, 245, 247);">acts</span> <span class="w" style="color: rgb(244, 245, 247);">before</span> <span class="w" style="color: rgb(244, 245, 247);">the</span> <span class="w" style="color: rgb(244, 245, 247);">damage</span> <span class="w" style="color: rgb(244, 245, 247);">is</span> <span class="w" style="color: rgb(244, 245, 247);">done.</span></p>
+      </div>
+    </section>
+
+    <!-- ALTERNATING FEATURE ROWS -->
+    <section class="section" id="platform">
+      <div class="wrap">
+        <div class="row reveal">
+          <div class="copy">
+            <span class="eyebrow">Unmatched throughput</span>
+            <h2 class="">Real-time data, the moment it happens</h2>
+            <p class="">
+              Connect any source and Nebula ingests millions of events per
+              second with sub-second latency and zero dropped records — no batch
+              windows, no waiting.
+            </p>
+            <ul class="ticks">
+              <li class="">
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                <span class="">
+                  <b class="">Streaming ingestion.</b>
+                  Kafka, Kinesis, webhooks, and CDC out of the box.
+                </span>
+              </li>
+              <li class="">
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                <span class="">
+                  <b class="">Exactly-once.</b>
+                  Every event lands once, in order, guaranteed.
+                </span>
+              </li>
+              <li class="">
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                <span class="">
+                  <b class="">Auto-detected schemas.</b>
+                  Version-controlled and replayable.
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="visual">
+            <div class="mini">
+              <div class="bar">
+                <span class="dot"></span>
+                <span class="t">
+                  Stripe events
+                  <small>1.2M / min</small>
+                </span>
+                <span class="pill">live</span>
+              </div>
+              <div class="bar">
+                <span class="dot v"></span>
+                <span class="t">
+                  Product telemetry
+                  <small>840K / min</small>
+                </span>
+                <span class="pill">live</span>
+              </div>
+              <div class="bar">
+                <span class="dot c"></span>
+                <span class="t">
+                  Warehouse sync
+                  <small>Snowflake · BigQuery</small>
+                </span>
+                <span class="pill">live</span>
+              </div>
+              <div class="bars">
+                <span style="height:40%"></span>
+                <span style="height:65%"></span>
+                <span style="height:50%"></span>
+                <span style="height:82%"></span>
+                <span style="height:60%"></span>
+                <span style="height:95%"></span>
+                <span style="height:72%"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row flip reveal">
+          <div class="copy">
+            <span class="eyebrow">Autonomous agents</span>
+            <h2>Dashboards that act, not just report</h2>
+            <p class="">
+              Deploy AI agents that monitor metrics, diagnose anomalies, and
+              trigger workflows on their own — turning your dashboards from a
+              rear-view mirror into a co-pilot.
+            </p>
+            <ul class="ticks">
+              <li class="">
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                <span class="">
+                  <b>Continuous monitoring.</b>
+                  Agents watch every metric, around the clock.
+                </span>
+              </li>
+              <li class="">
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                <span class="">
+                  <b>Root-cause in seconds.</b>
+                  Anomalies traced to the exact dimension.
+                </span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                <span>
+                  <b>Act automatically.</b>
+                  Page on-call, open a ticket, or run a playbook.
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="visual">
+            <div class="mini">
+              <div class="bar">
+                <span class="dot c"></span>
+                <span class="t">
+                  Agent · Revenue Watch
+                  <small class="">Detected −9.2% checkout conversion</small>
+                </span>
+                <span class="pill">resolved</span>
+              </div>
+              <div class="bar">
+                <span class="dot v"></span>
+                <span class="t">
+                  Root cause
+                  <small class="">EU region · payment latency ↑</small>
+                </span>
+              </div>
+              <div class="bar">
+                <span class="dot"></span>
+                <span class="t">
+                  Action taken
+                  <small class="">Paged on-call · opened incident #482</small>
+                </span>
+              </div>
+              <div class="bar">
+                <span class="dot c"></span>
+                <span class="t">
+                  Notified #data-alerts
+                  <small class="">2.1s after anomaly</small>
+                </span>
+                <span class="pill">auto</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PINNED HORIZONTAL MODULES -->
+    <section class="relative w-full bg-[#0B0C10] text-white py-24 lg:py-32 overflow-hidden" id="modules">
+      <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+        .bg-grid-pattern { background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px; }
+      </style>
+
+      <!-- Ambient Background Glow -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div class="max-w-[1512px] mx-auto px-6 lg:px-12 relative z-10">
+        <!-- Header -->
+        <div class="mb-16 md:mb-24 max-w-2xl">
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-medium mb-6 border border-indigo-500/20">
+            <i data-lucide="route" class="w-4 h-4"></i>
+            The workflow
+          </span>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-white mb-6">
+            One platform, every stage
+          </h2>
+          <p class="text-lg md:text-xl text-gray-400 font-light leading-relaxed m-0">
+            Scroll across the full journey your data takes inside Nebula.
+          </p>
+        </div>
+
+        <!-- Horizontal Scroll Section -->
+        <div class="relative w-full">
+          <!-- Continuous Connection Line (Background) -->
+          <div class="absolute top-[130px] left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent hidden lg:block"></div>
+
+          <!-- Scroll Container -->
+          <div class="flex overflow-x-auto gap-6 lg:gap-8 pb-12 pt-4 snap-x snap-mandatory hide-scrollbar items-stretch pr-[10vw]">
+            <!-- CARD 1: Connect -->
+            <div class="snap-start shrink-0 w-[85vw] sm:w-[400px] flex flex-col group relative bg-[#13151A] rounded-[24px] p-8 border border-white/5 hover:border-white/10 hover:bg-[#16181D] transition-all duration-500 shadow-lg shadow-black/50 overflow-hidden">
+              <div class="absolute -top-8 -right-6 text-[160px] font-semibold text-white/[0.02] pointer-events-none group-hover:text-indigo-500/[0.04] transition-colors leading-none tracking-tighter z-0">
+                01
+              </div>
+
+              <div class="relative z-10 flex flex-col h-full">
+                <!-- Custom Mini UI -->
+                <div class="h-56 w-full bg-[#0B0C10] rounded-xl border border-white/10 p-5 flex flex-col gap-4 relative overflow-hidden mb-8 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                  <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 blur-[40px] pointer-events-none"></div>
+
+                  <!-- Source 1 -->
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm shadow-sm group/item">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                        <i data-lucide="database" class="w-4 h-4"></i>
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium text-white/90">
+                          PostgreSQL
+                        </div>
+                        <div class="text-[11px] font-light text-emerald-400 mt-0.5 flex items-center gap-1">
+                          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                          Syncing
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Custom Toggle ON -->
+                    <div class="w-10 h-5.5 bg-indigo-500 rounded-full flex items-center px-0.5 justify-end shadow-inner cursor-pointer">
+                      <div class="w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                    </div>
+                  </div>
+
+                  <!-- Source 2 -->
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm shadow-sm">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-md bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                        <i data-lucide="webhook" class="w-4 h-4"></i>
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium text-white/90">
+                          Stripe Events
+                        </div>
+                        <div class="text-[11px] font-light text-gray-500 mt-0.5">
+                          Idle
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Custom Toggle OFF -->
+                    <div class="w-10 h-5.5 bg-white/10 rounded-full flex items-center px-0.5 justify-start shadow-inner cursor-pointer">
+                      <div class="w-4 h-4 bg-gray-400 rounded-full shadow-sm"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 class="text-2xl font-medium tracking-tight text-white mb-3">
+                  Connect
+                </h3>
+                <p class="text-sm font-light text-gray-400 leading-relaxed m-0">
+                  One-click connectors for streams and warehouses. Schemas
+                  auto-detected and versioned.
+                </p>
+              </div>
+            </div>
+
+            <!-- CARD 2: Model -->
+            <div class="snap-start shrink-0 w-[85vw] sm:w-[400px] flex flex-col group relative bg-[#13151A] rounded-[24px] p-8 border border-white/5 hover:border-white/10 hover:bg-[#16181D] transition-all duration-500 shadow-lg shadow-black/50 overflow-hidden">
+              <div class="absolute -top-8 -right-6 text-[160px] font-semibold text-white/[0.02] pointer-events-none group-hover:text-indigo-500/[0.04] transition-colors leading-none tracking-tighter z-0">
+                02
+              </div>
+
+              <div class="relative z-10 flex flex-col h-full">
+                <!-- Custom Mini UI -->
+                <div class="h-56 w-full bg-grid-pattern bg-[#0B0C10] rounded-xl border border-white/10 p-5 flex items-center justify-center relative mb-8 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] overflow-hidden">
+                  <div class="absolute inset-0 bg-gradient-to-b from-[#0B0C10]/10 to-[#0B0C10] pointer-events-none"></div>
+
+                  <div class="relative z-10 flex items-center gap-3 w-full justify-center">
+                    <!-- Nodes Left -->
+                    <div class="flex flex-col gap-4">
+                      <div class="flex items-center gap-3 px-3 py-2 bg-white/5 border border-white/10 rounded-lg shadow-sm">
+                        <i data-lucide="table" class="w-4 h-4 text-gray-400"></i>
+                        <div class="h-1.5 w-10 bg-white/20 rounded-full"></div>
+                      </div>
+                      <div class="flex items-center gap-3 px-3 py-2 bg-white/5 border border-white/10 rounded-lg shadow-sm">
+                        <i data-lucide="table" class="w-4 h-4 text-gray-400"></i>
+                        <div class="h-1.5 w-14 bg-white/20 rounded-full"></div>
+                      </div>
+                    </div>
+
+                    <!-- Line Connector -->
+                    <div class="flex flex-col items-center relative">
+                      <div class="absolute w-16 h-px bg-gradient-to-r from-gray-600 to-indigo-500 top-1/2 -translate-y-1/2 -z-10"></div>
+                      <div class="absolute w-16 h-px bg-gradient-to-r from-gray-600 to-indigo-500 top-1/2 -translate-y-[120%] rotate-45 origin-left -z-10"></div>
+                      <div class="absolute w-16 h-px bg-gradient-to-r from-gray-600 to-indigo-500 top-1/2 translate-y-[120%] -rotate-45 origin-left -z-10"></div>
+                    </div>
+
+                    <div class="w-4"></div>
+                    <!-- Spacer for lines -->
+
+                    <!-- Node Right -->
+                    <div class="p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-xl shadow-[0_0_25px_rgba(99,102,241,0.15)] group-hover:shadow-[0_0_30px_rgba(99,102,241,0.25)] transition-shadow bg-backdrop-blur-md relative">
+                      <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-indigo-500 border-2 border-[#13151A]"></div>
+                      <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="layers" class="w-4 h-4 text-indigo-400"></i>
+                        <span class="text-xs font-medium text-indigo-300 tracking-wide">
+                          Semantic
+                        </span>
+                      </div>
+                      <div class="flex flex-col gap-2">
+                        <div class="h-1.5 w-16 bg-indigo-400/50 rounded-full"></div>
+                        <div class="h-1.5 w-12 bg-indigo-400/30 rounded-full"></div>
+                        <div class="h-1.5 w-20 bg-indigo-400/30 rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 class="text-2xl font-medium tracking-tight text-white mb-3">
+                  Model
+                </h3>
+                <p class="text-sm font-light text-gray-400 leading-relaxed m-0">
+                  Define metrics once in a governed semantic layer — or let AI
+                  propose them for you.
+                </p>
+              </div>
+            </div>
+
+            <!-- CARD 3: Observe -->
+            <div class="snap-start shrink-0 w-[85vw] sm:w-[400px] flex flex-col group relative bg-[#13151A] rounded-[24px] p-8 border border-white/5 hover:border-white/10 hover:bg-[#16181D] transition-all duration-500 shadow-lg shadow-black/50 overflow-hidden">
+              <div class="absolute -top-8 -right-6 text-[160px] font-semibold text-white/[0.02] pointer-events-none group-hover:text-indigo-500/[0.04] transition-colors leading-none tracking-tighter z-0">
+                03
+              </div>
+
+              <div class="relative z-10 flex flex-col h-full">
+                <!-- Custom Mini UI -->
+                <div class="h-56 w-full bg-[#0B0C10] rounded-xl border border-white/10 p-5 flex flex-col justify-end gap-1 relative overflow-hidden mb-8 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                  <!-- Header Metric -->
+                  <div class="absolute top-5 left-5 flex gap-3 items-baseline">
+                    <div class="text-3xl font-semibold tracking-tight text-white">
+                      24.8k
+                    </div>
+                    <div class="text-sm font-medium text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
+                      +12%
+                    </div>
+                  </div>
+
+                  <!-- Animated Bar Chart UI -->
+                  <div class="w-full h-28 flex items-end justify-between gap-1.5 px-1 relative z-10">
+                    <div class="w-full bg-white/5 rounded-t-sm group-hover:h-[40%] transition-all duration-700 ease-out" style="height: 30%"></div>
+                    <div class="w-full bg-white/5 rounded-t-sm group-hover:h-[55%] transition-all duration-700 delay-75 ease-out" style="height: 45%"></div>
+                    <div class="w-full bg-white/5 rounded-t-sm group-hover:h-[35%] transition-all duration-700 delay-100 ease-out" style="height: 25%"></div>
+
+                    <div class="w-full bg-indigo-500/80 rounded-t-sm shadow-[0_0_15px_rgba(99,102,241,0.5)] relative cursor-pointer group/bar group-hover:h-[90%] transition-all duration-700 delay-150 ease-out" style="height: 75%">
+                      <!-- Custom Tooltip Dropdown -->
+                      <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-[#0B0C10] text-[10px] font-semibold px-2.5 py-1.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity shadow-lg flex flex-col items-center">
+                        Peak
+                        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45"></div>
+                      </div>
+                    </div>
+
+                    <div class="w-full bg-white/5 rounded-t-sm group-hover:h-[65%] transition-all duration-700 delay-200 ease-out" style="height: 55%"></div>
+                    <div class="w-full bg-white/5 rounded-t-sm group-hover:h-[50%] transition-all duration-700 delay-300 ease-out" style="height: 40%"></div>
+                    <div class="w-full bg-white/5 rounded-t-sm group-hover:h-[70%] transition-all duration-700 delay-100 ease-out" style="height: 60%"></div>
+                  </div>
+                  <div class="w-full h-px bg-white/10 mt-1"></div>
+                </div>
+
+                <h3 class="text-2xl font-medium tracking-tight text-white mb-3">
+                  Observe
+                </h3>
+                <p class="text-sm font-light text-gray-400 leading-relaxed m-0">
+                  Live dashboards refresh sub-second, so the number you see is
+                  the number right now.
+                </p>
+              </div>
+            </div>
+
+            <!-- CARD 4: Detect -->
+            <div class="snap-start shrink-0 w-[85vw] sm:w-[400px] flex flex-col group relative bg-[#13151A] rounded-[24px] p-8 border border-white/5 hover:border-white/10 hover:bg-[#16181D] transition-all duration-500 shadow-lg shadow-black/50 overflow-hidden">
+              <div class="absolute -top-8 -right-6 text-[160px] font-semibold text-white/[0.02] pointer-events-none group-hover:text-indigo-500/[0.04] transition-colors leading-none tracking-tighter z-0">
+                04
+              </div>
+
+              <div class="relative z-10 flex flex-col h-full">
+                <!-- Custom Mini UI -->
+                <div class="h-56 w-full bg-[#0B0C10] rounded-xl border border-white/10 p-5 flex items-center justify-center relative overflow-hidden mb-8 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                  <!-- Radar Rings -->
+                  <div class="absolute w-72 h-72 border border-red-500/5 rounded-full pointer-events-none"></div>
+                  <div class="absolute w-52 h-52 border border-red-500/10 rounded-full pointer-events-none"></div>
+                  <div class="absolute w-32 h-32 border border-red-500/20 rounded-full group-hover:animate-ping pointer-events-none duration-1000"></div>
+                  <div class="absolute w-12 h-12 bg-red-500/10 rounded-full blur-md pointer-events-none"></div>
+
+                  <!-- AI Alert Modal UI -->
+                  <div class="relative z-10 bg-[#13151A]/90 border border-red-500/30 backdrop-blur-xl rounded-xl p-4 w-[90%] shadow-[0_8px_30px_rgba(239,68,68,0.15)] group-hover:-translate-y-1 transition-transform duration-500">
+                    <div class="flex items-start gap-3.5">
+                      <div class="mt-0.5 w-8 h-8 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 text-red-400"></i>
+                      </div>
+                      <div class="flex-1">
+                        <div class="text-sm font-medium text-white mb-1">
+                          Anomaly Detected
+                        </div>
+                        <div class="text-[11px] font-light text-gray-400 leading-relaxed">
+                          Conversions dropped
+                          <span class="text-red-400 font-medium">9.2%</span>
+                          outside expected variance bounds.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 class="text-2xl font-medium tracking-tight text-white mb-3">
+                  Detect
+                </h3>
+                <p class="text-sm font-light text-gray-400 leading-relaxed m-0">
+                  AI agents flag anomalies with no static thresholds — and trace
+                  them to the exact cause.
+                </p>
+              </div>
+            </div>
+
+            <!-- CARD 5: Act -->
+            <div class="snap-start shrink-0 w-[85vw] sm:w-[400px] flex flex-col group relative bg-[#13151A] rounded-[24px] p-8 border border-white/5 hover:border-white/10 hover:bg-[#16181D] transition-all duration-500 shadow-lg shadow-black/50 overflow-hidden">
+              <div class="absolute -top-8 -right-6 text-[160px] font-semibold text-white/[0.02] pointer-events-none group-hover:text-indigo-500/[0.04] transition-colors leading-none tracking-tighter z-0">
+                05
+              </div>
+
+              <div class="relative z-10 flex flex-col h-full">
+                <!-- Custom Mini UI -->
+                <div class="h-56 w-full bg-[#0B0C10] rounded-xl border border-white/10 p-5 flex flex-col items-center justify-center relative overflow-hidden mb-8 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                  <!-- Background Grid -->
+                  <div class="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
+
+                  <!-- Workflow Trigger Node -->
+                  <div class="bg-white/5 border border-white/10 rounded-full px-5 py-2.5 flex items-center gap-3 w-3/4 z-10 backdrop-blur-md shadow-sm">
+                    <div class="w-5 h-5 rounded-full bg-yellow-400/20 flex items-center justify-center shrink-0">
+                      <i data-lucide="zap" class="w-3 h-3 text-yellow-400"></i>
+                    </div>
+                    <span class="text-xs font-medium text-white/90">
+                      On Anomaly
+                    </span>
+                  </div>
+
+                  <!-- Flow Lines container -->
+                  <div class="relative w-full h-10 flex justify-center -my-1 z-0">
+                    <!-- Main line down -->
+                    <div class="w-px h-full bg-gradient-to-b from-white/20 to-transparent"></div>
+                    <!-- Fork lines -->
+                    <div class="absolute top-1/2 left-[30%] right-[30%] h-px bg-white/20"></div>
+                    <div class="absolute top-1/2 left-[30%] w-px h-1/2 bg-gradient-to-b from-white/20 to-blue-500/50"></div>
+                    <div class="absolute top-1/2 right-[30%] w-px h-1/2 bg-gradient-to-b from-white/20 to-emerald-500/50"></div>
+                  </div>
+
+                  <!-- Action Nodes -->
+                  <div class="flex gap-10 z-10 w-full justify-center px-4">
+                    <!-- Action 1 -->
+                    <div class="bg-[#13151A] border border-white/10 rounded-lg p-3 flex flex-col items-center gap-2 shadow-lg group-hover:-translate-y-1 transition-transform delay-75">
+                      <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                        <i data-lucide="ticket" class="w-4 h-4 text-blue-400"></i>
+                      </div>
+                      <span class="text-[10px] font-medium text-gray-400">
+                        Create Ticket
+                      </span>
+                    </div>
+
+                    <!-- Action 2 -->
+                    <div class="bg-[#13151A] border border-white/10 rounded-lg p-3 flex flex-col items-center gap-2 shadow-lg group-hover:-translate-y-1 transition-transform delay-150">
+                      <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                        <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+                      </div>
+                      <span class="text-[10px] font-medium text-gray-400">
+                        Notify Slack
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 class="text-2xl font-medium tracking-tight text-white mb-3">
+                  Act
+                </h3>
+                <p class="text-sm font-light text-gray-400 leading-relaxed m-0">
+                  Trigger playbooks, page on-call, or post to Slack —
+                  automatically, the moment it matters.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURE GRID -->
+    <section class="section" style="padding-top:40px">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">One platform</span>
+          <h2 class="">Everything your data stack does, unified</h2>
+          <p class="">
+            Ingestion, modeling, alerting, automation — observable in real time,
+            in one clean workspace.
+          </p>
+        </div>
+        <div class="grid6">
+          <div class="cell reveal">
+            <div class="ico">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 12h4l3 8 4-16 3 8h4"></path>
+              </svg>
+            </div>
+            <h3>Semantic layer</h3>
+            <p>
+              Define a metric once and reuse it everywhere — every chart and
+              agent speaks the same language.
+            </p>
+          </div>
+          <div class="cell reveal">
+            <div class="ico">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+              </svg>
+            </div>
+            <h3>Live dashboards</h3>
+            <p>
+              Sub-second, always-fresh views your whole team can read at a
+              glance.
+            </p>
+          </div>
+          <div class="cell reveal">
+            <div class="ico">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
+            <h3>AI agents</h3>
+            <p>
+              Autonomous monitoring, diagnosis, and action across every metric.
+            </p>
+          </div>
+          <div class="cell reveal">
+            <div class="ico">
+              <svg viewBox="0 0 24 24">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"></path>
+              </svg>
+            </div>
+            <h3>Smart alerting</h3>
+            <p>
+              Anomaly detection with no static thresholds and near-zero noise.
+            </p>
+          </div>
+          <div class="cell reveal">
+            <div class="ico">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3>Enterprise security</h3>
+            <p>SOC 2 Type II, E2E encryption, RBAC, and region pinning.</p>
+          </div>
+          <div class="cell reveal">
+            <div class="ico">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 17l6-6-6-6M12 19h8"></path>
+              </svg>
+            </div>
+            <h3>Developer API</h3>
+            <p>
+              Everything in the UI, available via a clean, typed API and SDKs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KINETIC TYPOGRAPHY -->
+    <section class="kinetic" id="kinetic">
+      <div class="wrap">
+        <div class="lines">
+          <div class="line fill" data-split="Ingest" aria-label="Ingest"><span class="ch">I</span><span class="ch">n</span><span class="ch">g</span><span class="ch">e</span><span class="ch">s</span><span class="ch">t</span></div>
+          <div class="line outline" data-split="Model" aria-label="Model"><span class="ch">M</span><span class="ch">o</span><span class="ch">d</span><span class="ch">e</span><span class="ch">l</span></div>
+          <div class="line solid" data-split="Act" aria-label="Act"><span class="ch">A</span><span class="ch">c</span><span class="ch">t</span></div>
+        </div>
+      </div>
+
+      <div class="vmarq">
+        <div class="vtrack" id="vtrack">
+          <span>Real-time</span>
+          <span class="hl">Autonomous</span>
+          <span>Observable</span>
+          <span>Governed</span>
+          <span class="hl">Sub-second</span>
+          <span>Replayable</span>
+          <span>Real-time</span>
+          <span class="hl">Autonomous</span>
+          <span>Observable</span>
+          <span>Governed</span>
+          <span class="hl">Sub-second</span>
+          <span>Replayable</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEMA -->
+    <section class="section" id="schema">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 class="">From source to decision in milliseconds</h2>
+          <p>
+            Every stage of the pipeline is observable, replayable, and governed.
+          </p>
+        </div>
+
+        <div class="schema-wrap reveal" style="padding:38px">
+          <svg class="schema-svg" id="schemaSvg" viewBox="0 0 1100 420" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;margin:0 auto">
+            <defs>
+              <radialGradient id="nodeg" cx="50%" cy="30%" r="75%">
+                <stop offset="0%" stop-color="#161922"></stop>
+                <stop offset="100%" stop-color="#0d0f14"></stop>
+              </radialGradient>
+            </defs>
+
+            <g id="paths" fill="none">
+              <path class="flow" id="p1" d="M190,120 C280,120 300,210 390,210" style="stroke-dashoffset: 225px; stroke-dasharray: 224.633;"></path>
+              <path class="flow" id="p2" d="M190,300 C280,300 300,210 390,210" style="stroke-dashoffset: 225px; stroke-dasharray: 224.633;"></path>
+              <path class="flow" id="p3" d="M620,210 C700,210 720,120 800,120" style="stroke-dashoffset: 207px; stroke-dasharray: 206.727;"></path>
+              <path class="flow" id="p4" d="M620,210 C700,210 720,300 800,300" style="stroke-dashoffset: 207px; stroke-dasharray: 206.727;"></path>
+              <path class="flow" id="p5" d="M505,272 L505,330" style="stroke-dashoffset: 58px; stroke-dasharray: 58;"></path>
+            </g>
+            <g fill="none">
+              <path class="flow-dash" d="M190,120 C280,120 300,210 390,210" style="stroke-dashoffset: 225px; stroke-dasharray: 49.4193, 175.214;"></path>
+              <path class="flow-dash" d="M190,300 C280,300 300,210 390,210" style="stroke-dashoffset: 225px; stroke-dasharray: 49.4193, 175.214;"></path>
+              <path class="flow-dash" d="M620,210 C700,210 720,120 800,120" style="stroke-dashoffset: 207px; stroke-dasharray: 45.4799, 161.247;"></path>
+              <path class="flow-dash" d="M620,210 C700,210 720,300 800,300" style="stroke-dashoffset: 207px; stroke-dasharray: 45.4799, 161.247;"></path>
+              <path class="flow-dash" d="M505,272 L505,330" style="stroke-dashoffset: 58px; stroke-dasharray: 12.76, 45.24;"></path>
+            </g>
+
+            <g class="snode" transform="matrix(0.9,0,0,0.9,47.5,93)" style=" transform-origin: 0px 0px;" data-svg-origin="75 30">
+              <rect width="150" height="60" rx="13" fill="url(#nodeg)" stroke="rgba(255,255,255,.1)"></rect>
+              <circle cx="26" cy="30" r="6" fill="#6b7cff"></circle>
+              <text class="node-label" x="44" y="27">Event streams</text>
+              <text class="node-sub" x="44" y="43">Kafka · Kinesis</text>
+            </g>
+            <g class="snode" transform="matrix(0.9,0,0,0.9,47.5,273)" style=" transform-origin: 0px 0px;" data-svg-origin="75 30">
+              <rect width="150" height="60" rx="13" fill="url(#nodeg)" stroke="rgba(255,255,255,.1)"></rect>
+              <circle cx="26" cy="30" r="6" fill="#6b7cff"></circle>
+              <text class="node-label" x="44" y="27">Warehouses</text>
+              <text class="node-sub" x="44" y="43">Snowflake · BQ</text>
+            </g>
+
+            <g class="snode" transform="matrix(0.9,0,0,0.9,401.5,165)" style=" transform-origin: 0px 0px;" data-svg-origin="115 50">
+              <rect width="230" height="100" rx="16" fill="url(#nodeg)" stroke="rgba(107,124,255,.45)"></rect>
+              <rect width="230" height="100" rx="16" fill="none" stroke="#6b7cff" stroke-opacity="0" id="coreGlow"></rect>
+              <text class="node-label" x="115" y="40" text-anchor="middle" style="font-size:15px">
+                Nebula Engine
+              </text>
+              <text class="node-sub" x="115" y="60" text-anchor="middle">
+                Semantic layer · AI agents
+              </text>
+              <text class="node-sub" x="115" y="76" text-anchor="middle">
+                stream processing
+              </text>
+              <circle class="pulse" cx="202" cy="22" r="4.5" fill="#4fd1e0"></circle>
+            </g>
+
+            <g class="snode" transform="matrix(0.9,0,0,0.9,808,93)" style=" transform-origin: 0px 0px;" data-svg-origin="80 30">
+              <rect width="160" height="60" rx="13" fill="url(#nodeg)" stroke="rgba(255,255,255,.1)"></rect>
+              <circle cx="26" cy="30" r="6" fill="#4fd1e0"></circle>
+              <text class="node-label" x="44" y="27">Dashboards</text>
+              <text class="node-sub" x="44" y="43">Live metrics</text>
+            </g>
+            <g class="snode" transform="matrix(0.9,0,0,0.9,808,273)" style=" transform-origin: 0px 0px;" data-svg-origin="80 30">
+              <rect width="160" height="60" rx="13" fill="url(#nodeg)" stroke="rgba(255,255,255,.1)"></rect>
+              <circle cx="26" cy="30" r="6" fill="#4fd1e0"></circle>
+              <text class="node-label" x="44" y="27">Automations</text>
+              <text class="node-sub" x="44" y="43">Slack · Webhooks</text>
+            </g>
+            <g class="snode" transform="matrix(0.9,0,0,0.9,428.5,332.79999)" style=" transform-origin: 0px 0px;" data-svg-origin="85 28">
+              <rect width="170" height="56" rx="13" fill="url(#nodeg)" stroke="rgba(255,255,255,.1)"></rect>
+              <circle cx="26" cy="28" r="6" fill="#8e7bff"></circle>
+              <text class="node-label" x="44" y="25">Alerts &amp; SLAs</text>
+              <text class="node-sub" x="44" y="40">Anomaly detection</text>
+            </g>
+          </svg>
+          <div class="legend reveal">
+            <span>
+              <i style="background:#6b7cff"></i>
+              Sources
+            </span>
+            <span>
+              <i style="background:#6b7cff"></i>
+              Nebula Engine
+            </span>
+            <span>
+              <i style="background:#4fd1e0"></i>
+              Destinations
+            </span>
+            <span>
+              <i style="background:#8e7bff"></i>
+              Realtime alerts
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCRUB TIMELINE -->
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">How it works</span>
+          <h2 class="">Live in an afternoon, not a quarter</h2>
+          <p class="">
+            The progress line fills as you scroll — that's roughly how fast it
+            goes.
+          </p>
+        </div>
+        <div class="timeline timeline-xray reveal" id="timeline">
+          <div class="tl-top" aria-hidden="true">
+            <span id="tlFill" style="height: 100%;"></span>
+            <span class="tl-glow" aria-hidden="true"></span>
+          </div>
+          <div class="tl-line">
+            <span class="tl-ghost" aria-hidden="true">01</span>
+            <span class="tl-chip" aria-hidden="true">Connect</span>
+            <span id="tlFill" style="height: 0%;"></span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-ghost" aria-hidden="true">02</span>
+            <span class="tl-chip" aria-hidden="true">Define</span>
+            <span class="tl-dot"></span>
+            <span class="k">Minute 1</span>
+            <h3 class="">Connect your sources</h3>
+            <p class="">
+              Authorize a warehouse or stream. Nebula maps your schema
+              automatically and starts reading events.
+            </p>
+          </div>
+          <div class="tl-step">
+            <span class="tl-ghost" aria-hidden="true">03</span>
+            <span class="tl-chip" aria-hidden="true">Ship</span>
+            <span class="tl-dot"></span>
+            <span class="k">Minute 10</span>
+            <h3 class="">Define your first metric</h3>
+            <p>
+              Describe a metric in plain language; the semantic layer turns it
+              into a governed, reusable definition.
+            </p>
+          </div>
+          <div class="tl-step">
+            <span class="tl-ghost" aria-hidden="true">04</span>
+            <span class="tl-chip" aria-hidden="true">Automate</span>
+            <span class="tl-dot"></span>
+            <span class="k">Minute 30</span>
+            <h3>Ship a live dashboard</h3>
+            <p>
+              Drop metrics onto a board that refreshes sub-second. Share a link
+              — no setup for viewers.
+            </p>
+          </div>
+          <div class="tl-step">
+            <span class="tl-dot"></span>
+            <span class="k">Same afternoon</span>
+            <h3>Deploy an agent</h3>
+            <p>
+              Point an AI agent at the metric and it monitors, diagnoses, and
+              acts on its own from then on.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIP-PATH WIPE COMPARISON -->
+    <section class="section py-20 bg-slate-950 text-slate-300 px-4 md:px-8 font-sans overflow-hidden" style="padding-top:40px" id="compare-sec">
+  <div class="wrap max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="sec-head reveal flex flex-col items-center text-center mb-16">
+      <span class="eyebrow text-indigo-400 font-semibold tracking-widest text-sm uppercase mb-4 block">The difference</span>
+      <h2 class="text-4xl md:text-5xl font-semibold tracking-tight text-white mb-5">Batch is yesterday. Nebula is now.</h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">Scroll to wipe between the old way and the Nebula way.</p>
+    </div>
+
+    <!-- Compare Container -->
+    <div class="compare reveal relative w-full h-[680px] lg:h-[460px] rounded-3xl overflow-hidden border border-slate-800/80 bg-slate-950 shadow-2xl shadow-indigo-900/10" id="compare">
+      
+      <!-- Base Layer (Before) -->
+      <div class="layer before absolute inset-0 flex flex-col lg:flex-row p-8 lg:p-14 items-center justify-between w-full h-full bg-slate-950 z-0">
+        <!-- Text Left -->
+        <div class="txt w-full lg:w-[45%] flex flex-col justify-center text-center lg:text-left mb-10 lg:mb-0">
+          <span class="tagx text-slate-500 font-semibold tracking-widest text-xs uppercase mb-3 block">Traditional stack</span>
+          <h3 class="text-3xl font-semibold tracking-tight text-white mb-5">You find out tomorrow</h3>
+          <p class="text-slate-400 text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
+            Nightly batch jobs, stale dashboards, and alerts that fire long
+            after the revenue already leaked.
+          </p>
+        </div>
+        
+        <!-- Card Right -->
+        <div class="cv w-full lg:w-[50%] flex justify-center lg:justify-end perspective-1000">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col gap-6 relative overflow-hidden font-sans w-full max-w-[420px] lg:ml-auto">
+            <div class="flex justify-between items-center text-xs text-slate-400 font-medium tracking-wide border-b border-slate-800/60 pb-4">
+              <div class="flex items-center gap-2">
+                <i data-lucide="database" class="w-4 h-4 text-slate-500"></i>
+                <span>Batch job · revenue_daily</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-amber-500/90 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                <span>Last sync 6h ago</span>
+              </div>
+            </div>
+            
+            <div class="flex items-end justify-between h-32 gap-3 pt-2">
+              <div class="w-full bg-slate-800 rounded-sm" style="height: 55%"></div>
+              <div class="w-full bg-slate-800 rounded-sm" style="height: 40%"></div>
+              <div class="w-full bg-slate-800 rounded-sm" style="height: 62%"></div>
+              <div class="w-full bg-slate-800 rounded-sm" style="height: 48%"></div>
+              <div class="w-full bg-slate-800 rounded-sm" style="height: 70%"></div>
+              <div class="w-full bg-slate-800 rounded-sm" style="height: 52%"></div>
+              <div class="w-full bg-slate-800/40 rounded-sm border border-dashed border-slate-600 relative overflow-hidden flex flex-col justify-end" style="height: 44%">
+                 <div class="w-full bg-slate-700/30 animate-pulse" style="height: 100%"></div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3 pt-2">
+              <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                <div class="h-full bg-blue-500/60 w-[42%] relative overflow-hidden rounded-full"></div>
+              </div>
+              <div class="flex justify-between items-center text-[11px] uppercase tracking-wider text-slate-500 font-semibold">
+                <span class="flex items-center gap-1.5"><i data-lucide="loader-2" class="w-3 h-3 animate-spin text-blue-500/80"></i> Running… 42%</span>
+                <span>ETA 18 min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reveal Layer (After) -->
+      <div class="layer after absolute inset-0 flex flex-col lg:flex-row p-8 lg:p-14 items-center justify-between w-full h-full bg-[#0a0f1c] z-10 border-r border-cyan-500/30 shadow-[15px_0_40px_rgba(34,211,238,0.12)]" id="afterLayer" style="clip-path: inset(0px 40.3194% 0px 0px);">
+        <!-- Layer Background Effects -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent to-cyan-900/10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-cyan-500/5 to-transparent pointer-events-none"></div>
+
+        <!-- Text Left -->
+        <div class="txt w-full lg:w-[45%] flex flex-col justify-center text-center lg:text-left mb-10 lg:mb-0 relative z-20">
+          <span class="tagx text-cyan-400 font-semibold tracking-widest text-xs uppercase mb-3 block drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">With Nebula</span>
+          <h3 class="text-3xl font-semibold tracking-tight text-white mb-5">You knew a second ago</h3>
+          <p class="text-slate-300 text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
+            Streaming ingestion and autonomous agents surface the issue —
+            and act on it — in real time.
+          </p>
+        </div>
+        
+        <!-- Card Right -->
+        <div class="cv w-full lg:w-[50%] flex justify-center lg:justify-end relative z-20 perspective-1000">
+          <div class="bg-[#0b0f19] border border-indigo-500/40 rounded-2xl p-6 shadow-[0_0_50px_rgba(99,102,241,0.2)] flex flex-col gap-6 relative overflow-hidden group font-sans w-full max-w-[420px] lg:ml-auto transform transition-transform duration-500 hover:-translate-y-1 hover:shadow-[0_0_60px_rgba(34,211,238,0.25)]">
+            <div class="absolute -top-32 -right-32 w-64 h-64 bg-cyan-500/15 blur-[60px] rounded-full pointer-events-none transition-opacity duration-700 group-hover:opacity-100"></div>
+            <div class="absolute -bottom-32 -left-32 w-64 h-64 bg-indigo-500/15 blur-[60px] rounded-full pointer-events-none transition-opacity duration-700 group-hover:opacity-100"></div>
+
+            <div class="flex justify-between items-center text-xs font-medium tracking-wide relative z-10 text-slate-300 border-b border-indigo-500/20 pb-4">
+              <div class="flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]"></i>
+                <span class="text-slate-200">Live pipeline · revenue_stream</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-cyan-300 bg-cyan-400/10 border border-cyan-400/30 px-2.5 py-1 rounded-md shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+                <div class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_#22d3ee]"></div>
+                <span class="tracking-widest text-[10px] uppercase font-bold">LIVE</span>
+              </div>
+            </div>
+
+            <div class="relative z-10 w-full flex-1 flex flex-col justify-center items-center h-[140px] border border-white/5 rounded-xl bg-[#13182b]/50 shadow-inner overflow-hidden">
+              <svg viewBox="0 0 260 132" class="w-full h-full drop-shadow-md" aria-hidden="true">
+                <defs>
+                  <linearGradient id="sgrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#818cf8"></stop>
+                    <stop offset="1" stop-color="#22d3ee"></stop>
+                  </linearGradient>
+                </defs>
+                
+                <path d="M42,34 L118,66" stroke="#4f46e5" stroke-width="2" stroke-dasharray="4 4" class="opacity-30"></path>
+                <path d="M42,98 L118,66" stroke="#4f46e5" stroke-width="2" stroke-dasharray="4 4" class="opacity-30"></path>
+                <path d="M142,66 L218,34" stroke="#0891b2" stroke-width="2" stroke-dasharray="4 4" class="opacity-30"></path>
+                <path d="M142,66 L218,98" stroke="#0891b2" stroke-width="2" stroke-dasharray="4 4" class="opacity-30"></path>
+                
+                <circle r="3.5" fill="#818cf8" style="filter: drop-shadow(0 0 4px #818cf8);">
+                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M42,34 L118,66"></animateMotion>
+                </circle>
+                <circle r="3.5" fill="#818cf8" style="filter: drop-shadow(0 0 4px #818cf8);">
+                  <animateMotion dur="2s" repeatCount="indefinite" path="M42,98 L118,66"></animateMotion>
+                </circle>
+                <circle r="3.5" fill="#22d3ee" style="filter: drop-shadow(0 0 4px #22d3ee);">
+                  <animateMotion dur="1.8s" repeatCount="indefinite" path="M142,66 L218,34"></animateMotion>
+                </circle>
+                <circle r="3.5" fill="#22d3ee" style="filter: drop-shadow(0 0 4px #22d3ee);">
+                  <animateMotion dur="1.4s" repeatCount="indefinite" path="M142,66 L218,98"></animateMotion>
+                </circle>
+
+                <circle cx="42" cy="34" r="7" fill="#1e1b4b" stroke="#818cf8" stroke-width="2.5"></circle>
+                <circle cx="42" cy="98" r="7" fill="#1e1b4b" stroke="#818cf8" stroke-width="2.5"></circle>
+                
+                <rect x="114" y="48" width="32" height="36" rx="8" fill="#0f172a" stroke="url(#sgrad)" stroke-width="2"></rect>
+                <circle cx="130" cy="66" r="5" fill="#22d3ee" class="animate-ping opacity-75"></circle>
+                <circle cx="130" cy="66" r="5" fill="#22d3ee"></circle>
+                
+                <circle cx="218" cy="34" r="7" fill="#083344" stroke="#22d3ee" stroke-width="2.5"></circle>
+                <circle cx="218" cy="98" r="7" fill="#083344" stroke="#22d3ee" stroke-width="2.5"></circle>
+              </svg>
+            </div>
+
+            <div class="relative z-10 w-full h-14 group">
+              <svg viewBox="0 0 260 56" preserveAspectRatio="none" class="w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true">
+                <defs>
+                  <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"></stop>
+                    <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M0,42 L30,30 L56,38 L86,16 L116,28 L150,12 L184,24 L214,8 L240,18 L260,14 L260,56 L0,56 Z" fill="url(#sparkGrad)"></path>
+                <polyline points="0,42 30,30 56,38 86,16 116,28 150,12 184,24 214,8 240,18 260,14" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              </svg>
+            </div>
+
+            <div class="flex justify-between items-center relative z-10 mt-[-10px]">
+              <div class="flex flex-col">
+                <div class="text-white font-semibold tracking-tight text-2xl flex items-baseline gap-1.5 drop-shadow-md">
+                  184K <span class="text-slate-400 text-xs font-medium tracking-normal">events / sec</span>
+                </div>
+              </div>
+              <div class="text-cyan-300 text-xs font-semibold flex items-center gap-1.5 bg-cyan-950/60 px-2.5 py-1.5 rounded-full border border-cyan-800/60 shadow-[0_0_10px_rgba(8,145,178,0.2)]">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5 text-cyan-400"></i> updating now
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wipe Handle -->
+      <div class="handle absolute top-0 bottom-0 w-1 bg-cyan-400 cursor-ew-resize z-30 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.6)]" id="compareHandle" style="left: 59.6806%;">
+        <div class="w-9 h-9 bg-slate-900 border-2 border-cyan-400 rounded-full shadow-[0_0_15px_rgba(34,211,238,0.4)] flex items-center justify-center absolute left-1/2 -translate-x-1/2">
+          <i data-lucide="chevrons-left-right" class="w-4 h-4 text-cyan-400"></i>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <!-- STATS -->
+    <section class="section" style="padding-top:40px">
+      <div class="wrap">
+        <div class="stats reveal">
+          <div class="stat">
+            <div class="num grad-text" data-count="184" data-suffix="M">0</div>
+            <div class="lab">Events processed / day</div>
+          </div>
+          <div class="stat">
+            <div class="num grad-text" data-count="38" data-suffix="ms">0</div>
+            <div class="lab">Median query latency</div>
+          </div>
+          <div class="stat">
+            <div class="num grad-text" data-count="99.99" data-suffix="%" data-dec="2">
+              0
+            </div>
+            <div class="lab">Platform uptime</div>
+          </div>
+          <div class="stat">
+            <div class="num grad-text" data-count="4000" data-suffix="+">0</div>
+            <div class="lab">Data teams onboard</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTEGRATIONS PARALLAX GRID -->
+    <section class="section" id="integrations" style="padding-top:40px">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Integrations</span>
+          <h2>Plugs into everything you run</h2>
+          <p>Over 80 native connectors — and a typed API for the rest.</p>
+        </div>
+        <div class="integ" id="integ">
+          <div class="chip"><span class="d"></span></div>
+          <div class="chip">Kafka</div>
+          <div class="chip">Snowflake</div>
+          <div class="chip">dbt</div>
+          <div class="chip">Slack</div>
+          <div class="chip"><span class="d"></span></div>
+          <div class="chip">BigQuery</div>
+          <div class="chip">Postgres</div>
+          <div class="chip">Segment</div>
+          <div class="chip">Stripe</div>
+          <div class="chip">Kinesis</div>
+          <div class="chip"><span class="d"></span></div>
+          <div class="chip"><span class="d"></span></div>
+          <div class="chip">Redshift</div>
+          <div class="chip">Datadog</div>
+          <div class="chip">PagerDuty</div>
+          <div class="chip">GitHub</div>
+          <div class="chip"><span class="d"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section" id="testimonials">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Customers</span>
+          <h2>Loved by teams who ship on data</h2>
+        </div>
+        <div id="qOrbit" style="position:relative;max-width:760px;margin:0 auto 52px;height:300px;display:flex;align-items:center;justify-content:center">
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none">
+            <div style="width:150px;height:150px;border-radius:50%;border:1px solid rgba(255,255,255,.06)"></div>
+          </div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none">
+            <div style="width:250px;height:250px;border-radius:50%;border:1px solid rgba(255,255,255,.04)"></div>
+          </div>
+          <div id="qOrbitRing" style="position:absolute;inset:0">
+            <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.12); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 99; box-shadow: none;">
+              <img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.12); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 79; box-shadow: none;">
+              <img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+            <div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;">
+              <img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+          <div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;"><img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div><div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;"><img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div><div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;"><img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div><div data-i="0" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;"><img src="https://i.pravatar.cc/200?img=47" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div><div data-i="1" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;"><img src="https://i.pravatar.cc/200?img=12" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div><div data-i="2" style="position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0px 0px -31px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107, 124, 255, 0.85); cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; will-change: transform; z-index: 89; box-shadow: rgba(107, 124, 255, 0.55) 0px 0px 22px;"><img src="https://i.pravatar.cc/200?img=32" alt="customer" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div></div>
+          <div id="qCenter" style="position:relative;z-index:2;width:96px;height:96px;border-radius:50%;overflow:hidden;border:2px solid rgba(107,124,255,.5);box-shadow:0 0 40px rgba(107,124,255,.35);transition:opacity .5s">
+            <img id="qCenterImg" src="https://i.pravatar.cc/200?img=47" alt="customer" style="width:100%;height:100%;object-fit:cover;display:block">
+          </div>
+        </div>
+        <div class="quotes" style="position:relative;min-height:230px">
+          <div class="quote reveal" data-qi="0" data-img="https://i.pravatar.cc/200?img=47" style="transition: opacity 0.55s, transform 0.55s, filter 0.55s; filter: none;">
+            <p>
+              “We replaced four tools with Nebula and cut time-to-insight from
+              days to seconds. The agents catch anomalies before our on-call
+              even gets paged.”
+            </p>
+            <div class="who">
+              <span class="av" style="overflow:hidden;background:none">
+                <img src="https://i.pravatar.cc/100?img=47" alt="Maya Reyes" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%">
+              </span>
+              <span>
+                <b>Maya Reyes</b>
+                <span>VP Data, Northwind</span>
+              </span>
+            </div>
+          </div>
+          <div class="quote reveal" data-qi="1" data-img="https://i.pravatar.cc/200?img=12" style="transition: opacity 0.55s, transform 0.55s, filter 0.55s; filter: blur(0.5px);">
+            <p>
+              “The semantic layer finally ended the 'whose number is right'
+              argument. One definition, every team aligned. It paid for itself
+              in a month.”
+            </p>
+            <div class="who">
+              <span class="av" style="overflow:hidden;background:none">
+                <img src="https://i.pravatar.cc/100?img=12" alt="Tomás Albescu" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%">
+              </span>
+              <span>
+                <b>Tomás Albescu</b>
+                <span>Head of Analytics, Vertex</span>
+              </span>
+            </div>
+          </div>
+          <div class="quote reveal" data-qi="2" data-img="https://i.pravatar.cc/200?img=32" style="transition: opacity 0.55s, transform 0.55s, filter 0.55s; filter: blur(0.5px);">
+            <p>
+              “Onboarding took an afternoon. By the next morning we had
+              real-time alerting on revenue we used to discover a week late.”
+            </p>
+            <div class="who">
+              <span class="av" style="overflow:hidden;background:none">
+                <img src="https://i.pravatar.cc/100?img=32" alt="Priya Nair" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%">
+              </span>
+              <span>
+                <b>Priya Nair</b>
+                <span>CTO, Lumen Labs</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (function(){var sec=document.getElementById('testimonials');if(!sec)return;var ring=document.getElementById('qOrbitRing');var centerImg=document.getElementById('qCenterImg');var center=document.getElementById('qCenter');var quotes=Array.prototype.slice.call(sec.querySelectorAll('.quotes .quote'));if(!ring||!quotes.length)return;var imgs=quotes.map(function(q){return q.getAttribute('data-img')||'https://i.pravatar.cc/200';});var nodes=[];var N=imgs.length;var R=118;for(var i=0;i<N;i++){var d=document.createElement('div');d.style.cssText='position:absolute;top:50%;left:50%;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.12);cursor:pointer;transition:border-color .3s,box-shadow .3s,transform .3s;will-change:transform';d.setAttribute('data-i',i);var im=document.createElement('img');im.src=imgs[i];im.alt='customer';im.style.cssText='width:100%;height:100%;object-fit:cover;display:block';d.appendChild(im);ring.appendChild(d);nodes.push(d);}var active=0,ang=0,raf,playing=true;function setActive(idx){active=idx;quotes.forEach(function(q,j){var on=j===idx;q.style.transition='opacity .55s ease, transform .55s ease, filter .55s ease';q.style.opacity=on?'1':'.32';q.style.filter=on?'none':'blur(.5px)';q.style.transform=on?'scale(1)':'scale(.95)';});nodes.forEach(function(n,j){var on=j===idx;n.style.borderColor=on?'rgba(107,124,255,.85)':'rgba(255,255,255,.12)';n.style.boxShadow=on?'0 0 22px rgba(107,124,255,.55)':'none';});center.style.opacity='0';setTimeout(function(){centerImg.src=imgs[idx].replace('100?','200?').replace('/200?img','/200?img');center.style.opacity='1';},220);}function layout(){for(var i=0;i<N;i++){var a=ang+(i/N)*Math.PI*2;var x=Math.cos(a)*R;var y=Math.sin(a)*R*.62;var sc=.78+.22*((Math.sin(a)+1)/2);nodes[i].style.transform='translate('+x+'px,'+y+'px) scale('+sc+')';nodes[i].style.zIndex=Math.round(sc*100);}}function loop(){if(playing)ang+=0.0042;layout();raf=requestAnimationFrame(loop);}nodes.forEach(function(n,i){n.addEventListener('mouseenter',function(){playing=false;});n.addEventListener('mouseleave',function(){playing=true;});n.addEventListener('click',function(){setActive(i);});});loop();setActive(0);var cyc=setInterval(function(){if(playing)setActive((active+1)%N);},4200);})();
+      </script>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section" id="pricing">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Pricing</span>
+          <h2>Scale-friendly, surprise-free</h2>
+          <p>Start free. Upgrade when your data does. No per-seat penalties.</p>
+        </div>
+        <div class="relative w-full py-12 md:py-32">
+          <style>
+            @keyframes pipeline-flow { 0% { left: -20%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 110%; opacity: 0; } }
+          </style>
+          <div class="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent -translate-y-1/2 hidden md:block overflow-hidden">
+            <div class="absolute top-0 h-full w-48 bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-[1px]" style="animation: pipeline-flow 3s linear infinite;"></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10 relative z-10">
+            <!-- Starter -->
+            <div class="relative md:-mt-20 transition-transform duration-500 hover:-translate-y-2">
+              <div class="absolute -bottom-20 left-1/2 w-[2px] h-20 bg-gradient-to-b from-white/10 to-indigo-500/30 -translate-x-1/2 hidden md:block"></div>
+              <div class="absolute -bottom-20 left-1/2 w-3 h-3 rounded-full bg-[#090a0c] border-[2px] border-indigo-500/50 -translate-x-1/2 translate-y-1/2 hidden md:block"></div>
+              <div class="h-full bg-[#131720]/90 border border-white/5 rounded-3xl p-8 backdrop-blur-md flex flex-col shadow-xl">
+                <div class="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">
+                  Starter
+                </div>
+                <div class="text-4xl font-bold text-white mb-2">
+                  $0
+                  <span class="text-lg text-white/30 font-medium tracking-normal">
+                    /mo
+                  </span>
+                </div>
+                <p class="text-white/50 text-sm mb-8">
+                  For side projects and first pipelines.
+                </p>
+                <ul class="space-y-4 mb-10 flex-1">
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Up to 5M events / mo</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>3 connectors</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Community support</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>7-day retention</span>
+                  </li>
+                </ul>
+                <a href="#cta" class="w-full py-3.5 rounded-xl border border-white/10 hover:bg-white/10 text-white text-center text-sm font-semibold transition-all">
+                  Get started
+                </a>
+              </div>
+            </div>
+            <!-- Growth -->
+            <div class="relative md:mt-20 transition-transform duration-500 hover:translate-y-2">
+              <div class="absolute -top-20 left-1/2 w-[2px] h-20 bg-gradient-to-t from-indigo-500/30 to-cyan-400 -translate-x-1/2 hidden md:block"></div>
+              <div class="absolute -top-20 left-1/2 w-4 h-4 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(79,209,224,0.8)] -translate-x-1/2 -translate-y-1/2 hidden md:block">
+                <div class="absolute inset-0 rounded-full animate-ping bg-cyan-400 opacity-40"></div>
+              </div>
+              <div class="h-full bg-gradient-to-b from-indigo-500/10 to-[#131720]/90 border border-indigo-500/30 rounded-3xl p-8 backdrop-blur-md flex flex-col relative overflow-hidden shadow-[0_20px_80px_-20px_rgba(107,124,255,0.25)]">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-cyan-400"></div>
+                <div class="flex justify-between items-center mb-3">
+                  <div class="text-cyan-300 text-xs font-bold uppercase tracking-widest">
+                    Growth
+                  </div>
+                  <span class="text-[10px] uppercase tracking-widest font-bold bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full border border-indigo-500/30">
+                    Most Popular
+                  </span>
+                </div>
+                <div class="text-5xl font-bold text-white mb-2">
+                  $149
+                  <span class="text-lg text-white/50 font-medium tracking-normal">
+                    /mo
+                  </span>
+                </div>
+                <p class="text-white/60 text-sm mb-8">
+                  For teams running on real-time data.
+                </p>
+                <ul class="space-y-4 mb-10 flex-1">
+                  <li class="flex items-start gap-3 text-sm text-white/90 font-medium">
+                    <svg class="w-5 h-5 text-cyan-400 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>250M events / mo</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/80">
+                    <svg class="w-5 h-5 text-indigo-400 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Unlimited connectors</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/80">
+                    <svg class="w-5 h-5 text-indigo-400 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>5 AI agents</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/80">
+                    <svg class="w-5 h-5 text-indigo-400 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Semantic layer + RBAC</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/80">
+                    <svg class="w-5 h-5 text-indigo-400 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Priority support</span>
+                  </li>
+                </ul>
+                <a href="#cta" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-white text-center text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all">
+                  Start free trial
+                </a>
+              </div>
+            </div>
+            <!-- Enterprise -->
+            <div class="relative md:-mt-20 transition-transform duration-500 hover:-translate-y-2">
+              <div class="absolute -bottom-20 left-1/2 w-[2px] h-20 bg-gradient-to-b from-white/10 to-indigo-500/30 -translate-x-1/2 hidden md:block"></div>
+              <div class="absolute -bottom-20 left-1/2 w-3 h-3 rounded-full bg-[#090a0c] border-[2px] border-indigo-500/50 -translate-x-1/2 translate-y-1/2 hidden md:block"></div>
+              <div class="h-full bg-[#131720]/90 border border-white/5 rounded-3xl p-8 backdrop-blur-md flex flex-col shadow-xl">
+                <div class="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">
+                  Enterprise
+                </div>
+                <div class="text-4xl font-bold text-white mb-2">Custom</div>
+                <p class="text-white/50 text-sm mb-8">
+                  For org-wide, regulated deployments.
+                </p>
+                <ul class="space-y-4 mb-10 flex-1">
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Unlimited events</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>SOC 2 + region pinning</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Unlimited agents</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>SSO / SAML</span>
+                  </li>
+                  <li class="flex items-start gap-3 text-sm text-white/70">
+                    <svg class="w-5 h-5 text-indigo-400/70 mt-0.5 flex-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Dedicated success eng</span>
+                  </li>
+                </ul>
+                <a href="#cta" class="w-full py-3.5 rounded-xl border border-white/10 hover:bg-white/10 text-white text-center text-sm font-semibold transition-all">
+                  Talk to sales
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2>Questions, answered</h2>
+        </div>
+        <div class="faq" id="faqList">
+          <div class="qa reveal">
+            <button>How is Nebula different from a BI tool?</button>
+            <div class="a">
+              <p>
+                BI tools visualize data after a batch job lands. Nebula
+                processes events in real time and adds autonomous agents that
+                act on what they find — so it replaces ingestion, modeling,
+                dashboards, and alerting in one place.
+              </p>
+            </div>
+          </div>
+          <div class="qa reveal">
+            <button>Do I have to migrate my warehouse?</button>
+            <div class="a">
+              <p>
+                No. Nebula connects to Snowflake, BigQuery, Redshift, and
+                Postgres as-is, and can read streams in parallel. There's no
+                rip-and-replace — point it at your sources and it starts
+                modeling immediately.
+              </p>
+            </div>
+          </div>
+          <div class="qa reveal">
+            <button>How fast is "real time"?</button>
+            <div class="a">
+              <p>
+                Median query latency is 38ms and dashboards refresh sub-second.
+                Agents typically detect and respond to an anomaly within a
+                couple of seconds of the event arriving.
+              </p>
+            </div>
+          </div>
+          <div class="qa reveal">
+            <button>Is my data secure?</button>
+            <div class="a">
+              <p>
+                Yes — SOC 2 Type II, end-to-end encryption, fine-grained RBAC,
+                SSO/SAML, and region pinning so data never leaves your trust
+                boundary.
+              </p>
+            </div>
+          </div>
+          <div class="qa reveal">
+            <button>Can I start for free?</button>
+            <div class="a">
+              <p>
+                The Starter plan is free forever for up to 5M events per month,
+                with no credit card required. Upgrade only when your volume
+                grows.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTICLE TEXT CANVAS (scroll-scrubbed swarm) -->
+    <section class="section particles" id="wow">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">From noise to signal</span>
+          <h2>Millions of points. One clear picture.</h2>
+          <p>Keep scrolling — watch the scattered data swarm into focus.</p>
+        </div>
+        <div class="stage" id="stage">
+          <canvas id="pcanvas" width="2000" height="800"></canvas>
+          <div class="fallback grad-text">NEBULA</div>
+        </div>
+        <p class="hint reveal">
+          Every particle is an event. Nebula assembles them in real time.
+        </p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" id="cta">
+      <div class="wrap">
+        <div class="cta-box reveal">
+          <h2>Turn your data into decisions</h2>
+          <p>
+            Spin up your first real-time pipeline in minutes. Free forever for
+            small teams.
+          </p>
+          <div class="hero-cta">
+            <a href="#" class="btn btn-primary">Start for free</a>
+            <a href="#" class="btn btn-ghost">Book a demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="wrap">
+        <div class="foot">
+          <div>
+            <div class="logo">
+              <span class="mark"></span>
+              Nebula
+            </div>
+            <p>
+              The everything platform for your data teams. Built for teams who
+              ship on real-time signals.
+            </p>
+          </div>
+          <div>
+            <h4>Product</h4>
+            <a href="#platform">Platform</a>
+            <a href="#schema">Architecture</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#">Changelog</a>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <a href="#">About</a>
+            <a href="#">Careers</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+          </div>
+          <div>
+            <h4>Resources</h4>
+            <a href="#">Docs</a>
+            <a href="#">API</a>
+            <a href="#">Status</a>
+            <a href="#">Security</a>
+          </div>
+        </div>
+        <div class="foot-bot">
+          <span>© 2026 Nebula Labs, Inc. All rights reserved.</span>
+          <span>Privacy · Terms · SOC 2 Type II</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      (function(){
+        var root=document.getElementById('timeline');
+        var fill=document.getElementById('tlFill');
+        var glow=null;
+        if(root){
+          glow=root.querySelector('.tl-line .tl-glow');
+        }
+        function setPct(p){
+          var el=document.getElementById('tlPct');
+          if(el) el.textContent=Math.round(p*100)+'%';
+          if(glow && fill){
+            glow.style.height=fill.style.height||'0%';
+          }
+          var scan=root && root.querySelector('.tl-scan');
+          if(scan){
+            scan.style.transform='translateY('+ (p* (root.scrollHeight-40)) +'px)';
+          }
+        }
+        if(!fill){
+          var t=document.getElementById('timeline');
+          if(t){
+            var fb=t.querySelector('.tl-line span');
+            if(fb) fill=fb;
+          }
+        }
+        if(window.ScrollTrigger && root){
+          ScrollTrigger.create({
+            trigger:root,
+            start:'top 65%',
+            end:'bottom 75%',
+            onUpdate:function(self){ setPct(self.progress); }
+          });
+        } else {
+          // fallback: keep readout synced to fill height if set elsewhere
+          var last='';
+          setInterval(function(){
+            if(!fill) return;
+            var h=fill.style.height||'';
+            if(h!==last){
+              last=h;
+              var m=(/([0-9.]+)/.exec(h)||[])[1];
+              if(m){ setPct(Math.max(0,Math.min(1,parseFloat(m)/100))); }
+            }
+          },200);
+        }
+      })();
+    </script>
+    <script>
+      document.body.classList.remove('no-js');
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let lenis;
+      if (window.Lenis && !prefersReduced){
+        lenis = new Lenis({ duration:1.1, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)), smoothWheel:true });
+        function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+      }
+
+      /* ===== "MagicRings" shader background (React Bits port) behind the hero ===== */
+      (function(){
+        const canvas=document.getElementById('bgGL');
+        if(!canvas || !window.THREE || prefersReduced){ if(canvas) canvas.style.display='none'; return; }
+
+        /* tuned to the page palette: violet -> cyan */
+        const CFG={
+          color:'#8e7bff', colorTwo:'#4fd1e0',
+          speed:0.85, ringCount:6, attenuation:10, lineThickness:2,
+          baseRadius:0.35, radiusStep:0.1, scaleRate:0.1, opacity:0.95,
+          blur:0, noiseAmount:0.07, rotation:0, ringGap:1.5,
+          fadeIn:0.7, fadeOut:0.5, followMouse:true, mouseInfluence:0.14, parallax:0.05
+        };
+
+        const vert='void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}';
+        const frag=[
+          'precision highp float;',
+          'uniform float uTime,uAttenuation,uLineThickness;',
+          'uniform float uBaseRadius,uRadiusStep,uScaleRate;',
+          'uniform float uOpacity,uNoiseAmount,uRotation,uRingGap;',
+          'uniform float uFadeIn,uFadeOut,uMouseInfluence,uParallax;',
+          'uniform vec2 uResolution,uMouse;',
+          'uniform vec3 uColor,uColorTwo;',
+          'uniform int uRingCount;',
+          'const float HP=1.5707963;',
+          'const float CYCLE=3.45;',
+          'float fade(float t){return t<uFadeIn?smoothstep(0.0,uFadeIn,t):1.0-smoothstep(uFadeOut,CYCLE-0.2,t);}',
+          'float ring(vec2 p,float ri,float cut,float t0,float px){',
+          ' float t=mod(uTime+t0,CYCLE);',
+          ' float r=ri+t/CYCLE*uScaleRate;',
+          ' float d=abs(length(p)-r);',
+          ' float a=atan(abs(p.y),abs(p.x))/HP;',
+          ' float th=max(1.0-a,0.5)*px*uLineThickness;',
+          ' float h=(1.0-smoothstep(th,th*1.5,d))+1.0;',
+          ' d+=pow(cut*a,3.0)*r;',
+          ' return h*exp(-uAttenuation*d)*fade(t);',
+          '}',
+          'void main(){',
+          ' float px=1.0/min(uResolution.x,uResolution.y);',
+          ' vec2 p=(gl_FragCoord.xy-0.5*uResolution.xy)*px;',
+          ' float cr=cos(uRotation),sr=sin(uRotation);',
+          ' p=mat2(cr,-sr,sr,cr)*p;',
+          ' p-=uMouse*uMouseInfluence;',
+          ' vec3 c=vec3(0.0);',
+          ' float rcf=max(float(uRingCount)-1.0,1.0);',
+          ' for(int i=0;i<10;i++){',
+          '  if(i>=uRingCount)break;',
+          '  float fi=float(i);',
+          '  vec2 pr=p-fi*uParallax*uMouse;',
+          '  vec3 rc=mix(uColor,uColorTwo,fi/rcf);',
+          '  c=mix(c,rc,vec3(ring(pr,uBaseRadius+fi*uRadiusStep,pow(uRingGap,fi),i==0?0.0:2.95*fi,px)));',
+          ' }',
+          ' float n=fract(sin(dot(gl_FragCoord.xy+uTime*100.0,vec2(12.9898,78.233)))*43758.5453);',
+          ' c+=(n-0.5)*uNoiseAmount;',
+          ' gl_FragColor=vec4(c,max(c.r,max(c.g,c.b))*uOpacity);',
+          '}'
+        ].join('\n');
+
+        let renderer;
+        try{ renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true}); }
+        catch(e){ canvas.style.display='none'; return; }
+        renderer.setClearColor(0x000000,0);
+
+        const scene=new THREE.Scene();
+        const camera=new THREE.OrthographicCamera(-0.5,0.5,0.5,-0.5,0.1,10);
+        camera.position.z=1;
+
+        const uniforms={
+          uTime:{value:0}, uAttenuation:{value:CFG.attenuation},
+          uResolution:{value:new THREE.Vector2()},
+          uColor:{value:new THREE.Color(CFG.color)},
+          uColorTwo:{value:new THREE.Color(CFG.colorTwo)},
+          uLineThickness:{value:CFG.lineThickness},
+          uBaseRadius:{value:CFG.baseRadius},
+          uRadiusStep:{value:CFG.radiusStep},
+          uScaleRate:{value:CFG.scaleRate},
+          uRingCount:{value:CFG.ringCount},
+          uOpacity:{value:CFG.opacity},
+          uNoiseAmount:{value:CFG.noiseAmount},
+          uRotation:{value:CFG.rotation*Math.PI/180},
+          uRingGap:{value:CFG.ringGap},
+          uFadeIn:{value:CFG.fadeIn},
+          uFadeOut:{value:CFG.fadeOut},
+          uMouse:{value:new THREE.Vector2()},
+          uMouseInfluence:{value:CFG.followMouse?CFG.mouseInfluence:0},
+          uParallax:{value:CFG.parallax}
+        };
+        const material=new THREE.ShaderMaterial({vertexShader:vert,fragmentShader:frag,uniforms,transparent:true});
+        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(1,1),material));
+
+        function resize(){
+          const w=window.innerWidth,h=window.innerHeight;
+          const dpr=Math.min(window.devicePixelRatio||1,2);
+          renderer.setPixelRatio(dpr);
+          renderer.setSize(w,h);
+          uniforms.uResolution.value.set(w*dpr,h*dpr);
+        }
+        resize();
+        window.addEventListener('resize',resize);
+        if(CFG.blur>0) canvas.style.filter='blur('+CFG.blur+'px)';
+
+        const mouse=[0,0], smooth=[0,0];
+        window.addEventListener('pointermove',e=>{
+          mouse[0]=e.clientX/window.innerWidth-0.5;
+          mouse[1]=-(e.clientY/window.innerHeight-0.5);
+        },{passive:true});
+
+        let visible=true;
+        const heroH=()=>window.innerHeight*1.2;
+        const checkVis=()=>{ visible=((lenis?lenis.scroll:window.scrollY)||window.scrollY)<heroH(); };
+        window.addEventListener('scroll',checkVis,{passive:true});
+        if(lenis) lenis.on('scroll',checkVis);
+
+        (function loop(t){
+          requestAnimationFrame(loop);
+          if(!visible) return;
+          smooth[0]+=(mouse[0]-smooth[0])*0.08;
+          smooth[1]+=(mouse[1]-smooth[1])*0.08;
+          uniforms.uTime.value=t*0.001*CFG.speed;
+          uniforms.uMouse.value.set(smooth[0],smooth[1]);
+          renderer.render(scene,camera);
+        })(0);
+
+        if(window.gsap && window.ScrollTrigger){
+          gsap.registerPlugin(ScrollTrigger);
+          gsap.to('#bgGL',{opacity:0,ease:'none',
+            scrollTrigger:{trigger:'.hero',start:'center top',end:'bottom top',scrub:true}});
+        }
+      })();
+
+      if (window.gsap){
+        gsap.registerPlugin(ScrollTrigger);
+        if (lenis){ lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0); }
+
+        document.querySelectorAll('a[href^="#"]').forEach(a=>{
+          a.addEventListener('click',e=>{
+            const id=a.getAttribute('href'); if(id==='#')return;
+            const el=document.querySelector(id); if(!el)return; e.preventDefault();
+            lenis ? lenis.scrollTo(el,{offset:-66}) : el.scrollIntoView({behavior:'smooth'});
+          });
+        });
+
+        const header=document.getElementById('header');
+        const onScroll=()=>header.classList.toggle('scrolled',(lenis?lenis.scroll:window.scrollY)>40);
+        window.addEventListener('scroll',onScroll,{passive:true});
+        if(lenis) lenis.on('scroll',onScroll);
+
+        /* split manifesto into word spans (used by scrub + fallbacks) */
+        const mEl=document.getElementById('manifestoText');
+        if(mEl){ mEl.innerHTML = mEl.textContent.trim().split(/\s+/).map(w=>'<span class="w">'+w+'</span>').join(' '); }
+
+        if(prefersReduced){
+          gsap.set('.reveal',{opacity:1,y:0});
+          gsap.set('.manifesto .w',{color:'#f4f5f7'});
+          const af=document.getElementById('afterLayer'); if(af) af.style.clipPath='none';
+          const hn=document.getElementById('compareHandle'); if(hn) hn.style.display='none';
+          const tf=document.getElementById('tlFill'); if(tf) tf.style.height='100%';
+          document.querySelectorAll('.tl-step').forEach(s=>s.classList.add('on'));
+          const st=document.getElementById('stage'); if(st){const cv=st.querySelector('canvas');if(cv)cv.style.display='none';const fb=st.querySelector('.fallback');if(fb)fb.style.display='flex';}
+        } else {
+          /* gentle hero entrance — explicit destinations so elements end visible */
+          const tl=gsap.timeline({defaults:{ease:'power2.out'}});
+          tl.fromTo('.hero .badge',{y:18,opacity:0},{y:0,opacity:1,duration:.6})
+            .fromTo('.hero h1',{y:28,opacity:0},{y:0,opacity:1,duration:.8},'-=.35')
+            .fromTo('.hero .lead',{y:20,opacity:0},{y:0,opacity:1,duration:.7},'-=.5')
+            .fromTo('.hero-cta',{y:18,opacity:0},{y:0,opacity:1,duration:.6},'-=.45')
+            .fromTo('.hero-note',{opacity:0},{opacity:1,duration:.6},'-=.4')
+            .fromTo('#shot',{y:40,opacity:0},{y:0,opacity:1,duration:.9},'-=.35');
+
+          /* very subtle mockup parallax */
+          gsap.to('#shot',{yPercent:-5,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+          /* animate hero chart */
+          const line=document.getElementById('linePath');
+          if(line){const len=line.getTotalLength();gsap.set(line,{strokeDasharray:len,strokeDashoffset:len});
+            gsap.to(line,{strokeDashoffset:0,duration:1.5,ease:'power2.inOut',delay:.7});
+            gsap.to('#areaPath',{opacity:1,duration:1,delay:1.5});}
+
+          /* generic reveals */
+          gsap.utils.toArray('.reveal').forEach(el=>{
+            if(el.closest('.hero')) return;
+            gsap.fromTo(el,{y:26,opacity:0},{y:0,opacity:1,duration:.8,ease:'power2.out',
+              scrollTrigger:{trigger:el,start:'top 90%'}});
+          });
+
+          /* feature cells stagger */
+          gsap.fromTo('.grid6 .cell',{y:30,opacity:0},{y:0,opacity:1,duration:.6,stagger:.07,ease:'power2.out',
+            scrollTrigger:{trigger:'.grid6',start:'top 80%'}});
+
+          /* mini-bars grow */
+          gsap.utils.toArray('.mini .bars').forEach(b=>{
+            gsap.from(b.querySelectorAll('span'),{scaleY:0,transformOrigin:'bottom',duration:.7,stagger:.06,ease:'power2.out',
+              scrollTrigger:{trigger:b,start:'top 88%'}});
+          });
+
+          /* ---- animated schema ---- */
+          const schema=document.getElementById('schemaSvg');
+          if(schema){
+            schema.querySelectorAll('#paths .flow').forEach(p=>{
+              const L=p.getTotalLength(); gsap.set(p,{strokeDasharray:L,strokeDashoffset:L});
+            });
+            gsap.set('.snode',{opacity:0,scale:.9,transformOrigin:'center'});
+
+            ScrollTrigger.create({trigger:'.schema-wrap',start:'top 76%',once:true,onEnter:()=>{
+              gsap.to(schema.querySelectorAll('#paths .flow'),{strokeDashoffset:0,duration:1.1,stagger:.08,ease:'power2.inOut'});
+              gsap.to('.snode',{opacity:1,scale:1,duration:.6,stagger:.08,ease:'power2.out',delay:.1});
+            }});
+
+            schema.querySelectorAll('.flow-dash').forEach((d,i)=>{
+              const L=d.getTotalLength(); const seg=L*0.22;
+              gsap.set(d,{strokeDasharray:seg+' '+(L-seg),strokeDashoffset:L});
+              gsap.to(d,{strokeDashoffset:-L,duration:2.6,ease:'none',repeat:-1,delay:i*0.45});
+            });
+
+            gsap.to('.pulse',{scale:1.7,opacity:.25,transformOrigin:'center',duration:1.3,repeat:-1,yoyo:true,ease:'sine.inOut'});
+            gsap.to('#coreGlow',{attr:{'stroke-opacity':.5},duration:1.8,repeat:-1,yoyo:true,ease:'sine.inOut'});
+          }
+
+          /* ---- count up ---- */
+          document.querySelectorAll('[data-count]').forEach(el=>{
+            const target=parseFloat(el.dataset.count);
+            const suffix=el.dataset.suffix||'';
+            const dec=parseInt(el.dataset.dec||'0');
+            const obj={v:0};
+            ScrollTrigger.create({trigger:el,start:'top 94%',once:true,onEnter:()=>{
+              gsap.to(obj,{v:target,duration:1.6,ease:'power2.out',onUpdate:()=>{
+                let n=obj.v,s;
+                if(dec>0) s=n.toFixed(dec);
+                else if(n>=1000) s=Math.round(n).toLocaleString();
+                else s=Math.round(n).toString();
+                const small=el.querySelector('small');
+                if(el.firstChild && el.firstChild.nodeType===3) el.firstChild.nodeValue=s+suffix;
+                else el.textContent=s+suffix;
+                if(small) el.appendChild(small);
+              }});
+            }});
+          });
+
+          /* ===== 1. MANIFESTO — word-by-word highlight tied to scroll ===== */
+          const words=gsap.utils.toArray('.manifesto .w');
+          if(words.length){
+            gsap.to(words,{color:'#f4f5f7',ease:'none',stagger:1,
+              scrollTrigger:{trigger:'#manifesto',start:'top 75%',end:'bottom 70%',scrub:true}});
+          }
+
+          /* ===== 2. PINNED HORIZONTAL MODULES ===== */
+          const htrack=document.getElementById('htrack');
+          const hpin=document.getElementById('hpin');
+          if(htrack && hpin && window.innerWidth>840){
+            const getDist=()=>htrack.scrollWidth - window.innerWidth + 24;
+            gsap.to(htrack,{x:()=>-getDist(),ease:'none',
+              scrollTrigger:{trigger:'#modules',start:'top top',end:()=>'+='+getDist(),
+                pin:'#hpin',scrub:1,invalidateOnRefresh:true,anticipatePin:1}});
+            gsap.from('.hcard',{opacity:0,y:30,duration:.5,stagger:.08,
+              scrollTrigger:{trigger:'#hpin',start:'top 80%'}});
+          } else if(htrack){
+            gsap.from('.hcard',{opacity:0,y:24,duration:.6,stagger:.1,
+              scrollTrigger:{trigger:'#htrack',start:'top 85%'}});
+          }
+
+          /* ===== 3. TIMELINE — line draws + steps light up on scrub ===== */
+          const tlFill=document.getElementById('tlFill');
+          if(tlFill){
+            gsap.to(tlFill,{height:'100%',ease:'none',
+              scrollTrigger:{trigger:'#timeline',start:'top 65%',end:'bottom 75%',scrub:true}});
+            gsap.utils.toArray('.tl-step').forEach(step=>{
+              ScrollTrigger.create({trigger:step,start:'top 70%',end:'bottom 70%',
+                onToggle:self=>step.classList.toggle('on',self.isActive),
+                onEnter:()=>step.classList.add('on')});
+              gsap.from(step,{opacity:0,x:-20,duration:.6,ease:'power2.out',
+                scrollTrigger:{trigger:step,start:'top 85%'}});
+            });
+          }
+
+          /* ===== 4. CLIP-PATH WIPE COMPARISON ===== */
+          const after=document.getElementById('afterLayer');
+          const handle=document.getElementById('compareHandle');
+          if(after){
+            gsap.fromTo(after,{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',ease:'none',
+              scrollTrigger:{trigger:'#compare',start:'top 80%',end:'bottom 75%',scrub:true}});
+            if(handle){gsap.fromTo(handle,{left:'0%'},{left:'100%',ease:'none',
+              scrollTrigger:{trigger:'#compare',start:'top 80%',end:'bottom 75%',scrub:true}});}
+          }
+
+          /* ===== 5. INTEGRATIONS — staggered pop-in + scrub parallax drift ===== */
+          const chips=gsap.utils.toArray('.chip');
+          if(chips.length){
+            gsap.from(chips,{opacity:0,scale:.6,duration:.5,ease:'back.out(1.6)',
+              stagger:{each:.04,from:'center',grid:'auto'},
+              scrollTrigger:{trigger:'#integ',start:'top 82%'}});
+            chips.forEach((c,i)=>{
+              const dir=(i%3)-1; // -1,0,1
+              gsap.fromTo(c,{y:dir*24},{y:dir*-24,ease:'none',
+                scrollTrigger:{trigger:'#integrations',start:'top bottom',end:'bottom top',scrub:true}});
+            });
+          }
+
+          /* ===== 7. KINETIC TYPOGRAPHY — 3D per-character flip on scrub ===== */
+          document.querySelectorAll('.kinetic [data-split]').forEach((line,i)=>{
+            const txt=(line.getAttribute('data-split') || line.textContent || '').trim();
+            line.innerHTML=[...txt].map(c=>'<span class="ch">'+c+'</span>').join('');
+            const chars=line.querySelectorAll('.ch');
+            gsap.fromTo(chars,
+              {yPercent:130,opacity:0,rotateX:-95},
+              {yPercent:0,opacity:1,rotateX:0,ease:'power3.out',
+               stagger:{each:.045,from:(i%2?'end':'start')},
+               scrollTrigger:{trigger:line,start:'top 92%',end:'top 46%',scrub:true}});
+          });
+
+          /* velocity-reactive marquee — skews & speeds with scroll velocity */
+          const vtrack=document.getElementById('vtrack');
+          if(vtrack){
+            const loop=gsap.to(vtrack,{xPercent:-50,duration:26,ease:'none',repeat:-1});
+            let skew=0,targetSkew=0,ts=1;
+            ScrollTrigger.create({onUpdate:self=>{
+              const v=self.getVelocity();
+              targetSkew=gsap.utils.clamp(-20,20,v/-70);
+              ts=gsap.utils.clamp(1,5,1+Math.abs(v)/500);
+            }});
+            gsap.ticker.add(()=>{
+              skew+=(targetSkew-skew)*0.1; targetSkew*=0.9;
+              const cur=loop.timeScale(); loop.timeScale(cur+(ts-cur)*0.06); ts+=(1-ts)*0.06;
+              gsap.set(vtrack,{skewX:skew});
+            });
+          }
+
+          /* ===== 8. PARTICLE TEXT SWARM — scroll-scrubbed assembly on canvas ===== */
+          (function(){
+            const canvas=document.getElementById('pcanvas');
+            const stage=document.getElementById('stage');
+            if(!canvas||!stage) return;
+            const ctx=canvas.getContext('2d');
+            let W,H,parts=[],dpr=Math.min(2,window.devicePixelRatio||1);
+            let targetP=0,scrollP=0;
+            const easeOut=t=>1-Math.pow(1-t,3);
+
+            function build(){
+              const rect=stage.getBoundingClientRect();
+              if(rect.width<2) return;
+              W=canvas.width=Math.round(rect.width*dpr);
+              H=canvas.height=Math.round(rect.height*dpr);
+              const oc=document.createElement('canvas');oc.width=W;oc.height=H;
+              const o=oc.getContext('2d');
+              o.fillStyle='#fff';o.textAlign='center';o.textBaseline='middle';
+              const fs=Math.min(W*0.205,H*0.8);
+              o.font='800 '+fs+'px Inter, Arial, sans-serif';
+              o.fillText('NEBULA',W/2,H/2);
+              const data=o.getImageData(0,0,W,H).data;
+              const step=Math.max(4,Math.round(W/300));
+              const pts=[];
+              for(let y=0;y<H;y+=step){for(let x=0;x<W;x+=step){
+                if(data[(y*W+x)*4+3]>128) pts.push([x,y]);
+              }}
+              parts=pts.map(([tx,ty])=>{
+                const hue=255-(tx/W)*70;
+                return {tx,ty,sx:Math.random()*W,sy:Math.random()*H,
+                  ph:Math.random()*6.28,col:'hsl('+hue+',82%,66%)',s:Math.max(1.4,dpr*1.3)};
+              });
+            }
+
+            function render(now){
+              scrollP+=(targetP-scrollP)*0.08;
+              const a=easeOut(Math.min(1,scrollP/0.62));
+              ctx.clearRect(0,0,W,H);
+              const t=now*0.001;
+              for(let i=0;i<parts.length;i++){
+                const p=parts[i];
+                const drift=(1-a)*16;
+                const x=p.sx+(p.tx-p.sx)*a+Math.cos(t+p.ph)*drift;
+                const y=p.sy+(p.ty-p.sy)*a+Math.sin(t+p.ph)*drift;
+                ctx.globalAlpha=0.16+0.84*a;
+                ctx.fillStyle=p.col;
+                ctx.fillRect(x,y,p.s,p.s);
+              }
+              requestAnimationFrame(render);
+            }
+
+            build();
+            if(document.fonts&&document.fonts.ready){document.fonts.ready.then(build);}
+            requestAnimationFrame(render);
+            ScrollTrigger.create({trigger:'#wow',start:'top 80%',end:'bottom 25%',scrub:true,
+              onUpdate:self=>{targetP=self.progress;}});
+            let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{dpr=Math.min(2,window.devicePixelRatio||1);build();ScrollTrigger.refresh();},200);});
+          })();
+
+          ScrollTrigger.refresh();
+        }
+      } else {
+        document.querySelectorAll('.reveal').forEach(e=>{e.style.opacity=1;e.style.transform='none';});
+      }
+
+      /* ===== FAQ accordion (runs always) ===== */
+      document.querySelectorAll('#faqList .qa').forEach(item=>{
+        const btn=item.querySelector('button');
+        const ans=item.querySelector('.a');
+        btn.addEventListener('click',()=>{
+          const open=item.classList.contains('open');
+          document.querySelectorAll('#faqList .qa').forEach(o=>{o.classList.remove('open');o.querySelector('.a').style.maxHeight=null;});
+          if(!open){item.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';}
+        });
+      });
+    </script>
+  
+</body></html>

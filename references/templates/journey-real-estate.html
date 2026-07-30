@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey Real Estate | Premium Properties</title>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+},
+colors: {
+zinc: {
+50: '#fafafa',
+400: '#a1a1aa',
+500: '#71717a',
+800: '#27272a',
+900: '#18181b',
+950: '#09090b',
+}
+}
+}
+}
+}
+</script>
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+body {
+cursor: none;
+overflow-x: hidden;
+}
+/* Lenis Smooth Scroll */
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+/* Custom Cursor */
+#cursor-dot {
+position: fixed;
+top: 0; left: 0;
+width: 0.5rem; height: 0.5rem;
+background-color: #fafafa;
+border-radius: 50%;
+pointer-events: none;
+z-index: 9999;
+transform: translate(-50%, -50%);
+transition: width 0.3s, height 0.3s, background-color 0.3s, mix-blend-mode 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0;
+color: #09090b;
+font-family: 'Inter', sans-serif;
+font-weight: 500;
+mix-blend-mode: difference;
+}
+#cursor-dot.hover-active {
+width: 4rem; height: 4rem;
+background-color: #fafafa;
+mix-blend-mode: normal;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+/* Scroll Progress */
+#scroll-progress {
+position: fixed;
+top: 0; left: 0;
+height: 1px;
+background: rgba(255, 255, 255, 0.5);
+width: 0%;
+z-index: 10000;
+transform-origin: left;
+}
+/* Utilities */
+.clip-hidden { clip-path: inset(0 0 100% 0); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Magnetic Button */
+.btn-magnetic {
+position: relative;
+overflow: hidden;
+}
+.btn-magnetic::before {
+content: '';
+position: absolute;
+top: 50%; left: 50%;
+width: 150%; height: 150%;
+background: #fafafa;
+border-radius: 50%;
+transform: translate(-50%, -50%) scale(0);
+transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+z-index: -1;
+}
+.btn-magnetic:hover::before { transform: translate(-50%, -50%) scale(1); }
+.btn-magnetic:hover { color: #09090b; }
+/* Rotating words */
+.rotating-words-container {
+display: inline-block;
+vertical-align: top;
+overflow: hidden;
+height: 1.5em;
+position: relative;
+}
+.rotating-word {
+position: absolute;
+top: 0; left: 0;
+width: 100%;
+opacity: 0;
+transform: translateY(100%);
+}
+.rotating-word.active {
+opacity: 1;
+transform: translateY(0);
+position: relative;
+}
+/* Parallax Image */
+.img-parallax-wrap {
+overflow: hidden;
+position: relative;
+}
+.img-parallax {
+height: 120%;
+width: 100%;
+object-fit: cover;
+position: absolute;
+top: -10%;
+}
+/* Custom Input Range */
+input[type="range"] {
+-webkit-appearance: none;
+width: 100%;
+background: transparent;
+}
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+height: 1rem;
+width: 1rem;
+border-radius: 50%;
+background: #fafafa;
+cursor: pointer;
+margin-top: -0.375rem;
+border: 1px solid #27272a;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+width: 100%;
+height: 0.25rem;
+cursor: pointer;
+background: #27272a;
+border-radius: 9999px;
+}
+</style>
+<meta name="disabled-font-classes" content="font-geist,font-roboto,font-montserrat,font-poppins,font-playfair,font-instrument-serif,font-merriweather,font-bricolage,font-jakarta,font-manrope,font-space-grotesk,font-work-sans,font-pt-serif,font-geist-mono,font-space-mono,font-quicksand,font-nunito,font-newsreader,font-oswald,font-dm-sans,font-cormorant"><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="font-sans text-zinc-50 bg-zinc-950 antialiased selection:bg-zinc-50 selection:text-zinc-950">
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component fixed top-0 w-full h-screen -z-10" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div id="bg-unicorn" data-us-project="qO2hJSXvjk0iEIVJ5nim"></div>
+
+<style>
+  #bg-unicorn {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>
+
+<script type="text/javascript">
+  !function(){
+  if(!window.UnicornStudio){
+    window.UnicornStudio={isInitialized:false};
+    var i=document.createElement("script");
+    i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.2/dist/unicornStudio.umd.js";
+    i.onload=function(){
+      window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=true)
+    };
+    (document.head || document.body).appendChild(i);
+  }
+}();
+</script></div>
+
+    <div id="scroll-progress" style="width: 0%;"></div>
+    <div id="cursor-dot" style="left: 391px; top: 4px;" class=""><span id="cursor-text"></span></div>
+
+    <!-- Loader -->
+    <div id="loader" class="fixed inset-0 bg-zinc-950 z-[9998] flex items-center justify-center" style=" display: none;">
+        
+    <h1 class="text-xl uppercase text-zinc-50 font-google-sans-flex tracking-tighter font-light">Journey</h1></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-500 py-6 px-6 md:px-16 flex justify-between items-center border-b border-transparent">
+        <div class="text-lg tracking-widest uppercase font-medium cursor-interact tracking-tight font-sans" data-cursor-text="Home">
+            Journey
+        </div>
+        
+        <div class="hidden lg:flex gap-12 text-xs uppercase tracking-widest font-normal text-zinc-400">
+            <a href="#" class="hover:text-zinc-50 transition-colors duration-300 relative group cursor-interact font-sans">
+                Properties
+            </a>
+            <a href="#" class="hover:text-zinc-50 transition-colors duration-300 relative group cursor-interact font-sans">
+                Developments
+            </a>
+            <a href="#" class="hover:text-zinc-50 transition-colors duration-300 relative group cursor-interact font-sans">
+                About
+            </a>
+            <a href="#" class="hover:text-zinc-50 transition-colors duration-300 relative group cursor-interact font-sans">
+                Services
+            </a>
+        </div>
+
+        <div class="flex items-center gap-8">
+            <div class="hidden md:flex gap-3 text-xs uppercase tracking-widest text-zinc-500">
+                <button class="text-zinc-50 transition-colors font-sans">EN</button>
+                <span class="font-sans">/</span>
+                <button class="hover:text-zinc-50 transition-colors font-sans">DE</button>
+            </div>
+            <button class="btn-magnetic border border-zinc-800 bg-zinc-950 px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-normal transition-colors cursor-interact font-sans">
+                Contact
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative h-screen w-full flex flex-col justify-center px-6 md:px-16 overflow-hidden">
+        <div id="canvas-container" class="absolute inset-0 z-0"><canvas width="2758" height="2408" style="display: block; width: 1379px; height: 1204px;" class=""></canvas><canvas width="2758" height="2408" style="display: block; width: 1379px; height: 1204px;"></canvas><canvas width="2758" height="2408" style="display: block; width: 1379px; height: 1204px;"></canvas><canvas width="2758" height="2408" style="display: block; width: 1379px; height: 1204px;"></canvas><canvas width="2758" height="2408" style="display: block; width: 1379px; height: 1204px;"></canvas></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-transparent to-zinc-950 z-0 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto w-full mt-24">
+            <div class="flex items-center gap-4 mb-8 gs-reveal blur-in" style=" filter: blur(0px);">
+                <span class="w-8 h-[1px] bg-zinc-500"></span>
+                <span class="text-xs uppercase tracking-widest text-zinc-400 label-scramble font-sans">JOURNEY REAL ESTATE</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl leading-none tracking-tight font-medium text-zinc-50">
+                <div class="overflow-hidden"><div class="hero-line translate-y-full text-zinc-500 font-google-sans-flex tracking-tighter font-light">Exceptional</div></div>
+                <div class="overflow-hidden"><div class="hero-line translate-y-full font-google-sans-flex tracking-tighter font-light">Properties.</div></div>
+                <div class="overflow-hidden"><div class="hero-line translate-y-full text-zinc-500 font-google-sans-flex tracking-tighter font-light">Curated Living.</div></div>
+            </h1>
+
+            <div class="mt-12 text-lg md:text-xl text-zinc-400 gs-reveal fade-up flex flex-wrap gap-2 items-center font-google-sans-flex tracking-tighter font-light">
+                Your trusted partners in 
+                <span class="rotating-words-container text-zinc-50 font-normal w-32">
+                    <span class="rotating-word font-google-sans-flex tracking-tighter font-light">Sales</span>
+                    <span class="rotating-word font-google-sans-flex tracking-tighter font-light">Rentals</span>
+                    <span class="rotating-word font-google-sans-flex tracking-tighter font-light">Development</span>
+                    <span class="rotating-word active font-google-sans-flex tracking-tighter font-light">Investment</span>
+                    <span class="rotating-word font-google-sans-flex tracking-tighter font-light">Advisory</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4 gs-reveal fade-up" style="animation-delay: 2s;">
+            <span class="text-xs uppercase tracking-widest text-zinc-500 font-sans">Scroll</span>
+            <div class="w-[1px] h-12 bg-zinc-800 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-zinc-50 animate-[scrollDown_2s_ease-in-out_infinite]"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="py-32 md:py-48 px-6 md:px-16 bg-zinc-950 relative z-10 border-t border-zinc-900">
+        <div class="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-8">
+            <div class="lg:w-2/5">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="text-xs uppercase tracking-widest text-zinc-400 label-scramble font-sans">PORTFOLIO</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl tracking-tight font-normal leading-[1.1] masked-heading text-zinc-50">
+                    <span class="block">
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">Explore</span></span>
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">our</span></span>
+                    </span>
+                    <span class="block text-zinc-500">
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">exclusive</span></span>
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">listings.</span></span>
+                    </span>
+                </h2>
+            </div>
+            
+            <div class="lg:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="group relative h-[60vh] md:h-[500px] rounded-2xl border border-zinc-900 overflow-hidden cursor-interact md:mt-12 gs-reveal blur-in" data-cursor-text="View" style=" filter: blur(0px);">
+                    <div class="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/10 transition-colors duration-700 z-10"></div>
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/1b91a594-99f8-46f8-8662-86846a226792/800w.png" alt="Rentals" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 parallax-img grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100">
+                    <div class="absolute bottom-8 left-8 right-8 z-20 flex justify-between items-end">
+                        <h3 class="text-xl text-zinc-50 font-google-sans-flex tracking-tighter font-light">Rentals</h3>
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-2xl text-zinc-50 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" style="stroke-width: 1.5;"></iconify-icon>
+                    </div>
+                </div>
+
+                <div class="group relative h-[60vh] md:h-[500px] rounded-2xl border border-zinc-900 overflow-hidden cursor-interact gs-reveal blur-in" data-cursor-text="View" style="transition-delay: 0.1s;">
+                    <div class="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/10 transition-colors duration-700 z-10"></div>
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2d1d802b-a54d-4fe2-a54b-3de67b39f0d5_800w.webp" alt="Sales" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 parallax-img grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100">
+                    <div class="absolute bottom-8 left-8 right-8 z-20 flex justify-between items-end">
+                        <h3 class="text-xl text-zinc-50 font-google-sans-flex tracking-tighter font-light">Sales</h3>
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-2xl text-zinc-50 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" style="stroke-width: 1.5;"></iconify-icon>
+                    </div>
+                </div>
+                
+                <div class="group relative h-[40vh] md:h-[350px] rounded-2xl border border-zinc-900 overflow-hidden cursor-interact md:col-span-2 gs-reveal blur-in" data-cursor-text="View" style="transition-delay: 0.2s;">
+                    <div class="absolute inset-0 bg-zinc-950/60 group-hover:bg-zinc-950/20 transition-colors duration-700 z-10"></div>
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/701be6a0-d975-4bb5-a6bc-8297c3088870_1600w.webp" alt="Commercial" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 parallax-img grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100">
+                    <div class="absolute bottom-8 left-8 right-8 z-20 flex justify-between items-end">
+                        <h3 class="text-xl text-zinc-50 font-google-sans-flex tracking-tighter font-light">Commercial &amp; Investment</h3>
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-2xl text-zinc-50 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" style="stroke-width: 1.5;"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Horizontal Scroll -->
+    <div class="relative w-full overflow-hidden">
+        <div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: 10; float: none; flex-shrink: 1; display: flex; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1379px; height: 3516px; padding: 0px 0px 2312px;"><div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: 10; float: none; flex-shrink: 1; display: flex; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1379px; height: 1204px; padding: 0px;"><div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: 10; float: none; flex-shrink: 1; display: flex; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1379px; height: 1204px; padding: 0px;"><div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: 10; float: none; flex-shrink: 1; display: flex; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1379px; height: 1204px; padding: 0px;"><div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: 10; float: none; flex-shrink: 1; display: flex; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1379px; height: 1204px; padding: 0px;"><section id="horizontal-scroller" class="h-screen bg-zinc-950 relative z-10 flex items-center pt-24 border-t border-zinc-900" style="inset: 0px auto auto 0px; margin: 0px; max-width: 1379px; width: 1379px; max-height: 1204px; height: 1204px; padding: 96px 0px 0px;">
+            <div class="absolute left-6 md:left-16 top-32 z-20 w-80 text-zinc-50">
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-xs uppercase tracking-widest text-zinc-500 label-scramble font-sans">FEATURED</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl leading-[1.1] font-google-sans-flex tracking-tighter font-light">
+                    Handpicked<br><span class="text-zinc-500 font-google-sans-flex tracking-tighter font-light">properties.</span>
+                </h2>
+            </div>
+
+            <div id="horizontal-container" class="flex gap-6 pl-[100vw] md:pl-[40vw] pr-32 h-[65vh] items-center">
+                
+                <!-- Card 1 -->
+                <div class="w-[85vw] md:w-[420px] h-full shrink-0 group flex flex-col p-4 rounded-3xl border border-zinc-900 bg-zinc-950/50 hover:bg-zinc-900/30 transition-colors duration-500 gs-h-card">
+                    <div class="img-parallax-wrap h-[60%] w-full rounded-2xl overflow-hidden cursor-interact" data-cursor-text="View">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/9d2cc9af-026b-4c08-a0b2-d7c601376d5a_800w.webp" alt="Prop" class="img-parallax transition-transform duration-1000 group-hover:scale-105 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 object-cover w-full h-auto">
+                    </div>
+                    <div class="mt-6 flex flex-col justify-between flex-grow px-2">
+                        <div>
+                            <span class="text-xs text-zinc-500 mb-2 block tracking-widest uppercase font-sans">Vienna, Inner City</span>
+                            <h3 class="text-xl md:text-2xl text-zinc-50 font-google-sans-flex tracking-tighter font-light">Kärntner Ring Penthouse</h3>
+                        </div>
+                        <div class="border-t border-zinc-900 pt-4 mt-4 flex justify-between text-sm text-zinc-400 font-light">
+                            <span class="font-sans">4 Beds</span>
+                            <span class="font-sans">185 sqm</span>
+                            <span class="text-zinc-50 font-medium font-sans">€ 4.25M</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="w-[85vw] md:w-[420px] h-full shrink-0 group flex flex-col p-4 rounded-3xl border border-zinc-900 bg-zinc-950/50 hover:bg-zinc-900/30 transition-colors duration-500 gs-h-card">
+                    <div class="img-parallax-wrap h-[60%] w-full rounded-2xl overflow-hidden cursor-interact" data-cursor-text="View">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8f0afe4e-00e6-4fe9-9e21-950a760b51f3_800w.jpg" alt="Prop" class="img-parallax transition-transform duration-1000 group-hover:scale-105 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 object-cover w-full h-auto">
+                    </div>
+                    <div class="mt-6 flex flex-col justify-between flex-grow px-2">
+                        <div>
+                            <span class="text-xs text-zinc-500 mb-2 block tracking-widest uppercase font-sans">Vienna, Döbling</span>
+                            <h3 class="text-xl md:text-2xl text-zinc-50 font-google-sans-flex tracking-tighter font-light">Modern City Villa</h3>
+                        </div>
+                        <div class="border-t border-zinc-900 pt-4 mt-4 flex justify-between text-sm text-zinc-400 font-light">
+                            <span class="font-sans">6 Beds</span>
+                            <span class="font-sans">320 sqm</span>
+                            <span class="text-zinc-50 font-medium font-sans">€ 3.80M</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="w-[85vw] md:w-[420px] h-full shrink-0 group flex flex-col p-4 rounded-3xl border border-zinc-900 bg-zinc-950/50 hover:bg-zinc-900/30 transition-colors duration-500 gs-h-card">
+                    <div class="img-parallax-wrap h-[60%] w-full rounded-2xl overflow-hidden cursor-interact" data-cursor-text="View">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/70fab80d-8316-45d5-b3e5-e3c5c2662383_800w.webp" alt="Prop" class="img-parallax transition-transform duration-1000 group-hover:scale-105 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 object-cover w-full h-auto">
+                    </div>
+                    <div class="mt-6 flex flex-col justify-between flex-grow px-2">
+                        <div>
+                            <span class="text-xs text-zinc-500 mb-2 block tracking-widest uppercase font-sans">Vienna, Neubau</span>
+                            <h3 class="text-xl md:text-2xl text-zinc-50 font-google-sans-flex tracking-tighter font-light">Architectural Loft</h3>
+                        </div>
+                        <div class="border-t border-zinc-900 pt-4 mt-4 flex justify-between text-sm text-zinc-400 font-light">
+                            <span class="font-sans">3 Beds</span>
+                            <span class="font-sans">145 sqm</span>
+                            <span class="text-zinc-50 font-medium font-sans">Rent: € 3,200</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-[300px] h-full shrink-0 flex items-center justify-center">
+                    <a href="#" class="btn-magnetic border border-zinc-800 rounded-full w-32 h-32 flex flex-col items-center justify-center gap-2 group cursor-interact hover:bg-zinc-50 transition-colors">
+                        <span class="text-xs uppercase tracking-widest text-center text-zinc-400 group-hover:text-zinc-950 transition-colors font-sans">View<br>All</span>
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-xl text-zinc-50 group-hover:text-zinc-950 group-hover:translate-x-1 transition-all" style="stroke-width: 1.5;"></iconify-icon>
+                    </a>
+                </div>
+
+            </div>
+        </section></div></div></div></div></div>
+    </div>
+
+    <!-- About -->
+    <section class="bg-zinc-50 text-zinc-950 py-32 md:py-48 relative z-10 border-t border-zinc-200">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-16 flex flex-col md:flex-row items-center gap-16 md:gap-32">
+            
+            <div class="w-full md:w-[50%] relative">
+                <div class="img-parallax-wrap h-[60vh] md:h-[80vh] w-full rounded-2xl overflow-hidden clip-reveal clip-hidden" style="clip-path: inset(0px 0px 0%);">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/c0f2cda3-8ae4-46f5-ab21-578fd11909bb/1600w.jpg" alt="Team" class="img-parallax grayscale opacity-90 object-cover w-full h-auto">
+                </div>
+            </div>
+
+            <div class="w-full md:w-[50%]">
+                <div class="flex items-center gap-4 mb-8 gs-reveal fade-up">
+                    <span class="text-xs uppercase tracking-widest text-zinc-500 label-scramble font-sans">ABOUT US</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl tracking-tight font-normal leading-[1.1] mb-8 masked-heading">
+                    <span class="block">
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">More</span></span>
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">than</span></span>
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">just</span></span>
+                    </span>
+                    <span class="block text-zinc-500">
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">brokerage.</span></span>
+                    </span>
+                </h2>
+                <p class="text-lg text-zinc-600 mb-12 gs-reveal blur-in max-w-md font-light leading-relaxed tracking-tight font-sans" style=" filter: blur(0px);">
+                    Our dedicated team provides expert guidance at every step. We possess intimate knowledge of each property in our portfolio, ensuring seamless communication and a transparent process.
+                </p>
+                
+                <div class="gs-reveal slide-up">
+                    <button class="rounded-full border border-zinc-300 bg-zinc-50 px-8 py-3 text-xs uppercase tracking-widest font-medium text-zinc-950 hover:bg-zinc-100 transition-colors flex items-center gap-3 cursor-interact font-sans">
+                        Meet the team
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="bg-zinc-950 text-zinc-50 py-32 md:py-48 relative z-10 border-t border-zinc-900">
+        <div class="max-w-[1200px] mx-auto px-6 md:px-16 text-center mb-24 md:mb-32">
+            <div class="flex items-center justify-center gap-4 mb-8 gs-reveal fade-up">
+                <span class="text-xs uppercase tracking-widest text-zinc-500 label-scramble font-sans">OUR SERVICES</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl tracking-tight font-normal leading-[1.1] masked-heading">
+                <span class="block">
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">Two</span></span>
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">paths.</span></span>
+                </span>
+                <span class="block text-zinc-500">
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">One</span></span>
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">standard.</span></span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="max-w-[1200px] mx-auto px-6 md:px-16 relative flex flex-col md:flex-row gap-16 md:gap-0">
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-zinc-900 origin-top gs-line-draw-v z-0"></div>
+
+            <div class="w-full md:w-1/2 md:pr-24 relative z-10">
+                <h3 class="text-sm uppercase tracking-widest font-normal mb-16 text-zinc-500 gs-reveal fade-left border-b border-zinc-900 pb-4 inline-block font-sans">I want to sell</h3>
+                
+                <div class="space-y-16">
+                    <div class="gs-reveal slide-right group">
+                        <div class="text-sm font-mono text-zinc-600 mb-4 transition-colors group-hover:text-zinc-50 font-sans">01</div>
+                        <h4 class="text-2xl mb-3 text-zinc-100 font-google-sans-flex tracking-tighter font-light">Strategic Planning</h4>
+                        <p class="text-zinc-500 font-light leading-relaxed text-sm md:text-base font-sans">In-depth market analysis and bespoke advisory for optimal positioning of your asset.</p>
+                    </div>
+                    <div class="gs-reveal slide-right group" style="transition-delay: 0.1s;">
+                        <div class="text-sm font-mono text-zinc-600 mb-4 transition-colors group-hover:text-zinc-50 font-sans">02</div>
+                        <h4 class="text-2xl mb-3 text-zinc-100 font-google-sans-flex tracking-tighter font-light">Marketing Concept</h4>
+                        <p class="text-zinc-500 font-light leading-relaxed text-sm md:text-base font-sans">Professional preparation, high-end photography, and targeted placement across exclusive channels.</p>
+                    </div>
+                    <div class="gs-reveal slide-right group" style="transition-delay: 0.2s;">
+                        <div class="text-sm font-mono text-zinc-600 mb-4 transition-colors group-hover:text-zinc-50 font-sans">03</div>
+                        <h4 class="text-2xl mb-3 text-zinc-100 font-google-sans-flex tracking-tighter font-light">Successful Closing</h4>
+                        <p class="text-zinc-500 font-light leading-relaxed text-sm md:text-base font-sans">Confident negotiation and transparent guidance through to final contract signature.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 md:pl-24 relative z-10">
+                <h3 class="text-sm uppercase tracking-widest font-normal mb-16 text-zinc-500 gs-reveal fade-right text-left md:text-right border-b border-zinc-900 pb-4 inline-block md:float-right font-sans">I want to buy</h3>
+                <div class="clear-both"></div>
+
+                <div class="space-y-16 md:text-right">
+                    <div class="gs-reveal slide-left text-left md:text-right group">
+                        <div class="text-sm font-mono text-zinc-600 mb-4 transition-colors group-hover:text-zinc-50 font-sans">01</div>
+                        <h4 class="text-2xl mb-3 text-zinc-100 font-google-sans-flex tracking-tighter font-light">Needs Analysis</h4>
+                        <p class="text-zinc-500 font-light leading-relaxed ml-auto max-w-sm text-sm md:text-base font-sans">Detailed consultation to capture your exact search criteria and lifestyle requirements.</p>
+                    </div>
+                    <div class="gs-reveal slide-left text-left md:text-right group" style="transition-delay: 0.1s;">
+                        <div class="text-sm font-mono text-zinc-600 mb-4 transition-colors group-hover:text-zinc-50 font-sans">02</div>
+                        <h4 class="text-2xl mb-3 text-zinc-100 font-google-sans-flex tracking-tighter font-light">Active Search</h4>
+                        <p class="text-zinc-500 font-light leading-relaxed ml-auto max-w-sm text-sm md:text-base font-sans">Leveraging our off-market network to present perfectly matched, pre-selected properties.</p>
+                    </div>
+                    <div class="gs-reveal slide-left text-left md:text-right group" style="transition-delay: 0.2s;">
+                        <div class="text-sm font-mono text-zinc-600 mb-4 transition-colors group-hover:text-zinc-50 font-sans">03</div>
+                        <h4 class="text-2xl mb-3 text-zinc-100 font-google-sans-flex tracking-tighter font-light">360° Support</h4>
+                        <p class="text-zinc-500 font-light leading-relaxed ml-auto max-w-sm text-sm md:text-base font-sans">From initial viewing and legal review to the final handover of keys.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Property Search -->
+    <section class="bg-zinc-950 py-32 relative z-10 border-t border-zinc-900">
+        <div class="max-w-[1000px] mx-auto px-6">
+            
+            <div class="text-center mb-16">
+                <div class="flex items-center justify-center gap-4 mb-6 gs-reveal fade-up">
+                    <span class="text-xs uppercase tracking-widest text-zinc-500 label-scramble font-sans">PROPERTY SEARCH</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl leading-[1.1] text-zinc-50 font-google-sans-flex tracking-tighter font-light">
+                    Find your <span class="text-zinc-500 font-google-sans-flex tracking-tighter font-light">space.</span>
+                </h2>
+            </div>
+
+            <div class="bg-zinc-900/20 border border-zinc-800/50 p-8 md:p-12 rounded-3xl gs-reveal scale-reveal">
+                
+                <div class="flex justify-center mb-12">
+                    <div class="bg-zinc-900 p-1 rounded-full inline-flex relative border border-zinc-800">
+                        <div class="absolute left-1 top-1 bottom-1 w-[calc(50%-0.25rem)] bg-zinc-800 rounded-full transition-all duration-300 z-0 border border-zinc-700"></div>
+                        <button class="relative z-10 px-8 py-2.5 text-xs uppercase tracking-widest text-zinc-50 font-normal transition-colors w-32 cursor-interact font-sans">Buy</button>
+                        <button class="relative z-10 px-8 py-2.5 text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors w-32 cursor-interact font-sans">Rent</button>
+                    </div>
+                </div>
+
+                <form class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="relative gs-reveal blur-in" style=" filter: blur(0px);">
+                        <label class="block text-[10px] uppercase tracking-widest text-zinc-500 mb-3 font-sans">Property Type</label>
+                        <div class="border-b border-zinc-800 pb-3 flex justify-between items-center cursor-interact group">
+                            <span class="text-base text-zinc-300 group-hover:text-zinc-50 transition-colors font-sans">All Properties</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-zinc-600 group-hover:text-zinc-300 transition-colors" style="stroke-width: 1.5;"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="relative gs-reveal blur-in" style="transition-delay: 0.1s;">
+                        <label class="block text-[10px] uppercase tracking-widest text-zinc-500 mb-3 font-sans">Location</label>
+                        <div class="border-b border-zinc-800 pb-3 flex justify-between items-center cursor-interact group">
+                            <span class="text-base text-zinc-300 group-hover:text-zinc-50 transition-colors font-sans">Vienna &amp; Surroundings</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-zinc-600 group-hover:text-zinc-300 transition-colors" style="stroke-width: 1.5;"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="relative gs-reveal blur-in" style="transition-delay: 0.2s;">
+                        <div class="flex justify-between mb-3">
+                            <label class="block text-[10px] uppercase tracking-widest text-zinc-500 font-sans">Price</label>
+                            <span class="text-xs text-zinc-400 font-sans">€0 - €5M+</span>
+                        </div>
+                        <div class="pt-2">
+                            <input type="range" min="0" max="100" value="50" class="w-full cursor-interact">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-3 mt-8 flex justify-center gs-reveal fade-up">
+                        <button type="button" class="btn-magnetic bg-zinc-50 text-zinc-950 px-10 py-3 rounded-full text-xs uppercase tracking-widest font-medium w-full md:w-auto cursor-interact hover:bg-zinc-200 transition-colors font-sans">
+                            Search Properties
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Developments -->
+    <section class="bg-zinc-50 text-zinc-950 py-32 md:py-48 relative z-10 border-t border-zinc-200">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-16">
+            
+            <div class="mb-24 md:mb-32">
+                <div class="flex items-center gap-4 mb-8 gs-reveal fade-up">
+                    <span class="text-xs uppercase tracking-widest text-zinc-500 label-scramble font-sans">DEVELOPMENTS</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl tracking-tight font-normal leading-[1.1] masked-heading">
+                    <span class="block">
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">Current</span></span>
+                    </span>
+                    <span class="block text-zinc-400">
+                        <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">projects.</span></span>
+                    </span>
+                </h2>
+            </div>
+
+            <!-- Project 1 -->
+            <div class="flex flex-col lg:flex-row gap-12 lg:gap-24 items-center mb-32 border-b border-zinc-200 pb-32">
+                <div class="w-full lg:w-3/5 order-2 lg:order-1 relative group cursor-interact" data-cursor-text="Explore">
+                    <div class="img-parallax-wrap aspect-[16/10] w-full rounded-2xl overflow-hidden clip-reveal clip-hidden bg-zinc-200" style="clip-path: inset(0px 0px 0%);">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/02cd101a-ea64-461e-b11d-755119819422_1600w.webp" alt="Project" class="img-parallax transition-transform duration-[1.5s] group-hover:scale-105 grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 object-cover w-full h-auto">
+                    </div>
+                </div>
+                <div class="w-full lg:w-2/5 order-1 lg:order-2 gs-reveal fade-left">
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 mb-6 block border border-zinc-300 rounded-full px-3 py-1 inline-block font-sans">Planning</span>
+                    <h3 class="text-3xl md:text-4xl mb-6 text-zinc-900 font-google-sans-flex tracking-tighter font-light">The Danube</h3>
+                    <p class="text-base text-zinc-600 mb-8 font-light leading-relaxed font-sans">Exclusive waterfront living. 45 luxury apartments with unobstructed views of the Danube, private moorings, and 5-star concierge service.</p>
+                    <a href="#" class="inline-flex items-center gap-3 text-xs uppercase tracking-widest font-medium text-zinc-900 hover:text-zinc-500 transition-colors group font-sans">
+                        Discover Project
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-lg group-hover:translate-x-1 transition-transform" style="stroke-width: 1.5;"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="flex flex-col lg:flex-row gap-12 lg:gap-24 items-center">
+                <div class="w-full lg:w-2/5 gs-reveal fade-right">
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 mb-6 block border border-zinc-300 rounded-full px-3 py-1 inline-block font-sans">Construction</span>
+                    <h3 class="text-3xl md:text-4xl mb-6 text-zinc-900 font-google-sans-flex tracking-tighter font-light">Palais Ring</h3>
+                    <p class="text-base text-zinc-600 mb-8 font-light leading-relaxed font-sans">Revitalization of a historic palace on the Ringstraße. A perfect synthesis of imperial heritage and state-of-the-art smart home technology.</p>
+                    <a href="#" class="inline-flex items-center gap-3 text-xs uppercase tracking-widest font-medium text-zinc-900 hover:text-zinc-500 transition-colors group font-sans">
+                        Discover Project
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-lg group-hover:translate-x-1 transition-transform" style="stroke-width: 1.5;"></iconify-icon>
+                    </a>
+                </div>
+                <div class="w-full lg:w-3/5 relative group cursor-interact" data-cursor-text="Explore">
+                    <div class="img-parallax-wrap aspect-[16/10] w-full rounded-2xl overflow-hidden clip-reveal clip-hidden bg-zinc-200" style="clip-path: inset(0px 0px 0%);">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e7094b64-53eb-4296-9de0-8b45cc99b04d_1600w.webp" alt="Project" class="img-parallax transition-transform duration-[1.5s] group-hover:scale-105 grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 object-cover w-full h-auto">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Testimonial -->
+    <section class="bg-zinc-950 py-32 md:py-48 relative z-10 overflow-hidden border-t border-zinc-900">
+        <div class="max-w-[800px] mx-auto px-6 text-center relative">
+            <iconify-icon icon="solar:quote-left-bold" class="text-[120px] md:text-[200px] text-zinc-900 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 gs-reveal scale-reveal" style="stroke-width: 1.5;"></iconify-icon>
+
+            <div class="relative z-10 gs-reveal blur-in" style=" filter: blur(0px);">
+                <p class="text-xl md:text-3xl leading-relaxed text-zinc-300 mb-12 font-google-sans-flex tracking-tighter font-light">
+                    "Journey made the entire process remarkably effortless. Highly professional, extremely discreet, and with a true eye for the exceptional."
+                </p>
+                <div class="flex flex-col items-center gap-2">
+                    <span class="w-8 h-[1px] bg-zinc-800 mb-4"></span>
+                    <h4 class="text-sm font-medium tracking-tight text-zinc-100 font-sans">Dr. Thomas M.</h4>
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 font-sans">Property Owner, Vienna</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="py-32 md:py-48 bg-zinc-950 relative z-10 flex items-center justify-center overflow-hidden border-t border-zinc-900">
+        <div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+            <div class="absolute top-1/2 left-1/2 w-[800px] h-[800px] bg-zinc-800 rounded-full blur-[150px] -translate-y-1/2 -translate-x-1/2"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
+            <div class="flex items-center justify-center gap-4 mb-8 gs-reveal fade-up">
+                <span class="text-xs uppercase tracking-widest text-zinc-500 label-scramble font-sans">CONTACT</span>
+            </div>
+            
+            <h2 class="text-4xl md:text-6xl tracking-tight font-normal leading-[1.1] mb-8 masked-heading">
+                <span class="block">
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">Ready</span></span>
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">for</span></span>
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">your</span></span>
+                </span>
+                <span class="block text-zinc-500">
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">next</span></span>
+                    <span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word font-google-sans-flex tracking-tighter font-light">step?</span></span>
+                </span>
+            </h2>
+            
+            <p class="text-base text-zinc-400 font-light mb-12 gs-reveal blur-in max-w-xl mx-auto font-sans" style=" filter: blur(0px);">
+                Let us find your perfect property together or handle the sale of your asset with utmost discretion and professionalism.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 gs-reveal fade-up">
+                <button class="btn-magnetic bg-zinc-50 text-zinc-950 px-8 py-3 rounded-full text-xs uppercase tracking-widest font-medium w-full sm:w-auto cursor-interact hover:bg-zinc-200 transition-colors font-sans">
+                    Get in Touch
+                </button>
+                <a href="tel:+4318909041" class="btn-magnetic border border-zinc-800 text-zinc-300 px-8 py-3 rounded-full text-xs uppercase tracking-widest font-medium w-full sm:w-auto hover:bg-zinc-900 transition-colors flex items-center justify-center gap-3 cursor-interact font-sans">
+                    <iconify-icon icon="solar:phone-linear" class="text-base" style="stroke-width: 1.5;"></iconify-icon>
+                    +43 1 890 90 41
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050505] pt-24 pb-12 px-6 md:px-16 relative z-10 border-t border-zinc-900">
+        <div class="max-w-[1400px] mx-auto">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+                
+                <div class="gs-reveal fade-up">
+                    <div class="text-xl uppercase mb-6 text-zinc-50 font-google-sans-flex tracking-tighter font-light">Journey</div>
+                    <p class="text-zinc-500 text-xs leading-relaxed max-w-xs mb-8 font-light font-sans">
+                        Premium real estate brokerage in Vienna. Discreet, professional, and meeting the highest standards since 2009.
+                    </p>
+                </div>
+
+                <div class="gs-reveal fade-up" style="transition-delay: 0.1s;">
+                    <h5 class="text-[10px] uppercase tracking-widest text-zinc-600 mb-6 font-sans">Navigation</h5>
+                    <ul class="space-y-4 text-xs text-zinc-400 font-light">
+                        <li><a href="#" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">Properties</a></li>
+                        <li><a href="#" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">Developments</a></li>
+                        <li><a href="#" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">About</a></li>
+                        <li><a href="#" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">Services</a></li>
+                        <li><a href="#" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="gs-reveal fade-up" style="transition-delay: 0.2s;">
+                    <h5 class="text-[10px] uppercase tracking-widest text-zinc-600 mb-6 font-sans">Contact</h5>
+                    <ul class="space-y-4 text-xs text-zinc-400 font-light">
+                        <li class="font-sans">Kärntner Ring 10/10</li>
+                        <li class="font-sans">1010 Vienna, Austria</li>
+                        <li class="pt-4"><a href="tel:+4318909041" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">+43 1 890 90 41</a></li>
+                        <li><a href="mailto:office@journey.at" class="hover:text-zinc-50 transition-colors cursor-interact font-sans">office@journey.at</a></li>
+                    </ul>
+                </div>
+
+                <div class="gs-reveal fade-up" style="transition-delay: 0.3s;">
+                    <h5 class="text-[10px] uppercase tracking-widest text-zinc-600 mb-6 font-sans">Newsletter</h5>
+                    <p class="text-zinc-500 text-xs mb-4 font-light font-sans">Receive exclusive off-market offers.</p>
+                    <form class="relative mb-8">
+                        <input type="email" placeholder="Email Address" class="w-full bg-transparent border-b border-zinc-800 pb-3 text-xs text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors cursor-interact font-light">
+                        <button type="button" class="absolute right-0 top-0 text-zinc-600 hover:text-zinc-50 transition-colors cursor-interact">
+                            <iconify-icon icon="solar:arrow-right-linear" class="text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                        </button>
+                    </form>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-8 h-8 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 hover:text-zinc-950 transition-all cursor-interact"><iconify-icon icon="solar:instagram-linear" class="text-sm" style="stroke-width: 1.5;"></iconify-icon></a>
+                        <a href="#" class="w-8 h-8 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 hover:text-zinc-950 transition-all cursor-interact"><iconify-icon icon="solar:linkedin-linear" class="text-sm" style="stroke-width: 1.5;"></iconify-icon></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-zinc-900 text-[10px] uppercase tracking-widest text-zinc-600 gs-reveal fade-up">
+                <p class="font-sans">© 2026 JOURNEY Real Estate</p>
+                <div class="flex gap-8 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-zinc-400 transition-colors cursor-interact font-sans">Imprint</a>
+                    <a href="#" class="hover:text-zinc-400 transition-colors cursor-interact font-sans">Privacy Policy</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Main JS -->
+    <script>
+        document.querySelectorAll('.masked-heading').forEach(heading => {
+            const html = heading.innerHTML;
+            const lines = html.split('<br>');
+            heading.innerHTML = lines.map(line => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = line;
+                let processedLine = line;
+                
+                if(!line.includes('js-word')) {
+                     const words = tempDiv.textContent.split(' ').map(word => {
+                        if(!word.trim()) return '';
+                        return `<span class="inline-block overflow-hidden align-bottom pb-1"><span class="inline-block translate-y-[110%] opacity-0 js-word">${word}</span></span>`;
+                    }).join(' ');
+                    processedLine = `<span class="block">${words}</span>`;
+                }
+                return processedLine;
+            }).join('');
+        });
+
+        window.addEventListener('load', () => {
+            gsap.to('#loader h1', { opacity: 0, scale: 1.05, duration: 0.8, delay: 0.3, ease: "power2.inOut" });
+            gsap.to('#loader', { opacity: 0, duration: 0.8, delay: 0.8, ease: "power2.inOut", onComplete: () => {
+                document.getElementById('loader').style.display = 'none';
+            }});
+            
+            setTimeout(() => {
+                gsap.to('.hero-line', { y: 0, duration: 1.2, ease: "power4.out", stagger: 0.15 });
+            }, 800);
+        });
+
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        lenis.on('scroll', (e) => {
+            const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('scroll-progress').style.width = `${progress}%`;
+        });
+
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorText = document.getElementById('cursor-text');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        const loopCursor = () => {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursorDot.style.left = `${cursorX}px`;
+            cursorDot.style.top = `${cursorY}px`;
+            requestAnimationFrame(loopCursor);
+        };
+        requestAnimationFrame(loopCursor);
+
+        document.querySelectorAll('.cursor-interact').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hover-active');
+                if(el.dataset.cursorText) cursorText.textContent = el.dataset.cursorText;
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hover-active');
+                cursorText.textContent = '';
+            });
+        });
+
+        if(window.innerWidth < 768) {
+            cursorDot.style.display = 'none';
+            document.body.style.cursor = 'auto';
+        }
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        ScrollTrigger.create({
+            start: 'top -50',
+            end: 99999,
+            toggleClass: {className: 'backdrop-blur-md bg-zinc-950/80 border-b-zinc-900', targets: '#navbar'}
+        });
+
+        const words = document.querySelectorAll('.rotating-word');
+        let currentWord = 0;
+        setInterval(() => {
+            gsap.to(words[currentWord], { y: -10, opacity: 0, duration: 0.5 });
+            words[currentWord].classList.remove('active');
+            
+            currentWord = (currentWord + 1) % words.length;
+            
+            gsap.fromTo(words[currentWord], 
+                { y: 10, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.5 }
+            );
+            words[currentWord].classList.add('active');
+        }, 3000);
+
+        const revealElements = document.querySelectorAll('.gs-reveal');
+        revealElements.forEach(el => {
+            if(el.classList.contains('fade-up')) {
+                gsap.fromTo(el, {y: 30, opacity: 0}, {
+                    y: 0, opacity: 1, duration: 1, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%" }
+                });
+            } else if(el.classList.contains('blur-in')) {
+                gsap.fromTo(el, {y: 20, opacity: 0, filter: "blur(8px)"}, {
+                    y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%" }
+                });
+            } else if(el.classList.contains('scale-reveal')) {
+                gsap.fromTo(el, {scale: 0.95, opacity: 0}, {
+                    scale: 1, opacity: 1, duration: 1.2, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%" }
+                });
+            } else if(el.classList.contains('slide-right')) {
+                gsap.fromTo(el, {x: -30, opacity: 0}, {
+                    x: 0, opacity: 1, duration: 1, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%" }
+                });
+            } else if(el.classList.contains('slide-left')) {
+                gsap.fromTo(el, {x: 30, opacity: 0}, {
+                    x: 0, opacity: 1, duration: 1, ease: "power3.out",
+                    scrollTrigger: { trigger: el, start: "top 85%" }
+                });
+            }
+        });
+
+        document.querySelectorAll('.masked-heading').forEach(heading => {
+            const words = heading.querySelectorAll('.js-word');
+            if(words.length === 0) return;
+            gsap.to(words, {
+                y: 0, opacity: 1, duration: 1.2, ease: "power4.out", stagger: 0.05,
+                scrollTrigger: { trigger: heading, start: "top 85%" }
+            });
+        });
+
+        document.querySelectorAll('.clip-reveal').forEach(el => {
+            el.classList.add('clip-hidden');
+            gsap.to(el, {
+                clipPath: "inset(0 0 0% 0)",
+                duration: 1.5,
+                ease: "power3.inOut",
+                scrollTrigger: { trigger: el, start: "top 85%" }
+            });
+        });
+
+        gsap.to('.gs-line-draw-v', {
+            scaleY: 1, duration: 1.5, ease: "power3.inOut",
+            scrollTrigger: { trigger: '.gs-line-draw-v', start: "top 85%" }
+        });
+
+        gsap.utils.toArray('.img-parallax').forEach(img => {
+            gsap.to(img, {
+                yPercent: 10, ease: "none",
+                scrollTrigger: { trigger: img.parentElement, scrub: true }
+            });
+        });
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        document.querySelectorAll('.label-scramble').forEach(label => {
+            let originalText = label.innerText;
+            ScrollTrigger.create({
+                trigger: label, start: "top 90%",
+                onEnter: () => {
+                    let iteration = 0;
+                    let interval = setInterval(() => {
+                        label.innerText = label.innerText
+                            .split("")
+                            .map((letter, index) => {
+                                if(letter === ' ') return ' ';
+                                if(index < iteration) return originalText[index];
+                                return letters[Math.floor(Math.random() * 26)];
+                            }).join("");
+                        if(iteration >= originalText.length) clearInterval(interval);
+                        iteration += 1 / 2;
+                    }, 30);
+                }
+            });
+        });
+
+        if(window.innerWidth > 768) {
+            const horizScroller = document.querySelector("#horizontal-container");
+            const scrollerWidth = horizScroller.scrollWidth;
+            gsap.to(horizScroller, {
+                x: () => -(scrollerWidth - window.innerWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#horizontal-scroller",
+                    pin: true, scrub: 1,
+                    end: () => "+=" + scrollerWidth
+                }
+            });
+        }
+
+        const initThreeJS = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 800;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 60;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                color: '#ffffff',
+                transparent: true,
+                opacity: 0.15,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            let targetX = 0;
+            let targetY = 0;
+            
+            document.addEventListener('mousemove', (event) => {
+                targetX = (event.clientX / window.innerWidth) * 2 - 1;
+                targetY = -(event.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            const clock = new THREE.Clock();
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+                particlesMesh.rotation.y = elapsedTime * 0.02;
+                particlesMesh.rotation.x = elapsedTime * 0.01;
+
+                particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+                particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+                camera.position.x += (targetX * 2 - camera.position.x) * 0.02;
+                camera.position.y += (targetY * 2 - camera.position.y) * 0.02;
+
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        initThreeJS();
+    </script>
+
+</body></html>

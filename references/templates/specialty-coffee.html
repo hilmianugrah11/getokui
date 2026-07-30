@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Café Nova — Specialty Coffee &amp; Slow Mornings</title>
+<meta name="description" content="Café Nova is a warm specialty coffee shop serving single-origin espresso, seasonal pastries, and calm neighborhood rituals.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+<body class="bg-[#9d9283] text-[#17191f] antialiased selection:bg-[#1f6f49] selection:text-white" style="font-family: Inter, ui-sans-serif, system-ui, sans-serif;">
+  <main class="mx-auto min-h-screen w-full max-w-[112rem] overflow-hidden bg-[#faf8f1] shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)]">
+    <header class="sticky top-0 z-50 border-b border-black/5 bg-[#faf8f1]/88 backdrop-blur-xl">
+      <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
+        <a href="#top" aria-label="Café Nova home" data-magnetic="" class="group flex items-center gap-3 rounded-full outline-none transition duration-300 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[#1f6f49]/40">
+          
+          <span class="text-sm font-semibold tracking-[-0.06em] text-[#17191f] sm:text-base">CAFÉNOVA</span>
+        </a>
+
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#features" data-interactive="" class="rounded-full px-3 py-2 text-sm font-medium text-black/60 transition duration-300 hover:bg-white hover:text-[#17191f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/35">Menu</a>
+          <a href="#testimonials" data-interactive="" class="rounded-full px-3 py-2 text-sm font-medium text-black/60 transition duration-300 hover:bg-white hover:text-[#17191f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/35">Stories</a>
+          <a href="#about" data-interactive="" class="rounded-full px-3 py-2 text-sm font-medium text-black/60 transition duration-300 hover:bg-white hover:text-[#17191f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/35">About</a>
+          <a href="#gallery" data-interactive="" class="rounded-full px-3 py-2 text-sm font-medium text-black/60 transition duration-300 hover:bg-white hover:text-[#17191f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/35">Gallery</a>
+        </div>
+
+        <a href="#visit" data-magnetic="" class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-[#17191f] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#f3f7ef] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/35">
+          Visit today
+          <iconify-icon icon="solar:arrow-right-linear" stroke-width="1.5" class="text-lg transition duration-300 group-hover:translate-x-1"></iconify-icon>
+        </a>
+      </nav>
+    </header>
+
+    <section class="overflow-hidden sm:px-8 sm:pb-24 sm:pt-20 lg:px-10 lg:pb-28 pt-16 pr-5 pb-20 pl-5 relative gap-x-12 gap-y-12" id="top">
+      <div aria-hidden="true" class="pointer-events-none absolute top-0 right-0 bottom-0 left-0 gap-x-12 gap-y-12">
+        <div class="absolute left-1/2 top-0 h-[32rem] w-[56rem] -translate-x-1/2 rounded-full bg-[#1f6f49]/10 blur-3xl"></div>
+        <div class="absolute right-0 top-28 h-[22rem] w-[22rem] rounded-full bg-[#d8b48b]/20 blur-3xl"></div>
+        <div class="absolute inset-x-0 top-8 mx-auto h-72 max-w-5xl opacity-25" style="background-image: radial-gradient(circle, rgba(23,25,31,0.13) 1px, transparent 1px); background-size: 2rem 2rem;"></div>
+      </div>
+
+      <div class="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] max-w-7xl mr-auto ml-auto relative gap-x-12 gap-y-12 items-center">
+        <div class="text-center lg:text-left">
+          <div data-reveal="" class="inline-flex items-center gap-2 rounded-full bg-[#1f6f49] px-3 py-1.5 text-xs font-semibold text-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" style=" filter: blur(0px);">
+            <iconify-icon icon="solar:cup-hot-linear" stroke-width="1.5" class="text-base"></iconify-icon>
+            Open daily · 7:00—18:00
+          </div>
+
+          <h1 data-mask-reveal="" class="mt-6 max-w-5xl text-5xl font-light leading-none tracking-tight text-[#17191f] sm:text-6xl lg:text-7xl" style="font-family: 'Instrument Serif', Georgia, serif;" aria-label="Coffee roasted for bright mornings and slower afternoons"><span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">Coffee</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">roasted</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">for</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">bright</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">mornings</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">and</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">slower</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">afternoons</span></span> </h1>
+
+          <p data-reveal="" class="mx-auto mt-6 max-w-2xl text-base leading-7 text-black/65 sm:text-lg lg:mx-0" style=" filter: blur(0px);">
+            Café Nova is a neighborhood specialty coffee shop serving floral espresso, hand-poured filter, small-batch pastries, and a room designed for calm conversation.
+          </p>
+
+          <div data-reveal="" class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start" style=" filter: blur(0px);">
+            <a href="#features" data-magnetic="" class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#17191f] px-7 py-4 text-sm font-semibold text-white shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-[#1f6f49] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/40 sm:w-auto">
+              Explore the menu
+              <iconify-icon icon="solar:alt-arrow-right-linear" stroke-width="1.5" class="text-lg transition duration-300 group-hover:translate-x-1"></iconify-icon>
+            </a>
+            <a href="#visit" data-magnetic="" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-black/20 bg-white px-7 py-4 text-sm font-semibold text-[#17191f] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:bg-[#f4f7ef] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f6f49]/35 sm:w-auto">
+              Reserve a table
+            </a>
+          </div>
+
+          <div data-reveal="" class="mt-10 grid grid-cols-3 gap-3 rounded-2xl border border-black/5 bg-white/65 p-3 text-left shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] backdrop-blur" style=" filter: blur(0px);">
+            <div class="rounded-xl bg-[#f7f7f3] p-4">
+              <p class="text-2xl font-light tracking-tight sm:text-3xl" style="font-family: 'Instrument Serif', Georgia, serif;">18</p>
+              <p class="mt-1 text-xs font-medium text-black/55">single-origin lots</p>
+            </div>
+            <div class="rounded-xl bg-[#f7f7f3] p-4">
+              <p class="text-2xl font-light tracking-tight sm:text-3xl" style="font-family: 'Instrument Serif', Georgia, serif;">4.9</p>
+              <p class="mt-1 text-xs font-medium text-black/55">guest rating</p>
+            </div>
+            <div class="rounded-xl bg-[#f7f7f3] p-4">
+              <p class="text-2xl font-light tracking-tight sm:text-3xl" style="font-family: 'Instrument Serif', Georgia, serif;">7d</p>
+              <p class="mt-1 text-xs font-medium text-black/55">fresh roasting</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-reveal="" class="relative" style=" filter: blur(0px);">
+          <div class="absolute z-20 -left-4 -top-4 hidden rounded-2xl bg-white p-4 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] sm:block lg:-left-8">
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e7efe2] text-[#1f6f49]">
+                <iconify-icon icon="solar:leaf-linear" stroke-width="1.5" class="text-xl"></iconify-icon>
+              </span>
+              <div class="">
+                <p class="text-sm font-medium">Ethiopia Guji</p>
+                <p class="text-xs text-black/50">jasmine · lime · honey</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-[2rem] bg-[#e9eadf] p-3 shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)]">
+            <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779131605992-bc94c4e1-0062-4bf8-99ef-a198c77b8e94.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/68be631c-b384-41c4-8a37-8f72870ba941_3840w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Barista pouring latte art at Café Nova" class="h-[32rem] w-full rounded-[1.5rem] object-cover transition duration-700 hover:scale-[1.035]"></video>
+          </div>
+
+          <div class="absolute -bottom-6 right-4 max-w-xs rounded-2xl border border-white/70 bg-white/90 p-4 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] backdrop-blur sm:right-8">
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80" alt="Regular guest avatar" class="h-11 w-11 rounded-full object-cover">
+              <div>
+                <p class="text-sm font-semibold">Mara, daily regular</p>
+                <p class="text-xs leading-5 text-black/55">“The cortado has ruined every other morning coffee for me.”</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="bg-[#e9eadf] px-5 py-20 sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div>
+            <span data-reveal="" class="inline-flex rounded-full bg-[#1f6f49] px-3 py-1 text-xs font-semibold text-white" style=" filter: blur(0px);">What we pour</span>
+            <h2 data-mask-reveal="" class="mt-4 max-w-2xl text-4xl font-light leading-none tracking-tight sm:text-5xl lg:text-6xl" style="font-family: 'Instrument Serif', Georgia, serif;" aria-label="A smaller menu, carefully made"><span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">A</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">smaller</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">menu,</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">carefully</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">made</span></span> </h2>
+          </div>
+          <p data-reveal="" class="max-w-2xl text-base leading-7 text-black/62 lg:justify-self-end" style=" filter: blur(0px);">
+            Every drink is built around clarity: balanced espresso, seasonal milk options, thoughtful brew recipes, and pastries that are baked before sunrise.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <article data-card="" data-reveal="" class="group rounded-3xl bg-white/85 p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2 hover:bg-white" style=" filter: blur(0px); transform-origin: 50% 50%;">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e7efe2] text-[#1f6f49] transition duration-500 group-hover:rotate-[-8deg] group-hover:scale-110">
+              <iconify-icon icon="solar:cup-hot-linear" stroke-width="1.5" class="text-2xl"></iconify-icon>
+            </span>
+            <h3 class="mt-20 text-3xl font-light leading-none tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Signature espresso</h3>
+            <p class="mt-4 text-sm leading-6 text-black/60">A rotating house blend pulled for sweetness, crema, and a round finish.</p>
+          </article>
+
+          <article data-card="" data-reveal="" class="group rounded-3xl bg-white/85 p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2 hover:bg-white" style=" filter: blur(0px); transform-origin: 50% 50%;">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eff3e8] text-[#1f6f49] transition duration-500 group-hover:rotate-[-8deg] group-hover:scale-110">
+              <iconify-icon icon="solar:filter-linear" stroke-width="1.5" class="text-2xl"></iconify-icon>
+            </span>
+            <h3 class="mt-20 text-3xl font-light leading-none tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Slow filter bar</h3>
+            <p class="mt-4 text-sm leading-6 text-black/60">Single-origin pour-overs brewed to highlight florals, acidity, and texture.</p>
+          </article>
+
+          <article data-card="" data-reveal="" class="group rounded-3xl bg-white/85 p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2 hover:bg-white" style=" filter: blur(0px); transform-origin: 50% 50%;">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f5f0df] text-[#8a633d] transition duration-500 group-hover:rotate-[-8deg] group-hover:scale-110">
+              <iconify-icon icon="solar:chef-hat-linear" stroke-width="1.5" class="text-2xl"></iconify-icon>
+            </span>
+            <h3 class="mt-20 text-3xl font-light leading-none tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Fresh pastry case</h3>
+            <p class="mt-4 text-sm leading-6 text-black/60">Cardamom buns, olive oil cake, and savory galettes made in small batches.</p>
+          </article>
+
+          <article data-card="" data-reveal="" class="group rounded-3xl bg-[#17191f] p-6 text-white shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] transition duration-500 hover:-translate-y-2" style=" filter: blur(0px); transform-origin: 50% 50%;">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#b9d9ab] transition duration-500 group-hover:rotate-[-8deg] group-hover:scale-110">
+              <iconify-icon icon="solar:shop-linear" stroke-width="1.5" class="text-2xl"></iconify-icon>
+            </span>
+            <h3 class="mt-20 text-3xl font-light leading-none tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Calm work tables</h3>
+            <p class="mt-4 text-sm leading-6 text-white/60">Soft lighting, reliable Wi‑Fi, and quiet corners for reading or planning.</p>
+          </article>
+        </div>
+
+        <div data-reveal="" class="mt-10 grid gap-5 rounded-[2rem] bg-[#dce5d6] p-5 lg:grid-cols-[1fr_0.8fr] lg:p-8" style=" filter: blur(0px);">
+          <div class="overflow-hidden rounded-3xl">
+            <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779131655695-670ad566-83e0-46bd-a807-d46395600461.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d4d7282c-0562-4aa5-a2a7-1a2843307e9b_3840w.png" data-aura-generated-video="true" data-aura-video-preset="hover" muted="" playsinline="" preload="metadata" aria-label="Coffee cups and pastries on a café table" class="h-80 w-full object-cover transition duration-700 hover:scale-105 lg:h-full"></video>
+          </div>
+          <div class="flex flex-col justify-between rounded-3xl bg-white p-6 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+            <div class="">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1f6f49]">Today’s favorite</p>
+              <h3 class="mt-4 text-4xl font-light leading-none tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Iced pistachio latte</h3>
+              <p class="mt-4 text-base leading-7 text-black/62">House pistachio milk, double espresso, sea salt, and a pale green finish that tastes like spring.</p>
+            </div>
+            <div class="mt-8 flex flex-wrap gap-2">
+              <span class="rounded-full bg-[#eef3e8] px-4 py-2 text-sm font-medium text-black/65">oat friendly</span>
+              <span class="rounded-full bg-[#eef3e8] px-4 py-2 text-sm font-medium text-black/65">limited batch</span>
+              <span class="rounded-full bg-[#eef3e8] px-4 py-2 text-sm font-medium text-black/65">served over ice</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" class="bg-[#fbfbf8] px-5 py-20 sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-7xl">
+        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div class="">
+            <span data-reveal="" class="inline-flex rounded-full bg-[#1f6f49] px-3 py-1 text-xs font-semibold text-white" style=" filter: blur(0px);">Guest notes</span>
+            <h2 data-mask-reveal="" class="mt-4 max-w-3xl text-4xl font-light leading-none tracking-tight sm:text-5xl lg:text-6xl" style="font-family: 'Instrument Serif', Georgia, serif;" aria-label="The kind of place people build rituals around"><span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">The</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">kind</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">of</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">place</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">people</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">build</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">rituals</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">around</span></span> </h2>
+          </div>
+          <a href="#visit" data-magnetic="" data-reveal="" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#17191f] px-6 py-4 text-sm font-semibold text-white shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-[#1f6f49]" style=" filter: blur(0px);">
+            Plan your visit
+            <iconify-icon icon="solar:map-point-linear" stroke-width="1.5" class="text-lg"></iconify-icon>
+          </a>
+        </div>
+
+        <div class="mt-12 grid gap-5 lg:grid-cols-3">
+          <article data-card="" data-reveal="" class="rounded-3xl bg-white p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" filter: blur(0px);">
+            <div class="flex gap-1 text-[#1f6f49]" aria-label="Five stars">
+              <iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon>
+            </div>
+            <p class="mt-8 text-2xl font-light leading-8 tracking-tight text-black/80" style="font-family: 'Instrument Serif', Georgia, serif;">“Café Nova has that rare mix of serious coffee and zero pretension. The filter menu is beautiful.”</p>
+            <div class="mt-8 flex items-center gap-3 border-t border-black/10 pt-5">
+              <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=240&q=80" alt="Guest Lina Ortiz" class="h-12 w-12 rounded-full object-cover">
+              <div>
+                <p class="text-sm font-semibold">Lina Ortiz</p>
+                <p class="text-xs text-black/50">Ceramicist</p>
+              </div>
+            </div>
+          </article>
+
+          <article data-card="" data-reveal="" class="rounded-3xl bg-[#e8ebe3] p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" filter: blur(0px); transform-origin: 50% 50%;">
+            <div class="flex gap-1 text-[#1f6f49]" aria-label="Five stars">
+              <iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon>
+            </div>
+            <p class="mt-8 text-2xl font-light leading-8 tracking-tight text-black/80" style="font-family: 'Instrument Serif', Georgia, serif;">“I bring clients here because the room feels intentional. Quiet enough to think, warm enough to stay.”</p>
+            <div class="mt-8 flex items-center gap-3 border-t border-black/10 pt-5">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=80" alt="Guest Theo Park" class="h-12 w-12 rounded-full object-cover">
+              <div class="">
+                <p class="text-sm font-semibold">Theo Park</p>
+                <p class="text-xs text-black/50">Studio founder</p>
+              </div>
+            </div>
+          </article>
+
+          <article data-card="" data-reveal="" class="rounded-3xl bg-white p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" filter: blur(0px); transform-origin: 50% 50%;">
+            <div class="flex gap-1 text-[#1f6f49]" aria-label="Five stars">
+              <iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon><iconify-icon icon="solar:star-bold" class="text-base"></iconify-icon>
+            </div>
+            <p class="mt-8 text-2xl font-light leading-8 tracking-tight text-black/80" style="font-family: 'Instrument Serif', Georgia, serif;">“The cardamom bun is reason enough to cross town. Add a cappuccino and it is perfect.”</p>
+            <div class="mt-8 flex items-center gap-3 border-t border-black/10 pt-5">
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=240&q=80" alt="Guest Amara Bell" class="h-12 w-12 rounded-full object-cover">
+              <div>
+                <p class="text-sm font-semibold">Amara Bell</p>
+                <p class="text-xs text-black/50">Food writer</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div data-reveal="" class="mt-8 grid gap-5 rounded-[2rem] bg-[#17191f] p-5 text-white lg:grid-cols-[0.8fr_1.2fr] lg:p-8" style=" filter: blur(0px);">
+          <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779132224753-8326d8bd-b858-4d08-b342-9c164b6379e6.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/581abf40-e37d-4fd8-b99f-d8ef81991d84_3840w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Interior of a cozy café" class="h-80 w-full rounded-3xl object-cover lg:h-full"></video>
+          <div class="flex flex-col justify-center rounded-3xl bg-white/5 p-6">
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#b9d9ab]">Proof point</p>
+            <p class="mt-5 text-4xl font-light leading-tight tracking-tight sm:text-5xl" style="font-family: 'Instrument Serif', Georgia, serif;">
+              82% of weekend guests return within two weeks.
+            </p>
+            <p class="mt-5 max-w-2xl text-base leading-7 text-white/60">
+              We measure loyalty the simple way: familiar faces, remembered orders, and coffee good enough to become part of the week.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trusted" class="border-y border-black/5 bg-[#f7f7f3] px-5 py-16 sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-7xl">
+        <p data-reveal="" class="text-center text-xs font-semibold uppercase tracking-[0.18em] text-black/45" style=" filter: blur(0px);">Beans, tools, and creative neighbors trusted by global teams</p>
+        <div class="relative mt-10 flex w-full overflow-hidden py-4" style="-webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+  <style>
+    @keyframes marquee-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-scroll {
+      animation: marquee-scroll 40s linear infinite;
+    }
+    .animate-marquee-scroll:hover {
+      animation-play-state: paused;
+    }
+  </style>
+  <div class="animate-marquee-scroll flex w-max">
+    <div class="flex w-max shrink-0 gap-6 px-3">
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:nasa" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:spacex" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:uber" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:visa" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:grab" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:bose" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:discover" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:dji" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:nikon" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:craftsman" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:sony" style="font-size: 4rem;"></iconify-icon>
+      </div>
+    </div>
+    <div class="flex w-max shrink-0 gap-6 px-3">
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:nasa" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:spacex" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:uber" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:visa" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:grab" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:bose" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:discover" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:dji" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:nikon" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:craftsman" style="font-size: 4rem;"></iconify-icon>
+      </div>
+      <div data-card="" class="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl bg-white text-black/60 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-300 hover:-translate-y-1 hover:text-[#1f6f49]">
+        <iconify-icon icon="simple-icons:sony" style="font-size: 4rem;"></iconify-icon>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+    </section>
+
+    <section id="about" class="bg-[#faf8f1] px-5 py-20 sm:px-8 lg:px-10">
+      <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div class="">
+          <span data-reveal="" class="inline-flex rounded-full bg-[#1f6f49] px-3 py-1 text-xs font-semibold text-white" style=" filter: blur(0px);">Our approach</span>
+          <h2 data-mask-reveal="" class="mt-4 text-4xl font-light leading-none tracking-tight sm:text-5xl lg:text-6xl" style="font-family: 'Instrument Serif', Georgia, serif;" aria-label="Built by baristas who believe hospitality is a craft"><span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">Built</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">by</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">baristas</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">who</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">believe</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">hospitality</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">is</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">a</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">craft</span></span> </h2>
+          <p data-reveal="" class="mt-6 text-base leading-7 text-black/62" style=" filter: blur(0px);">
+            We source with patient importers, roast in measured weekly batches, and train every barista to serve coffee with clarity rather than ceremony. The result is a café that feels polished, personal, and easy to return to.
+          </p>
+
+          <div data-reveal="" class="mt-8 grid gap-3 sm:grid-cols-2" style=" filter: blur(0px);">
+            <div class="rounded-2xl bg-white p-5 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+              <p class="text-3xl font-light tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Direct relationships</p>
+              <p class="mt-3 text-sm leading-6 text-black/58">Seasonal coffee purchased through transparent producer partnerships.</p>
+            </div>
+            <div class="rounded-2xl bg-white p-5 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+              <p class="text-3xl font-light tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Low-waste service</p>
+              <p class="mt-3 text-sm leading-6 text-black/58">Reusable cups, composted grounds, and pastry planning by demand.</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-reveal="" class="grid gap-5 sm:grid-cols-2" style=" filter: blur(0px);">
+          <div class="flex h-full flex-col gap-5">
+            <div data-card="" class="rounded-3xl bg-[#e9eadf] p-4 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" transform-origin: 50% 50%;">
+              <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779132099187-acc1a31c-4a1a-43e3-b935-c651e58008d4.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c08df5a4-9c88-4a4d-89f1-f48893a64eb8_3840w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Head barista tasting espresso" class="h-64 w-full rounded-2xl object-cover"></video>
+              <p class="mt-4 text-sm font-medium">Nico Vale</p>
+              <p class="text-xs text-black/50">Head barista</p>
+            </div>
+            <div data-card="" class="flex flex-1 flex-col justify-between rounded-3xl bg-[#17191f] p-6 text-white shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" transform-origin: 50% 50%;">
+  <iconify-icon icon="solar:medal-ribbons-star-linear" stroke-width="1.5" class="text-3xl text-[#b9d9ab]"></iconify-icon>
+  <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Freshly roasted coffee beans" class="mt-6 h-40 w-full rounded-2xl object-cover opacity-90 transition-opacity duration-300 hover:opacity-100">
+  <p class="mt-6 text-3xl font-extralight leading-none tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Roasted within seven days of service.</p>
+</div>
+          </div>
+
+          <div class="space-y-5 sm:pt-14">
+            <div data-card="" class="rounded-3xl bg-white p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" transform-origin: 50% 50%;">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1f6f49]">Mission</p>
+              <p class="mt-5 text-3xl font-light leading-tight tracking-tight" style="font-family: 'Instrument Serif', Georgia, serif;">Make excellent coffee feel welcoming, repeatable, and quietly memorable.</p>
+            </div>
+            <div data-card="" class="rounded-3xl bg-[#dce5d6] p-4 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] transition duration-500 hover:-translate-y-2" style=" transform-origin: 50% 50%;">
+              <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779132272229-470dc80f-f610-4478-83eb-769dc47e2692.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/71815886-1276-4f2b-addf-a79d285be6b3_1600w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Pastry chef preparing dough" class="h-72 w-full rounded-2xl object-cover"></video>
+              <p class="mt-4 text-sm font-semibold">Iris Chen</p>
+              <p class="text-xs text-black/50">Pastry lead</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="bg-[#e9eadf] px-5 py-20 sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-7xl">
+        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div>
+            <span data-reveal="" class="inline-flex rounded-full bg-[#1f6f49] px-3 py-1 text-xs font-semibold text-white" style=" filter: blur(12px);">Inside the café</span>
+            <h2 data-mask-reveal="" class="mt-4 max-w-3xl text-4xl font-light leading-none tracking-tight sm:text-5xl lg:text-6xl" style="font-family: 'Instrument Serif', Georgia, serif;" aria-label="Soft light, fresh bakes, green details"><span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">Soft</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">light,</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">fresh</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">bakes,</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">green</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">details</span></span> </h2>
+          </div>
+          <p data-reveal="" class="max-w-md text-base leading-7 text-black/62" style=" filter: blur(12px);">
+            A visual taste of the bar, the morning bake, and the quiet corners our regulars love most.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6 lg:grid-rows-2 lg:auto-rows-[260px] mt-12">
+  <!-- Large video card -->
+  <figure data-card="" data-reveal="" class="group col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-2 h-[320px] sm:h-[360px] lg:h-full overflow-hidden rounded-3xl bg-white p-2 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)]" style=" filter: blur(12px);">
+    <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779131906933-fd7060a7-90b4-4bc9-8f01-baa89dd962ea.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ce75ddb-2ca9-4359-a463-0a64830d1f6c_1600w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Freshly poured coffee" class="h-full w-full rounded-[1.25rem] object-cover transition duration-700 group-hover:scale-105"></video>
+  </figure>
+
+  <!-- Coffee beans -->
+  <figure data-card="" data-reveal="" class="group col-span-1 sm:col-span-1 lg:col-span-2 h-[260px] lg:h-full overflow-hidden rounded-3xl bg-white p-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" style=" filter: blur(12px);">
+    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e62346fe-8572-4f4b-af7b-bf0c0f3b178c_3840w.png" alt="Coffee beans close up" class="h-full w-full rounded-[1.25rem] object-cover transition duration-700 group-hover:scale-105">
+  </figure>
+
+  <!-- Café seating -->
+  <figure data-card="" data-reveal="" class="group col-span-1 sm:col-span-1 lg:col-span-2 h-[260px] lg:h-full overflow-hidden rounded-3xl bg-white p-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" style=" filter: blur(12px);">
+    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ecee3f84-538e-4626-be30-d43ec73b376d_3840w.png" alt="Café seating and plants" class="h-full w-full rounded-[1.25rem] object-cover transition duration-700 group-hover:scale-105">
+  </figure>
+
+  <!-- Pastries -->
+  <figure data-card="" data-reveal="" class="group col-span-1 sm:col-span-1 lg:col-span-2 h-[260px] lg:h-full overflow-hidden rounded-3xl bg-white p-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" style=" filter: blur(12px);">
+    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e458f247-6d97-4aab-aa32-8d5b7d2505e6_3840w.png" alt="Fresh pastries on display" class="h-full w-full rounded-[1.25rem] object-cover transition duration-700 group-hover:scale-105">
+  </figure>
+
+  <!-- Reading video -->
+  <figure data-card="" data-reveal="" class="group col-span-1 sm:col-span-1 lg:col-span-2 h-[260px] lg:h-full overflow-hidden rounded-3xl bg-white p-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" style=" filter: blur(12px);">
+    <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1779132318452-fadf49a3-041c-411f-92f8-49d907787c09.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/daf7a894-7b17-4e80-b249-69b024610bb2_3840w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Person reading beside coffee" class="h-full w-full rounded-[1.25rem] object-cover transition duration-700 group-hover:scale-105"></video>
+  </figure>
+</div>
+      </div>
+    </section>
+
+    <footer id="visit" class="bg-[#17191f] px-5 py-10 text-white sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-7xl">
+        <div class="rounded-[2rem] bg-[#1e211f] p-6 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] lg:p-8">
+          <div class="grid gap-10 lg:grid-cols-[1.25fr_0.75fr_0.75fr_1fr]">
+            <div>
+              <a href="#top" data-magnetic="" class="inline-flex items-center gap-3 rounded-full outline-none transition duration-300 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-white/30">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#17191f]">
+                  <span class="text-sm font-semibold tracking-[-0.08em]">CN</span>
+                </span>
+                <span class="text-sm font-semibold tracking-[-0.06em]">CAFÉNOVA</span>
+              </a>
+              <h3 data-mask-reveal="" class="mt-8 max-w-md text-4xl font-light leading-none tracking-tight text-white/88 sm:text-5xl" style="font-family: 'Instrument Serif', Georgia, serif;" aria-label="Come for the coffee. Stay for the light."><span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">Come</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">for</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">the</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">coffee.</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">Stay</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">for</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">the</span></span> <span style="display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.05em;"><span style="display: inline-block; will-change: transform;">light.</span></span> </h3>
+              <p class="mt-5 max-w-sm text-sm leading-6 text-white/55">
+                42 Greenway Lane, Portland · Open daily from 7:00 to 18:00.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-semibold">Explore</h4>
+              <ul class="mt-4 space-y-3 text-sm text-white/55">
+                <li><a data-interactive="" href="#features" class="transition duration-300 hover:text-white">Menu</a></li>
+                <li><a data-interactive="" href="#testimonials" class="transition duration-300 hover:text-white">Guest notes</a></li>
+                <li><a data-interactive="" href="#about" class="transition duration-300 hover:text-white">About</a></li>
+                <li><a data-interactive="" href="#gallery" class="transition duration-300 hover:text-white">Gallery</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-semibold">Hours</h4>
+              <ul class="mt-4 space-y-3 text-sm text-white/55">
+                <li>Mon—Fri · 7:00—18:00</li>
+                <li>Saturday · 8:00—18:00</li>
+                <li>Sunday · 8:00—16:00</li>
+                <li>Kitchen closes at 15:00</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-semibold">Get the weekly roast note</h4>
+              <p class="mt-4 text-sm leading-6 text-white/55">Seasonal beans, pastry drops, and quiet events in your inbox.</p>
+              <form class="mt-5 flex gap-2" action="#" method="post">
+                <label for="email" class="sr-only">Email address</label>
+                <input id="email" type="email" placeholder="Email address" class="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none transition duration-300 placeholder:text-white/35 focus:border-[#b9d9ab]/60 focus:bg-white/15 focus:ring-2 focus:ring-[#b9d9ab]/15">
+                <button data-magnetic="" type="submit" class="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#17191f] transition duration-300 hover:-translate-y-0.5 hover:bg-[#dce5d6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35">Join</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="mt-10 flex flex-col justify-between gap-4 border-t border-white/10 pt-6 text-sm text-white/42 sm:flex-row">
+            <p>Copyright © 2028 Café Nova</p>
+            <div class="flex flex-wrap gap-5">
+              <a data-interactive="" href="#" class="transition duration-300 hover:text-white">Instagram</a>
+              <a data-interactive="" href="#" class="transition duration-300 hover:text-white">Privacy</a>
+              <a data-interactive="" href="#" class="transition duration-300 hover:text-white">Accessibility</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!prefersReducedMotion && window.Lenis) {
+      const lenis = new Lenis({
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1.2
+      });
+
+      lenis.on("scroll", ScrollTrigger.update);
+
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+
+      gsap.ticker.lagSmoothing(0);
+
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", (event) => {
+          const target = document.querySelector(anchor.getAttribute("href"));
+          if (!target) return;
+          event.preventDefault();
+          lenis.scrollTo(target, { offset: -80 });
+        });
+      });
+    }
+
+    document.querySelectorAll("[data-mask-reveal]").forEach((heading) => {
+      const text = heading.textContent.trim();
+      heading.setAttribute("aria-label", text);
+      heading.textContent = "";
+
+      text.split(" ").forEach((word) => {
+        const outer = document.createElement("span");
+        outer.style.display = "inline-block";
+        outer.style.overflow = "hidden";
+        outer.style.verticalAlign = "top";
+        outer.style.paddingBottom = "0.05em";
+
+        const inner = document.createElement("span");
+        inner.textContent = word;
+        inner.style.display = "inline-block";
+        inner.style.transform = "translateY(110%)";
+        inner.style.willChange = "transform";
+
+        outer.appendChild(inner);
+        heading.appendChild(outer);
+        heading.appendChild(document.createTextNode(" "));
+      });
+
+      if (prefersReducedMotion) {
+        heading.querySelectorAll("span span").forEach((span) => {
+          span.style.transform = "translateY(0)";
+        });
+        return;
+      }
+
+      gsap.to(heading.querySelectorAll("span span"), {
+        y: "0%",
+        duration: 1.05,
+        ease: "power4.out",
+        stagger: 0.035,
+        scrollTrigger: {
+          trigger: heading,
+          start: "top 86%",
+          once: true
+        }
+      });
+    });
+
+    if (!prefersReducedMotion) {
+      gsap.utils.toArray("[data-reveal]").forEach((item, index) => {
+        gsap.fromTo(item, {
+          opacity: 0,
+          y: 28,
+          filter: "blur(12px)"
+        }, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.9,
+          ease: "power3.out",
+          delay: Math.min((index % 6) * 0.045, 0.25),
+          scrollTrigger: {
+            trigger: item,
+            start: "top 88%",
+            once: true
+          }
+        });
+      });
+
+      gsap.utils.toArray("[data-card]").forEach((card) => {
+        card.addEventListener("mousemove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const rotateY = ((x / rect.width) - 0.5) * 5;
+          const rotateX = ((y / rect.height) - 0.5) * -5;
+
+          gsap.to(card, {
+            rotateX,
+            rotateY,
+            transformPerspective: 900,
+            transformOrigin: "center",
+            duration: 0.35,
+            ease: "power2.out"
+          });
+        });
+
+        card.addEventListener("mouseleave", () => {
+          gsap.to(card, {
+            rotateX: 0,
+            rotateY: 0,
+            duration: 0.55,
+            ease: "elastic.out(1, 0.45)"
+          });
+        });
+      });
+
+      gsap.utils.toArray("[data-magnetic]").forEach((element) => {
+        element.addEventListener("mousemove", (event) => {
+          const rect = element.getBoundingClientRect();
+          const x = event.clientX - rect.left - rect.width / 2;
+          const y = event.clientY - rect.top - rect.height / 2;
+
+          gsap.to(element, {
+            x: x * 0.18,
+            y: y * 0.18,
+            duration: 0.35,
+            ease: "power3.out"
+          });
+        });
+
+        element.addEventListener("mouseleave", () => {
+          gsap.to(element, {
+            x: 0,
+            y: 0,
+            duration: 0.55,
+            ease: "elastic.out(1, 0.45)"
+          });
+        });
+      });
+    } else {
+      document.querySelectorAll("[data-reveal]").forEach((item) => {
+        item.style.opacity = "1";
+        item.style.transform = "none";
+        item.style.filter = "none";
+      });
+    }
+
+    document.querySelectorAll("button, a, input").forEach((element) => {
+      element.addEventListener("pointerdown", () => {
+        if (prefersReducedMotion) return;
+        gsap.to(element, { scale: 0.985, duration: 0.12, ease: "power2.out" });
+      });
+
+      element.addEventListener("pointerup", () => {
+        if (prefersReducedMotion) return;
+        gsap.to(element, { scale: 1, duration: 0.22, ease: "back.out(2)" });
+      });
+
+      element.addEventListener("pointerleave", () => {
+        if (prefersReducedMotion) return;
+        gsap.to(element, { scale: 1, duration: 0.22, ease: "back.out(2)" });
+      });
+    });
+  </script>
+
+<script data-aura-video-controller="true">
+(function () {
+  function playVideo(video) {
+    var promise = video.play();
+    if (promise && typeof promise.catch === "function") {
+      promise.catch(function () {});
+    }
+  }
+
+  function setupVideo(video) {
+    if (video.__auraVideoReady === true) return;
+    video.__auraVideoReady = true;
+    video.removeAttribute("data-aura-video-ready");
+    video.removeAttribute("data-aura-video-played");
+    video.muted = true;
+    video.playsInline = true;
+
+    var preset = video.dataset.auraVideoPreset || "loop-in-view";
+    if (preset === "hover") {
+      video.addEventListener("mouseenter", function () {
+        playVideo(video);
+      });
+      video.addEventListener("mouseleave", function () {
+        video.pause();
+        video.currentTime = 0;
+      });
+      return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      playVideo(video);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          if (preset === "play-once" && video.__auraVideoPlayed === true) {
+            return;
+          }
+          playVideo(video);
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+
+    if (preset === "play-once") {
+      video.addEventListener("ended", function () {
+        video.__auraVideoPlayed = true;
+      }, { once: true });
+    }
+
+    observer.observe(video);
+  }
+
+  function setupVideos() {
+    document
+      .querySelectorAll("video[data-aura-video-preset]")
+      .forEach(setupVideo);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupVideos);
+  } else {
+    setupVideos();
+  }
+})();</script></body></html>

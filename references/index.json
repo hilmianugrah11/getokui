@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "generated": "2026-07-30",
+  "note": "Curated design references for the getokui plugin. Thumbnails are self-screenshotted from the local HTML (Playwright 1280x800 -> WebP), no external URLs.",
+  "templates": [
+    {
+      "slug": "aura-generative",
+      "name": "Aura Generative AI",
+      "category": "landing",
+      "tags": ["saas", "ai", "dark", "gradient", "editorial", "hero"],
+      "description": "Dark AI product landing with warm-gold gradients, large serif display headline, and generous cinematic spacing.",
+      "colors": ["#070707", "#e8c382", "#e2482d", "#ededec"],
+      "sections": ["hero", "features", "showcase", "cta", "footer"],
+      "fonts": ["Gloock", "Manrope", "sans-serif"],
+      "thumbnail": "thumbs/aura-generative.webp"
+    },
+    {
+      "slug": "nebula-real-time",
+      "name": "Nebula Data Platform",
+      "category": "landing",
+      "tags": ["saas", "data", "dark", "cyan", "gradient", "dashboard-preview"],
+      "description": "Dark SaaS data-platform landing with cyan/indigo glow accents, product UI preview, and a technical feature grid.",
+      "colors": ["#0b0c10", "#22d3ee", "#6b7cff", "#13151a"],
+      "sections": ["hero", "logos", "features", "product-preview", "pricing", "cta", "footer"],
+      "fonts": ["Inter", "sans-serif"],
+      "thumbnail": "thumbs/nebula-real-time.webp"
+    },
+    {
+      "slug": "sequra-fintech",
+      "name": "Sequra Financial",
+      "category": "fintech",
+      "tags": ["fintech", "wealth", "light", "luxury", "serif", "minimal"],
+      "description": "Elegant light fintech/wealth landing with warm-beige tones, refined serif headings, and calm editorial layout.",
+      "colors": ["#f3efe6", "#111111", "#c5a67c", "#5a5a5a"],
+      "sections": ["hero", "features", "stats", "testimonial", "cta", "footer"],
+      "fonts": ["Cormorant Garamond", "serif"],
+      "thumbnail": "thumbs/sequra-fintech.webp"
+    },
+    {
+      "slug": "novapay",
+      "name": "NovaPay Fintech",
+      "category": "fintech",
+      "tags": ["fintech", "payments", "light", "clean", "minimal", "product"],
+      "description": "Clean light fintech/payments landing, monochrome zinc palette, crisp product cards and a modern sans stack.",
+      "colors": ["#ffffff", "#18181b", "#52525b", "#f4f4f5"],
+      "sections": ["hero", "logos", "features", "how-it-works", "pricing", "cta", "footer"],
+      "fonts": ["Inter", "Geist", "sans-serif"],
+      "thumbnail": "thumbs/novapay.webp"
+    },
+    {
+      "slug": "primeestat-real",
+      "name": "PrimeEstates Advisory",
+      "category": "real-estate",
+      "tags": ["real-estate", "luxury", "dark", "gold", "advisory", "serif"],
+      "description": "Premium real-estate advisory landing, near-black canvas with gold accents and property-forward imagery.",
+      "colors": ["#111111", "#eab308", "#c9b49a", "#f4f4f4"],
+      "sections": ["hero", "listings", "services", "stats", "cta", "footer"],
+      "fonts": ["Inter", "sans-serif"],
+      "thumbnail": "thumbs/primeestat-real.webp"
+    },
+    {
+      "slug": "journey-real-estate",
+      "name": "Journey Real Estate",
+      "category": "real-estate",
+      "tags": ["real-estate", "light", "minimal", "clean", "editorial", "gallery"],
+      "description": "Light, minimal luxury real-estate landing with neutral zinc palette, big property gallery and airy whitespace.",
+      "colors": ["#fafafa", "#09090b", "#27272a", "#a1a1aa"],
+      "sections": ["hero", "gallery", "features", "agents", "cta", "footer"],
+      "fonts": ["Inter", "sans-serif"],
+      "thumbnail": "thumbs/journey-real-estate.webp"
+    },
+    {
+      "slug": "creative-portfolio1",
+      "name": "NOEMA Artist Portfolio",
+      "category": "portfolio",
+      "tags": ["portfolio", "creative", "dark", "bold", "colorful", "display"],
+      "description": "Bold dark artist-portfolio 'OS' with heavy Anton display type and vivid indigo/rose/emerald accents.",
+      "colors": ["#050505", "#4f46e5", "#f43f5e", "#10b981"],
+      "sections": ["hero", "projects", "about", "gallery", "contact", "footer"],
+      "fonts": ["Anton", "sans-serif"],
+      "thumbnail": "thumbs/creative-portfolio1.webp"
+    },
+    {
+      "slug": "ui-ux-designer",
+      "name": "Designer Portfolio",
+      "category": "portfolio",
+      "tags": ["portfolio", "designer", "dark", "gradient", "modern", "case-study"],
+      "description": "Modern dark designer portfolio, GitHub-style ink background with violet/indigo accents and case-study cards.",
+      "colors": ["#0d1117", "#6d28d9", "#5e6ad2", "#1db954"],
+      "sections": ["hero", "work", "case-studies", "about", "contact", "footer"],
+      "fonts": ["Inter", "Geist", "sans-serif"],
+      "thumbnail": "thumbs/ui-ux-designer.webp"
+    },
+    {
+      "slug": "obsidian",
+      "name": "Obsidian Furniture",
+      "category": "ecommerce",
+      "tags": ["ecommerce", "furniture", "light", "warm", "minimal", "product-grid"],
+      "description": "Warm off-white furniture e-commerce landing with soft neutral tones, large product photography and a clean grid.",
+      "colors": ["#f8f7f4", "#1a1a1a", "#4a3424", "#d1d0ca"],
+      "sections": ["hero", "collection", "product-grid", "story", "cta", "footer"],
+      "fonts": ["Inter", "sans-serif"],
+      "thumbnail": "thumbs/obsidian.webp"
+    },
+    {
+      "slug": "asagiri-38matcha",
+      "name": "Asagiri Matcha",
+      "category": "ecommerce",
+      "tags": ["ecommerce", "food", "matcha", "light", "organic", "serif", "artisanal"],
+      "description": "Artisanal matcha e-commerce landing, soft green + cream organic palette with delicate serif accents.",
+      "colors": ["#f4f0e6", "#5f7a52", "#3a4a31", "#86a074"],
+      "sections": ["hero", "product", "benefits", "ritual", "shop", "footer"],
+      "fonts": ["Instrument Serif", "sans-serif"],
+      "thumbnail": "thumbs/asagiri-38matcha.webp"
+    },
+    {
+      "slug": "kinzan-omakase",
+      "name": "Kinzan Omakase",
+      "category": "restaurant",
+      "tags": ["restaurant", "japanese", "luxury", "dark", "editorial", "minimal"],
+      "description": "Luxury Japanese omakase restaurant landing, near-black with warm espresso browns and refined editorial spacing.",
+      "colors": ["#0b0b0b", "#2b1d16", "#3e2723", "#f2f2f2"],
+      "sections": ["hero", "menu", "chef", "reservation", "gallery", "footer"],
+      "fonts": ["Inter", "sans-serif"],
+      "thumbnail": "thumbs/kinzan-omakase.webp"
+    },
+    {
+      "slug": "specialty-coffee",
+      "name": "Cafe Nova Coffee",
+      "category": "restaurant",
+      "tags": ["restaurant", "coffee", "cafe", "light", "organic", "serif", "warm"],
+      "description": "Specialty-coffee / F&B landing in fresh cream + deep-green tones with an Instrument Serif display face.",
+      "colors": ["#f7f7f3", "#1f6f49", "#17191f", "#b9d9ab"],
+      "sections": ["hero", "menu", "beans", "locations", "cta", "footer"],
+      "fonts": ["Instrument Serif", "sans-serif"],
+      "thumbnail": "thumbs/specialty-coffee.webp"
+    },
+    {
+      "slug": "samsara-wellness",
+      "name": "Samsara Wellness Retreat",
+      "category": "wellness",
+      "tags": ["wellness", "retreat", "luxury", "light", "serif", "calm", "spa"],
+      "description": "Calm luxury wellness-retreat landing with airy neutral tones, mixed serif display type and spa-like spacing.",
+      "colors": ["#f5f0eb", "#3a3a34", "#9c8f7a", "#c8b8a0"],
+      "sections": ["hero", "about", "programs", "gallery", "booking", "footer"],
+      "fonts": ["Gloock", "Fraunces", "Manrope", "serif"],
+      "thumbnail": "thumbs/samsara-wellness.webp"
+    },
+    {
+      "slug": "serene-wellness",
+      "name": "Serene Wellness",
+      "category": "wellness",
+      "tags": ["wellness", "yoga", "health", "light", "botanical", "calm", "editorial"],
+      "description": "Serene wellness / yoga landing over a soft botanical hero, warm stone neutrals with muted green accents and calm editorial type.",
+      "colors": ["#fafaf9", "#2c3e35", "#23322b", "#d4e8b0"],
+      "sections": ["hero", "philosophy", "programs", "clinic", "journal", "footer"],
+      "fonts": ["Inter", "Geist", "sans-serif"],
+      "thumbnail": "thumbs/serene-wellness.webp"
+    },
+    {
+      "slug": "outnext-gaming",
+      "name": "OUTNEXT Game Agency",
+      "category": "gaming",
+      "tags": ["gaming", "agency", "dark", "monochrome", "bold", "brutal"],
+      "description": "Dark game-agency landing, near-black monochrome canvas with heavy uppercase display type and strong grid.",
+      "colors": ["#080808", "#191919", "#737373", "#f5f5f5"],
+      "sections": ["hero", "games", "services", "team", "contact", "footer"],
+      "fonts": ["ITC Avant Garde Std", "sans-serif"],
+      "thumbnail": "thumbs/outnext-gaming.webp"
+    },
+    {
+      "slug": "playverse",
+      "name": "Playverse Gaming Hub",
+      "category": "gaming",
+      "tags": ["gaming", "hub", "dark", "vibrant", "pink", "playful"],
+      "description": "Vibrant gaming-hub landing on a deep indigo-black with hot-pink accents and playful, energetic cards.",
+      "colors": ["#0d0c22", "#ea4c89", "#6e6d7a", "#e7e7e9"],
+      "sections": ["hero", "games", "community", "leaderboard", "cta", "footer"],
+      "fonts": ["Geist", "Montserrat", "sans-serif"],
+      "thumbnail": "thumbs/playverse.webp"
+    },
+    {
+      "slug": "brutalist-creative-agency",
+      "name": "Brutalist Creative Agency",
+      "category": "agency",
+      "tags": ["agency", "brutalist", "monochrome", "bold", "type-driven", "grid"],
+      "description": "Raw brutalist creative-agency landing, stark black/white monochrome with system type and hard grid lines.",
+      "colors": ["#050505", "#1a1a1a", "#f5f5f5", "#d4d4d4"],
+      "sections": ["hero", "work", "services", "manifesto", "contact", "footer"],
+      "fonts": ["system-ui", "sans-serif"],
+      "thumbnail": "thumbs/brutalist-creative-agency.webp"
+    },
+    {
+      "slug": "apex-creative",
+      "name": "Apex Growth Studio",
+      "category": "agency",
+      "tags": ["agency", "creative", "dark", "neon", "lime", "bold"],
+      "description": "High-energy dark growth-studio landing with an electric lime accent, big claims and confident motion.",
+      "colors": ["#0a0a0a", "#c8f23e", "#141414", "#1c1c1c"],
+      "sections": ["hero", "services", "results", "case-studies", "cta", "footer"],
+      "fonts": ["Inter", "sans-serif"],
+      "thumbnail": "thumbs/apex-creative.webp"
+    },
+    {
+      "slug": "vellum-architecture",
+      "name": "Vellum Architecture",
+      "category": "architecture",
+      "tags": ["architecture", "interior", "light", "minimal", "editorial", "gallery"],
+      "description": "Minimal architecture & interior-design studio landing, near-white canvas with quiet type and a refined gallery.",
+      "colors": ["#f8faf8", "#111817", "#aeb8b4", "#eef1ef"],
+      "sections": ["hero", "projects", "studio", "process", "gallery", "footer"],
+      "fonts": ["DM Sans", "sans-serif"],
+      "thumbnail": "thumbs/vellum-architecture.webp"
+    },
+    {
+      "slug": "vesper-space",
+      "name": "Vesper Deep-Space",
+      "category": "landing",
+      "tags": ["cinematic", "space", "dark", "neon", "gradient", "scrolling"],
+      "description": "Cinematic deep-space scrolling landing on near-black with neon pink/cyan gradients and bold Syne display type.",
+      "colors": ["#050507", "#ff4d9d", "#46e5ff", "#1b1438"],
+      "sections": ["hero", "story", "features", "gallery", "cta", "footer"],
+      "fonts": ["Syne", "sans-serif"],
+      "thumbnail": "thumbs/vesper-space.webp"
+    }
+  ]
+}

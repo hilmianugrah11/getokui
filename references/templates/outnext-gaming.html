@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcrowd - Game Agency</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+<style>
+@font-face {
+font-family: 'ITC Avant Garde Std';
+src: url('https://cdn.prod.website-files.com/667a7576e7e7ef3ba89b3f2a/667a7576e7e7ef3ba89b3f58_ITCAvantGardeStd-Md.ttf') format('truetype');
+font-weight: 500;
+font-style: normal;
+}
+@font-face {
+font-family: 'ITC Avant Garde Std';
+src: url('https://cdn.prod.website-files.com/667a7576e7e7ef3ba89b3f2a/66b48507e29f91b36b3fb696_ITCAvantGardeStd-BkCn.woff') format('woff');
+font-weight: 400;
+font-style: normal;
+}
+body {
+font-family: 'ITC Avant Garde Std', sans-serif;
+background-color: #080808;
+color: #ffffff;
+overflow-x: hidden;
+}
+.hide-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.hide-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+.radial-glow {
+position: absolute;
+width: 400px;
+height: 400px;
+background: radial-gradient(circle, rgba(138,92,255,0.12) 0%, rgba(0,0,0,0) 70%);
+border-radius: 50%;
+pointer-events: none;
+transform: translate(-50%, -50%);
+opacity: 0;
+transition: opacity 0.3s ease;
+z-index: 0;
+}
+.service-card:hover .radial-glow {
+opacity: 1;
+}
+/* SplitType baseline styles */
+.char {
+transform-origin: bottom center;
+}
+</style>
+<style>
+/* 3D Transform utilities */
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="antialiased selection:bg-[#8a5cff] selection:text-white">
+    <!-- Dynamic Navbar -->
+    <nav class="fixed -translate-x-1/2 w-[calc(100%-2rem)] flex transition-colors duration-500 max-w-[90rem] z-50 border-[#ededed]/10 border rounded-[2.875rem] mr-auto ml-auto pt-4 pr-6 pb-4 pl-6 top-6 left-1/2 backdrop-blur-xl items-center justify-between" id="navbar">
+      <a href="#" class="text-xl tracking-tighter uppercase font-medium">OutNext</a>
+      <div class="hidden md:flex items-center gap-10 text-xs uppercase tracking-widest text-current/70">
+        <a href="#" class="transition-colors">Work</a>
+        <a href="#" class="transition-colors">Services</a>
+        <a href="#" class="transition-colors">Agency</a>
+        <a href="#" class="transition-colors">Blog</a>
+      </div>
+      <a href="#" class="text-white px-7 py-3.5 rounded-[0.56rem] text-xs uppercase tracking-widest transition-colors nav-cta bg-orange-500 hover:bg-orange-600">
+        Contact us
+      </a>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main class="">
+      <!-- Hero Section -->
+      <section class="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-4 overflow-hidden" data-theme="dark">
+        <!-- Ambient Lighting -->
+        <div class="absolute inset-0 z-0 opacity-50 pointer-events-none">
+          <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/2e815afb-cac1-4c01-90e1-cf3810246e35/1779828973094-4af7697b-5285-4766-9717-4e4da8bfbade.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/89f71c7a-eac8-4049-a83c-b0df2617924e_3840w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Ambient Lighting" class="w-full h-full object-cover mix-blend-screen"></video>
+        </div>
+
+        <div class="relative z-10 w-full max-w-[90rem] mx-auto flex flex-col items-center text-center">
+          <p class="text-[#737373] uppercase tracking-widest text-xs mb-8">
+            Game Design Agency
+          </p>
+
+          <h1 class="text-[clamp(3.5rem,9vw,8rem)] leading-[0.9] tracking-tighter font-medium max-w-[85rem] mx-auto hero-title uppercase"> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">D</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">s</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">i</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">g</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">n</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">&amp;</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">E</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">x</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">p</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">r</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">i</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">n</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">c</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <br> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">A</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">c</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">c</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">l</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">r</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">a</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">t</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">i</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">o</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">n</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">f</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">o</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">r</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <br> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">G</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">a</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">m</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">e</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">S</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">t</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">u</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">d</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">i</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">o</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="char" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;"><div class="char" style="display: inline-block;">s</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> </h1>
+
+          <!-- Floating Graphic Elements -->
+          <div class="mt-20 flex flex-wrap justify-center items-center gap-6 relative">
+            
+
+            <div class="flex gap-4 hero-element">
+              <div class="w-20 h-20 rounded-[1.5rem] bg-[#191919] border border-white/10 flex items-center justify-center p-4 shadow-xl">
+                <img src="https://cdn.prod.website-files.com/667a7576e7e7ef3ba89b3f2a/66a6043f15171cfef875605c_dribbble-icon%201.svg" alt="App Icon" class="w-full h-full object-contain">
+              </div>
+              <div class="w-20 h-20 rounded-[1.5rem] bg-[#191919] border border-white/10 flex items-center justify-center p-4 shadow-xl">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/acea3f04-55da-4c73-a90c-11dbb1ffaf9e_320w.png" alt="App Icon" class="w-full h-full object-contain filter grayscale invert">
+              </div>
+              <div class="w-20 h-20 rounded-[1.5rem] border-2 border-white/10 border-dashed flex items-center justify-center hover:border-white/30 transition-colors cursor-pointer">
+                <iconify-icon icon="solar:add-circle-linear" class="text-3xl text-white/30"></iconify-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Descriptive Pill -->
+          <div class="absolute bottom-12 right-12 bg-[#171717]/80 backdrop-blur-md rounded-3xl p-8 border border-white/5 max-w-sm text-left hero-element hidden md:block">
+            <p class="text-sm text-[#737373] mb-6 leading-relaxed">
+              We help visionary studios design world-class games and digital
+              experiences that captivate players and publishers.
+            </p>
+            <div class="flex gap-3">
+              <button class="bg-white text-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-widest font-medium hover:bg-gray-200 transition">
+                Our Works
+              </button>
+              <button class="bg-transparent border border-white/20 text-white px-6 py-2.5 rounded-xl text-xs uppercase tracking-widest hover:bg-white/10 transition">
+                Services
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statement / Showcase Section -->
+      <section class="py-40 px-4 relative bg-[#080808]" data-theme="dark">
+        <div class="max-w-[90rem] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div class="max-w-xl">
+            
+            <h2 class="text-[clamp(3rem,6vw,5.5rem)] leading-[0.95] tracking-tighter mb-10 reveal-text font-medium uppercase"><div class="line" style="display: block; text-align: start; width: 100%;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">Indie</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="line" style="display: block; text-align: start; width: 100%;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">AA</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> <div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">Studios</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="line" style="display: block; text-align: start; width: 100%;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">AAA</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="line" style="display: block; text-align: start; width: 100%;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">Publishers</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></h2><p class="text-[#737373] text-lg leading-relaxed max-w-md reveal-fade">
+              Partnering with ambitious creators to build genre-defining games
+              from the ground up. We bring life to extraordinary virtual worlds.
+            </p>
+          </div>
+
+          <div class="relative h-[700px] w-full reveal-scale perspective-1000 hidden md:block">
+            <!-- Abstract mockups replicating depth and material -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] h-[110%] bg-[#101010] border border-[#262626] rounded-[2rem] transform -rotate-[8deg] translate-x-10 shadow-2xl overflow-hidden flex flex-col p-10 z-10">
+              <div class="flex justify-between items-center mb-10 border-b border-[#262626] pb-6">
+                <span class="text-white/40 uppercase tracking-widest text-xs">
+                  Player Analytics
+                </span>
+                <div class="w-10 h-10 rounded-full bg-[#8a5cff]/10 flex items-center justify-center">
+                  <iconify-icon icon="solar:chart-square-linear" class="text-xl text-[#8a5cff]"></iconify-icon>
+                </div>
+              </div>
+              <div class="flex-1 flex flex-col justify-center">
+                <span class="text-[8rem] tracking-tighter text-white leading-none font-medium">
+                  84%
+                </span>
+                <span class="text-[#737373] uppercase tracking-widest text-sm mt-4">
+                  Completion Rate
+                </span>
+              </div>
+            </div>
+            <!-- Background secondary card -->
+            <div class="absolute right-20 top-1/2 -translate-y-1/2 w-[90%] h-[90%] bg-[#0d0d0d] border border-[#1a1a1a] rounded-[2rem] transform rotate-[4deg] translate-x-20 shadow-xl z-0"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Grid Section -->
+      <section class="py-32 px-4 bg-[#080808] relative z-20" id="services" data-theme="dark">
+        <div class="max-w-[90rem] mx-auto">
+          <div class="flex justify-between items-end mb-20 border-b border-[#262626] pb-10">
+            <h2 class="text-[clamp(2.5rem,5vw,4rem)] tracking-tighter leading-none uppercase font-medium">
+              Our Services
+            </h2>
+            <a href="#" class="hidden md:flex items-center gap-3 text-[#737373] hover:text-white transition-colors uppercase text-xs tracking-widest">
+              Explore All
+              <iconify-icon icon="solar:arrow-right-linear" class="text-lg"></iconify-icon>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Service Card 1 -->
+            <div class="service-card relative bg-[#101010] border border-[#262626] rounded-[2rem] min-h-[480px] p-12 overflow-hidden group">
+              <div class="radial-glow" style="left: 272px; top: 148px;"></div>
+              <div class="relative z-10 flex flex-col h-full justify-between pointer-events-none">
+                <div class="max-w-xs">
+                  <h3 class="text-3xl tracking-tight mb-4 font-medium">
+                    Game Design
+                  </h3>
+                  <p class="text-[#737373] text-sm leading-relaxed">
+                    Defining core mechanics, game loops, and narrative to stand
+                    out in saturated gaming ecosystems.
+                  </p>
+                </div>
+                <div class="self-end mt-12 w-64 h-64 relative origin-bottom-right group-hover:scale-105 transition-transform duration-700 ease-out">
+                  <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/adc3d507-1e3c-4b11-9af4-11ad7cf96637_1600w.png" alt="Strategy Graphic" class="w-full h-full object-contain">
+                </div>
+              </div>
+            </div>
+
+            <!-- Service Card 2 -->
+            <div class="service-card relative bg-[#101010] border border-[#262626] rounded-[2rem] min-h-[480px] p-12 overflow-hidden group">
+              <div class="radial-glow" style="left: 451px; top: 499px;"></div>
+              <div class="relative z-10 flex flex-col h-full justify-between pointer-events-none">
+                <div class="max-w-xs">
+                  <h3 class="text-3xl tracking-tight mb-4 font-medium">
+                    UI/UX &amp; HUD
+                  </h3>
+                  <p class="text-[#737373] text-sm leading-relaxed">
+                    Crafting intuitive interfaces and seamless player journeys
+                    for complex games and immersive applications.
+                  </p>
+                </div>
+                <div class="self-end mt-12 w-64 h-64 relative origin-bottom-right group-hover:scale-105 transition-transform duration-700 ease-out">
+                  <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7a957aa1-d044-4cc6-a708-989f066120e4_1600w.png" alt="Design Graphic" class="w-full h-full object-contain">
+                </div>
+              </div>
+            </div>
+
+            <!-- Service Card 3 (Full Span) -->
+            <div class="service-card relative bg-[#101010] border border-[#262626] rounded-[2rem] min-h-[400px] p-12 overflow-hidden group md:col-span-2 flex flex-col md:flex-row justify-between items-center gap-12">
+              <div class="radial-glow" style="left: 244px; top: 11.5px;"></div>
+              <div class="relative z-10 max-w-md pointer-events-none">
+                <h3 class="text-3xl tracking-tight mb-4 font-medium">
+                  Game Development
+                </h3>
+                <p class="text-[#737373] text-sm mb-8 leading-relaxed">
+                  Robust engine execution bringing designs to life flawlessly
+                  with modern game technologies.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                  <span class="px-4 py-2 bg-[#191919] rounded-full border border-[#262626] text-xs uppercase tracking-widest text-white/60">
+                    Unreal
+                  </span>
+                  <span class="px-4 py-2 bg-[#191919] rounded-full border border-[#262626] text-xs uppercase tracking-widest text-white/60">
+                    Unity
+                  </span>
+                  <span class="px-4 py-2 bg-[#191919] rounded-full border border-[#262626] text-xs uppercase tracking-widest text-white/60">
+                    C++
+                  </span>
+                </div>
+              </div>
+              <div class="relative z-10 w-full md:w-[45%] h-72 group-hover:scale-105 transition-transform duration-700 ease-out pointer-events-none">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3f254269-fe49-41c8-80b4-cec8d114a061_1600w.png" alt="Development Graphic" class="w-full h-full object-contain">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Light Section: Case Studies -->
+      <section class="py-40 px-4 bg-[#fafafa] text-[#080808] transition-colors duration-700 relative z-10" id="work" data-theme="light">
+        <div class="max-w-[90rem] mx-auto">
+          <div class="flex justify-between items-end mb-20">
+            
+          <h2 class="text-[clamp(3rem,6vw,5.5rem)] tracking-tighter leading-none uppercase font-medium reveal-text"><div class="line" style="display: block; text-align: start; width: 100%;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">Selected</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div class="line" style="display: block; text-align: start; width: 100%;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="line" style="display: inline-block; text-align: start; width: 100%; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block; position: relative;"><div class="word" style="display: inline-block;">Work</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></h2></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            <!-- Case 1 -->
+            <a href="#" class="group block cursor-pointer">
+              <div class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden mb-6 bg-gray-200 relative isolate">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ac8b5453-0b58-4c34-a8e6-bec8877fa826_3840w.png" alt="Planet 9 Case Study" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out">
+                <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+              </div>
+              <div class="flex justify-between items-start border-t border-black/10 pt-6">
+                <div class="">
+                  <h3 class="text-2xl font-medium tracking-tight mb-2">
+                    Neon Nexus
+                  </h3>
+                  <p class="text-[#737373] text-sm">Cyberpunk RPG</p>
+                </div>
+                <div class="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center group-hover:bg-[#080808] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                  <iconify-icon icon="solar:arrow-right-up-linear" class="text-xl"></iconify-icon>
+                </div>
+              </div>
+            </a>
+
+            <!-- Case 2 -->
+            <a href="#" class="group block cursor-pointer lg:mt-16">
+              <div class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden mb-6 bg-gray-200 relative isolate">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/da6d39d7-5cf1-4713-bca0-ae3713cbc0c1_3840w.png" alt="Clover Case Study" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out">
+              </div>
+              <div class="flex justify-between items-start border-t border-black/10 pt-6">
+                <div class="">
+                  <h3 class="text-2xl font-medium tracking-tight mb-2">
+                    Aetheria
+                  </h3>
+                  <p class="text-[#737373] text-sm">MMORPG</p>
+                </div>
+                <div class="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center group-hover:bg-[#080808] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                  <iconify-icon icon="solar:arrow-right-up-linear" class="text-xl"></iconify-icon>
+                </div>
+              </div>
+            </a>
+
+            <!-- Case 3 -->
+            <a href="#" class="group block cursor-pointer lg:mt-32">
+              <div class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden mb-6 bg-gray-200 relative isolate">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8e06f33a-8f46-45b2-969f-ab1e7399a753_3840w.png" alt="Bonsai Case Study" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out">
+              </div>
+              <div class="flex justify-between items-start border-t border-black/10 pt-6">
+                <div>
+                  <h3 class="text-2xl font-medium tracking-tight mb-2">
+                    Void Runner
+                  </h3>
+                  <p class="text-[#737373] text-sm">Action Roguelike</p>
+                </div>
+                <div class="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center group-hover:bg-[#080808] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                  <iconify-icon icon="solar:arrow-right-up-linear" class="text-xl"></iconify-icon>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials -->
+      <section class="py-32 px-4 bg-[#fafafa]" data-theme="light">
+        <div class="max-w-[90rem] mx-auto overflow-hidden">
+          <div class="flex gap-8 overflow-x-auto pb-12 snap-x snap-mandatory hide-scrollbar cursor-grab active:cursor-grabbing">
+            <!-- Card 1 -->
+            <div class="min-w-[85vw] md:min-w-[500px] bg-white p-10 md:p-12 rounded-[2rem] border border-black/5 snap-center shadow-sm flex flex-col justify-between">
+              <div class="">
+                <img src="https://cdn.prod.website-files.com/667a7576e7e7ef3ba89b3f2a/667d7493097816a7e1c772a3_stars.svg" alt="5 stars rating" class="h-5 mb-8">
+                <p class="leading-relaxed md:text-2xl text-xl text-[#000000] tracking-tight mb-12">
+                  "Outcrowd completely transformed our digital presence. Their
+                  attention to kinetic details and premium aesthetic helped us
+                  secure our publishing deal."
+                </p>
+              </div>
+              <div class="flex items-center gap-5 pt-8 border-t border-black/5">
+                <div class="overflow-hidden shrink-0 bg-gray-200 w-14 h-14 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7debb119-f845-4a33-8704-883ab284b52c_320w.webp)] bg-cover bg-center rounded-full"></div>
+                <div class="">
+                  <div class="text-lg font-medium text-slate-950">Sarah Jenkins</div>
+                  <div class="text-sm text-[#737373]">Director, Neon Nexus</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="min-w-[85vw] md:min-w-[500px] bg-white p-10 md:p-12 rounded-[2rem] border border-black/5 snap-center shadow-sm flex flex-col justify-between">
+              <div class="">
+                <img src="https://cdn.prod.website-files.com/667a7576e7e7ef3ba89b3f2a/667d7493097816a7e1c772a3_stars.svg" alt="5 stars rating" class="h-5 mb-8">
+                <p class="md:text-2xl leading-relaxed text-xl text-[#000000] tracking-tight mb-12">
+                  "The team's ability to balance complex game mechanics with
+                  breathtaking, sophisticated art is unmatched in the industry."
+                </p>
+              </div>
+              <div class="flex items-center gap-5 pt-8 border-t border-black/5">
+                <div class="overflow-hidden shrink-0 bg-gray-200 w-14 h-14 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5866f61c-e537-452b-9d35-053e985d625b_320w.webp)] bg-cover bg-center rounded-full"></div>
+                <div class="">
+                  <div class="text-lg font-medium text-[#000000]">Marcus Chen</div>
+                  <div class="text-sm text-[#737373]">Producer, Aetheria</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kinetic Awards List (Dark) -->
+      <section class="py-40 px-4 bg-[#080808] text-white" data-theme="dark">
+        <div class="max-w-[90rem] mx-auto border-t border-[#262626]">
+          <h2 class="sr-only">Awards and Recognition</h2>
+
+          <!-- Item 1 -->
+          <div class="group relative py-12 md:py-16 border-b border-[#262626] flex items-center justify-between cursor-pointer overflow-hidden">
+            <div class="flex items-baseline gap-6 md:gap-12 relative z-10 pointer-events-none mix-blend-difference">
+              <span class="text-white/30 text-sm w-8 uppercase tracking-widest">
+                01
+              </span>
+              <h3 class="text-[clamp(2.5rem,6vw,5rem)] tracking-tighter font-medium uppercase group-hover:translate-x-8 transition-transform duration-700 ease-out">
+                Site of the Day
+              </h3>
+            </div>
+            <div class="text-right relative z-10 pointer-events-none mix-blend-difference">
+              <span class="block text-xl md:text-2xl font-medium tracking-tight">
+                Awwwards
+              </span>
+              <span class="text-[#737373] text-sm uppercase tracking-widest mt-1 block">
+                2023
+              </span>
+            </div>
+
+            <!-- Hover Reveal -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] aspect-video pointer-events-none opacity-0 group-hover:opacity-40 lg:group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-700 ease-out z-0 rounded-2xl overflow-hidden shadow-2xl">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dc7ea982-b550-469a-a96b-b39cffb15e56_1600w.png" alt="Award Certificate" class="w-full h-full object-cover">
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="group relative py-12 md:py-16 border-b border-[#262626] flex items-center justify-between cursor-pointer overflow-hidden">
+            <div class="flex items-baseline gap-6 md:gap-12 relative z-10 pointer-events-none mix-blend-difference">
+              <span class="text-white/30 text-sm w-8 uppercase tracking-widest">
+                02
+              </span>
+              <h3 class="text-[clamp(2.5rem,6vw,5rem)] tracking-tighter font-medium uppercase group-hover:translate-x-8 transition-transform duration-700 ease-out">
+                FWA of the Day
+              </h3>
+            </div>
+            <div class="text-right relative z-10 pointer-events-none mix-blend-difference">
+              <span class="block text-xl md:text-2xl font-medium tracking-tight">
+                FWA
+              </span>
+              <span class="text-[#737373] text-sm uppercase tracking-widest mt-1 block">
+                2023
+              </span>
+            </div>
+
+            <!-- Hover Reveal -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] aspect-video pointer-events-none opacity-0 group-hover:opacity-40 lg:group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-700 ease-out z-0 rounded-2xl overflow-hidden shadow-2xl">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/53626668-c098-4943-91af-d0149ca8fe09_1600w.png" alt="Award Certificate" class="w-full h-full object-cover">
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="group relative py-12 md:py-16 border-b border-[#262626] flex items-center justify-between cursor-pointer overflow-hidden">
+            <div class="flex items-baseline gap-6 md:gap-12 relative z-10 pointer-events-none mix-blend-difference">
+              <span class="text-white/30 text-sm w-8 uppercase tracking-widest">
+                03
+              </span>
+              <h3 class="text-[clamp(2.5rem,6vw,5rem)] tracking-tighter font-medium uppercase group-hover:translate-x-8 transition-transform duration-700 ease-out">
+                Special Kudos
+              </h3>
+            </div>
+            <div class="text-right relative z-10 pointer-events-none mix-blend-difference">
+              <span class="block text-xl md:text-2xl font-medium tracking-tight">
+                CSSDA
+              </span>
+              <span class="text-[#737373] text-sm uppercase tracking-widest mt-1 block">
+                2024
+              </span>
+            </div>
+
+            <!-- Hover Reveal -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] aspect-video pointer-events-none opacity-0 group-hover:opacity-40 lg:group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-700 ease-out z-0 rounded-2xl overflow-hidden shadow-2xl">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/037bbf03-6a5c-431e-b725-23f29ed4ef62_1600w.png" alt="Award Certificate" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Banner -->
+      <section class="py-32 px-4 bg-[#080808]" data-theme="dark">
+        <div class="max-w-[85rem] mx-auto bg-[#101010] rounded-[3rem] py-24 px-8 relative overflow-hidden text-center flex flex-col items-center justify-center border border-[#262626] group">
+          <!-- Abstract BG pattern -->
+          <div class="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity duration-1000 group-hover:scale-105 transform ease-out pointer-events-none">
+            <img src="https://cdn.prod.website-files.com/667a7576e7e7ef3ba89b3f2a/66b371a597474618710d0c03_Group.svg" class="w-full h-full object-cover" alt="">
+          </div>
+
+          <h2 class="relative z-10 text-[clamp(4rem,9vw,8.5rem)] tracking-tighter font-medium leading-[0.9] mb-16 text-white uppercase">
+            Innovate
+            <br>
+            with us
+          </h2>
+
+          <div class="relative z-10 flex flex-wrap justify-center gap-4">
+            <button class="text-white px-8 py-4 rounded-[0.56rem] text-xs uppercase tracking-widest font-medium transition-colors flex items-center gap-3 bg-orange-500 hover:bg-orange-600">
+              Write us
+              <iconify-icon icon="solar:arrow-right-linear" class="text-lg"></iconify-icon>
+            </button>
+            <button class="bg-[#191919] border border-[#262626] text-white px-8 py-4 rounded-[0.56rem] text-xs uppercase tracking-widest hover:bg-[#262626] transition-colors">
+              Book a call
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#080808] pt-24 pb-12 px-4 border-t border-[#262626]" data-theme="dark">
+      <div class="max-w-[90rem] mx-auto flex flex-col lg:flex-row justify-between gap-20 mb-24">
+        <!-- Links Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 lg:gap-24 flex-1">
+          <div class="">
+            <h4 class="text-white/40 uppercase tracking-widest text-[0.65rem] mb-8">
+              Company
+            </h4>
+            <ul class="space-y-5 text-sm text-[#737373]">
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  About us
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">Blog</a>
+              </li>
+            </ul>
+          </div>
+          <div class="">
+            <h4 class="text-white/40 uppercase tracking-widest text-[0.65rem] mb-8">
+              Social
+            </h4>
+            <ul class="space-y-5 text-sm text-[#737373]">
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  Dribbble
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  Behance
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors">
+                  LinkedIn
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="">
+            <h4 class="text-white/40 uppercase tracking-widest text-[0.65rem] mb-8">
+              Offices
+            </h4>
+            <ul class="space-y-5 text-sm text-[#737373]">
+              <li>
+                <span class="block text-white mb-1">San Francisco</span>
+                100 Market St
+              </li>
+              <li>
+                <span class="block text-white mb-1 mt-4">London</span>
+                120 Moorgate
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact Area -->
+        <div class="text-left lg:text-right flex flex-col lg:items-end justify-between">
+          <a href="/mailto:hello@outnext.io" class="text-[clamp(2.5rem,5vw,4rem)] tracking-tighter uppercase font-medium hover:text-[#8a5cff] transition-colors inline-block mb-12 lg:mb-0">hello@outnext.io</a>
+          <div class="flex gap-3">
+            <a href="#" class="w-14 h-14 rounded-full bg-[#101010] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black transition-colors" aria-label="Dribbble">
+              <iconify-icon icon="solar:basketball-linear" class="text-2xl"></iconify-icon>
+            </a>
+            <a href="#" class="w-14 h-14 rounded-full bg-[#101010] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black transition-colors" aria-label="Instagram">
+              <iconify-icon icon="solar:camera-linear" class="text-2xl"></iconify-icon>
+            </a>
+            <a href="#" class="w-14 h-14 rounded-full bg-[#101010] border border-[#262626] flex items-center justify-center hover:bg-white hover:text-black transition-colors" aria-label="Twitter">
+              <iconify-icon icon="solar:letter-linear" class="text-2xl"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="max-w-[90rem] mx-auto border-t border-[#262626] pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[#737373] text-[0.65rem] uppercase tracking-widest">
+        <p>© 2024 Outcrowd Game Agency. All rights reserved.</p>
+        <div class="flex gap-8">
+          <a href="#" class="hover:text-white transition-colors">
+            Privacy Policy
+          </a>
+          <a href="#" class="hover:text-white transition-colors">
+            Terms of Use
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts for Evidenced Motion -->
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          if (!reduceMotion) {
+              // 1. Hero Text Reveal via SplitType
+              const heroTitle = new SplitType('.hero-title', { types: 'chars, words' });
+
+              gsap.from(heroTitle.chars, {
+                  opacity: 0,
+                  y: 60,
+                  rotateX: -90,
+                  stagger: 0.015,
+                  duration: 1.2,
+                  ease: 'power4.out',
+                  delay: 0.2
+              });
+
+              // 2. Hero Elements Floating In
+              gsap.from('.hero-element', {
+                  y: 40,
+                  opacity: 0,
+                  duration: 1.2,
+                  stagger: 0.15,
+                  ease: 'power3.out',
+                  delay: 0.8
+              });
+
+              // 3. Scroll Reveal for headings
+              const revealTexts = document.querySelectorAll('.reveal-text');
+              revealTexts.forEach(text => {
+                  const split = new SplitType(text, { types: 'lines, words' });
+                  gsap.from(split.words, {
+                      scrollTrigger: {
+                          trigger: text,
+                          start: 'top 85%',
+                      },
+                      y: 40,
+                      opacity: 0,
+                      stagger: 0.05,
+                      duration: 1,
+                      ease: 'power3.out'
+                  });
+              });
+
+              // 4. Dynamic Navbar Theme Switching
+              const sections = document.querySelectorAll('[data-theme]');
+              const navbar = document.getElementById('navbar');
+              const navCta = navbar.querySelector('.nav-cta');
+              const navLinks = navbar.querySelectorAll('a:not(.nav-cta)');
+
+              sections.forEach(section => {
+                  ScrollTrigger.create({
+                      trigger: section,
+                      start: 'top 80px',
+                      end: 'bottom 80px',
+                      onEnter: () => updateNavTheme(section.dataset.theme),
+                      onEnterBack: () => updateNavTheme(section.dataset.theme),
+                  });
+              });
+
+              function updateNavTheme(theme) {
+                  if(theme === 'light') {
+                      navbar.classList.replace('bg-[#171717]/80', 'bg-white/80');
+                      navbar.classList.replace('text-white', 'text-[#080808]');
+                      navbar.classList.replace('border-white/5', 'border-black/5');
+                      navLinks.forEach(a => {
+                          a.classList.replace('text-current/70', 'text-[#080808]/70');
+                          a.classList.replace('hover:text-current', 'hover:text-[#080808]');
+                      });
+                  } else {
+                      navbar.classList.replace('bg-white/80', 'bg-[#171717]/80');
+                      navbar.classList.replace('text-[#080808]', 'text-white');
+                      navbar.classList.replace('border-black/5', 'border-white/5');
+                      navLinks.forEach(a => {
+                          a.classList.replace('text-[#080808]/70', 'text-current/70');
+                          a.classList.replace('hover:text-[#080808]', 'hover:text-current');
+                      });
+                  }
+              }
+          }
+
+          // 5. Service Card Radial Glow Follower (Vanilla JS)
+          document.querySelectorAll('.service-card').forEach(card => {
+              const glow = card.querySelector('.radial-glow');
+              if(!glow) return;
+
+              card.addEventListener('mousemove', (e) => {
+                  const rect = card.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+
+                  glow.style.left = `${x}px`;
+                  glow.style.top = `${y}px`;
+              });
+          });
+      });
+    </script>
+  
+<script data-aura-video-controller="true">
+(function () {
+  function playVideo(video) {
+    var promise = video.play();
+    if (promise && typeof promise.catch === "function") {
+      promise.catch(function () {});
+    }
+  }
+
+  function setupVideo(video) {
+    if (video.__auraVideoReady === true) return;
+    video.__auraVideoReady = true;
+    video.removeAttribute("data-aura-video-ready");
+    video.removeAttribute("data-aura-video-played");
+    video.muted = true;
+    video.playsInline = true;
+
+    var preset = video.dataset.auraVideoPreset || "loop-in-view";
+    if (preset === "hover") {
+      video.addEventListener("mouseenter", function () {
+        playVideo(video);
+      });
+      video.addEventListener("mouseleave", function () {
+        video.pause();
+        video.currentTime = 0;
+      });
+      return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      playVideo(video);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          if (preset === "play-once" && video.__auraVideoPlayed === true) {
+            return;
+          }
+          playVideo(video);
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+
+    if (preset === "play-once") {
+      video.addEventListener("ended", function () {
+        video.__auraVideoPlayed = true;
+      }, { once: true });
+    }
+
+    observer.observe(video);
+  }
+
+  function setupVideos() {
+    document
+      .querySelectorAll("video[data-aura-video-preset]")
+      .forEach(setupVideo);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupVideos);
+  } else {
+    setupVideos();
+  }
+})();</script></body></html>
