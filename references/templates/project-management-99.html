@@ -1,0 +1,1818 @@
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll Animation Library | Complete Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&amp;family=Manrope:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@300;400;600;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+/* ============================================
+GLOBAL RESET & CATEGORY DIVIDERS
+============================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background-color: #020202; overflow-x: hidden; }
+.category-divider {
+background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+padding: 60px 40px;
+text-align: center;
+border-top: 2px solid #333;
+border-bottom: 2px solid #333;
+}
+.category-divider h1 {
+font-family: 'Cinzel', serif;
+font-size: 32px;
+color: #CFB53B;
+letter-spacing: 0.1em;
+margin-bottom: 10px;
+}
+.category-divider p {
+font-family: 'Manrope', sans-serif;
+color: #666;
+font-size: 14px;
+}
+/* ============================================
+CATEGORY 1: FADE ANIMATIONS
+============================================ */
+#cat1-container {
+--bg-deep: #020202;
+--bg-panel: #0F0F0F;
+--text-main: #EAEAEA;
+--text-muted: #888888;
+--accent: #CFB53B;
+--font-display: 'Cinzel', serif;
+--font-body: 'Manrope', sans-serif;
+--container: 1400px;
+--ease-cinematic: cubic-bezier(0.19, 1, 0.22, 1);
+--ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+--duration-slow: 1.5s;
+color: var(--text-main);
+font-family: var(--font-body);
+-webkit-font-smoothing: antialiased;
+}
+#cat1-container h1, #cat1-container h2, #cat1-container h3 { font-family: var(--font-display); line-height: 1.1; font-weight: 400; letter-spacing: -0.01em; }
+#cat1-container p { line-height: 1.6; color: var(--text-muted); font-size: 16px; font-weight: 300; }
+#cat1-container .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); display: block; margin-bottom: 16px; font-weight: 600; }
+#cat1-container .btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; border-radius: 2px; text-decoration: none; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px; transition: 0.3s; }
+#cat1-container .btn-gold { background: var(--accent); color: #000; }
+#cat1-container .btn-gold:hover { background: #fff; transform: translateY(-2px); }
+#cat1-container .btn-glass { border: 1px solid rgba(255,255,255,0.2); color: #fff; backdrop-filter: blur(4px); }
+#cat1-container .btn-glass:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+#cat1-container .controls { position: absolute; top: 40px; right: 40px; z-index: 50; display: flex; gap: 10px; }
+#cat1-container .ctrl-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); height: 36px; padding: 0 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+#cat1-container .ctrl-btn:hover { border-color: var(--accent); color: #fff; }
+#cat1-container section { width: 100%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 80px 5%; border-bottom: 1px solid rgba(255,255,255,0.03); overflow: hidden; }
+#cat1-container .container { width: 100%; max-width: var(--container); position: relative; z-index: 2; }
+#cat1-container #hero { background: linear-gradient(180deg, rgba(2,2,2,0.6) 0%, rgba(2,2,2,1) 100%), url('https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=2000&auto=format&fit=crop'); background-size: cover; background-position: center; }
+#cat1-container .seq-el { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease, transform 0.6s ease; }
+#cat1-container .active .seq-el { animation-name: cat1FadeSlideUp; animation-duration: var(--duration-slow); animation-timing-function: var(--ease-cinematic); animation-fill-mode: forwards; }
+@keyframes cat1FadeSlideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+#cat1-container .hero-stats { display: flex; gap: 60px; margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.15); }
+#cat1-container .stat h3 { font-size: 32px; margin-bottom: 4px; color: #fff; }
+#cat1-container .stat p { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+#cat1-container #features { background: #080808; }
+#cat1-container .bento-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; height: 600px; width: 100%; margin-top: 40px; }
+#cat1-container .b-card { position: relative; background: #111; border: 1px solid rgba(255,255,255,0.05); padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+#cat1-container .b-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: 0.5s; }
+#cat1-container .b-card:hover img { opacity: 0.6; transform: scale(1.05); }
+#cat1-container .b-content { position: relative; z-index: 2; }
+#cat1-container .b-1 { grid-row: span 2; }
+#cat1-container .dir-left { opacity: 0; transform: translateX(-60px); transition: all 1s ease; }
+#cat1-container .dir-right { opacity: 0; transform: translateX(60px); transition: all 1s ease; }
+#cat1-container .dir-up { opacity: 0; transform: translateY(60px); transition: all 1s ease; }
+#cat1-container .active .dir-left, #cat1-container .active .dir-right, #cat1-container .active .dir-up { transition: all var(--duration-slow) var(--ease-cinematic); opacity: 1; transform: translate(0); }
+#cat1-container #showcase { background: #050505; }
+#cat1-container .stage { width: 100%; height: 600px; display: flex; justify-content: center; align-items: center; position: relative; perspective: 1000px; }
+#cat1-container .main-render { width: 900px; height: 500px; background: #222; background-image: url('https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1600&auto=format&fit=crop'); background-size: cover; background-position: center; box-shadow: 0 40px 80px rgba(0,0,0,0.6); opacity: 0; transform: scale(0.85); transition: all 1s ease; }
+#cat1-container .float-info { position: absolute; background: rgba(15,15,15,0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); padding: 24px; min-width: 220px; opacity: 0; transform: scale(0.6) translateY(20px); transition: all 1s ease; }
+#cat1-container .f-1 { top: 40px; right: 10%; }
+#cat1-container .f-2 { bottom: 60px; left: 10%; }
+#cat1-container .active .main-render { transition: all var(--duration-slow) var(--ease-elastic); opacity: 1; transform: scale(1); }
+#cat1-container .active .float-info { transition: all 1.2s var(--ease-elastic); opacity: 1; transform: scale(1) translateY(0); }
+#cat1-container #team { background: #020202; }
+#cat1-container .team-row { display: flex; gap: 32px; justify-content: center; margin-top: 60px; perspective: 1200px; }
+#cat1-container .architect-card { width: 320px; height: 480px; position: relative; opacity: 0; transform-origin: center 1000px; transition: all 1s ease; }
+#cat1-container .arc-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2); transition: 0.5s; }
+#cat1-container .architect-card:hover .arc-img { filter: grayscale(0%); }
+#cat1-container .arc-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 24px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+#cat1-container .rot-l { transform: rotate(-10deg) translateY(60px) translateX(-30px); }
+#cat1-container .rot-c { transform: rotate(0deg) translateY(80px); }
+#cat1-container .rot-r { transform: rotate(10deg) translateY(60px) translateX(30px); }
+#cat1-container .active .architect-card { transition: all var(--duration-slow) cubic-bezier(0.2, 0.8, 0.2, 1); opacity: 1; transform: rotate(0) translate(0); }
+#cat1-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat1-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat1-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 650px; max-width: 90%; padding: 40px; box-shadow: 0 0 50px rgba(0,0,0,0.5); transform: translateY(20px); transition: 0.4s; }
+#cat1-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat1-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+#cat1-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat1-container .prompt-block { margin-bottom: 24px; }
+#cat1-container .pb-label { font-size: 11px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat1-container .pb-text { font-size: 15px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; }
+#cat1-container .code-block { background: #050505; color: #999; font-family: 'Courier New', monospace; font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+@media(max-width: 1024px) {
+#cat1-container .hero-title { font-size: 48px; }
+#cat1-container .bento-grid { grid-template-columns: 1fr; height: auto; }
+#cat1-container .b-1 { grid-row: auto; height: 300px; }
+#cat1-container .team-row { flex-direction: column; align-items: center; }
+#cat1-container .f-1, #cat1-container .f-2 { display: none; }
+#cat1-container .main-render { width: 100%; height: 300px; }
+}
+/* ============================================
+CATEGORY 2: PARALLAX EFFECTS
+============================================ */
+#cat2-container { --bg-deep: #020202; --accent: #CFB53B; --font-display: 'Cinzel', serif; --font-body: 'Manrope', sans-serif; color: #EAEAEA; font-family: var(--font-body); }
+#cat2-container h1, #cat2-container h2, #cat2-container h3 { font-family: var(--font-display); line-height: 1.1; font-weight: 400; }
+#cat2-container p { line-height: 1.6; color: #888; font-size: 16px; }
+#cat2-container .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); display: block; margin-bottom: 16px; font-weight: 600; }
+#cat2-container .btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; border-radius: 2px; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px; transition: 0.3s; cursor: pointer; border: none; }
+#cat2-container .btn-gold { background: var(--accent); color: #000; }
+#cat2-container .btn-gold:hover { background: #fff; transform: translateY(-2px); }
+#cat2-container .controls { position: absolute; top: 40px; right: 40px; z-index: 50; display: flex; gap: 10px; }
+#cat2-container .ctrl-btn { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(12px); color: #fff; height: 36px; padding: 0 16px; border-radius: 100px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+#cat2-container .ctrl-btn:hover { border-color: var(--accent); background: #fff; color: #000; }
+#cat2-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat2-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat2-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 650px; max-width: 90%; padding: 40px; transform: translateY(20px); transition: 0.4s; }
+#cat2-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat2-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+#cat2-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat2-container .prompt-block { margin-bottom: 24px; }
+#cat2-container .pb-label { font-size: 11px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat2-container .pb-text { font-size: 15px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; }
+#cat2-container .code-block { background: #050505; color: #999; font-family: monospace; font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+#cat2-container section { position: relative; width: 100%; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+#cat2-container #p-hero { overflow: hidden; }
+#cat2-container .ph-bg { position: absolute; top: -10%; left: 0; width: 100%; height: 120%; background-image: linear-gradient(rgba(10,10,10,0.3), rgba(10,10,10,0.8)), url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&h=1080&fit=crop'); background-size: cover; background-position: center; z-index: 1; will-change: transform; }
+#cat2-container .ph-content { position: relative; z-index: 2; text-align: center; max-width: 800px; padding: 0 20px; }
+#cat2-container .ph-title { font-size: clamp(48px, 6vw, 80px); color: #fff; margin-bottom: 20px; }
+#cat2-container .ph-sub { font-size: 24px; color: #ccc; margin-bottom: 40px; }
+#cat2-container #p-multi { height: 120vh; }
+#cat2-container .layer { position: absolute; top: 0; left: 0; width: 100%; height: 120%; background-size: cover; background-position: center; will-change: transform; }
+#cat2-container .l-back { background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop'); z-index: 1; height: 130%; top: -15%; }
+#cat2-container .l-mid { background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 60%); z-index: 2; mix-blend-mode: overlay; }
+#cat2-container .l-front { z-index: 3; display: flex; align-items: center; justify-content: center; height: 100%; }
+#cat2-container .glass-card { background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); padding: 60px; text-align: center; max-width: 600px; border-radius: 4px; }
+#cat2-container #p-zoom { overflow: hidden; }
+#cat2-container .pz-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1920&h=1080&fit=crop'); background-size: cover; background-position: center; z-index: 1; will-change: transform; }
+#cat2-container .pz-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 0%, #020202 90%); z-index: 2; }
+#cat2-container .pz-content { position: relative; z-index: 3; text-align: center; will-change: opacity; }
+#cat2-container #p-reveal { display: flex; align-items: stretch; height: 100vh; padding: 0; }
+#cat2-container .pr-col-left { width: 50%; background: var(--bg-deep); display: flex; flex-direction: column; justify-content: center; padding: 80px; z-index: 2; }
+#cat2-container .pr-col-right { width: 50%; position: relative; background: #111; overflow: hidden; }
+#cat2-container .pr-img-wrap { width: 100%; height: 100%; position: relative; }
+#cat2-container .pr-img { width: 100%; height: 100%; object-fit: cover; will-change: clip-path; }
+@media(max-width: 900px) {
+#cat2-container #p-reveal { flex-direction: column; height: auto; }
+#cat2-container .pr-col-left, #cat2-container .pr-col-right { width: 100%; min-height: 50vh; }
+#cat2-container .ph-title { font-size: 40px; }
+}
+/* ============================================
+CATEGORY 3: COUNTER/NUMBER ANIMATIONS
+============================================ */
+#cat3-container { --bg-deep: #020202; --accent: #10B981; --accent-glow: rgba(16, 185, 129, 0.25); --font-display: 'Manrope', sans-serif; --font-mono: 'JetBrains Mono', monospace; color: #fff; font-family: var(--font-display); }
+#cat3-container h1, #cat3-container h2, #cat3-container h3 { line-height: 1.1; letter-spacing: -0.02em; font-weight: 700; }
+#cat3-container p { line-height: 1.6; color: #888; font-size: 16px; }
+#cat3-container .section-label { font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); display: block; margin-bottom: 16px; }
+#cat3-container .controls { position: absolute; top: 40px; right: 40px; z-index: 50; display: flex; gap: 10px; }
+#cat3-container .ctrl-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(12px); color: #ccc; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: 0.2s; font-family: var(--font-mono); display: flex; align-items: center; gap: 8px; }
+#cat3-container .ctrl-btn:hover { border-color: var(--accent); color: #fff; background: var(--accent-glow); }
+#cat3-container section { width: 100%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 100px 5%; border-bottom: 1px solid rgba(255,255,255,0.03); overflow: hidden; }
+#cat3-container .container { width: 100%; max-width: 1280px; position: relative; z-index: 2; }
+#cat3-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat3-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat3-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 600px; max-width: 90%; padding: 40px; transform: translateY(20px); transition: 0.4s; }
+#cat3-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat3-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+#cat3-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat3-container .prompt-block { margin-bottom: 24px; }
+#cat3-container .pb-label { font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat3-container .pb-text { font-size: 14px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; font-family: var(--font-mono); }
+#cat3-container .code-block { background: #050505; color: #999; font-family: var(--font-mono); font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+#cat3-container .btn-copy { width: 100%; padding: 16px; background: var(--accent); color: #000; font-weight: 700; border: none; cursor: pointer; text-transform: uppercase; font-family: var(--font-mono); font-size: 12px; }
+#cat3-container #stats { background: #0F0F0F; }
+#cat3-container .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 60px; }
+#cat3-container .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 40px 20px; border-radius: 16px; text-align: center; transition: 0.3s; }
+#cat3-container .stat-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+#cat3-container .stat-icon { color: var(--accent); margin-bottom: 24px; width: 48px; height: 48px; }
+#cat3-container .stat-num-wrap { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 12px; font-feature-settings: "tnum"; }
+#cat3-container .stat-label { font-size: 16px; color: #888; font-weight: 500; }
+#cat3-container #progress { background: #0A0A0A; }
+#cat3-container .prog-container { max-width: 800px; margin: 60px auto 0 auto; display: flex; flex-direction: column; gap: 40px; }
+#cat3-container .prog-item { width: 100%; }
+#cat3-container .prog-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+#cat3-container .prog-label { font-size: 18px; font-weight: 600; color: #fff; }
+#cat3-container .prog-val { font-size: 20px; font-weight: 700; color: var(--accent); font-feature-settings: "tnum"; }
+#cat3-container .prog-track { width: 100%; height: 12px; background: #1A1A1A; border-radius: 6px; overflow: hidden; }
+#cat3-container .prog-fill { height: 100%; background: linear-gradient(90deg, #10B981, #34D399); width: 0%; border-radius: 6px; }
+#cat3-container #circles { background: #0F0F0F; }
+#cat3-container .circle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-top: 80px; justify-items: center; }
+#cat3-container .circle-wrap { width: 200px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+#cat3-container .circle-label { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+#cat3-container .circle-svg { transform: rotate(-90deg); width: 200px; height: 200px; }
+#cat3-container .c-bg { fill: none; stroke: #222; stroke-width: 8; }
+#cat3-container .c-prog { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 565; stroke-dashoffset: 565; }
+#cat3-container .circle-center { position: absolute; top: 0; left: 0; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: 800; color: var(--accent); font-feature-settings: "tnum"; }
+#cat3-container .circle-desc { margin-top: 24px; font-size: 14px; color: #888; }
+#cat3-container .relative-circle { position: relative; width: 200px; height: 200px; }
+#cat3-container #impact { background: #0A0A0A; }
+#cat3-container .impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 60px auto 0 auto; width: 100%; max-width: 1000px; }
+#cat3-container .impact-card { background: linear-gradient(135deg, #1A1A1A 0%, #111 100%); border: 1px solid rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; position: relative; overflow: hidden; transition: 0.3s; }
+#cat3-container .impact-card:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1); }
+#cat3-container .imp-icon { position: absolute; top: 32px; right: 32px; color: #888; opacity: 0.5; width: 32px; height: 32px; }
+#cat3-container .imp-val { font-size: 48px; font-weight: 800; color: var(--accent); margin-bottom: 8px; display: block; font-feature-settings: "tnum"; }
+#cat3-container .imp-label { font-size: 16px; color: #AAA; display: block; margin-bottom: 24px; }
+#cat3-container .trend { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; padding: 6px 12px; border-radius: 100px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 600; }
+@media(max-width: 1024px) {
+#cat3-container .stats-grid, #cat3-container .circle-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+#cat3-container .impact-grid { grid-template-columns: 1fr; }
+}
+@media(max-width: 600px) {
+#cat3-container .stats-grid, #cat3-container .circle-grid { grid-template-columns: 1fr; }
+}
+/* ============================================
+CATEGORY 4: STAGGERED REVEAL
+============================================ */
+#cat4-container { --bg-deep: #020202; --accent: #CFB53B; --font-display: 'Cinzel', serif; --font-body: 'Manrope', sans-serif; --ease-cinematic: cubic-bezier(0.19, 1, 0.22, 1); color: #EAEAEA; font-family: var(--font-body); }
+#cat4-container h1, #cat4-container h2, #cat4-container h3, #cat4-container h4 { font-family: var(--font-display); line-height: 1.1; font-weight: 400; }
+#cat4-container p { line-height: 1.6; color: #888; font-size: 16px; }
+#cat4-container .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); display: block; margin-bottom: 16px; font-weight: 600; }
+#cat4-container .controls { position: absolute; top: 40px; right: 40px; z-index: 50; display: flex; gap: 10px; }
+#cat4-container .ctrl-btn { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; height: 36px; padding: 0 16px; border-radius: 2px; font-size: 11px; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+#cat4-container .ctrl-btn:hover { border-color: var(--accent); background: #fff; color: #000; }
+#cat4-container .btn-gold { display: inline-flex; padding: 14px 28px; background: var(--accent); color: #000; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; font-size: 12px; transition: 0.3s; }
+#cat4-container section { width: 100%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 80px 5%; border-bottom: 1px solid rgba(255,255,255,0.03); overflow: hidden; }
+#cat4-container .container { width: 100%; max-width: 1400px; position: relative; z-index: 2; }
+#cat4-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat4-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat4-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 650px; max-width: 90%; padding: 40px; transform: translateY(20px); transition: 0.4s; }
+#cat4-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat4-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+#cat4-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat4-container .prompt-block { margin-bottom: 24px; }
+#cat4-container .pb-label { font-size: 11px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat4-container .pb-text { font-size: 15px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; }
+#cat4-container .code-block { background: #050505; color: #999; font-family: monospace; font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+#cat4-container #gallery { background: #0F0F0F; }
+#cat4-container .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
+#cat4-container .project-card { position: relative; height: 320px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); overflow: hidden; cursor: pointer; opacity: 0; transform: translateY(40px); transition: opacity 0.5s ease, transform 0.5s ease; }
+#cat4-container .p-img { width: 100%; height: 200px; object-fit: cover; transition: 0.5s; opacity: 0.8; }
+#cat4-container .project-card:hover .p-img { transform: scale(1.05); opacity: 1; }
+#cat4-container .p-info { padding: 20px; }
+#cat4-container .p-tag { font-size: 10px; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(207, 181, 59, 0.3); padding: 4px 8px; border-radius: 100px; display: inline-block; margin-bottom: 8px; }
+#cat4-container .p-title { font-size: 18px; font-weight: 500; font-family: var(--font-body); }
+#cat4-container .active .project-card { transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; transform: translateY(0); }
+#cat4-container #workflow { background: #0A0A0A; }
+#cat4-container .workflow-layout { display: flex; align-items: center; gap: 60px; margin-top: 40px; }
+#cat4-container .wf-text { width: 40%; }
+#cat4-container .wf-svg-container { width: 60%; display: flex; justify-content: center; }
+#cat4-container .wf-step { margin-bottom: 32px; opacity: 0; transform: translateX(-20px); transition: 0.5s; }
+#cat4-container .wf-step h4 { color: #fff; font-size: 20px; margin-bottom: 4px; }
+#cat4-container .wf-path { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 1s ease; }
+#cat4-container .wf-node { fill: #111; stroke: var(--accent); stroke-width: 2; opacity: 0; transform: scale(0); transform-origin: center; transition: all 0.4s ease; }
+#cat4-container .active .wf-step { opacity: 1; transform: translateX(0); }
+#cat4-container .active .wf-path { stroke-dashoffset: 0; }
+#cat4-container .active .wf-node { opacity: 1; transform: scale(1); }
+#cat4-container #quote { background: #0F0F0F; }
+#cat4-container .quote-container { text-align: center; max-width: 1000px; }
+#cat4-container .line-wrap { overflow: hidden; margin-bottom: 4px; }
+#cat4-container .reveal-text { display: block; font-size: clamp(40px, 5vw, 80px); font-family: var(--font-display); color: #fff; line-height: 1.1; clip-path: inset(0 100% 0 0); transform: translateX(-20px); transition: all 0.5s ease; }
+#cat4-container .quote-attr { margin-top: 40px; font-size: 14px; letter-spacing: 0.1em; color: #888; opacity: 0; transition: 1s ease; }
+#cat4-container .active .reveal-text { transition: clip-path 1.4s cubic-bezier(0.77, 0, 0.175, 1), transform 1.4s var(--ease-cinematic); clip-path: inset(0 0% 0 0); transform: translateX(0); }
+#cat4-container .active .quote-attr { opacity: 1; transition-delay: 1.5s; }
+#cat4-container #featured { background: #0A0A0A; }
+#cat4-container .feat-wrapper { position: relative; width: 100%; max-width: 1200px; height: 700px; margin: 40px auto; overflow: hidden; }
+#cat4-container .feat-img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); transition: transform 1.5s ease-out; }
+#cat4-container .curtains { position: absolute; inset: 0; display: flex; z-index: 2; }
+#cat4-container .curtain-panel { flex: 1; height: 100%; background: #1a1a1a; border-right: 1px solid rgba(255,255,255,0.05); transform: translateY(0); transition: transform 0.5s ease; }
+#cat4-container .feat-caption { margin-top: 32px; text-align: center; opacity: 0; transform: translateY(20px); transition: 0.5s; }
+#cat4-container .active .curtain-panel { transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1); transform: translateY(-100%); }
+#cat4-container .active .feat-img { transform: scale(1); }
+#cat4-container .active .feat-caption { opacity: 1; transform: translateY(0); transition-delay: 1s; }
+@media(max-width: 1024px) {
+#cat4-container .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+#cat4-container .workflow-layout { flex-direction: column-reverse; }
+#cat4-container .wf-text, #cat4-container .wf-svg-container { width: 100%; }
+#cat4-container .feat-wrapper { height: 400px; }
+}
+@media(max-width: 600px) { #cat4-container .gallery-grid { grid-template-columns: 1fr; } }
+/* ============================================
+CATEGORY 5: PINNED/STICKY LAYOUTS
+============================================ */
+#cat5-container { --bg-deep: #050505; --accent: #CFB53B; --font-display: 'Cinzel', serif; --font-body: 'Manrope', sans-serif; color: #EAEAEA; font-family: var(--font-body); }
+#cat5-container h1, #cat5-container h2, #cat5-container h3 { font-family: var(--font-display); line-height: 1.1; }
+#cat5-container p { line-height: 1.6; color: #888; font-size: 16px; }
+#cat5-container .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent); display: block; margin-bottom: 20px; font-weight: 600; border-left: 2px solid var(--accent); padding-left: 12px; }
+#cat5-container .btn-gold { display: inline-flex; padding: 16px 32px; background: var(--accent); color: #000; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; font-size: 12px; transition: 0.3s; cursor: pointer; border: none; }
+#cat5-container .btn-gold:hover { background: #fff; transform: translateY(-2px); }
+#cat5-container .ctrl-btn { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; height: 36px; padding: 0 16px; border-radius: 100px; font-size: 11px; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+#cat5-container .ctrl-btn:hover { border-color: var(--accent); background: #fff; color: #000; }
+#cat5-container .controls { position: absolute; top: 40px; right: 40px; z-index: 50; display: flex; gap: 10px; }
+#cat5-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat5-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat5-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 600px; max-width: 90%; padding: 40px; transform: translateY(20px); transition: 0.4s; }
+#cat5-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat5-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+#cat5-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat5-container .prompt-block { margin-bottom: 24px; }
+#cat5-container .pb-label { font-size: 11px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat5-container .pb-text { font-size: 15px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; }
+#cat5-container .code-block { background: #050505; color: #999; font-family: monospace; font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+#cat5-container #cat5-hero { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%, #151515 0%, #000 80%); text-align: center; position: relative; z-index: 1; }
+#cat5-container #cat5-split-sticky { display: flex; align-items: flex-start; position: relative; background: #020202; border-top: 1px solid #222; }
+#cat5-container .sticky-col { width: 45%; height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; padding: 80px; border-right: 1px solid #111; z-index: 10; }
+#cat5-container .scroll-col { width: 55%; display: flex; flex-direction: column; position: relative; z-index: 1; }
+#cat5-container .scroll-block { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 80px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: opacity 0.5s; opacity: 0.3; }
+#cat5-container .scroll-block.active { opacity: 1; }
+#cat5-container .sticky-title { font-size: 64px; margin-bottom: 16px; transition: opacity 0.3s; }
+#cat5-container .sticky-desc { font-size: 18px; color: var(--accent); margin-bottom: 40px; transition: opacity 0.3s; }
+#cat5-container .timeline-item { padding: 15px 0; border-bottom: 1px solid #1a1a1a; color: #444; font-size: 14px; font-weight: 500; transition: 0.3s; display: flex; align-items: center; justify-content: space-between; }
+#cat5-container .timeline-item.active { color: #fff; border-bottom-color: var(--accent); }
+#cat5-container .timeline-item.active::after { content: '→'; color: var(--accent); }
+#cat5-container .block-img { width: 100%; height: 450px; object-fit: cover; margin-top: 40px; filter: grayscale(100%) contrast(1.2); transition: 0.5s; border: 1px solid #222; }
+#cat5-container .scroll-block.active .block-img { filter: grayscale(0%) contrast(1); border-color: var(--accent); }
+#cat5-container #cat5-stacked-wrapper { position: relative; background: #000; }
+#cat5-container .slide { position: sticky; top: 0; height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 -10px 50px rgba(0,0,0,0.8); overflow: hidden; }
+#cat5-container .slide-overlay { background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); padding: 60px; max-width: 800px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+#cat5-container .s-1 { z-index: 1; background-color: #050505; }
+#cat5-container .s-2 { z-index: 2; background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&fit=crop'); }
+#cat5-container .s-3 { z-index: 3; background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&fit=crop'); }
+#cat5-container .s-4 { z-index: 4; background-image: url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1600&fit=crop'); }
+#cat5-container #cat5-h-scroll-container { height: 500vh; position: relative; background: #020202; }
+#cat5-container #cat5-h-sticky-stage { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; display: flex; align-items: center; }
+#cat5-container #cat5-h-track { display: flex; gap: 100px; padding-left: 10vw; padding-right: 10vw; will-change: transform; }
+#cat5-container .h-card { width: 70vw; height: 70vh; flex-shrink: 0; position: relative; background: #111; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: flex-end; }
+#cat5-container .h-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+#cat5-container .h-info { position: relative; z-index: 2; padding: 40px; background: linear-gradient(to top, #000, transparent); }
+#cat5-container .h-num { font-size: 80px; font-weight: 700; color: #333; line-height: 0.8; font-family: var(--font-display); }
+@media(max-width: 1024px) {
+#cat5-container #cat5-split-sticky { flex-direction: column; }
+#cat5-container .sticky-col { width: 100%; height: auto; position: relative; top: 0; padding: 60px 20px; border-right: none; border-bottom: 1px solid #222; }
+#cat5-container .scroll-col { width: 100%; }
+#cat5-container .scroll-block { min-height: 50vh; padding: 60px 20px; }
+#cat5-container .timeline-item { display: none; }
+#cat5-container .h-card { width: 85vw; height: 60vh; }
+}
+/* ============================================
+CATEGORY 6: PROGRESS INDICATORS
+============================================ */
+#cat6-container { --bg-deep: #030303; --accent: #00F0FF; --border: rgba(255, 255, 255, 0.08); --font-ui: 'Inter', sans-serif; --font-code: 'JetBrains Mono', monospace; color: #EDEDED; font-family: var(--font-ui); background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; }
+#cat6-container h1, #cat6-container h2, #cat6-container h3 { font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+#cat6-container p { line-height: 1.7; color: #666; font-size: 18px; max-width: 600px; }
+#cat6-container .mono { font-family: var(--font-code); color: var(--accent); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+#cat6-container .controls { position: absolute; top: 40px; right: 40px; z-index: 100; display: flex; gap: 10px; }
+#cat6-container .ctrl-btn { background: rgba(0,0,0,0.8); border: 1px solid rgba(0, 240, 255, 0.3); color: #fff; padding: 12px 24px; border-radius: 4px; font-family: var(--font-code); font-size: 11px; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+#cat6-container .ctrl-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px rgba(0,240,255,0.4); }
+#cat6-container .btn-gold { display: inline-flex; padding: 16px 32px; background: var(--accent); color: #000; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; font-size: 12px; transition: 0.3s; cursor: pointer; border: none; }
+#cat6-container .btn-gold:hover { background: #fff; transform: translateY(-2px); }
+#cat6-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 20000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat6-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat6-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 600px; padding: 40px; transform: translateY(20px); transition: 0.4s; }
+#cat6-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat6-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+#cat6-container .modal-title { font-family: var(--font-code); color: var(--accent); font-size: 18px; text-transform: uppercase; letter-spacing: 0.05em; }
+#cat6-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat6-container .prompt-block { margin-bottom: 24px; }
+#cat6-container .pb-label { font-size: 11px; font-family: var(--font-code); text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat6-container .pb-text { font-size: 14px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; }
+#cat6-container .code-block { background: #050505; color: #999; font-family: monospace; font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+#cat6-container #cat6-global-bar-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 9999; background: rgba(255,255,255,0.05); }
+#cat6-container #cat6-global-bar { height: 100%; width: 0%; background: var(--accent); box-shadow: 0 0 15px var(--accent); transition: width 0.1s linear; }
+#cat6-container #cat6-global-pct { position: fixed; bottom: 40px; right: 40px; z-index: 9999; width: 70px; height: 70px; background: rgba(10,10,10,0.9); backdrop-filter: blur(10px); border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(20px); transition: 0.5s ease; cursor: pointer; }
+#cat6-container #cat6-global-pct.visible { opacity: 1; transform: translateY(0); }
+#cat6-container .pct-svg { transform: rotate(-90deg); width: 100%; height: 100%; position: absolute; }
+#cat6-container .pct-track { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 3; }
+#cat6-container .pct-fill { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 200; stroke-dashoffset: 200; transition: stroke-dashoffset 0.1s linear; }
+#cat6-container .pct-num { font-size: 14px; font-weight: 700; color: #fff; font-family: var(--font-code); }
+#cat6-container section { width: 100%; min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); }
+#cat6-container .container { width: 100%; max-width: 1000px; margin: 0 auto; position: relative; z-index: 2; padding: 0 40px; }
+#cat6-container #cat6-hero { background: radial-gradient(circle at 50% 50%, #151515 0%, #030303 70%); text-align: center; }
+#cat6-container .hero-badge { border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; display: inline-block; margin-bottom: 32px; font-family: var(--font-code); }
+#cat6-container .hero-h1 { font-size: clamp(60px, 8vw, 96px); margin-bottom: 24px; color: #fff; }
+#cat6-container #cat6-path-progress { padding: 150px 0; background: #020202; }
+#cat6-container .path-container { position: relative; max-width: 1000px; margin: 0 auto; }
+#cat6-container .path-svg-wrap { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: #111; }
+#cat6-container .path-line-fill { width: 2px; height: 0%; background: var(--accent); box-shadow: 0 0 15px var(--accent); transition: height 0.1s linear; }
+#cat6-container .path-node { display: flex; justify-content: center; align-items: center; margin: 200px 0; position: relative; opacity: 0.2; transition: 0.5s; }
+#cat6-container .path-node.active { opacity: 1; }
+#cat6-container .node-content { background: #0A0A0A; padding: 40px; border: 1px solid #222; width: 400px; position: relative; z-index: 2; transition: 0.3s; }
+#cat6-container .node-content:hover { border-color: var(--accent); }
+#cat6-container .node-marker { width: 16px; height: 16px; background: #000; border: 2px solid var(--accent); border-radius: 50%; position: absolute; left: 50%; transform: translateX(-50%); z-index: 3; box-shadow: 0 0 0 10px #020202; }
+#cat6-container .node-left { margin-right: auto; text-align: right; padding-right: 80px; }
+#cat6-container .node-right { margin-left: auto; text-align: left; padding-left: 80px; }
+#cat6-container #cat6-circular-section { display: flex; align-items: flex-start; background: #050505; border-top: 1px solid #222; position: relative; }
+#cat6-container .sticky-progress { width: 40%; height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #111; z-index: 10; }
+#cat6-container .scroll-content { width: 60%; padding-bottom: 100px; }
+#cat6-container .big-circle-wrap { position: relative; width: 300px; height: 300px; }
+#cat6-container .bc-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+#cat6-container .bc-track { fill: none; stroke: #1a1a1a; stroke-width: 8; }
+#cat6-container .bc-fill { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 880; stroke-dashoffset: 880; transition: stroke-dashoffset 0.1s linear; }
+#cat6-container .bc-value { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 64px; font-family: var(--font-code); color: #fff; }
+#cat6-container .content-chunk { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 80px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: opacity 0.5s; opacity: 0.4; }
+#cat6-container .content-chunk.active { opacity: 1; }
+@media(max-width: 1024px) {
+#cat6-container #cat6-circular-section { flex-direction: column; }
+#cat6-container .sticky-progress { width: 100%; height: auto; padding: 40px 0; position: relative; border-right: none; border-bottom: 1px solid #222; top: 0; }
+#cat6-container .scroll-content { width: 100%; }
+}
+/* ============================================
+CATEGORY 7: CREATIVE EFFECTS
+============================================ */
+#cat7-container { --bg-deep: #050505; --accent: #CFB53B; --font-display: 'Cinzel', serif; --font-body: 'Manrope', sans-serif; --font-code: 'Space Mono', monospace; color: #fff; font-family: var(--font-body); }
+#cat7-container h1, #cat7-container h2, #cat7-container h3 { font-family: var(--font-display); line-height: 1.1; font-weight: 400; }
+#cat7-container p { line-height: 1.6; color: #888; font-size: 16px; }
+#cat7-container .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); display: block; margin-bottom: 16px; font-weight: 600; }
+#cat7-container .controls { position: absolute; top: 40px; right: 40px; z-index: 100; display: flex; gap: 10px; }
+#cat7-container .ctrl-btn { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 20px; border-radius: 100px; font-size: 11px; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+#cat7-container .ctrl-btn:hover { border-color: var(--accent); background: #fff; color: #000; }
+#cat7-container .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#cat7-container .modal-overlay.open { opacity: 1; pointer-events: auto; }
+#cat7-container .modal-box { background: #0A0A0A; border: 1px solid #333; width: 600px; padding: 40px; transform: translateY(20px); transition: 0.4s; }
+#cat7-container .modal-overlay.open .modal-box { transform: translateY(0); }
+#cat7-container .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+#cat7-container .close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+#cat7-container .prompt-block { margin-bottom: 24px; }
+#cat7-container .pb-label { font-size: 11px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 8px; }
+#cat7-container .pb-text { font-size: 15px; color: #ddd; line-height: 1.5; background: #111; padding: 16px; border: 1px solid #222; }
+#cat7-container .code-block { background: #050505; color: #999; font-family: var(--font-code); font-size: 13px; padding: 16px; border: 1px solid #222; overflow-x: auto; white-space: pre-wrap; height: 150px; }
+#cat7-container .btn-copy { width: 100%; padding: 15px; background: var(--accent); border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+#cat7-container #cat7-typewriter { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at 50% 50%, #151515 0%, #000 80%); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+#cat7-container .type-container { max-width: 900px; padding: 0 20px; min-height: 200px; position: relative; z-index: 2; }
+#cat7-container .type-text { font-size: clamp(32px, 5vw, 56px); color: #fff; font-family: var(--font-display); }
+#cat7-container .cursor { display: inline-block; width: 3px; height: 1em; background: var(--accent); margin-left: 5px; vertical-align: middle; animation: cat7blink 1s step-end infinite; }
+#cat7-container .type-sub { font-size: 18px; color: #888; margin-top: 30px; opacity: 0; transform: translateY(20px); transition: 1s ease; }
+#cat7-container .type-sub.visible { opacity: 1; transform: translateY(0); }
+#cat7-container .cursor.hidden { display: none; }
+@keyframes cat7blink { 50% { opacity: 0; } }
+#cat7-container #cat7-scramble { min-height: 100vh; background: #0F0F0F; padding: 100px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+#cat7-container .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; max-width: 1200px; margin-top: 60px; position: relative; z-index: 2; }
+#cat7-container .scramble-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 40px; border-radius: 4px; backdrop-filter: blur(10px); transition: 0.3s; }
+#cat7-container .scramble-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+#cat7-container .s-icon { width: 40px; height: 40px; color: var(--accent); margin-bottom: 24px; }
+#cat7-container .s-title { font-family: var(--font-code); font-size: 24px; margin-bottom: 12px; height: 30px; color: #fff; font-weight: 700; }
+#cat7-container #cat7-color { height: 300vh; position: relative; }
+#cat7-container #cat7-color-sticky { position: sticky; top: 0; height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: background-color 0.1s linear; text-align: center; }
+#cat7-container .color-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); padding: 80px; border-radius: 20px; max-width: 800px; width: 90%; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease; }
+#cat7-container .color-icon { width: 60px; height: 60px; margin-bottom: 30px; transition: color 0.3s; }
+#cat7-container .color-title { font-size: 48px; margin-bottom: 20px; transition: color 0.3s; }
+#cat7-container .color-desc { font-size: 20px; transition: color 0.3s; }
+#cat7-container #cat7-morph { background: #0A0A0A; height: 300vh; position: relative; }
+#cat7-container #cat7-morph-sticky { position: sticky; top: 0; height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; }
+#cat7-container .morph-layout { display: flex; width: 100%; max-width: 1200px; align-items: center; }
+#cat7-container .morph-content { width: 45%; padding-right: 50px; }
+#cat7-container .morph-visual { width: 55%; display: flex; justify-content: center; }
+#cat7-container .morph-list li { margin-bottom: 20px; padding-left: 20px; border-left: 2px solid #333; color: #666; transition: 0.3s; list-style: none; }
+#cat7-container .morph-list li.active { border-left-color: var(--accent); color: #fff; padding-left: 30px; }
+#cat7-container #cat7-morph-svg { width: 500px; height: 500px; overflow: visible; }
+#cat7-container #cat7-morph-path { fill: url(#cat7-morph-gradient); transition: d 0.1s linear, transform 0.1s linear; transform-origin: center; }
+@media(max-width: 1024px) {
+#cat7-container .card-grid { grid-template-columns: 1fr; }
+#cat7-container .morph-layout { flex-direction: column-reverse; text-align: center; }
+#cat7-container .morph-content { width: 100%; padding: 40px 20px; }
+#cat7-container .morph-visual { width: 100%; }
+#cat7-container #cat7-morph-svg { width: 300px; height: 300px; }
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body>
+
+<!-- ============================================
+     CATEGORY 1: FADE ANIMATIONS
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 1: Fade Animations</h1>
+    <p>Sequential fade, directional slide, elastic scale, rotation settle</p>
+</div>
+
+<div id="cat1-container">
+    <div class="modal-overlay" id="cat1-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="cat1-m-title" style="color:#fff;">Animation Title</h3>
+                <button class="close-btn" onclick="cat1CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat1-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Generated CSS</span>
+                <div class="code-block" id="cat1-m-code"></div>
+            </div>
+            <button class="btn btn-gold" style="width:100%" onclick="cat1CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <section id="hero">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat1OpenModal('seq')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat1Replay('hero')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="label seq-el" style="animation-delay: 0ms">Next Gen Architecture</span>
+            <h1 class="seq-el" style="font-size: clamp(48px, 6vw, 90px); margin-bottom: 24px; animation-delay: 200ms;">
+                Redefine the <br> <span style="color:var(--accent)">Skyline.</span>
+            </h1>
+            <p class="seq-el" style="max-width: 500px; margin-bottom: 40px; animation-delay: 400ms;">
+                Lumina leverages generative AI to create sustainable, structural blueprints in milliseconds.
+            </p>
+            <div class="seq-el" style="display: flex; gap: 16px; animation-delay: 600ms;">
+                <a href="#" class="btn btn-gold">Start Generating</a>
+                <a href="#" class="btn btn-glass">Watch Keynote</a>
+            </div>
+            <div class="hero-stats seq-el" style="animation-delay: 800ms;">
+                <div class="stat"><h3>14k+</h3><p>Projects Built</p></div>
+                <div class="stat"><h3>0.2s</h3><p>Render Speed</p></div>
+                <div class="stat"><h3>LEED</h3><p>Certified Ready</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat1OpenModal('dir')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat1Replay('features')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="label" style="text-align:center;">Capabilities</span>
+            <h2 style="text-align:center; font-size: 48px; margin-bottom: 60px;">The Design Suite</h2>
+            <div class="bento-grid">
+                <div class="b-card b-1 dir-left">
+                    <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="Drafting">
+                    <div class="b-content"><h3>Neural Drafting</h3><p>Sketch to CAD conversion with 99.8% accuracy.</p></div>
+                </div>
+                <div class="b-card dir-right" style="transition-delay: 200ms">
+                    <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Material">
+                    <div class="b-content"><h3>Material Solver</h3><p>Calculate load-bearing instantly.</p></div>
+                </div>
+                <div class="b-card dir-up" style="transition-delay: 400ms">
+                    <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Compliance">
+                    <div class="b-content"><h3>Zoning Compliance</h3><p>Auto-check against local regulations.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="showcase">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat1OpenModal('scale')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat1Replay('showcase')">Replay</button>
+        </div>
+        <div class="container">
+            <div style="text-align:center; margin-bottom:40px;">
+                <span class="label">Project Spotlight</span>
+                <h2 style="font-size: 48px;">The Zenith Hub</h2>
+            </div>
+            <div class="stage">
+                <div class="main-render"></div>
+                <div class="float-info f-1" style="transition-delay: 300ms">
+                    <span class="label" style="margin-bottom:4px;">Efficiency</span>
+                    <h4 style="font-size: 24px; color:#fff;">Net Zero</h4>
+                </div>
+                <div class="float-info f-2" style="transition-delay: 500ms">
+                    <span class="label" style="margin-bottom:4px;">Timeline</span>
+                    <h4 style="font-size: 24px; color:#fff;">6 Weeks</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat1OpenModal('rot')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat1Replay('team')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="label">Visionaries</span>
+            <h2 style="font-size: 48px;">The Architects</h2>
+            <div class="team-row">
+                <div class="architect-card rot-l">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&amp;w=600&amp;auto=format&amp;fit=crop" class="arc-img">
+                    <div class="arc-info"><h3>Elias Vane</h3><p>Lead Engineer</p></div>
+                </div>
+                <div class="architect-card rot-c" style="transition-delay: 200ms">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&amp;w=600&amp;auto=format&amp;fit=crop" class="arc-img">
+                    <div class="arc-info"><h3>Sarah O'Neil</h3><p>Design Director</p></div>
+                </div>
+                <div class="architect-card rot-r" style="transition-delay: 400ms">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&amp;w=600&amp;auto=format&amp;fit=crop" class="arc-img">
+                    <div class="arc-info"><h3>Marcus Chen</h3><p>Structural AI</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 1: FADE ANIMATIONS - JAVASCRIPT
+// ============================================
+(function() {
+    const prompts = {
+        seq: { title: "Sequential Staggered Fade", prompt: "Create a CSS keyframe animation for a Hero section where each element fades in and slides up individually. Use a 200ms stagger between them.", code: `.seq-el { opacity: 0; transform: translateY(40px); }\n.active .seq-el { animation: fadeSlideUp 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }` },
+        dir: { title: "Directional Slide Entry", prompt: "I have a Bento Grid layout. The large left card slides from left, top-right from right, bottom-right from bottom.", code: `.dir-left { opacity: 0; transform: translateX(-60px); }\n.active .dir-left { transition: all 1.5s; opacity: 1; transform: translate(0); }` },
+        scale: { title: "Elastic Scale Up", prompt: "Create an effect where the main image scales up from 0.85 to 1.0 with a bouncy elastic effect.", code: `.main-render { opacity: 0; transform: scale(0.85); }\n.active .main-render { transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 1; transform: scale(1); }` },
+        rot: { title: "Rotation Settle", prompt: "Create a Team section animation where cards start rotated and snap into a clean grid.", code: `.rot-l { transform: rotate(-10deg) translateY(60px); opacity: 0; }\n.active .architect-card { transition: all 1.5s; opacity: 1; transform: rotate(0) translate(0); }` }
+    };
+
+    window.cat1Replay = function(id) {
+        const sec = document.querySelector('#cat1-container #' + id);
+        sec.classList.remove('active');
+        const els = sec.querySelectorAll('.seq-el, .dir-left, .dir-right, .dir-up, .main-render, .float-info, .architect-card');
+        els.forEach(e => { e.style.animation = 'none'; e.style.transition = 'none'; e.style.opacity = '0'; });
+        void sec.offsetWidth;
+        els.forEach(e => { e.style.animation = ''; e.style.transition = ''; e.style.opacity = ''; });
+        setTimeout(() => sec.classList.add('active'), 50);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if(e.isIntersecting) e.target.classList.add('active');
+            else e.target.classList.remove('active');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('#cat1-container section').forEach(s => observer.observe(s));
+
+    const modal = document.getElementById('cat1-modal');
+    window.cat1OpenModal = function(key) {
+        document.getElementById('cat1-m-title').innerText = prompts[key].title;
+        document.getElementById('cat1-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat1-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat1CloseModal = function() { modal.classList.remove('open'); };
+    window.cat1CopyAll = function(e) {
+        navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat1-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat1-m-code').innerText}`);
+        const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000);
+    };
+    modal.addEventListener('click', e => { if(e.target===modal) cat1CloseModal(); });
+})();
+</script>
+
+<!-- ============================================
+     CATEGORY 2: PARALLAX EFFECTS
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 2: Parallax Effects</h1>
+    <p>Background parallax, multi-layer depth, zoom parallax, image reveal</p>
+</div>
+
+<div id="cat2-container">
+    <div class="modal-overlay" id="cat2-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="cat2-m-title" style="color:#fff;">Parallax Type</h3>
+                <button class="close-btn" onclick="cat2CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat2-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Logic &amp; CSS</span>
+                <div class="code-block" id="cat2-m-code"></div>
+            </div>
+            <button class="btn btn-gold" style="width:100%" onclick="cat2CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <section id="p-hero">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat2OpenModal('hero')">Show Prompt</button>
+        </div>
+        <div class="ph-bg" id="cat2-hero-bg"></div>
+        <div class="ph-content">
+            <h1 class="ph-title">Experience the <br><span style="color:var(--accent)">Difference</span></h1>
+            <p class="ph-sub">Where innovation meets execution.</p>
+            <button class="btn btn-gold">Explore Now</button>
+        </div>
+    </section>
+
+    <section id="p-multi">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat2OpenModal('multi')">Show Prompt</button>
+        </div>
+        <div class="layer l-back" id="cat2-l-back"></div>
+        <div class="layer l-mid" id="cat2-l-mid"></div>
+        <div class="layer l-front" id="cat2-l-front">
+            <div class="glass-card">
+                <span class="label">Performance</span>
+                <h2 style="font-size: 48px; margin-bottom: 24px;">Built for Speed</h2>
+                <p style="margin-bottom: 32px;">Every detail optimized for maximum velocity.</p>
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; font-size: 14px; color: var(--accent); letter-spacing: 0.1em; font-weight: 600;">
+                    99.9% UPTIME • 50MS LATENCY
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="p-zoom">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat2OpenModal('zoom')">Show Prompt</button>
+        </div>
+        <div class="pz-bg" id="cat2-zoom-bg"></div>
+        <div class="pz-overlay"></div>
+        <div class="pz-content" id="cat2-zoom-content">
+            <span class="label">Precision</span>
+            <h2 style="font-size: 64px; margin-bottom: 16px;">Attention to Detail</h2>
+            <p style="font-size: 20px;">Crafted with mathematical perfection.</p>
+        </div>
+    </section>
+
+    <section id="p-reveal">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat2OpenModal('reveal')">Show Prompt</button>
+        </div>
+        <div class="pr-col-left">
+            <span class="label">Innovation</span>
+            <h2 style="font-size: 56px; margin-bottom: 32px;">Reimagining <br>Possibility</h2>
+            <p style="margin-bottom: 24px;">We strip away the unnecessary to reveal the essential.</p>
+            <button class="btn btn-gold">Learn More</button>
+        </div>
+        <div class="pr-col-right">
+            <div class="pr-img-wrap">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&amp;h=1600&amp;fit=crop" class="pr-img" id="cat2-reveal-img">
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 2: PARALLAX - JAVASCRIPT
+// ============================================
+(function() {
+    const sections = {
+        hero: document.querySelector('#cat2-container #p-hero'),
+        multi: document.querySelector('#cat2-container #p-multi'),
+        zoom: document.querySelector('#cat2-container #p-zoom'),
+        reveal: document.querySelector('#cat2-container #p-reveal')
+    };
+    const elements = {
+        heroBg: document.getElementById('cat2-hero-bg'),
+        multiBack: document.getElementById('cat2-l-back'),
+        multiMid: document.getElementById('cat2-l-mid'),
+        multiFront: document.getElementById('cat2-l-front'),
+        zoomBg: document.getElementById('cat2-zoom-bg'),
+        zoomContent: document.getElementById('cat2-zoom-content'),
+        revealImg: document.getElementById('cat2-reveal-img')
+    };
+
+    function updateParallax() {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+
+        // Hero
+        const heroRect = sections.hero.getBoundingClientRect();
+        if (heroRect.bottom > 0 && heroRect.top < windowHeight) {
+            const heroOffset = sections.hero.offsetTop;
+            elements.heroBg.style.transform = `translateY(${(scrollY - heroOffset) * 0.5}px)`;
+        }
+
+        // Multi-layer
+        const multiRect = sections.multi.getBoundingClientRect();
+        if (multiRect.top < windowHeight && multiRect.bottom > 0) {
+            const relativeScroll = (windowHeight - multiRect.top);
+            elements.multiBack.style.transform = `translateY(${relativeScroll * 0.15}px)`;
+            elements.multiMid.style.transform = `translateY(${relativeScroll * 0.3}px)`;
+            elements.multiFront.style.transform = `translateY(${relativeScroll * 0.05}px)`;
+        }
+
+        // Zoom
+        const zoomRect = sections.zoom.getBoundingClientRect();
+        if (zoomRect.top < windowHeight && zoomRect.bottom > 0) {
+            const visibleProgress = Math.max(0, Math.min(1, (windowHeight - zoomRect.top) / windowHeight));
+            const scale = 1 + (visibleProgress * 0.3);
+            elements.zoomBg.style.transform = `scale(${scale})`;
+            elements.zoomContent.style.opacity = Math.max(0, Math.min(1, 2 - (visibleProgress * 2.5)));
+        } else if (zoomRect.top > windowHeight) {
+            elements.zoomBg.style.transform = `scale(1)`;
+            elements.zoomContent.style.opacity = 1;
+        }
+
+        // Reveal
+        const revRect = sections.reveal.getBoundingClientRect();
+        if (revRect.top < windowHeight && revRect.bottom > 0) {
+            const revealProgress = Math.max(0, Math.min(1, (windowHeight - revRect.top) / (windowHeight * 0.9)));
+            const insetTop = 100 - (revealProgress * 100);
+            elements.revealImg.style.clipPath = `inset(${insetTop}% 0% 0% 0%)`;
+        } else if (revRect.top > windowHeight) {
+            elements.revealImg.style.clipPath = `inset(100% 0% 0% 0%)`;
+        }
+
+        requestAnimationFrame(updateParallax);
+    }
+    requestAnimationFrame(updateParallax);
+
+    const prompts = {
+        hero: { prompt: "Create a Hero Section with a Parallax Background effect. Background moves at 50% speed.", code: `bg.style.transform = \`translateY(\${scrolled * 0.5}px)\`;` },
+        multi: { prompt: "Create Multi-Layer Parallax with 3 layers moving at different speeds (0.15x, 0.3x, 0.05x).", code: `layers.forEach((l,i) => l.style.transform = \`translateY(\${y * speeds[i]}px)\`);` },
+        zoom: { prompt: "Create a Zoom Parallax effect. Background scales from 1.0 to 1.3, text fades out.", code: `bg.style.transform = \`scale(\${1 + progress * 0.3})\`;` },
+        reveal: { prompt: "Create Image Reveal using clip-path. Image reveals from top to bottom.", code: `img.style.clipPath = \`inset(\${100 - progress*100}% 0% 0% 0%)\`;` }
+    };
+
+    const modal = document.getElementById('cat2-modal');
+    window.cat2OpenModal = function(key) {
+        document.getElementById('cat2-m-title').innerText = key.toUpperCase();
+        document.getElementById('cat2-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat2-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat2CloseModal = function() { modal.classList.remove('open'); };
+    window.cat2CopyAll = function(e) { navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat2-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat2-m-code').innerText}`); const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000); };
+    modal.addEventListener('click', e => { if(e.target===modal) cat2CloseModal(); });
+})();
+</script>
+
+<!-- ============================================
+     CATEGORY 3: COUNTER/NUMBER ANIMATIONS
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 3: Counter Animations</h1>
+    <p>Stats count-up, progress bars, circular indicators, dashboard cards</p>
+</div>
+
+<div id="cat3-container">
+    <div class="modal-overlay" id="cat3-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="cat3-m-title" style="color:#fff;">Animation Logic</h3>
+                <button class="close-btn" onclick="cat3CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat3-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Core Logic (JS)</span>
+                <div class="code-block" id="cat3-m-code"></div>
+            </div>
+            <button class="btn-copy" onclick="cat3CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <section id="stats">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat3OpenModal('count')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat3Replay('stats')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="section-label" style="text-align:center;">Global Impact</span>
+            <h2 style="text-align:center; font-size: 48px;">Trusted by teams worldwide</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                    <div class="stat-num-wrap"><span class="counter" data-target="50000" data-suffix="+">0</span></div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+                    <div class="stat-num-wrap"><span class="counter" data-target="180" data-suffix="+">0</span></div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat-card">
+                    <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <div class="stat-num-wrap"><span class="counter" data-target="99.9" data-suffix="%" data-decimals="1">0</span></div>
+                    <div class="stat-label">Uptime Guarantee</div>
+                </div>
+                <div class="stat-card">
+                    <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <div class="stat-num-wrap"><span class="counter" data-target="4.9" data-suffix="/5" data-decimals="1">0</span></div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="progress">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat3OpenModal('prog')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat3Replay('progress')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="section-label" style="text-align:center;">Tech Stack</span>
+            <h2 style="text-align:center; font-size: 56px;">Our Expertise</h2>
+            <div class="prog-container">
+                <div class="prog-item">
+                    <div class="prog-header"><span class="prog-label">Frontend Development</span><span class="prog-val counter-prog" data-target="95" data-suffix="%">0%</span></div>
+                    <div class="prog-track"><div class="prog-fill" data-width="95%"></div></div>
+                </div>
+                <div class="prog-item">
+                    <div class="prog-header"><span class="prog-label">Backend Systems</span><span class="prog-val counter-prog" data-target="88" data-suffix="%">0%</span></div>
+                    <div class="prog-track"><div class="prog-fill" data-width="88%"></div></div>
+                </div>
+                <div class="prog-item">
+                    <div class="prog-header"><span class="prog-label">Cloud Infrastructure</span><span class="prog-val counter-prog" data-target="92" data-suffix="%">0%</span></div>
+                    <div class="prog-track"><div class="prog-fill" data-width="92%"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="circles">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat3OpenModal('circle')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat3Replay('circles')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="section-label" style="text-align:center;">Benchmarks</span>
+            <h2 style="text-align:center; font-size: 56px;">Performance Metrics</h2>
+            <div class="circle-grid">
+                <div class="circle-wrap">
+                    <div class="circle-label">Success Rate</div>
+                    <div class="relative-circle">
+                        <svg class="circle-svg"><circle class="c-bg" cx="100" cy="100" r="90"></circle><circle class="c-prog" cx="100" cy="100" r="90" data-pct="98"></circle></svg>
+                        <div class="circle-center counter-circle" data-target="98" data-suffix="%">0%</div>
+                    </div>
+                    <div class="circle-desc">Task Completion</div>
+                </div>
+                <div class="circle-wrap">
+                    <div class="circle-label">Satisfaction</div>
+                    <div class="relative-circle">
+                        <svg class="circle-svg"><circle class="c-bg" cx="100" cy="100" r="90"></circle><circle class="c-prog" cx="100" cy="100" r="90" data-pct="94"></circle></svg>
+                        <div class="circle-center counter-circle" data-target="94" data-suffix="%">0%</div>
+                    </div>
+                    <div class="circle-desc">5-Star Reviews</div>
+                </div>
+                <div class="circle-wrap">
+                    <div class="circle-label">Productivity</div>
+                    <div class="relative-circle">
+                        <svg class="circle-svg"><circle class="c-bg" cx="100" cy="100" r="90"></circle><circle class="c-prog" cx="100" cy="100" r="90" data-pct="87"></circle></svg>
+                        <div class="circle-center counter-circle" data-target="87" data-suffix="%">0%</div>
+                    </div>
+                    <div class="circle-desc">Efficiency Gain</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="impact">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat3OpenModal('card')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat3Replay('impact')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="section-label" style="text-align:center;">Real-Time Data</span>
+            <h2 style="text-align:center; font-size: 56px;">Impact at Scale</h2>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <span class="imp-val counter-card" data-target="2.5" data-suffix="M" data-decimals="1">0</span>
+                    <span class="imp-label">Projects Launched</span>
+                    <div class="trend">+23% this month</div>
+                </div>
+                <div class="impact-card">
+                    <span class="imp-val counter-card" data-target="15" data-suffix="M" data-decimals="0">0</span>
+                    <span class="imp-label">Total Downloads</span>
+                    <div class="trend">+18% this month</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 3: COUNTER ANIMATIONS - JAVASCRIPT
+// ============================================
+(function() {
+    const prompts = {
+        count: { prompt: "Create Stats Row where numbers count up from 0 to their final value.", code: `const ease = 1 - Math.pow(1 - progress, 3);\nel.innerText = formatNumber(target * ease);` },
+        prog: { prompt: "Create Progress Bars that animate width while number counts up in sync.", code: `bar.style.width = targetWidth;\nrunCounter(numberEl, targetValue, 2000);` },
+        circle: { prompt: "Create Circular Progress Indicators using SVG stroke-dashoffset.", code: `const offset = 565 - (565 * pct) / 100;\ncircle.style.strokeDashoffset = offset;` },
+        card: { prompt: "Create dashboard Stat Cards with smooth count-up numbers.", code: `if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';` }
+    };
+
+    function formatNum(value, decimals = 0) {
+        return value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    }
+
+    function runCounter(el, duration = 2000, delay = 0) {
+        const target = parseFloat(el.dataset.target);
+        const decimals = parseInt(el.dataset.decimals) || 0;
+        const suffix = el.dataset.suffix || "";
+        setTimeout(() => {
+            let startTime = null;
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const val = target * ease;
+                el.innerText = formatNum(val, decimals) + suffix;
+                if (progress < 1) window.requestAnimationFrame(step);
+                else el.innerText = formatNum(target, decimals) + suffix;
+            }
+            window.requestAnimationFrame(step);
+        }, delay);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) cat3PlaySection(entry.target.id);
+            else cat3ResetSection(entry.target.id);
+        });
+    }, { threshold: 0.25 });
+    document.querySelectorAll('#cat3-container section').forEach(s => observer.observe(s));
+
+    function cat3PlaySection(id) {
+        const sec = document.querySelector('#cat3-container #' + id);
+        if(id === 'stats') sec.querySelectorAll('.counter').forEach(el => runCounter(el, 2500));
+        if(id === 'progress') {
+            sec.querySelectorAll('.prog-item').forEach((item, i) => {
+                const bar = item.querySelector('.prog-fill');
+                const num = item.querySelector('.counter-prog');
+                setTimeout(() => { bar.style.transition = 'width 2s ease'; bar.style.width = bar.dataset.width; }, i * 200);
+                runCounter(num, 2000, i * 200);
+            });
+        }
+        if(id === 'circles') {
+            sec.querySelectorAll('.circle-wrap').forEach((wrap, i) => {
+                const circle = wrap.querySelector('.c-prog');
+                const num = wrap.querySelector('.counter-circle');
+                const pct = circle.dataset.pct;
+                setTimeout(() => {
+                    const offset = 565 - (pct / 100) * 565;
+                    circle.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
+                    circle.style.strokeDashoffset = offset;
+                }, i * 150);
+                runCounter(num, 2500, i * 150);
+            });
+        }
+        if(id === 'impact') sec.querySelectorAll('.counter-card').forEach(el => runCounter(el, 2800));
+    }
+
+    function cat3ResetSection(id) {
+        const sec = document.querySelector('#cat3-container #' + id);
+        sec.querySelectorAll('[class*="counter"]').forEach(el => { el.innerText = "0" + (el.dataset.suffix || ""); });
+        sec.querySelectorAll('.prog-fill').forEach(el => { el.style.transition = 'none'; el.style.width = '0%'; });
+        sec.querySelectorAll('.c-prog').forEach(el => { el.style.transition = 'none'; el.style.strokeDashoffset = '565'; });
+    }
+
+    window.cat3Replay = function(id) { cat3ResetSection(id); setTimeout(() => cat3PlaySection(id), 50); };
+
+    const modal = document.getElementById('cat3-modal');
+    window.cat3OpenModal = function(key) {
+        document.getElementById('cat3-m-title').innerText = prompts[key].prompt.split('.')[0];
+        document.getElementById('cat3-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat3-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat3CloseModal = function() { modal.classList.remove('open'); };
+    window.cat3CopyAll = function(e) { navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat3-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat3-m-code').innerText}`); const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000); };
+    modal.addEventListener('click', e => { if(e.target===modal) cat3CloseModal(); });
+})();
+</script>
+
+<!-- ============================================
+     CATEGORY 4: STAGGERED REVEAL
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 4: Staggered Reveal</h1>
+    <p>Gallery grid, SVG path drawing, text reveal mask, image curtain</p>
+</div>
+
+<div id="cat4-container">
+    <div class="modal-overlay" id="cat4-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="cat4-m-title" style="color:#fff;">Stagger Effect</h3>
+                <button class="close-btn" onclick="cat4CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat4-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Code</span>
+                <div class="code-block" id="cat4-m-code"></div>
+            </div>
+            <button class="btn-gold" style="width:100%" onclick="cat4CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <section id="gallery">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat4OpenModal('grid')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat4Replay('gallery')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="label" style="text-align:center;">Portfolio</span>
+            <h2 style="text-align:center; font-size:48px;">Selected Works</h2>
+            <div class="gallery-grid">
+                <div class="project-card" style="transition-delay: 0ms"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&amp;fit=crop" class="p-img"><div class="p-info"><span class="p-tag">Architecture</span><h4 class="p-title">Zenith Tower</h4></div></div>
+                <div class="project-card" style="transition-delay: 100ms"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&amp;fit=crop" class="p-img"><div class="p-info"><span class="p-tag">Interior</span><h4 class="p-title">Azure Studios</h4></div></div>
+                <div class="project-card" style="transition-delay: 200ms"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&amp;fit=crop" class="p-img"><div class="p-info"><span class="p-tag">Urban</span><h4 class="p-title">Metro Line</h4></div></div>
+                <div class="project-card" style="transition-delay: 300ms"><img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&amp;fit=crop" class="p-img"><div class="p-info"><span class="p-tag">Industrial</span><h4 class="p-title">Forge Works</h4></div></div>
+                <div class="project-card" style="transition-delay: 400ms"><img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=600&amp;fit=crop" class="p-img"><div class="p-info"><span class="p-tag">Residential</span><h4 class="p-title">Haven Terrace</h4></div></div>
+                <div class="project-card" style="transition-delay: 500ms"><img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&amp;fit=crop" class="p-img"><div class="p-info"><span class="p-tag">Commercial</span><h4 class="p-title">Nexus Plaza</h4></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="workflow">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat4OpenModal('svg')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat4Replay('workflow')">Replay</button>
+        </div>
+        <div class="container">
+            <div class="workflow-layout">
+                <div class="wf-text">
+                    <span class="label">The Process</span>
+                    <h2 style="font-size:48px; margin-bottom:40px;">From Idea to Reality</h2>
+                    <div class="wf-step" style="transition-delay: 0ms"><h4>01. Discover</h4><p>We immerse ourselves in your brand to uncover deep insights.</p></div>
+                    <div class="wf-step" style="transition-delay: 800ms"><h4>02. Design</h4><p>Crafting intuitive interfaces and stunning visual systems.</p></div>
+                    <div class="wf-step" style="transition-delay: 1600ms"><h4>03. Develop</h4><p>Building robust, scalable code with modern architecture.</p></div>
+                    <div class="wf-step" style="transition-delay: 2400ms"><h4>04. Deploy</h4><p>Launching your product to the world with precision.</p></div>
+                </div>
+                <div class="wf-svg-container">
+                    <svg width="400" height="600" viewBox="0 0 400 600">
+                        <line x1="200" y1="50" x2="200" y2="200" class="wf-path" style="transition-delay: 400ms;"></line>
+                        <line x1="200" y1="200" x2="200" y2="350" class="wf-path" style="transition-delay: 1200ms;"></line>
+                        <line x1="200" y1="350" x2="200" y2="500" class="wf-path" style="transition-delay: 2000ms;"></line>
+                        <circle cx="200" cy="50" r="10" class="wf-node" style="transition-delay: 0ms;"></circle>
+                        <circle cx="200" cy="200" r="10" class="wf-node" style="transition-delay: 800ms;"></circle>
+                        <circle cx="200" cy="350" r="10" class="wf-node" style="transition-delay: 1600ms;"></circle>
+                        <circle cx="200" cy="500" r="10" class="wf-node" style="transition-delay: 2400ms;"></circle>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quote">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat4OpenModal('text')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat4Replay('quote')">Replay</button>
+        </div>
+        <div class="quote-container">
+            <div class="line-wrap"><span class="reveal-text" style="transition-delay: 0ms">"Architecture is the</span></div>
+            <div class="line-wrap"><span class="reveal-text" style="transition-delay: 150ms">learned game, correct</span></div>
+            <div class="line-wrap"><span class="reveal-text" style="transition-delay: 300ms">and magnificent, of</span></div>
+            <div class="line-wrap"><span class="reveal-text" style="transition-delay: 450ms">forms assembled in</span></div>
+            <div class="line-wrap"><span class="reveal-text" style="transition-delay: 600ms">the <span style="color:var(--accent)">light.</span>"</span></div>
+            <p class="quote-attr">— Le Corbusier</p>
+        </div>
+    </section>
+
+    <section id="featured">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat4OpenModal('curtain')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat4Replay('featured')">Replay</button>
+        </div>
+        <div class="container">
+            <span class="label" style="text-align:center;">Featured Project</span>
+            <h2 style="text-align:center; font-size:48px; margin-bottom:16px;">The Meridian</h2>
+            <div class="feat-wrapper">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&amp;fit=crop" class="feat-img">
+                <div class="curtains">
+                    <div class="curtain-panel" style="transition-delay: 0ms"></div>
+                    <div class="curtain-panel" style="transition-delay: 100ms"></div>
+                    <div class="curtain-panel" style="transition-delay: 200ms"></div>
+                    <div class="curtain-panel" style="transition-delay: 300ms"></div>
+                    <div class="curtain-panel" style="transition-delay: 400ms"></div>
+                </div>
+            </div>
+            <div class="feat-caption"><span class="label">2024 • Dubai, UAE</span><p>A landmark tower redefining urban skylines.</p></div>
+        </div>
+    </section>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 4: STAGGERED REVEAL - JAVASCRIPT
+// ============================================
+(function() {
+    const prompts = {
+        grid: { prompt: "Create Gallery Grid with staggered reveal. Each card fades in with delay.", code: `.card { opacity: 0; transform: translateY(40px); }\n.active .card { transition-delay: calc(var(--i) * 100ms); opacity: 1; transform: translateY(0); }` },
+        svg: { prompt: "Create SVG Path Drawing with stroke-dashoffset animation.", code: `.path { stroke-dasharray: 1000; stroke-dashoffset: 1000; }\n.active .path { stroke-dashoffset: 0; transition: 2s; }` },
+        text: { prompt: "Create Text Reveal using clip-path mask that reveals left to right.", code: `.text { clip-path: inset(0 100% 0 0); }\n.active .text { clip-path: inset(0 0% 0 0); transition: 1.4s; }` },
+        curtain: { prompt: "Create Image Curtain reveal with staggered panels sliding up.", code: `.panel { transform: translateY(0); }\n.active .panel { transform: translateY(-100%); transition-delay: calc(var(--i) * 100ms); }` }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if(e.isIntersecting) e.target.classList.add('active');
+            else e.target.classList.remove('active');
+        });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('#cat4-container section').forEach(s => observer.observe(s));
+
+    window.cat4Replay = function(id) {
+        const sec = document.querySelector('#cat4-container #' + id);
+        sec.classList.remove('active');
+        void sec.offsetWidth;
+        setTimeout(() => sec.classList.add('active'), 50);
+    };
+
+    const modal = document.getElementById('cat4-modal');
+    window.cat4OpenModal = function(key) {
+        document.getElementById('cat4-m-title').innerText = prompts[key].prompt.split('.')[0];
+        document.getElementById('cat4-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat4-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat4CloseModal = function() { modal.classList.remove('open'); };
+    window.cat4CopyAll = function(e) { navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat4-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat4-m-code').innerText}`); const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000); };
+    modal.addEventListener('click', e => { if(e.target===modal) cat4CloseModal(); });
+})();
+</script>
+
+<!-- ============================================
+     CATEGORY 5: PINNED/STICKY LAYOUTS
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 5: Pinned Layouts</h1>
+    <p>Split sticky, stacked slides, horizontal scroll</p>
+</div>
+
+<div id="cat5-container">
+    <div class="modal-overlay" id="cat5-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="cat5-m-title" style="color:#fff;">Title</h3>
+                <button class="close-btn" onclick="cat5CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat5-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Logic</span>
+                <div class="code-block" id="cat5-m-code"></div>
+            </div>
+            <button class="btn-gold" style="width:100%" onclick="cat5CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <section id="cat5-hero">
+        <div style="max-width:800px; padding:0 20px;">
+            <span class="label">Structural Design</span>
+            <h1 style="font-size: clamp(48px, 6vw, 80px); margin-bottom: 20px;">Pinned &amp;<br>Sticky Physics</h1>
+            <p>Scroll down to experience layout mechanics powered by modern CSS.</p>
+        </div>
+    </section>
+
+    <div id="cat5-split-sticky">
+        <div class="sticky-col">
+            <div class="controls"><button class="ctrl-btn" onclick="cat5OpenModal('split')">Show Prompt</button></div>
+            <span class="label">Core Principles</span>
+            <h2 class="sticky-title" id="cat5-sticky-title">Precision</h2>
+            <div class="sticky-desc" id="cat5-sticky-desc">Engineered to the micrometer.</div>
+            <div style="margin-top:40px;">
+                <div class="timeline-item active" id="cat5-time-1">01. Blueprint</div>
+                <div class="timeline-item" id="cat5-time-2">02. Foundation</div>
+                <div class="timeline-item" id="cat5-time-3">03. Structure</div>
+                <div class="timeline-item" id="cat5-time-4">04. Finish</div>
+            </div>
+        </div>
+        <div class="scroll-col">
+            <div class="scroll-block active" data-index="1" data-title="Precision" data-desc="Engineered to the micrometer."><h3>01. The Blueprint</h3><p>Every great structure begins with a flawless plan.</p><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&amp;fit=crop" class="block-img"></div>
+            <div class="scroll-block" data-index="2" data-title="Stability" data-desc="Unshakable foundations."><h3>02. The Foundation</h3><p>Deep piling and reinforced concrete ensure longevity.</p><img src="https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?w=1200&amp;fit=crop" class="block-img"></div>
+            <div class="scroll-block" data-index="3" data-title="Elevation" data-desc="Rising above the noise."><h3>03. The Structure</h3><p>Steel lattice work that defies gravity.</p><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&amp;fit=crop" class="block-img"></div>
+            <div class="scroll-block" data-index="4" data-title="Refinement" data-desc="Beauty in the details."><h3>04. The Finish</h3><p>Polished glass and sustainable materials.</p><img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&amp;fit=crop" class="block-img"></div>
+        </div>
+    </div>
+
+    <div id="cat5-stacked-wrapper">
+        <div class="controls" style="position:absolute; z-index:100; right:40px; top:40px;"><button class="ctrl-btn" onclick="cat5OpenModal('stack')">Show Prompt</button></div>
+        <div class="slide s-1"><div class="slide-overlay"><span class="label">The Process</span><h2 style="font-size:64px;">Scroll to Stack</h2><p>Each section pins to the top, creating a depth stack effect.</p></div></div>
+        <div class="slide s-2"><div class="slide-overlay"><h2>Concept</h2><p>Initial sketches and ideation.</p></div></div>
+        <div class="slide s-3"><div class="slide-overlay"><h2>Drafting</h2><p>Technical drawings and compliance.</p></div></div>
+        <div class="slide s-4"><div class="slide-overlay"><h2>Construction</h2><p>Breaking ground and vertical rise.</p></div></div>
+    </div>
+
+    <div id="cat5-h-scroll-container">
+        <div id="cat5-h-sticky-stage">
+            <div class="controls"><button class="ctrl-btn" onclick="cat5OpenModal('horiz')">Show Prompt</button></div>
+            <div id="cat5-h-track">
+                <div class="h-card"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&amp;fit=crop" class="h-img"><div class="h-info"><div class="h-num">01</div><h2>Innovation</h2><p>Pushing technical boundaries.</p></div></div>
+                <div class="h-card"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&amp;fit=crop" class="h-img"><div class="h-info"><div class="h-num">02</div><h2>Vision</h2><p>Seeing what others cannot.</p></div></div>
+                <div class="h-card"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&amp;fit=crop" class="h-img"><div class="h-info"><div class="h-num">03</div><h2>Teamwork</h2><p>Collaborative engineering.</p></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 5: PINNED/STICKY - JAVASCRIPT
+// ============================================
+(function() {
+    const stickyTitle = document.getElementById('cat5-sticky-title');
+    const stickyDesc = document.getElementById('cat5-sticky-desc');
+    const dots = document.querySelectorAll('#cat5-container .timeline-item');
+    const blocks = document.querySelectorAll('#cat5-container .scroll-block');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                blocks.forEach(b => b.classList.remove('active'));
+                entry.target.classList.add('active');
+                const title = entry.target.dataset.title;
+                const desc = entry.target.dataset.desc;
+                const index = entry.target.dataset.index;
+                dots.forEach(d => d.classList.remove('active'));
+                const dot = document.getElementById(`cat5-time-${index}`);
+                if(dot) dot.classList.add('active');
+                stickyTitle.style.opacity = 0;
+                stickyDesc.style.opacity = 0;
+                setTimeout(() => {
+                    stickyTitle.innerText = title;
+                    stickyDesc.innerText = desc;
+                    stickyTitle.style.opacity = 1;
+                    stickyDesc.style.opacity = 1;
+                }, 200);
+            }
+        });
+    }, { threshold: 0.5 });
+    blocks.forEach(b => observer.observe(b));
+
+    const hContainer = document.getElementById('cat5-h-scroll-container');
+    const hTrack = document.getElementById('cat5-h-track');
+    window.addEventListener('scroll', () => {
+        const rect = hContainer.getBoundingClientRect();
+        const viewHeight = window.innerHeight;
+        const viewWidth = window.innerWidth;
+        if (rect.top <= 0 && rect.bottom >= viewHeight) {
+            const scrolled = Math.abs(rect.top);
+            const total = rect.height - viewHeight;
+            const progress = scrolled / total;
+            const trackWidth = hTrack.scrollWidth;
+            const maxTranslate = trackWidth - viewWidth;
+            const translateX = progress * maxTranslate;
+            hTrack.style.transform = `translateX(-${translateX}px)`;
+        }
+    });
+
+    const prompts = {
+        split: { prompt: "Create a Split-Screen layout. Left side is 'position: sticky; top: 0; height: 100vh'. Right side scrolls naturally.", code: `.sticky-col { position: sticky; top: 0; height: 100vh; }` },
+        stack: { prompt: "Create Stacked Slides effect. Each section is 'position: sticky; top: 0; height: 100vh'.", code: `.slide { position: sticky; top: 0; height: 100vh; }` },
+        horiz: { prompt: "Create Horizontal Scroll pinned vertically. Parent is tall (500vh). Map vertical scroll to horizontal transform.", code: `const progress = scrolled / (totalHeight - viewHeight);\ntrack.style.transform = \`translateX(-\${progress * maxTranslate}px)\`;` }
+    };
+
+    const modal = document.getElementById('cat5-modal');
+    window.cat5OpenModal = function(key) {
+        document.getElementById('cat5-m-title').innerText = key.toUpperCase();
+        document.getElementById('cat5-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat5-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat5CloseModal = function() { modal.classList.remove('open'); };
+    window.cat5CopyAll = function(e) { navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat5-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat5-m-code').innerText}`); const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000); };
+    modal.addEventListener('click', e => { if(e.target===modal) cat5CloseModal(); });
+})();
+</script>
+
+<!-- ============================================
+     CATEGORY 6: PROGRESS INDICATORS
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 6: Progress Indicators</h1>
+    <p>Reading bar, path tracing, circular sticky progress</p>
+</div>
+
+<div id="cat6-container">
+    <div class="modal-overlay" id="cat6-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="cat6-m-title">Title</h3>
+                <button class="close-btn" onclick="cat6CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat6-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Code Snippet</span>
+                <div class="code-block" id="cat6-m-code"></div>
+            </div>
+            <button class="btn-gold" style="width:100%" onclick="cat6CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <div id="cat6-global-pct">
+        <svg class="pct-svg" viewBox="0 0 100 100">
+            <circle class="pct-track" cx="50" cy="50" r="45"></circle>
+            <circle class="pct-fill" cx="50" cy="50" r="45" id="cat6-global-ring"></circle>
+        </svg>
+        <span class="pct-num" id="cat6-global-num">0%</span>
+    </div>
+
+    <section id="cat6-hero">
+        <div class="controls"><button class="ctrl-btn" onclick="cat6OpenModal('global')">Show Global Logic</button></div>
+        <div class="container" style="display:flex; flex-direction:column; align-items:center;">
+            <div class="hero-badge">SYSTEM V.4.0</div>
+            <h1 class="hero-h1">Lumina OS</h1>
+            <p>Advanced Scroll Tracking Protocols.<br>Scroll to initialize diagnostic sequence.</p>
+        </div>
+    </section>
+
+    <section id="cat6-path-progress">
+        <div class="controls"><button class="ctrl-btn" onclick="cat6OpenModal('path')">Show Prompt</button></div>
+        <div class="container" style="text-align:center; padding-bottom:60px;">
+            <span class="mono">DIAGNOSTIC 01</span>
+            <h2 style="font-size:48px; margin:20px 0;">Path Tracing</h2>
+            <p style="margin:0 auto;">Scroll down to trace the connection line.</p>
+        </div>
+        <div class="path-container">
+            <div class="path-svg-wrap"><div class="path-line-fill" id="cat6-path-fill"></div></div>
+            <div style="width:100%">
+                <div class="path-node node-left"><div class="node-content"><h3>Initialization</h3><p>Loading core kernel modules.</p></div><div class="node-marker"></div></div>
+                <div class="path-node node-right"><div class="node-content"><h3>Handshake</h3><p>Establishing secure connection.</p></div><div class="node-marker"></div></div>
+                <div class="path-node node-left"><div class="node-content"><h3>Encryption</h3><p>256-bit keys generated.</p></div><div class="node-marker"></div></div>
+                <div class="path-node node-right"><div class="node-content"><h3>Uplink</h3><p>Connection established. Stable.</p></div><div class="node-marker"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="cat6-circular-section">
+        <div class="sticky-progress">
+            <div class="controls" style="top:40px; right:auto; left:40px;"><button class="ctrl-btn" onclick="cat6OpenModal('circle')">Show Prompt</button></div>
+            <span class="mono">DIAGNOSTIC 02</span>
+            <div class="big-circle-wrap">
+                <svg class="bc-svg"><circle class="bc-track" cx="150" cy="150" r="140"></circle><circle class="bc-fill" cx="150" cy="150" r="140" id="cat6-section-ring"></circle></svg>
+                <div class="bc-value" id="cat6-section-num">0%</div>
+            </div>
+            <p style="margin-top:20px; color:#666; font-size:14px;">Sector Analysis</p>
+        </div>
+        <div class="scroll-content">
+            <div class="content-chunk active"><h3>Sector A: Memory</h3><p>Analyzing heap allocation and stack trace integrity.</p></div>
+            <div class="content-chunk"><h3>Sector B: Logic</h3><p>Verifying arithmetic logic unit calculations.</p></div>
+            <div class="content-chunk"><h3>Sector C: Storage</h3><p>Checking write speeds and redundancy protocols.</p></div>
+            <div class="content-chunk"><h3>Sector D: Network</h3><p>Latency check complete. Bandwidth optimal.</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 6: PROGRESS INDICATORS - JAVASCRIPT
+// ============================================
+(function() {
+    const globalRing = document.getElementById('cat6-global-ring');
+    const globalNum = document.getElementById('cat6-global-num');
+    const globalPct = document.getElementById('cat6-global-pct');
+    const gCircum = 2 * Math.PI * 45;
+    globalRing.style.strokeDasharray = `${gCircum} ${gCircum}`;
+    globalRing.style.strokeDashoffset = gCircum;
+
+    const pathSection = document.getElementById('cat6-path-progress');
+    const pathFill = document.getElementById('cat6-path-fill');
+    const pathNodes = document.querySelectorAll('#cat6-container .path-node');
+
+    const circSection = document.getElementById('cat6-circular-section');
+    const sectRing = document.getElementById('cat6-section-ring');
+    const sectNum = document.getElementById('cat6-section-num');
+    const chunks = document.querySelectorAll('#cat6-container .content-chunk');
+    const sCircum = 2 * Math.PI * 140;
+    sectRing.style.strokeDasharray = `${sCircum} ${sCircum}`;
+    sectRing.style.strokeDashoffset = sCircum;
+
+    const container = document.getElementById('cat6-container');
+
+    window.addEventListener('scroll', () => {
+        const containerRect = container.getBoundingClientRect();
+        if (containerRect.top > window.innerHeight || containerRect.bottom < 0) {
+            globalPct.classList.remove('visible');
+            return;
+        }
+
+        const scrollTop = window.scrollY - container.offsetTop;
+        const containerHeight = container.scrollHeight - window.innerHeight;
+        const scrollRatio = Math.min(Math.max(scrollTop / containerHeight, 0), 1);
+
+        globalNum.innerText = Math.round(scrollRatio * 100) + '%';
+        const gOffset = gCircum - (scrollRatio * gCircum);
+        globalRing.style.strokeDashoffset = gOffset;
+        if(scrollTop > 200) globalPct.classList.add('visible');
+        else globalPct.classList.remove('visible');
+
+        const pathRect = pathSection.getBoundingClientRect();
+        if(pathRect.top < window.innerHeight && pathRect.bottom > 0) {
+            const startPoint = window.innerHeight / 2;
+            const pTotal = pathRect.height;
+            const pScrolled = startPoint - pathRect.top;
+            const pRatio = Math.max(0, Math.min(1, pScrolled / (pTotal - startPoint)));
+            pathFill.style.height = `${pRatio * 100}%`;
+            pathNodes.forEach(node => {
+                const nr = node.getBoundingClientRect();
+                if(nr.top < window.innerHeight * 0.75) node.classList.add('active');
+                else node.classList.remove('active');
+            });
+        }
+
+        const cRect = circSection.getBoundingClientRect();
+        if(cRect.top <= 0 && cRect.bottom >= 0) {
+            const cTotal = cRect.height - window.innerHeight;
+            const cScrolled = Math.abs(cRect.top);
+            const cRatio = Math.max(0, Math.min(1, cScrolled / cTotal));
+            const sOffset = sCircum - (cRatio * sCircum);
+            sectRing.style.strokeDashoffset = sOffset;
+            sectNum.innerText = Math.round(cRatio * 100) + '%';
+            chunks.forEach(chunk => {
+                const cr = chunk.getBoundingClientRect();
+                if(cr.top < window.innerHeight/2 && cr.bottom > window.innerHeight/2) chunk.classList.add('active');
+                else chunk.classList.remove('active');
+            });
+        }
+    });
+
+    const prompts = {
+        global: { title: "Global Progress System", prompt: "Create a Global Progress system with circular indicator (SVG stroke-dashoffset).", code: `ring.style.strokeDashoffset = circum - (scrollRatio * circum);` },
+        path: { title: "Path Trace Animation", prompt: "Create a 'Path Tracing' effect. A vertical line fills with color as the user scrolls.", code: `const ratio = scrolled / pathHeight;\npathLine.style.height = \`\${ratio * 100}%\`;` },
+        circle: { title: "Sticky Section Progress", prompt: "Create a Donut Chart that updates (0-100%) based on how far the section has scrolled.", code: `const ratio = Math.abs(rect.top) / (sectionHeight - viewHeight);\nupdateRing(ratio);` }
+    };
+
+    const modal = document.getElementById('cat6-modal');
+    window.cat6OpenModal = function(key) {
+        document.getElementById('cat6-m-title').innerText = prompts[key].title;
+        document.getElementById('cat6-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat6-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat6CloseModal = function() { modal.classList.remove('open'); };
+    window.cat6CopyAll = function(e) { navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat6-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat6-m-code').innerText}`); const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000); };
+    modal.addEventListener('click', e => { if(e.target===modal) cat6CloseModal(); });
+})();
+</script>
+
+<!-- ============================================
+     CATEGORY 7: CREATIVE EFFECTS
+     ============================================ -->
+<div class="category-divider">
+    <h1>Category 7: Creative Effects</h1>
+    <p>Typewriter, text scramble, color shift, SVG morph</p>
+</div>
+
+<div id="cat7-container">
+    <div class="modal-overlay" id="cat7-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="cat7-m-title" style="color:#fff; text-transform:uppercase;">Title</h3>
+                <button class="close-btn" onclick="cat7CloseModal()">×</button>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">AI Prompt</span>
+                <div class="pb-text" id="cat7-m-prompt"></div>
+            </div>
+            <div class="prompt-block">
+                <span class="pb-label">Code Logic</span>
+                <div class="code-block" id="cat7-m-code"></div>
+            </div>
+            <button class="btn-copy" onclick="cat7CopyAll(event)">Copy Prompt &amp; Code</button>
+        </div>
+    </div>
+
+    <section id="cat7-typewriter">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat7OpenModal('type')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat7ReplayTypewriter()">Replay</button>
+        </div>
+        <div class="type-container">
+            <span class="label">Our Mission</span>
+            <div class="type-text">
+                <span id="cat7-type-target"></span><span class="cursor" id="cat7-cursor"></span>
+            </div>
+            <p class="type-sub" id="cat7-type-sub">Join 10,000+ creative teams building the future.</p>
+        </div>
+    </section>
+
+    <section id="cat7-scramble">
+        <div class="controls">
+            <button class="ctrl-btn" onclick="cat7OpenModal('scramble')">Show Prompt</button>
+            <button class="ctrl-btn" onclick="cat7ReplayScramble()">Replay</button>
+        </div>
+        <div class="container">
+            <span class="label" style="text-align:center;">Capabilities</span>
+            <h2 style="text-align:center; font-size:48px; margin-bottom:20px;">What We Do</h2>
+            <div class="card-grid">
+                <div class="scramble-card">
+                    <svg class="s-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M16 18l6-6-6-6"></path><path d="M8 6l-6 6 6 6"></path></svg>
+                    <div class="s-title" data-final="Development">X9#m2@L</div>
+                    <p>Full-stack engineering expertise.</p>
+                </div>
+                <div class="scramble-card">
+                    <svg class="s-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                    <div class="s-title" data-final="Design">#k92!Pz</div>
+                    <p>Pixel-perfect precision.</p>
+                </div>
+                <div class="scramble-card">
+                    <svg class="s-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <div class="s-title" data-final="Strategy">Q@8m$W1</div>
+                    <p>Data-driven growth plans.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="cat7-color">
+        <div id="cat7-color-sticky">
+            <div class="controls" style="position:absolute; top:40px; right:40px;">
+                <button class="ctrl-btn" onclick="cat7OpenModal('color')">Show Prompt</button>
+            </div>
+            <div class="color-card" id="cat7-color-card">
+                <svg id="cat7-color-icon" class="color-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+                <h2 class="color-title" id="cat7-color-title">Adaptive Design</h2>
+                <p class="color-desc" id="cat7-color-desc">Beautiful at every scroll position.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="cat7-morph">
+        <div id="cat7-morph-sticky">
+            <div class="controls" style="position:absolute; top:40px; right:40px;">
+                <button class="ctrl-btn" onclick="cat7OpenModal('morph')">Show Prompt</button>
+            </div>
+            <div class="morph-layout">
+                <div class="morph-content">
+                    <span class="label">Evolution</span>
+                    <h2 style="font-size:56px; margin-bottom:30px; color:#fff;">Constantly Evolving</h2>
+                    <ul class="morph-list">
+                        <li id="cat7-morph-li-1" class="active">Agile Methodology</li>
+                        <li id="cat7-morph-li-2">Continuous Improvement</li>
+                        <li id="cat7-morph-li-3">Future-Focused Thinking</li>
+                        <li id="cat7-morph-li-4">Infinite Adaptability</li>
+                    </ul>
+                </div>
+                <div class="morph-visual">
+                    <svg id="cat7-morph-svg" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="cat7-morph-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#CFB53B"></stop>
+                                <stop offset="100%" stop-color="#FFD700"></stop>
+                            </linearGradient>
+                        </defs>
+                        <path id="cat7-morph-path" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// CATEGORY 7: CREATIVE EFFECTS - JAVASCRIPT
+// ============================================
+(function() {
+    // TYPEWRITER
+    const typeText = "We build products that empower teams to do their best work.";
+    const typeEl = document.getElementById('cat7-type-target');
+    const cursorEl = document.getElementById('cat7-cursor');
+    const subEl = document.getElementById('cat7-type-sub');
+    let typeTimeout;
+
+    function startTypewriter() {
+        resetTypewriter();
+        let i = 0;
+        cursorEl.classList.remove('hidden');
+        subEl.classList.remove('visible');
+        function typeLoop() {
+            if(i < typeText.length) {
+                typeEl.textContent += typeText.charAt(i);
+                i++;
+                typeTimeout = setTimeout(typeLoop, Math.random() * 40 + 30);
+            } else {
+                typeTimeout = setTimeout(() => { cursorEl.classList.add('hidden'); subEl.classList.add('visible'); }, 500);
+            }
+        }
+        typeLoop();
+    }
+    function resetTypewriter() {
+        clearTimeout(typeTimeout);
+        typeEl.textContent = '';
+        cursorEl.classList.remove('hidden');
+        subEl.classList.remove('visible');
+    }
+    window.cat7ReplayTypewriter = function() { resetTypewriter(); setTimeout(startTypewriter, 100); };
+
+    const typeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if(entry.isIntersecting) startTypewriter(); else resetTypewriter(); });
+    }, { threshold: 0.3 });
+    typeObserver.observe(document.getElementById('cat7-typewriter'));
+
+    // SCRAMBLE
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    const scrambleElements = document.querySelectorAll('#cat7-container .s-title');
+    const scrambleIntervals = [];
+
+    function scrambleText(el) {
+        const final = el.getAttribute('data-final');
+        let iterations = 0;
+        const interval = setInterval(() => {
+            el.innerText = final.split("").map((letter, index) => {
+                if(index < iterations) return final[index];
+                return chars[Math.floor(Math.random() * chars.length)];
+            }).join("");
+            if(iterations >= final.length) clearInterval(interval);
+            iterations += 1 / 3;
+        }, 30);
+        scrambleIntervals.push(interval);
+    }
+    function resetScramble() {
+        scrambleIntervals.forEach(clearInterval);
+        scrambleIntervals.length = 0;
+        scrambleElements.forEach(el => el.innerText = "Qk3pL@9m");
+    }
+    window.cat7ReplayScramble = function() {
+        resetScramble();
+        setTimeout(() => { scrambleElements.forEach((el, i) => { setTimeout(() => scrambleText(el), i * 200); }); }, 100);
+    };
+
+    const scrambleObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) scrambleElements.forEach((el, i) => { setTimeout(() => scrambleText(el), i * 200); });
+            else resetScramble();
+        });
+    }, { threshold: 0.25 });
+    scrambleObserver.observe(document.getElementById('cat7-scramble'));
+
+    // COLOR SHIFT
+    const colorSection = document.getElementById('cat7-color');
+    const colorSticky = document.getElementById('cat7-color-sticky');
+    const colors = [
+        { h: 224, s: 64, l: 33 },
+        { h: 263, s: 70, l: 50 },
+        { h: 335, s: 78, l: 42 },
+        { h: 24,  s: 89, l: 48 },
+        { h: 159, s: 91, l: 22 }
+    ];
+
+    // MORPH SHAPES
+    const morphSection = document.getElementById('cat7-morph');
+    const morphPath = document.getElementById('cat7-morph-path');
+    const lis = [
+        document.getElementById('cat7-morph-li-1'),
+        document.getElementById('cat7-morph-li-2'),
+        document.getElementById('cat7-morph-li-3'),
+        document.getElementById('cat7-morph-li-4')
+    ];
+    const paths = [
+        "M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0",
+        "M 25,25 L 175,25 L 175,175 L 25,175 Z",
+        "M 100,25 L 175,175 L 25,175 Z",
+        "M 100,20 L 170,60 L 170,140 L 100,180 L 30,140 L 30,60 Z"
+    ];
+
+    window.addEventListener('scroll', () => {
+        // Color Shift
+        const colorRect = colorSection.getBoundingClientRect();
+        const winH = window.innerHeight;
+        if(colorRect.top <= 0 && colorRect.bottom >= winH) {
+            const scrolled = Math.abs(colorRect.top);
+            const total = colorRect.height - winH;
+            const progress = Math.min(Math.max(scrolled / total, 0), 1);
+            const segmentLength = 1 / (colors.length - 1);
+            const segment = Math.floor(progress / segmentLength);
+            const subProgress = (progress % segmentLength) / segmentLength;
+            const c1 = colors[Math.min(segment, colors.length-1)];
+            const c2 = colors[Math.min(segment + 1, colors.length-1)];
+            if(c1 && c2) {
+                const h = c1.h + (c2.h - c1.h) * subProgress;
+                const s = c1.s + (c2.s - c1.s) * subProgress;
+                const l = c1.l + (c2.l - c1.l) * subProgress;
+                colorSticky.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
+            }
+        }
+
+        // Morph Shapes
+        const morphRect = morphSection.getBoundingClientRect();
+        if(morphRect.top <= 0 && morphRect.bottom >= winH) {
+            const scrolled = Math.abs(morphRect.top);
+            const total = morphRect.height - winH;
+            const progress = Math.min(Math.max(scrolled / total, 0), 1);
+            const stage = Math.min(Math.floor(progress * 4), 3);
+            morphPath.setAttribute('d', paths[stage]);
+            morphPath.style.transform = `rotate(${progress * 360}deg)`;
+            lis.forEach(li => li.classList.remove('active'));
+            lis[stage].classList.add('active');
+        }
+    });
+
+    // MODAL
+    const prompts = {
+        type: { title: "Typewriter Effect", prompt: "Create a Typewriter effect where text appears character by character with a blinking cursor.", code: `if(i < text.length) {\n  el.innerHTML += text.charAt(i);\n  i++;\n  setTimeout(type, rand(30,70));\n}` },
+        scramble: { title: "Text Scramble", prompt: "Create a 'Hacker' text scramble effect. Cycle through random characters before locking onto the correct letter.", code: `el.innerText = text.split("").map((letter, index) => {\n  if(index < iterations) return text[index];\n  return chars[Math.floor(Math.random()*chars.length)];\n}).join("");` },
+        color: { title: "Color Shift Scroll", prompt: "Create a tall sticky section where the background color interpolates smoothly between 5 colors (HSL) based on scroll percentage.", code: `const h = c1.h + (c2.h - c1.h) * subProgress;\nelement.style.backgroundColor = \`hsl(\${h}, \${s}%, \${l}%)\`;` },
+        morph: { title: "SVG Shape Morph", prompt: "Morph an SVG path from Circle -> Square -> Triangle -> Hexagon based on scroll position while rotating the shape.", code: `const paths = [circlePath, squarePath, triPath, hexPath];\nconst stage = Math.floor(progress * 4);\npath.setAttribute('d', paths[stage]);` }
+    };
+
+    const modal = document.getElementById('cat7-modal');
+    window.cat7OpenModal = function(key) {
+        document.getElementById('cat7-m-title').innerText = prompts[key].title;
+        document.getElementById('cat7-m-prompt').innerText = prompts[key].prompt;
+        document.getElementById('cat7-m-code').innerText = prompts[key].code;
+        modal.classList.add('open');
+    };
+    window.cat7CloseModal = function() { modal.classList.remove('open'); };
+    window.cat7CopyAll = function(e) { navigator.clipboard.writeText(`PROMPT:\n${document.getElementById('cat7-m-prompt').innerText}\n\nCODE:\n${document.getElementById('cat7-m-code').innerText}`); const btn = e.target; const orig = btn.innerText; btn.innerText = 'Copied!'; btn.style.background = '#10B981'; setTimeout(() => { btn.innerText = orig; btn.style.background = ''; }, 2000); };
+    modal.addEventListener('click', e => { if(e.target===modal) cat7CloseModal(); });
+})();
+</script>
+
+
+
+</body></html>

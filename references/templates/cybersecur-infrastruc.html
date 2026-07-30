@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus | Network Security &amp; Infrastructure Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'system-ui', 'sans-serif'],
+display: ['Space Grotesk', 'sans-serif'],
+},
+}
+}
+}
+</script>
+<style>
+body {
+background: linear-gradient(to bottom, #030303, #0a0a0a);
+color: #ffffff;
+overflow-x: hidden;
+overscroll-behavior: none;
+font-family: 'Inter', system-ui, sans-serif;
+}
+#webgl-canvas {
+position: fixed;
+top: 0; left: 0;
+width: 100vw; height: 100vh;
+z-index: -1;
+pointer-events: none;
+}
+.glass-panel {
+background: rgba(26, 26, 26, 0.4);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.glow-button {
+box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+transition: box-shadow 0.3s ease;
+}
+.glow-button:hover {
+box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+.text-silver { color: rgba(255,255,255,0.5); }
+.stat-number { font-variant-numeric: tabular-nums; }
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+<body class="antialiased selection:bg-white selection:text-black">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component fixed top-0 w-full h-screen -z-10 blur-3xl" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+  <div data-us-project="5UmJmFVVxnDOIkdUYRnh" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<canvas id="webgl-canvas" width="3600" height="1990" style="width: 1800px; height: 995px;"></canvas>
+
+<!-- ========== HEADER ========== -->
+<header class="fixed -translate-x-1/2 glass-panel flex w-[92%] max-w-5xl z-50 rounded-full py-3 pr-3 pl-6 top-6 left-1/2 shadow-[0_10px_40px_rgba(0,0,0,0.5)] items-center justify-between">
+  <div class="flex-1 flex justify-start">
+    <span class="text-lg font-extrabold tracking-[0.25em] bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-500">NEXUS</span>
+  </div>
+  <nav class="hidden md:flex items-center gap-8 text-[12px] uppercase tracking-widest font-medium text-white/60">
+    <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
+    <a href="#features" class="hover:text-white transition-colors">Features</a>
+    <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+    <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+  </nav>
+  <div class="flex-1 flex justify-end gap-3 items-center">
+    <a href="#" class="hidden md:inline text-sm font-medium text-white/60 hover:text-white transition-colors px-4 py-2">Log In</a>
+    <a href="#" class="text-sm font-semibold bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200 transition-all shadow-[0_0_15px_rgba(255,255,255,0.2)]">Start Free Trial</a>
+  </div>
+</header>
+
+<!-- ========== 1. HERO ========== -->
+<section class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-10">
+  <div class="max-w-[860px] flex flex-col items-center z-10 gs-reveal">
+
+    <div class="flex items-center gap-2 border border-white/10 rounded-full px-4 py-1.5 mb-8 bg-black/20 backdrop-blur-sm">
+      <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+      <span class="text-xs font-semibold uppercase tracking-widest text-silver">Trusted by 2,400+ security teams worldwide</span>
+    </div>
+
+    <h1 class="text-5xl md:text-7xl leading-[1.1] mb-6 tracking-tight font-light">
+      See Every Threat.<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Stop It Before It Starts.</span>
+    </h1>
+
+    <p class="text-lg md:text-xl text-white/50 max-w-[640px] mb-10 font-light leading-relaxed">
+      Nexus is a real-time network security platform that monitors your entire infrastructure, detects threats automatically, and responds in milliseconds — so your team can focus on building, not firefighting.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-4 items-center mb-12">
+      <a href="#" class="group relative inline-flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full blur-2xl opacity-50 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 z-0 bg-blue-500/25"></div>
+        <div class="relative z-10 p-[1.5px] rounded-full overflow-hidden bg-gradient-to-tr from-white/40 via-white/80 to-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+          <div class="relative flex items-center justify-center px-10 py-4 rounded-full bg-slate-950 overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,#1e40af_0%,#020617_100%)]"></div>
+            <span class="relative z-30 text-white font-bold tracking-[0.2em] uppercase text-sm">Start Free Trial</span>
+          </div>
+        </div>
+      </a>
+      
+    </div>
+
+    
+
+    <!-- Trust Logos -->
+    
+  </div>
+</section>
+
+<!-- ========== 2. WHAT IS NEXUS (Product Overview) ========== -->
+<section class="z-10 flex flex-col min-h-screen pt-32 pr-6 pl-6 relative items-center">
+  <div class="text-center mb-6 gs-reveal max-w-2xl mx-auto">
+    <span class="text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block text-blue-400">Live Dashboard</span>
+    <h2 class="text-4xl md:text-6xl mb-4 font-light">Your entire network,<br>at a glance.</h2>
+    <p class="text-white/40 leading-relaxed">The Nexus dashboard gives your security team a unified control center — showing endpoints, threats, traffic patterns, and system health in real time. No tab-switching, no context-switching.</p>
+  </div>
+
+  <!-- Dashboard Mockup -->
+  <div class="w-full max-w-[1280px] mt-20 mr-auto ml-auto pr-4 pl-4 relative">
+
+  <div class="absolute top-10 left-1/4 w-[600px] h-[600px] blur-[120px] rounded-full pointer-events-none z-0 bg-blue-500/20"></div>
+  <div class="absolute bottom-10 right-1/4 w-[500px] h-[500px] blur-[120px] rounded-full pointer-events-none z-0 bg-emerald-500/15"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] blur-[120px] rounded-full pointer-events-none z-0 bg-indigo-500/15"></div>
+
+  <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent to-transparent z-20 via-blue-400/50"></div>
+
+  <div class="relative z-10 w-full rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-[40px] overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col lg:flex-row h-[900px] ring-1 ring-white/10">
+
+    <aside class="hidden lg:flex w-64 flex-col border-r border-white/10 bg-white/[0.02] backdrop-blur-xl pt-5 pb-4 z-20 shrink-0 h-full">
+      <div class="px-6 mb-8 flex items-center gap-3 shrink-0">
+        <span class="font-semibold text-white tracking-widest text-lg uppercase">Nexus SOC</span>
+      </div>
+
+      <nav class="flex-1 px-3 space-y-1 overflow-y-auto">
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg group border shadow-[0_0_15px_rgba(99,102,241,0.1)] bg-blue-500/10 text-blue-400 border-blue-500/20 backdrop-blur-md">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="">
+              <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+              <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+              <rect width="7" height="9" x="14" y="12" rx="1" class=""></rect>
+              <rect width="7" height="5" x="3" y="16" rx="1" class=""></rect>
+            </svg>
+            <span class="text-sm font-normal">Global Overview</span>
+          </div>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-white/[0.06] hover:text-white transition-colors">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+            <span class="text-sm font-normal">Threat Intelligence</span>
+          </div>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-white/[0.06] hover:text-white transition-colors">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+              <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+              <line x1="6" x2="6.01" y1="6" y2="6"></line>
+              <line x1="6" x2="6.01" y1="18" y2="18"></line>
+            </svg>
+            <span class="text-sm font-normal">Network Assets</span>
+          </div>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-white/[0.06] hover:text-white transition-colors">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="7.5" cy="15.5" r="5.5"></circle>
+              <path d="m21 2-9.6 9.6"></path>
+              <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+            </svg>
+            <span class="text-sm font-normal">Access Control</span>
+          </div>
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-zinc-400 hover:bg-white/[0.06] hover:text-white transition-colors">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" x2="8" y1="13" y2="13"></line>
+              <line x1="16" x2="8" y1="17" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span class="text-sm font-normal">Audit Logs</span>
+          </div>
+        </a>
+      </nav>
+
+      <div class="px-3 mt-auto shrink-0">
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-normal text-zinc-400 hover:bg-white/[0.06] hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          Settings
+        </a>
+      </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 bg-transparent relative h-full">
+
+      <header class="h-16 border-b border-white/10 bg-white/[0.03] backdrop-blur-xl flex items-center justify-between px-6 shrink-0 relative z-20">
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <span class="text-xs font-normal text-emerald-400 uppercase tracking-wider">Network Secure</span>
+          </div>
+
+          <div class="w-px h-4 bg-white/10 hidden sm:block"></div>
+
+          <div class="hidden sm:flex items-center gap-2 text-sm text-zinc-400 hover:text-white cursor-pointer transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span class="font-normal">Global Topology</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/[0.05] backdrop-blur-md border border-white/10 rounded-md w-72 shadow-[inset_0_1px_4px_rgba(0,0,0,0.2)] hover:bg-white/[0.08] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+            <input type="text" placeholder="Search IPs, devices, threats..." class="bg-transparent border-none outline-none text-sm text-white placeholder:text-zinc-500 w-full font-light">
+            <span class="text-[10px] text-zinc-400 border border-white/10 bg-white/5 backdrop-blur-sm rounded px-1.5 py-0.5">⌘K</span>
+          </div>
+
+          <button class="text-zinc-400 hover:text-white relative p-1 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+            <span class="absolute top-0.5 right-1.5 w-1.5 h-1.5 rounded-full border border-white/10 bg-blue-500"></span>
+          </button>
+
+          <div class="w-7 h-7 rounded-full bg-gradient-to-tr to-emerald-400 p-[1px] cursor-pointer from-blue-500 shadow-md">
+            <div class="w-full h-full bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center">
+              <span class="text-[10px] font-semibold text-white">JD</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="flex-1 p-4 flex flex-col gap-4 overflow-hidden relative z-10">
+
+        
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 flex-[1.2] min-h-0">
+          <div class="xl:col-span-2 relative group flex flex-col bg-white/[0.03] backdrop-blur-xl h-full border border-white/10 hover:border-white/20 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-500 overflow-hidden">
+
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 blur-[80px] pointer-events-none transition-opacity duration-500 bg-blue-500/10 group-hover:bg-blue-500/20">
+            </div>
+
+            <div class="relative z-10 flex items-start justify-between mb-8 shrink-0">
+              <div class="">
+                <div class="flex items-center gap-2 mb-1">
+                  <div class="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-pulse bg-blue-500">
+                  </div>
+                  <h3 class="text-sm font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">
+                    Network Traffic Analysis</h3>
+                </div>
+                <div class="flex items-baseline gap-2.5 mt-1">
+                  <span class="text-3xl font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-300">1.42<span class="text-xl font-normal text-zinc-500 ml-0.5 tracking-tight">Tbps</span></span>
+                  <span class="text-[11px] font-semibold text-emerald-400 bg-emerald-400/10 backdrop-blur-md border border-emerald-400/20 px-1.5 py-0.5 rounded shadow-[0_0_10px_rgba(16,185,129,0.1)]">+12.5%</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1 bg-white/[0.02] p-1 rounded-lg border border-white/10 backdrop-blur-sm shadow-inner">
+                <button class="px-2.5 py-1 text-[10px] font-semibold tracking-wide text-zinc-400 hover:text-white rounded-md transition-all duration-300 hover:bg-white/[0.05]">1h</button>
+                <button class="px-2.5 py-1 text-[10px] font-semibold tracking-wide bg-white/10 backdrop-blur-md text-white rounded-md shadow-[0_1px_2px_rgba(0,0,0,0.5)] border border-white/10">24h</button>
+                <button class="px-2.5 py-1 text-[10px] font-semibold tracking-wide text-zinc-400 hover:text-white rounded-md transition-all duration-300 hover:bg-white/[0.05]">7d</button>
+              </div>
+            </div>
+
+            <div class="relative flex-1 min-h-[160px] w-full group/chart cursor-crosshair z-10 pl-8">
+
+              <div class="absolute inset-0 left-0 flex flex-col justify-between pointer-events-none z-0">
+                <div class="relative w-full h-px border-t border-dashed border-white/20">
+                  <span class="absolute left-0 -top-2.5 text-[9px] text-zinc-400 font-mono tracking-wider bg-transparent backdrop-blur-sm pr-2">1.5T</span>
+                </div>
+                <div class="relative w-full h-px border-t border-dashed border-white/20">
+                  <span class="absolute left-0 -top-2.5 text-[9px] text-zinc-400 font-mono tracking-wider bg-transparent backdrop-blur-sm pr-2">1.0T</span>
+                </div>
+                <div class="relative w-full h-px border-t border-dashed border-white/20">
+                  <span class="absolute left-0 -top-2.5 text-[9px] text-zinc-400 font-mono tracking-wider bg-transparent backdrop-blur-sm pr-2">0.5T</span>
+                </div>
+                <div class="relative w-full h-px border-t border-dashed border-white/20">
+                  <span class="absolute left-0 -top-2.5 text-[9px] text-zinc-400 font-mono tracking-wider bg-transparent backdrop-blur-sm pr-2">0.1T</span>
+                </div>
+                <div class="relative w-full h-px border-t border-dashed border-white/30">
+                  <span class="absolute left-0 -top-2.5 text-[9px] text-zinc-400 font-mono tracking-wider bg-transparent backdrop-blur-sm pr-2">0</span>
+                </div>
+              </div>
+
+              <div class="absolute inset-0 left-8 z-10 overflow-hidden">
+                <svg class="h-full w-full opacity-80 group-hover/chart:opacity-100 transition-opacity duration-500" preserveAspectRatio="none" viewBox="0 0 800 200">
+                  <defs>
+                    <linearGradient id="chart-grad-premium" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.5"></stop>
+                      <stop offset="50%" stop-color="#6366f1" stop-opacity="0.2"></stop>
+                      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"></stop>
+                    </linearGradient>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="4" result="blur"></feGaussianBlur>
+                      <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+                    </filter>
+                  </defs>
+
+                  <path d="M0 160 C 100 160, 150 120, 250 140 C 350 160, 400 80, 500 90 C 600 100, 650 40, 800 30 L 800 200 L 0 200 Z" fill="url(#chart-grad-premium)" class=""></path>
+
+                  <path d="M0 160 C 100 160, 150 120, 250 140 C 350 160, 400 80, 500 90 C 600 100, 650 40, 800 30" fill="none" stroke="#818CF8" stroke-width="2.5" vector-effect="non-scaling-stroke" filter="url(#glow)"></path>
+                </svg>
+              </div>
+
+              <div class="absolute inset-0 left-8 z-20 opacity-0 group-hover/chart:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div class="absolute top-0 bottom-0 left-[62.5%] w-px bg-gradient-to-b from-transparent to-transparent via-blue-400/80">
+                </div>
+
+                <div class="absolute top-[45%] left-[62.5%] -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white/10 backdrop-blur-md rounded-full border-2 shadow-[0_0_12px_rgba(129,140,248,1)] border-blue-400">
+                </div>
+
+                <div class="absolute top-[20%] left-[62.5%] -translate-x-1/2 bg-black/40 backdrop-blur-xl border border-white/10 px-2.5 py-1.5 rounded-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col items-center">
+                  <span class="text-[10px] text-zinc-300 font-mono mb-0.5">14:30 UTC</span>
+                  <span class="text-xs text-white font-semibold">1.28 Tbps</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="group relative flex flex-col bg-white/[0.03] backdrop-blur-xl h-full rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.2)] overflow-hidden border border-white/10 hover:border-emerald-500/30 transition-colors duration-500">
+
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-24 bg-emerald-500/10 blur-[50px] pointer-events-none">
+            </div>
+
+            <div class="flex flex-col gap-4 relative z-10 flex-1">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="p-1.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 shadow-[inset_0_0_12px_rgba(16,185,129,0.1)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-sm font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">
+                    Auto-Isolation</h3>
+                </div>
+
+                <div class="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20">
+                  <span class="relative flex h-1.5 w-1.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                  </span>
+                  <span class="text-[9px] font-semibold text-emerald-400 tracking-wider">ACTIVE</span>
+                </div>
+              </div>
+
+              <div class="group/dropdown relative w-full bg-white/[0.03] backdrop-blur-lg border border-white/10 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-white/20 hover:bg-white/[0.06] transition-all duration-300 overflow-hidden shadow-sm">
+                <div class="absolute inset-0 bg-white/[0.02] opacity-0 group-hover/dropdown:opacity-100 transition-opacity">
+                </div>
+
+                <div class="flex items-center gap-3 relative z-10">
+                  <div class="w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center shrink-0">
+                    <div class="w-2 h-2 rounded-full bg-zinc-400 shadow-[0_0_8px_rgba(161,161,170,0.5)]">
+                    </div>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-[9px] text-zinc-400 font-semibold uppercase tracking-widest mb-0.5">Isolated Segment</span>
+                    <span class="text-[13px] text-zinc-100 font-normal group-hover/dropdown:text-white transition-colors">VLAN-04 <span class="text-zinc-400 font-light">(Guest)</span></span>
+                  </div>
+                </div>
+
+                <div class="flex flex-col items-center justify-center text-zinc-400 group-hover/dropdown:text-zinc-200 transition-colors relative z-10">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m7 15 5 5 5-5"></path>
+                    <path d="m7 9 5-5 5 5"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="overflow-hidden transition-colors duration-500 bg-white/[0.02] backdrop-blur-lg w-full border rounded-xl mt-4 pt-4 pr-4 pb-4 pl-4 relative group-hover:border-blue-500/40 border-white/10 shadow-inner">
+
+              <div class="flex justify-between items-end relative z-10">
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <span class="text-[10px] font-medium uppercase tracking-widest text-blue-400">Isolation Time</span>
+                    <div class="w-1.5 h-1.5 rounded-full animate-pulse bg-blue-500"></div>
+                  </div>
+                  <div class="text-4xl font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-blue-200">
+                    12<span class="text-xl font-normal ml-0.5 text-blue-400/70 tracking-tight">ms</span>
+                  </div>
+                </div>
+
+                <div class="mb-1.5 px-2 py-0.5 rounded text-[10px] font-mono border backdrop-blur-md text-blue-300 bg-blue-500/10 border-blue-500/20 shadow-sm">
+                  -32% vs avg
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-white/10 shrink-0">
+              <div class="flex gap-3 items-start p-2 rounded-lg hover:bg-white/[0.05] transition-colors cursor-default">
+                <div class="mt-0.5 shrink-0 h-5 w-5 rounded-full bg-emerald-500/10 backdrop-blur-sm flex items-center justify-center border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6 9 17l-5-5"></path>
+                  </svg>
+                </div>
+                <p class="text-[12px] leading-relaxed text-zinc-300 font-light">
+                  Compromised device automatically isolated from main network. Zero lateral movement detected.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 flex-[1.1] min-h-0 gap-x-4 gap-y-4">
+          <div class="xl:col-span-2 relative flex flex-col bg-white/[0.02] backdrop-blur-xl h-full rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.2)] overflow-hidden border border-white/10">
+
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 blur-[100px] pointer-events-none bg-blue-500/10">
+            </div>
+
+            <div class="flex items-center justify-between mb-6 shrink-0 relative z-10">
+              <div class="space-y-1">
+                <h3 class="text-sm font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">
+                  Endpoint Security Health</h3>
+                <div class="flex items-center gap-2">
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">Live Fleet Status</p>
+                </div>
+              </div>
+              <button class="px-4 py-1.5 rounded-full bg-white/[0.03] backdrop-blur-md border border-white/10 text-[11px] font-normal text-zinc-300 hover:text-white hover:bg-white/[0.06] hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all duration-300">
+                View All Agents
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-1 min-h-0 relative z-10">
+
+              <div class="group relative bg-white/[0.02] backdrop-blur-md rounded-xl border border-white/10 p-4 flex flex-col justify-between hover:-translate-y-1 hover:bg-white/[0.04] transition-all duration-500 cursor-default overflow-hidden hover:border-blue-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.15)]">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                </div>
+
+                <div class="flex items-center justify-between mb-4 relative z-10">
+                  <div class="p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 shadow-[inset_0_0_12px_rgba(59,130,246,0.1)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+                      <rect width="16" height="16" x="4" y="4" rx="2" class=""></rect>
+                      <rect width="6" height="6" x="9" y="9" rx="1"></rect>
+                      <path d="M15 2v2m0 16v2M2 15h2m-2-6h2m16 6h2m-2-6h2M9 2v2m0 16v2"></path>
+                    </svg>
+                  </div>
+                  <span class="text-[9px] font-semibold tracking-wider border px-2 py-1 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.1)] text-blue-300 bg-blue-500/10 border-blue-500/20 backdrop-blur-sm">ACTIVE</span>
+                </div>
+
+                <div class="relative z-10">
+                  <div class="flex items-baseline justify-between mb-2">
+                    <span class="text-[11px] font-normal text-zinc-400">Policy Enforcements</span>
+                    <span class="text-lg font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-300">12<span class="text-xs font-normal text-zinc-400 ml-1">k/s</span></span>
+                  </div>
+                  <div class="w-full h-1.5 bg-black/20 backdrop-blur-sm shadow-inner rounded-full overflow-hidden border border-white/10">
+                    <div class="h-full bg-gradient-to-r w-[78%] rounded-full shadow-[0_0_10px_rgba(59,130,246,0.6)] from-blue-600 to-blue-400">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="group relative bg-white/[0.02] backdrop-blur-md rounded-xl border border-white/10 p-4 flex flex-col justify-between hover:-translate-y-1 hover:bg-white/[0.04] transition-all duration-500 cursor-default overflow-hidden hover:border-blue-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                </div>
+
+                <div class="flex items-center justify-between mb-4 relative z-10">
+                  <div class="p-2 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+                      <ellipse cx="12" cy="5" rx="9" ry="3" class=""></ellipse>
+                      <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+                      <path d="M3 12A9 3 0 0 0 21 12"></path>
+                    </svg>
+                  </div>
+                  <span class="text-[9px] font-semibold tracking-wider border px-2 py-1 rounded-full text-blue-300 bg-blue-500/10 border-blue-500/20 backdrop-blur-sm">STABLE</span>
+                </div>
+
+                <div class="h-10 w-full mb-4 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                </div>
+
+                <div class="relative z-10">
+                  <div class="flex items-baseline justify-between mb-2">
+                    <span class="text-[11px] font-normal text-zinc-400">Encrypted Tunnels</span>
+                    <span class="text-lg font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-300">4,208</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-black/20 backdrop-blur-sm shadow-inner rounded-full overflow-hidden border border-white/10">
+                    <div class="h-full bg-gradient-to-r w-[100%] rounded-full shadow-[0_0_10px_rgba(168,85,247,0.6)] from-blue-600 to-blue-400">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="group relative bg-white/[0.02] backdrop-blur-md rounded-xl border border-white/10 p-4 flex flex-col justify-between hover:-translate-y-1 hover:bg-white/[0.04] transition-all duration-500 cursor-default overflow-hidden hover:border-emerald-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_rgba(16,185,129,0.15)]">
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                </div>
+
+                <div class="flex items-center justify-between mb-4 relative z-10">
+                  <div class="p-2 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 shadow-[inset_0_0_12px_rgba(16,185,129,0.1)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="relative z-10">
+                  <div class="flex items-baseline justify-between mb-2">
+                    <span class="text-[11px] font-normal text-zinc-400">Scanned Traffic</span>
+                    <span class="text-lg font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-300">4.8<span class="text-xs font-normal text-zinc-400 ml-1">Tbps</span></span>
+                  </div>
+                  <div class="w-full h-1.5 bg-black/20 backdrop-blur-sm shadow-inner rounded-full overflow-hidden border border-white/10">
+                    <div class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 w-[65%] rounded-full shadow-[0_0_10px_rgba(16,185,129,0.6)]">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="group relative bg-white/[0.02] backdrop-blur-md rounded-xl border border-white/10 p-4 flex flex-col justify-between hover:-translate-y-1 hover:bg-white/[0.04] transition-all duration-500 cursor-default overflow-hidden hover:border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_32px_rgba(244,63,94,0.15)]">
+                <div class="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                </div>
+
+                <div class="flex items-center justify-between mb-4 relative z-10">
+                  <div class="p-2 rounded-lg bg-rose-500/10 backdrop-blur-sm border border-rose-500/20 shadow-[inset_0_0_12px_rgba(244,63,94,0.1)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-400">
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                      <path d="M12 9v4"></path>
+                      <path d="M12 17h.01"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="relative z-10">
+                  <div class="flex items-baseline justify-between mb-2">
+                    <span class="text-[11px] font-normal text-zinc-400">Intrusion Attempts</span>
+                    <span class="text-lg font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-300">14</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-black/20 backdrop-blur-sm shadow-inner rounded-full overflow-hidden border border-white/10">
+                    <div class="h-full bg-gradient-to-r from-rose-600 to-rose-400 w-[15%] rounded-full shadow-[0_0_10px_rgba(244,63,94,0.6)]">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="relative flex flex-col bg-white/[0.02] backdrop-blur-xl h-full rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.2)] overflow-hidden border border-white/10">
+
+            <div class="flex items-center justify-between mb-6 shrink-0 relative z-10">
+              <h3 class="text-sm font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">
+                Security Events</h3>
+              <button class="text-[11px] font-normal text-zinc-400 hover:text-white transition-colors">View All</button>
+            </div>
+
+            <div class="relative flex-1 flex flex-col gap-2 min-h-0 overflow-hidden z-10">
+
+              <div class="absolute left-[11px] top-3 bottom-4 w-px bg-gradient-to-b from-white/20 via-white/10 to-transparent z-0">
+              </div>
+
+              <div class="group relative flex items-start gap-4 p-2 -mx-2 rounded-lg hover:bg-white/[0.05] hover:shadow-[inset_0_0_20px_rgba(255,255,255,0.02)] transition-all duration-300 cursor-default z-10">
+                <div class="relative flex items-center justify-center w-6 h-6 shrink-0 bg-white/[0.05] backdrop-blur-md border border-white/10 rounded-full mt-0.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]">
+                  </div>
+                  <div class="absolute inset-1 border border-rose-500/30 rounded-full animate-ping" style="animation-duration: 3s;"></div>
+                </div>
+                <div class="flex-1 min-w-0 pt-1">
+                  <div class="flex justify-between items-baseline mb-1">
+                    <p class="text-[13px] font-normal text-zinc-200 group-hover:text-rose-400 transition-colors truncate">
+                      Ransomware Blocked</p>
+                    <span class="text-[10px] text-zinc-400 font-mono tracking-wider shrink-0 ml-2 group-hover:text-rose-400/80 transition-colors">2m ago</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-400 font-light truncate group-hover:text-zinc-300 transition-colors">
+                    signature detected on DEV-MAC-04</p>
+                </div>
+              </div>
+
+              <div class="group relative flex items-start gap-4 p-2 -mx-2 rounded-lg hover:bg-white/[0.05] hover:shadow-[inset_0_0_20px_rgba(255,255,255,0.02)] transition-all duration-300 cursor-default z-10">
+                <div class="relative flex items-center justify-center w-6 h-6 shrink-0 bg-white/[0.05] backdrop-blur-md border border-white/10 rounded-full mt-0.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]">
+                  </div>
+                  <div class="absolute inset-1 border border-amber-500/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0 pt-1">
+                  <div class="flex justify-between items-baseline mb-1">
+                    <p class="text-[13px] font-normal text-zinc-200 group-hover:text-amber-400 transition-colors truncate">
+                      Unusual Login Prevented</p>
+                    <span class="text-[10px] text-zinc-400 font-mono tracking-wider shrink-0 ml-2 group-hover:text-amber-400/80 transition-colors">1h ago</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-400 font-light truncate group-hover:text-zinc-300 transition-colors">
+                    Multiple failed attempts from 192.168.1.105</p>
+                </div>
+              </div>
+
+              <div class="group relative flex items-start gap-4 p-2 -mx-2 rounded-lg hover:bg-white/[0.05] hover:shadow-[inset_0_0_20px_rgba(255,255,255,0.02)] transition-all duration-300 cursor-default z-10">
+                <div class="relative flex items-center justify-center w-6 h-6 shrink-0 bg-white/[0.05] backdrop-blur-md border border-white/10 rounded-full mt-0.5">
+                  <div class="w-1.5 h-1.5 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.8)] bg-blue-500">
+                  </div>
+                  <div class="absolute inset-1 border rounded-full opacity-0 group-hover:opacity-100 transition-opacity border-blue-500/20">
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0 pt-1">
+                  <div class="flex justify-between items-baseline mb-1">
+                    <p class="text-[13px] font-normal text-zinc-200 transition-colors truncate group-hover:text-blue-400">
+                      Port Scan Blocked</p>
+                    <span class="text-[10px] text-zinc-400 font-mono tracking-wider shrink-0 ml-2 transition-colors group-hover:text-blue-400/80">3h ago</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-400 font-light truncate group-hover:text-zinc-300 transition-colors">
+                    Automated scan blocked from external IP</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section><section class="z-10 md:px-20 pt-20 pr-6 pb-20 pl-6 relative">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="gs-reveal">
+        <div class="text-4xl md:text-5xl font-light text-white stat-number mb-2">12ms</div>
+        <p class="text-sm text-white/40">Average response time to isolate a threat</p>
+      </div>
+      <div class="gs-reveal">
+        <div class="text-4xl md:text-5xl font-light text-white stat-number mb-2">99.99%</div>
+        <p class="text-sm text-white/40">Uptime SLA guaranteed</p>
+      </div>
+      <div class="gs-reveal">
+        <div class="text-4xl md:text-5xl font-light text-white stat-number mb-2">2,400+</div>
+        <p class="text-sm text-white/40">Security teams using Nexus</p>
+      </div>
+      <div class="gs-reveal">
+        <div class="text-4xl md:text-5xl font-light text-white stat-number mb-2">4.2M</div>
+        <p class="text-sm text-white/40">Threats blocked last month</p>
+      </div>
+    </div>
+  </div>
+</section><section class="min-h-screen flex z-10 px-6 md:px-20 py-24 relative items-center">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 w-full max-w-7xl mr-auto ml-auto gap-x-12 gap-y-12 items-start">
+
+  <div class="lg:col-span-5 flex flex-col items-start">
+    <div class="mb-10">
+      <span class="text-[10px] uppercase block font-bold text-blue-400 tracking-[0.3em] mb-4">What is Nexus</span>
+    </div>
+    <h2 class="md:text-5xl text-4xl font-light mb-6">
+      One platform<br>
+      <span class="text-white/40">for your entire network.</span>
+    </h2>
+    <p class="leading-relaxed text-white/40">
+      Think of Nexus as a security operations center that runs itself. It watches every device, server, and cloud
+      service connected to your network — 24/7, in real time.
+    </p>
+  </div>
+
+  <div class="lg:col-span-7 lg:pt-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+      <div class="glass-panel rounded-2xl p-8 hover:border-white/10 transition-all">
+        <div class="w-10 h-10 rounded-xl border flex items-center justify-center mb-5 bg-blue-500/10 border-blue-500/20">
+          <svg class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z">
+            </path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Real-Time Visibility</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">See every device, user, and data flow across your
+          infrastructure in a single live dashboard. No more blind spots.</p>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-8 hover:border-white/10 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z">
+            </path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Automated Threat Detection</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">ML-powered analysis identifies suspicious behavior, intrusion
+          attempts, and misconfigurations before they become breaches.</p>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-8 hover:border-white/10 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Instant Response</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">When a threat is detected, Nexus isolates the affected segment
+          and blocks the attack automatically — in under 50ms.</p>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-8 hover:border-white/10 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z">
+            </path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Compliance Reports</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Generate audit-ready reports for SOC 2, ISO 27001, HIPAA, and
+          GDPR with a single click. Stay compliant effortlessly.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ========== 3. KEY METRICS ========== -->
+
+
+<!-- ========== 4. FEATURES (Deep Dive) ========== -->
+<section id="features" class="min-h-screen relative z-10 px-6 md:px-20 py-24">
+  <div class="max-w-7xl mx-auto w-full">
+    <div class="text-center mb-20 max-w-2xl mx-auto gs-reveal">
+      <span class="text-[10px] uppercase block font-bold text-blue-400 tracking-[0.3em] mb-4">Core Features</span>
+      <h2 class="md:text-5xl text-4xl font-light mb-6">Everything you need to<br>secure your network.</h2>
+      <p class="leading-relaxed text-white/40">Nexus replaces your fragmented security stack with a single, intelligent platform. Here's what's under the hood.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans pt-8 pr-8 pb-8 pl-8 gap-x-6 gap-y-6">
+
+  <div class="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-[2rem] p-2 flex flex-col group hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+    <div class="relative flex-1 bg-black/20 shadow-inner border border-white/5 rounded-[1.5rem] min-h-[300px] overflow-hidden flex items-center justify-center">
+
+      <div class="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-[10px] text-zinc-300 backdrop-blur-md z-20 shadow-sm">
+        Status: Scanning
+      </div>
+      <div class="absolute top-1/3 left-1/4 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] text-white backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)] z-20">
+        Packet Analysis
+      </div>
+      <div class="absolute bottom-1/4 right-1/4 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] text-zinc-300 backdrop-blur-md z-20 shadow-sm">
+        Real-Time
+      </div>
+
+      <div class="flex absolute inset-0 items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity duration-700 overflow-hidden">
+
+        <div class="absolute w-[200%] h-[1px] bg-white/10 top-1/2"></div>
+        <div class="absolute w-[200%] h-[1px] bg-white/10 top-2/3"></div>
+        <svg class="absolute inset-0 w-full h-full text-white/5" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M10 50 L 30 50 M 70 50 L 90 50" stroke-dasharray="2 2"></path>
+          <circle cx="30" cy="50" r="1" fill="currentColor"></circle>
+          <circle cx="70" cy="50" r="1" fill="currentColor"></circle>
+        </svg>
+
+        <div class="relative w-32 h-32 z-10 flex items-center justify-center">
+
+          <svg class="absolute w-full h-full text-indigo-400/30" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8">
+            <ellipse cx="50" cy="50" rx="40" ry="12" transform="rotate(90 50 50)"></ellipse>
+          </svg>
+
+          <svg class="w-full h-full text-indigo-400 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)] animate-[spin_20s_linear_infinite]" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M50 10 L80 50 L50 90 L20 50 Z"></path>
+            <path d="M50 10 L20 50 L80 50 L50 10 Z"></path>
+            <path d="M50 90 L20 50 L80 50 L50 90 Z" stroke-opacity="0.5"></path>
+            <path d="M15 50 L85 50" stroke-width="0.8" stroke-dasharray="4 4"></path>
+          </svg>
+
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-indigo-400 rounded-full animate-pulse shadow-[0_0_15px_#818cf8]">
+          </div>
+        </div>
+
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-indigo-500/20 blur-[50px] rounded-full pointer-events-none">
+        </div>
+      </div>
+    </div>
+
+    <div class="px-5 py-6 shrink-0">
+      <h3 class="text-[1.1rem] font-medium text-white mb-3 tracking-tight drop-shadow-sm">Deep Network Visibility</h3>
+      <p class="text-[13px] text-zinc-300 leading-relaxed font-light">
+        Gain unprecedented insight into your infrastructure. Nexus continuously monitors traffic patterns, instantly
+        identifying unmanaged devices and shadow IT without blind spots.
+      </p>
+    </div>
+  </div>
+
+  <div class="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-[2rem] p-2 flex flex-col group hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+    <div class="relative flex-1 bg-black/20 shadow-inner border border-white/5 rounded-[1.5rem] min-h-[300px] overflow-hidden flex flex-col items-center justify-center py-8">
+
+      <div class="flex flex-col items-center gap-2 w-full max-w-[200px] z-10 relative">
+        <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/10 -translate-x-1/2 -z-10"></div>
+
+        <div class="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-3.5 flex items-center gap-3 shadow-lg group-hover:bg-white/10 group-hover:border-white/20 transition-colors">
+          <svg class="w-4 h-4 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+            </path>
+          </svg>
+          <span class="text-xs font-medium text-white">Detect Threat</span>
+        </div>
+
+        <div class="w-5 h-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-[10px] text-zinc-300 my-0.5">
+          +</div>
+
+        <div class="w-full bg-blue-500/20 backdrop-blur-md border border-blue-400/40 rounded-xl p-3.5 flex items-center gap-3 shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.3)] transition-all">
+          <svg class="w-4 h-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <span class="text-xs font-medium text-blue-50">Micro-Segment</span>
+        </div>
+
+        <div class="w-5 h-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-[10px] text-zinc-300 my-0.5">
+          +</div>
+
+        <div class="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-3.5 flex items-center gap-3 shadow-lg group-hover:bg-white/10 group-hover:border-white/20 transition-colors">
+          <svg class="w-4 h-4 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+            </path>
+          </svg>
+          <span class="text-xs font-medium text-white">Reconfigure</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-5 py-6 shrink-0">
+      <h3 class="text-[1.1rem] font-medium text-white mb-3 tracking-tight drop-shadow-sm">Autonomous Threat Mitigation</h3>
+      <p class="text-[13px] text-zinc-300 leading-relaxed font-light">
+        When an anomaly is detected, Nexus automatically deploys micro-segmentation to isolate compromised devices in
+        milliseconds, stopping lateral movement dead in its tracks.
+      </p>
+    </div>
+  </div>
+
+  <div class="bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-[2rem] p-2 flex flex-col group hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+    <div class="relative flex-1 bg-black/20 shadow-inner border border-white/5 rounded-[1.5rem] min-h-[300px] overflow-hidden flex items-center justify-center">
+
+      <div class="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-[10px] text-zinc-300 backdrop-blur-md z-20 shadow-sm">
+        Verification Log
+      </div>
+      <div class="absolute top-1/4 right-6 px-2.5 py-1 rounded-full border border-emerald-400/40 text-[10px] text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)] bg-emerald-500/10 backdrop-blur-md z-20">
+        100% Verified
+      </div>
+
+      <div class="relative w-full h-full flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity duration-700">
+
+        <svg class="absolute inset-0 w-full h-full text-white/10" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M0 100 L 80 100 L 120 150 L 250 150" stroke-dasharray="4 4"></path>
+          <path d="M400 200 L 320 200 L 280 150 L 150 150" stroke-dasharray="4 4"></path>
+          <path d="M0 200 L 60 200 L 90 180 L 180 180"></path>
+        </svg>
+
+        <div class="relative w-20 h-20 bg-black/40 backdrop-blur-lg border border-white/10 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(52,211,153,0.2)] z-10">
+          <div class="w-12 h-12 border border-white/20 rounded-lg flex items-center justify-center">
+            <div class="w-6 h-6 border border-emerald-400/60 rounded flex items-center justify-center bg-emerald-500/10">
+              <div class="w-2 h-2 bg-emerald-400 rounded-sm animate-pulse shadow-[0_0_12px_rgba(52,211,153,1)]"></div>
+            </div>
+          </div>
+          <div class="absolute top-2 left-2 w-1 h-1 bg-white/30 rounded-full"></div>
+          <div class="absolute top-2 right-2 w-1 h-1 bg-white/30 rounded-full"></div>
+          <div class="absolute bottom-2 left-2 w-1 h-1 bg-white/30 rounded-full"></div>
+          <div class="absolute bottom-2 right-2 w-1 h-1 bg-white/30 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-5 py-6 shrink-0">
+      <h3 class="text-[1.1rem] font-medium text-white mb-3 tracking-tight drop-shadow-sm">Identity-Aware Architecture</h3>
+      <p class="text-[13px] text-zinc-300 leading-relaxed font-light">
+        Implement strict zero-trust policies across your entire network. Every connection request is continuously
+        authenticated, authorized, and validated for security posture.
+      </p>
+    </div>
+  </div>
+
+</div>
+  </div>
+</section>
+
+<!-- ========== 5. PRODUCT SHOWCASE (Dashboard Preview) ========== -->
+
+
+<!-- ========== 6. HOW IT WORKS ========== -->
+<section class="min-h-screen z-10 md:px-20 flex pt-32 pr-6 pb-32 pl-6 relative items-center" id="how-it-works">
+  <div class="font-sans w-full max-w-6xl mx-auto px-8 py-24">
+  <div class="text-center mb-24 max-w-2xl mx-auto">
+    <span class="text-[10px] uppercase tracking-[0.4em] font-bold mb-4 block text-blue-500">Deployment Workflow</span>
+    <h2 class="text-4xl md:text-5xl mb-6 font-light text-white tracking-tight leading-tight">Up and running<br>in three steps.</h2>
+    <p class="text-zinc-500 text-sm leading-relaxed max-w-md mx-auto">
+      Getting started takes less than 10 minutes. No hardware to install, no network downtime required.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans pt-8 pr-8 pb-8 pl-8 gap-x-6 gap-y-6">
+
+  <div class="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-lg overflow-hidden text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 group">
+    <div class="p-6 flex-1 flex flex-col">
+      <div class="flex items-center justify-between mb-8">
+        <div class="w-8 h-8 rounded-full border border-white/10 bg-black/40 flex items-center justify-center text-[11px] font-bold text-white shadow-sm backdrop-blur-md">
+          01</div>
+        <span class="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold drop-shadow-sm">Deployment</span>
+      </div>
+
+      <div class="mb-8 flex-1">
+        <h3 class="text-lg font-semibold mb-3 tracking-tight drop-shadow-sm">Install the Agent</h3>
+        <p class="text-zinc-300 text-sm leading-relaxed font-light">
+          Deploy a lightweight binary (under 5MB) on your servers or cloud instances with a single command.
+        </p>
+      </div>
+
+      <div class="bg-black/40 backdrop-blur-md border border-white/10 rounded p-4 font-mono text-[11px] mb-2 group-hover:border-white/20 transition-colors shadow-inner">
+        <div class="text-emerald-400">
+          <span class="text-zinc-500">$</span> curl -sSL nexus.io/i | sh
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4 border-t border-white/10 bg-black/20 flex items-center gap-2">
+      <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></div>
+      <span class="text-[11px] text-zinc-300 font-medium">Ready for Linux, Win, K8s</span>
+    </div>
+  </div>
+
+  <div class="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-lg overflow-hidden text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 group">
+    <div class="p-6 flex-1 flex flex-col">
+      <div class="flex items-center justify-between mb-8">
+        <div class="w-8 h-8 rounded-full border border-white/10 bg-black/40 flex items-center justify-center text-[11px] font-bold text-white shadow-sm backdrop-blur-md">
+          02</div>
+        <span class="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold drop-shadow-sm">Visibility</span>
+      </div>
+
+      <div class="mb-8 flex-1">
+        <h3 class="text-lg font-semibold mb-3 tracking-tight drop-shadow-sm">Map Your Network</h3>
+        <p class="text-zinc-300 text-sm leading-relaxed font-light">
+          Nexus automatically discovers every device, service, and connection. Including hidden shadow IT.
+        </p>
+      </div>
+
+      <div class="bg-black/40 backdrop-blur-md border border-white/10 rounded p-4 flex items-baseline gap-2 group-hover:border-blue-400/40 transition-colors shadow-inner">
+        <span class="text-xl font-light text-white italic drop-shadow-sm">3:12</span>
+        <span class="text-[9px] text-blue-300 font-black uppercase tracking-widest animate-pulse">Scanning...</span>
+      </div>
+    </div>
+
+    <div class="p-4 border-t border-white/10 bg-black/20 flex items-center gap-2">
+      <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"></div>
+      <span class="text-[11px] text-zinc-300 font-medium">Real-time Topology Active</span>
+    </div>
+  </div>
+
+  <div class="flex flex-col bg-blue-900/10 backdrop-blur-xl border border-blue-500/30 shadow-[0_8px_32px_rgba(59,130,246,0.15)] rounded-lg overflow-hidden text-white relative transition-all duration-500 hover:bg-blue-900/20 hover:border-blue-400/50 group">
+
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none"></div>
+
+    <div class="p-6 flex-1 flex flex-col relative z-10">
+      <div class="flex items-center justify-between mb-8">
+        <div class="w-8 h-8 rounded-full border border-blue-400/40 bg-blue-500/20 flex items-center justify-center text-[11px] font-bold text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.3)] backdrop-blur-md">
+          03</div>
+        <span class="text-[10px] uppercase tracking-[0.2em] text-blue-300 font-bold drop-shadow-sm">Protection</span>
+      </div>
+
+      <div class="mb-8 flex-1">
+        <h3 class="text-lg font-semibold mb-3 tracking-tight text-white drop-shadow-sm">Activate Protection</h3>
+        <p class="text-blue-100/80 text-sm leading-relaxed font-light">
+          Enforce zero-trust policies and isolate compromised segments instantly with one-click automation.
+        </p>
+      </div>
+
+      <div class="bg-blue-600/80 backdrop-blur-md border border-blue-400/40 shadow-[0_4px_15px_rgba(37,99,235,0.4)] rounded p-4 flex items-center justify-between group-hover:bg-blue-500/90 transition-colors cursor-pointer">
+        <span class="text-[10px] font-black uppercase tracking-widest text-white drop-shadow-sm">Enable Shield</span>
+        <div class="w-6 h-3 bg-white/30 rounded-full relative shadow-inner">
+          <div class="absolute right-0.5 top-0.5 w-2 h-2 bg-white rounded-full shadow-sm"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4 border-t border-blue-500/20 bg-blue-950/40 backdrop-blur-md flex items-center gap-2 relative z-10">
+      <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399]"></div>
+      <span class="text-[11px] text-blue-100/90 font-medium">Auto-Response Shield Ready</span>
+    </div>
+  </div>
+
+</div>
+</div>
+</section>
+
+<!-- ========== 7. SOCIAL PROOF ========== -->
+<section class="relative z-10 px-6 md:px-20 py-24">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 gs-reveal">
+      <span class="text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block text-blue-400">What Teams Say</span>
+      <h2 class="text-3xl md:text-4xl font-light">Trusted by security leaders.</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 font-sans pt-8 pr-8 pb-8 pl-8 gap-x-6 gap-y-6">
+
+  <div class="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-2xl overflow-hidden text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 group">
+    <div class="p-6 flex-1 flex flex-col relative">
+      <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      
+      <div class="flex gap-3 mb-8 flex-1 relative z-10">
+        <span class="text-white/20 font-serif text-5xl leading-none mt-1">“</span>
+        <p class="text-zinc-200 text-sm leading-relaxed mt-2 font-light">
+          We replaced three separate security tools with Nexus. The unified dashboard alone saved our team 15 hours a week. Threat response went from minutes to milliseconds.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 border-t border-white/10 bg-black/20 backdrop-blur-md">
+      <div class="p-5 border-r border-white/10 relative overflow-hidden">
+        <div class="text-[22px] font-bold mb-1 text-white drop-shadow-md">15h</div>
+        <div class="text-[10px] text-zinc-400 font-medium tracking-wide uppercase">Weekly time saved</div>
+      </div>
+      <div class="p-5 relative overflow-hidden">
+        <div class="text-[22px] font-bold mb-1 text-white drop-shadow-md">&lt;1ms</div>
+        <div class="text-[10px] text-zinc-400 font-medium tracking-wide uppercase">Threat detection</div>
+      </div>
+    </div>
+
+    <div class="p-5 border-t border-white/10 bg-black/40 backdrop-blur-lg flex items-center gap-3">
+      <div class="relative">
+        <div class="absolute inset-0 rounded-full border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.1)]"></div>
+        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/461c2bb1-9a06-404e-b80f-18cf9b924a4d_320w.webp" alt="Sarah Jenkins" class="w-10 h-10 object-cover rounded-full grayscale brightness-90 border-[2px] border-transparent">
+      </div>
+      <div class="flex flex-col">
+        <span class="text-sm font-semibold text-white tracking-tight drop-shadow-sm">Sarah Jenkins</span>
+        <span class="text-[11px] text-zinc-400 mt-0.5">CTO, Core Systems</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-2xl overflow-hidden text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 group">
+    <div class="p-6 flex-1 flex flex-col relative">
+      <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      
+      <div class="flex gap-3 mb-8 flex-1 relative z-10">
+        <span class="text-white/20 font-serif text-5xl leading-none mt-1">“</span>
+        <p class="text-zinc-200 text-sm leading-relaxed mt-2 font-light">
+          The auto-discovery feature found 340 unmanaged endpoints we had no idea about. Nexus mapped our entire infrastructure in under 5 minutes. That visibility is priceless.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 border-t border-white/10 bg-black/20 backdrop-blur-md">
+      <div class="p-5 border-r border-white/10 relative overflow-hidden">
+        <div class="text-[22px] font-bold mb-1 text-white drop-shadow-md">340</div>
+        <div class="text-[10px] text-zinc-400 font-medium tracking-wide uppercase">Endpoints discovered</div>
+      </div>
+      <div class="p-5 relative overflow-hidden">
+        <div class="text-[22px] font-bold mb-1 text-white drop-shadow-md">5 min</div>
+        <div class="text-[10px] text-zinc-400 font-medium tracking-wide uppercase">Full network mapping</div>
+      </div>
+    </div>
+
+    <div class="p-5 border-t border-white/10 bg-black/40 backdrop-blur-lg flex items-center gap-3">
+      <div class="relative">
+        <div class="absolute inset-0 rounded-full border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.1)]"></div>
+        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d4340f08-d355-4926-afca-701af404821c_320w.webp" alt="Marcus Chen" class="w-10 h-10 rounded-full object-cover grayscale brightness-90 border-[2px] border-transparent">
+      </div>
+      <div class="flex flex-col">
+        <span class="text-sm font-semibold text-white tracking-tight drop-shadow-sm">Marcus Chen</span>
+        <span class="text-[11px] text-zinc-400 mt-0.5">Head of Security, Relay</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-2xl overflow-hidden text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 group">
+    <div class="p-6 flex-1 flex flex-col relative">
+      <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      
+      <div class="flex gap-3 mb-8 flex-1 relative z-10">
+        <span class="text-white/20 font-serif text-5xl leading-none mt-1">“</span>
+        <p class="text-zinc-200 text-sm leading-relaxed mt-2 font-light">
+          SOC 2 compliance used to take us weeks of manual work. With Nexus, we generate audit-ready reports in one click. Our last audit was the smoothest we've ever had.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 border-t border-white/10 bg-black/20 backdrop-blur-md">
+      <div class="p-5 border-r border-white/10 relative overflow-hidden">
+        <div class="text-[22px] font-bold mb-1 text-white drop-shadow-md">100%</div>
+        <div class="text-[10px] text-zinc-400 font-medium tracking-wide uppercase">Audit-ready status</div>
+      </div>
+      <div class="p-5 relative overflow-hidden">
+        <div class="text-[22px] font-bold mb-1 text-white drop-shadow-md">1 click</div>
+        <div class="text-[10px] text-zinc-400 font-medium tracking-wide uppercase">Compliance reporting</div>
+      </div>
+    </div>
+
+    <div class="p-5 border-t border-white/10 bg-black/40 backdrop-blur-lg flex items-center gap-3">
+      <div class="relative">
+        <div class="absolute inset-0 rounded-full border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.1)]"></div>
+        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bf728e3d-89a4-468d-96e5-d2d55f70e406_320w.webp" alt="Priya Patel" class="w-10 h-10 rounded-full object-cover grayscale brightness-90 border-[2px] border-transparent">
+      </div>
+      <div class="flex flex-col">
+        <span class="text-sm font-semibold text-white tracking-tight drop-shadow-sm">Priya Patel</span>
+        <span class="text-[11px] text-zinc-400 mt-0.5">VP Engineering, Quantus</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+  </div>
+</section>
+
+<!-- ========== 8. INTEGRATIONS ========== -->
+
+
+<!-- ========== 9. PRICING ========== -->
+<section id="pricing" class="min-h-screen relative z-10 px-6 md:px-20 py-24">
+  <div class="w-full max-w-6xl mr-auto ml-auto">
+  <div class="text-center mb-8 max-w-2xl mx-auto gs-reveal">
+    <span class="text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block text-blue-400">Pricing</span>
+    <h2 class="text-4xl md:text-5xl mb-6 font-light">Simple, transparent pricing.</h2>
+    <p class="text-white/40 leading-relaxed">Start free with up to 50 endpoints. Upgrade as your infrastructure grows.
+      No hidden fees, cancel anytime.</p>
+  </div>
+
+  <div class="flex md:p-8 font-sans pt-4 pr-4 pb-4 pl-4 items-center justify-center">
+  <div class="flex flex-col xl:flex-row overflow-hidden bg-white/5 backdrop-blur-xl w-full max-w-[1400px] border-white/10 border rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.2)] relative">
+    
+    <!-- Background Glow -->
+    <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] pointer-events-none rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+
+    <div class="xl:w-[35%] lg:p-16 flex flex-col w-full pt-10 pr-10 pb-10 pl-10 justify-between relative z-10">
+      <div class="">
+        <div class="flex items-center text-zinc-400 text-xs mb-8 tracking-wide uppercase font-semibold">
+          <svg class="w-4 h-4 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v18m9-9H3m13.5-6.5L4.5 17.5m15 0L4.5 6.5"></path>
+          </svg>
+          Beyond the Possible
+        </div>
+        <h2 class="text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight drop-shadow-sm">
+          Powerful features<br>for powerful creators
+        </h2>
+      </div>
+      <div class="mt-20 xl:mt-32 text-zinc-400 text-sm leading-relaxed tracking-wide font-light">
+        Emptiness is not the absence;<br>it's a space for something new.
+      </div>
+    </div>
+
+    <div class="w-full xl:w-[65%] flex flex-col md:flex-row border-t xl:border-t-0 xl:border-l border-white/10 bg-black/20 shadow-inner relative z-10">
+
+      <div class="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-white/10 hover:bg-white/[0.04] transition-colors duration-500">
+        <div class="px-8 lg:px-12 pt-12 pb-8">
+          <h3 class="text-2xl text-white font-medium mb-3 drop-shadow-sm">Starter</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed h-20 pr-4 font-light">
+            For small teams getting started with network security monitoring and essential endpoint protection.
+          </p>
+          <div class="text-white text-4xl font-light tracking-tight mt-4">
+            $0<span class="text-sm text-zinc-500 font-normal ml-1 tracking-normal">/Month</span>
+          </div>
+        </div>
+
+        <div class="border-t border-b border-white/10 py-6 px-8 lg:px-12 flex justify-between items-center cursor-pointer hover:bg-white/10 text-white transition-colors">
+          <span class="text-sm font-medium">Get started</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </div>
+
+        <div class="px-8 lg:px-12 pt-8 pb-12 flex-1">
+          <ul class="space-y-4 text-sm text-zinc-400">
+            <li class="flex items-center"><svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> <span class="text-zinc-300">50 Max Endpoints</span></li>
+            <li class="flex items-center"><svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> <span class="text-zinc-300">7d Data Retention</span></li>
+            <li class="flex items-center text-zinc-600"><svg class="w-5 h-5 mr-3 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> ML-Response</li>
+            <li class="flex items-center text-zinc-600"><svg class="w-5 h-5 mr-3 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> Dedicated Concierge</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex-1 flex flex-col hover:bg-white/[0.04] transition-colors duration-500 relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none"></div>
+        <div class="px-8 lg:px-12 pt-12 pb-8 relative z-10">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-2xl text-white font-medium drop-shadow-sm">Professional</h3>
+            <span class="px-3 py-1 text-[10px] font-semibold tracking-widest uppercase border rounded-full text-blue-300 bg-blue-500/10 border-blue-500/20 backdrop-blur-sm">Most Popular</span>
+          </div>
+          <p class="text-zinc-400 text-sm leading-relaxed h-20 pr-4 font-light">
+            Full visibility and automated threat response powered by our proprietary ML-detection engine.
+          </p>
+          <div class="text-white text-4xl font-light tracking-tight mt-4 drop-shadow-sm">
+            $499<span class="text-sm text-zinc-500 font-normal ml-1 tracking-normal">/Month</span>
+          </div>
+        </div>
+
+        <div class="bg-white text-black border-t border-b border-white py-6 px-8 lg:px-12 flex justify-between items-center cursor-pointer hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] relative z-10">
+          <span class="text-sm font-semibold">Start Free Trial</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </div>
+
+        <div class="px-8 lg:px-12 pt-8 pb-12 flex-1 relative z-10">
+          <ul class="space-y-4 text-sm text-zinc-400">
+            <li class="flex items-center"><svg class="w-5 h-5 mr-3 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> <span class="text-zinc-300">Unlimited Nodes</span></li>
+            <li class="flex items-center"><svg class="w-5 h-5 mr-3 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> <span class="text-zinc-300">90d History Log</span></li>
+            <li class="flex items-center"><svg class="w-5 h-5 mr-3 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> <span class="text-zinc-300">ML-Response Active</span></li>
+            <li class="flex items-center"><svg class="w-5 h-5 mr-3 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg> <span class="text-zinc-300">Dedicated Concierge</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ========== 10. FAQ ========== -->
+<section id="faq" class="relative z-10 px-6 md:px-20 py-24">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-16 gs-reveal">
+      <span class="text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block text-blue-400">FAQ</span>
+      <h2 class="text-3xl md:text-4xl font-light">Common questions.</h2>
+    </div>
+
+    <div class="space-y-6">
+
+      <details class="glass-panel rounded-2xl group" open="">
+        <summary class="px-8 py-6 cursor-pointer text-white font-medium flex items-center justify-between list-none">
+          What exactly does Nexus do?
+          <svg class="w-5 h-5 text-white/40 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-8 pb-6 text-sm text-slate-400 leading-relaxed">
+          Nexus is a network security platform that gives you real-time visibility into every device and connection in your infrastructure. It automatically detects threats like intrusion attempts, misconfigurations, and unusual behavior — then responds instantly by isolating affected segments. Think of it as a 24/7 security operations center that runs itself.
+        </div>
+      </details>
+
+      <details class="glass-panel rounded-2xl group">
+        <summary class="px-8 py-6 cursor-pointer text-white font-medium flex items-center justify-between list-none">
+          How long does setup take?
+          <svg class="w-5 h-5 text-white/40 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-8 pb-6 text-sm text-slate-400 leading-relaxed">
+          Most teams are fully operational in under 10 minutes. You install a lightweight agent on your servers (one command), Nexus discovers your network automatically, and you turn on protection. No hardware changes required, and there's zero downtime during setup.
+        </div>
+      </details>
+
+      <details class="glass-panel rounded-2xl group">
+        <summary class="px-8 py-6 cursor-pointer text-white font-medium flex items-center justify-between list-none">
+          Will it slow down my network?
+          <svg class="w-5 h-5 text-white/40 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-8 pb-6 text-sm text-slate-400 leading-relaxed">
+          No. The Nexus agent uses less than 1% CPU and minimal memory. It operates passively by analyzing network metadata rather than inspecting full packet payloads, so your applications won't see any performance impact.
+        </div>
+      </details>
+
+      <details class="glass-panel rounded-2xl group">
+        <summary class="px-8 py-6 cursor-pointer text-white font-medium flex items-center justify-between list-none">
+          What compliance standards does Nexus support?
+          <svg class="w-5 h-5 text-white/40 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-8 pb-6 text-sm text-slate-400 leading-relaxed">
+          Nexus generates audit-ready reports for SOC 2 Type II, ISO 27001, HIPAA, and GDPR out of the box. Enterprise customers can also configure custom compliance frameworks, including FedRAMP. Reports are available on-demand or can be scheduled for automatic delivery.
+        </div>
+      </details>
+
+      <details class="glass-panel rounded-2xl group">
+        <summary class="px-8 py-6 cursor-pointer text-white font-medium flex items-center justify-between list-none">
+          Can I try Nexus for free?
+          <svg class="w-5 h-5 text-white/40 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-8 pb-6 text-sm text-slate-400 leading-relaxed">
+          Yes. The Starter plan is completely free for up to 50 endpoints with no time limit. You can also start a 14-day free trial of the Professional plan — no credit card required. If you need to evaluate Enterprise features, contact our sales team for a guided demo.
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== 11. FINAL CTA & FOOTER ========== -->
+<section class="min-h-[70vh] relative z-10 flex flex-col justify-between pt-32 px-6 border-t border-white/5">
+  <div class="flex-1 flex flex-col items-center justify-center text-center gs-reveal">
+    <h2 class="text-5xl md:text-7xl mb-6 font-light">Ready to secure<br>your network?</h2>
+    <p class="text-white/40 mb-10 max-w-lg">Join 2,400+ security teams already using Nexus. Setup takes under 10 minutes and the Starter plan is free forever.</p>
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <a href="#" class="bg-white text-black font-semibold px-10 py-4 rounded-full glow-button hover:scale-105 transition-transform">
+        Start Free Trial
+      </a>
+      <a href="#" class="text-sm text-white/50 hover:text-white transition-colors font-medium px-6 py-4">
+        Talk to Sales
+      </a>
+    </div>
+  </div>
+
+  <footer class="w-full pb-8 pt-10 border-t border-white/5 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
+      <div>
+        <span class="text-lg font-extrabold tracking-[0.25em] bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-500 block mb-3">NEXUS</span>
+        <p class="text-xs text-slate-500 max-w-xs">Real-time network security and infrastructure monitoring for modern teams.</p>
+      </div>
+      <div class="flex gap-12 text-xs text-slate-500">
+        <div class="space-y-3">
+          <p class="text-white/40 font-semibold uppercase tracking-wider text-[10px]">Product</p>
+          <a href="#" class="block hover:text-white transition-colors">Features</a>
+          <a href="#" class="block hover:text-white transition-colors">Pricing</a>
+          <a href="#" class="block hover:text-white transition-colors">Integrations</a>
+          <a href="#" class="block hover:text-white transition-colors">Changelog</a>
+        </div>
+        <div class="space-y-3">
+          <p class="text-white/40 font-semibold uppercase tracking-wider text-[10px]">Company</p>
+          <a href="#" class="block hover:text-white transition-colors">About</a>
+          <a href="#" class="block hover:text-white transition-colors">Blog</a>
+          <a href="#" class="block hover:text-white transition-colors">Careers</a>
+          <a href="#" class="block hover:text-white transition-colors">Contact</a>
+        </div>
+        <div class="space-y-3">
+          <p class="text-white/40 font-semibold uppercase tracking-wider text-[10px]">Legal</p>
+          <a href="#" class="block hover:text-white transition-colors">Privacy</a>
+          <a href="#" class="block hover:text-white transition-colors">Terms</a>
+          <a href="#" class="block hover:text-white transition-colors">Security</a>
+          <a href="#" class="block hover:text-white transition-colors">Status</a>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col md:flex-row justify-between items-center text-xs text-slate-600 pt-6 border-t border-white/5">
+      <p>© 2026 Nexus Infrastructure. All rights reserved.</p>
+      <p class="mt-2 md:mt-0">SOC 2 Type II Certified · ISO 27001 Compliant</p>
+    </div>
+  </footer>
+</section>
+
+<!-- ========== THREE.JS & ANIMATIONS ========== -->
+<script>
+// --- THREE.JS ---
+const canvas = document.getElementById('webgl-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 18);
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const globeGroup = new THREE.Group();
+scene.add(globeGroup);
+
+const geometry = new THREE.IcosahedronGeometry(5, 2);
+const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0x0f4c81, wireframe: true, transparent: true, opacity: 0.8 });
+const coreSphere = new THREE.Mesh(geometry, wireframeMaterial);
+globeGroup.add(coreSphere);
+
+const shieldGeometry = new THREE.IcosahedronGeometry(5.15, 4);
+const vertexShader = `
+  varying vec3 vNormal; varying vec3 vPosition;
+  void main() {
+    vNormal = normalize(normalMatrix * normal);
+    vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const fragmentShader = `
+  varying vec3 vNormal; varying vec3 vPosition;
+  void main() {
+    vec3 viewDirection = normalize(-vPosition);
+    float fresnel = clamp(1.0 - dot(viewDirection, vNormal), 0.0, 1.0);
+    fresnel = pow(fresnel, 6.0);
+    vec3 rimColor = vec3(0.1, 0.4, 0.8);
+    gl_FragColor = vec4(rimColor, fresnel * 0.9);
+  }
+`;
+const shieldMaterial = new THREE.ShaderMaterial({ vertexShader, fragmentShader, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+globeGroup.add(new THREE.Mesh(shieldGeometry, shieldMaterial));
+
+const particleCount = 150;
+const particleGeometry = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+for(let i = 0; i < particleCount; i++) {
+  const r = 6.5 + Math.random() * 7.5;
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos((Math.random() * 2) - 1);
+  particlePositions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+  particlePositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+  particlePositions[i*3+2] = r * Math.cos(phi);
+}
+particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+const particles = new THREE.Points(particleGeometry, new THREE.PointsMaterial({ size: 0.04, color: 0x00e5ff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending }));
+globeGroup.add(particles);
+
+const clock = new THREE.Clock();
+function animate() {
+  const t = clock.getElapsedTime();
+  globeGroup.rotation.y = t * 0.05;
+  globeGroup.rotation.x = t * 0.02;
+  const s = 1 + Math.sin(t * 0.5) * 0.015;
+  globeGroup.scale.set(s, s, s);
+  particles.rotation.y = t * -0.02;
+  particles.rotation.z = t * 0.01;
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// --- GSAP ---
+gsap.registerPlugin(ScrollTrigger);
+
+const tl3D = gsap.timeline({
+  scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
+});
+tl3D.to(camera.position, { z: 22, y: -2, ease: "power1.inOut", duration: 1 }, 0)
+  .to(wireframeMaterial.color, { r: 0.3, g: 0.3, b: 0.3, ease: "power1.inOut", duration: 1 }, 0)
+  .to(globeGroup.position, { x: 4, ease: "power1.inOut", duration: 1 }, 0)
+  .to(globeGroup.position, { y: -15, x: 0, duration: 1.5, ease: "power2.inOut" }, 1)
+  .to(globeGroup.rotation, { x: Math.PI / 2, duration: 1.5 }, 1)
+  .to(globeGroup.position, { y: 0, z: -10, duration: 1.5 }, 2.5)
+  .to(globeGroup.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 1.5 }, 2.5)
+  .to(globeGroup.position, { y: -20, z: -20, duration: 2 }, 4);
+
+gsap.utils.toArray('.gs-reveal').forEach(elem => {
+  gsap.fromTo(elem, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: elem, start: "top 85%" } });
+});
+
+gsap.fromTo('.gs-feature', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: ".gs-feature", start: "top 80%" } });
+
+gsap.fromTo('#showcase-ui', { rotationX: 15, rotationY: -5, y: 100, opacity: 0, scale: 0.9 }, { rotationX: 0, rotationY: 0, y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power2.out", scrollTrigger: { trigger: "#showcase-ui", start: "top 85%", end: "top 40%", scrub: 1 } });
+
+gsap.utils.toArray('.gs-step').forEach(elem => {
+  gsap.fromTo(elem, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", scrollTrigger: { trigger: elem, start: "top 80%" } });
+});
+</script>
+
+</body></html>

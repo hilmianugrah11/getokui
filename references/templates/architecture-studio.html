@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architectural Innovations</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<!-- Three.js for WebGL Effects -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+.font-serif-custom { font-family: 'Playfair Display', serif; }
+.font-sans-custom { font-family: 'Inter', sans-serif; }
+/* Marquee Animation */
+.marquee-track {
+display: flex;
+width: max-content;
+animation: marquee 20s linear infinite;
+}
+@keyframes marquee {
+to { transform: translateX(-50%); }
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="bg-[#E3E7E0] text-[#2A3324] font-sans-custom font-light antialiased relative overflow-x-hidden">
+
+    <!-- Vertical Container Lines -->
+    <div class="fixed inset-0 pointer-events-none z-0 flex justify-center w-full">
+        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between border-x border-[#C4CFC0]/60">
+            <div class="h-full border-r border-[#C4CFC0]/60 w-1/3 hidden md:block"></div>
+            <div class="h-full border-r border-[#C4CFC0]/60 w-1/3 hidden md:block"></div>
+        </div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header Navigation -->
+        <header class="py-6 flex justify-between items-start border-b border-[#C4CFC0]">
+            <nav class="flex flex-wrap gap-x-4 gap-y-2 text-base uppercase tracking-widest text-[#2A3324]/70">
+                <a href="#" class="hover:text-[#2A3324] transition-colors">Studio</a>
+                <span>/</span>
+                <a href="#" class="hover:text-[#2A3324] transition-colors">Expertise</a>
+                <span>/</span>
+                <a href="#" class="hover:text-[#2A3324] transition-colors">Vision</a>
+                <span>/</span>
+                <a href="#" class="hover:text-[#2A3324] transition-colors">Portfolio</a>
+                <span>/</span>
+                <a href="#" class="hover:text-[#2A3324] transition-colors">Journal</a>
+            </nav>
+            <div class="hidden sm:block text-[#5C715E]">
+                <iconify-icon icon="solar:arrow-right-up-linear" class="text-4xl"></iconify-icon>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="pt-16 pb-12 md:pt-24 md:pb-16 relative">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 relative z-10">
+                <h1 class="font-serif-custom text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-none tracking-tight font-normal w-full md:w-3/4">
+                    Architectural <br>
+                    <span class="italic pr-4">Innovations</span> <span class="hidden md:inline-block w-24 h-[2px] bg-[#2A3324] align-middle mb-4"></span> Habitats
+                </h1>
+                
+                <div class="mt-8 md:mt-0 md:w-1/4 flex flex-col items-start md:items-end text-left md:text-right">
+                    <a href="#contact" class="inline-block border-b border-[#2A3324] pb-1 mb-6 text-base uppercase tracking-widest hover:opacity-70 transition-opacity">Discuss Project</a>
+                    <div class="relative w-40 h-32 md:w-48 md:h-40 group cursor-pointer webgl-measure" data-grayscale="true">
+                        <div class="absolute inset-0 w-full h-full bg-transparent">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/69c241bd-fe7d-481f-8b0c-0a5ba80fb29e_800w.webp" alt="Small project preview" class="webgl-img w-full h-full object-cover opacity-0">
+                        </div>
+                        <div class="absolute bottom-2 left-2 bg-[#2A3324] text-[#E3E7E0] p-1 rounded-sm flex items-center justify-center z-10">
+                            <iconify-icon icon="solar:arrow-right-linear" class="text-base"></iconify-icon>
+                        </div>
+                    </div>
+                    <p class="text-sm mt-4 text-[#2A3324]/70 text-left">Developing timeless structures with minimal environmental footprint, altering the way we inhabit spaces.</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center py-4 border-y border-[#C4CFC0] text-base uppercase tracking-widest text-[#2A3324]/70">
+                <span>Alpine Retreat Concept</span>
+                <span class="hidden sm:block">2024</span>
+                <span>Minimalist Dwelling</span>
+            </div>
+
+            <!-- WebGL Enhanced Hero Image -->
+            <div class="webgl-measure mt-4 w-full h-[400px] md:h-[600px] lg:h-[700px] relative">
+                <div class="absolute inset-0 w-full h-full bg-transparent">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/33f44bf5-8b59-437b-a1e3-87e3db3f82ec_1600w.webp" alt="Modern wooden house exterior" class="webgl-img w-full h-full object-cover opacity-0">
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center py-3 text-base text-[#2A3324]/70">
+                <span>Featured Work</span>
+                <a href="#" class="hover:text-[#2A3324] transition-colors">Explore Project</a>
+            </div>
+        </section>
+
+        <!-- Logos Section (Marquee) -->
+        <section class="py-12 border-t border-[#C4CFC0] overflow-hidden">
+            <p class="text-base text-[#2A3324]/60 uppercase tracking-widest mb-8 text-center md:text-left">Trusted by industry leaders</p>
+            <div class="w-full relative">
+                <div class="marquee-track flex gap-16 md:gap-32 items-center opacity-70">
+                    <iconify-icon icon="simple-icons:nasa" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:spacex" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:uber" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:visa" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:sony" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:bose" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:nasa" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:spacex" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:uber" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:visa" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:sony" class="text-6xl"></iconify-icon>
+                    <iconify-icon icon="simple-icons:bose" class="text-6xl"></iconify-icon>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro / About -->
+        <section class="py-16 md:py-24 border-t border-[#C4CFC0]">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-8">
+                    <h2 class="reveal-text font-serif-custom text-4xl sm:text-5xl md:text-6xl tracking-tight font-normal leading-tight pr-0 md:pr-12">
+                        At Vanguardis, we are committed to engineering progressive habitats that integrate seamlessly with their surroundings while defining modern living standards.
+                    </h2>
+                    <div class="mt-8">
+                        <a href="#" class="text-lg uppercase tracking-widest border-b border-[#2A3324] pb-1 hover:opacity-70 transition-opacity">Our Studio</a>
+                    </div>
+                </div>
+                <div class="md:col-span-4 flex flex-col justify-between">
+                    <p class="text-lg text-[#2A3324]/80 mb-8 md:mb-0">
+                        We pioneer a forward-thinking approach by fusing advanced structural engineering with ecological awareness. From passive thermal systems to the deliberate selection of regional materials, every endeavor is a testament to longevity and spatial harmony.
+                    </p>
+                    
+                    <!-- WebGL Enhanced Detail Image -->
+                    <div class="webgl-measure relative w-full h-48 mt-auto group cursor-pointer">
+                        <div class="absolute inset-0 w-full h-full bg-transparent">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7779de4b-5917-4029-a549-ad23ff8ff120_800w.webp" alt="Interior detail" class="webgl-img w-full h-full object-cover opacity-0">
+                        </div>
+                        <div class="absolute top-2 right-2 bg-[#2A3324] text-[#E3E7E0] p-2 rounded-sm group-hover:bg-[#5C715E] transition-colors flex items-center justify-center z-10">
+                            <iconify-icon icon="solar:arrow-right-linear" class="text-xl"></iconify-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section class="py-16 md:py-24 border-t border-[#C4CFC0]">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
+                <div>
+                    <span class="text-base uppercase tracking-widest text-[#2A3324]/70 block mb-6">Expertise</span>
+                    <h2 class="font-serif-custom text-4xl md:text-5xl tracking-tight font-normal">
+                        Engineering Precision<br>Solutions for Any Scale
+                    </h2>
+                </div>
+                <a href="#" class="mt-6 md:mt-0 text-lg uppercase tracking-widest border-b border-[#2A3324] pb-1 hover:opacity-70 transition-opacity">Explore All</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-[#D5DBD1] p-8 md:p-10 flex flex-col h-full border-t-2 border-[#2A3324]">
+                    <span class="text-lg font-normal text-[#2A3324]/50 mb-6">01</span>
+                    <h3 class="font-serif-custom text-3xl tracking-tight font-normal mb-8 pr-8 leading-tight">Spatial<br>Architecture<br>Design</h3>
+                    <div class="mt-auto">
+                        <p class="text-lg text-[#2A3324]/70 mb-8">We engineer structural frameworks that optimize spatial flow, light penetration, and material efficiency for modern demands.</p>
+                        <div class="flex justify-start">
+                            <button class="bg-[#2A3324] text-[#E3E7E0] p-3 hover:bg-[#5C715E] transition-colors rounded-sm flex items-center justify-center">
+                                <iconify-icon icon="solar:arrow-right-linear" class="text-xl"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-[#D5DBD1] p-8 md:p-10 flex flex-col h-full border-t-2 border-[#5C715E]">
+                    <span class="text-lg font-normal text-[#2A3324]/50 mb-6">02</span>
+                    <h3 class="font-serif-custom text-3xl tracking-tight font-normal mb-8 pr-8 leading-tight">Ecological<br>Integration<br>Strategy</h3>
+                    <div class="mt-auto">
+                        <p class="text-lg text-[#2A3324]/70 mb-8">Our specialists provide blueprints for implementing passive energy systems and reducing overall structural carbon footprint.</p>
+                        <div class="flex justify-end">
+                            <button class="bg-[#5C715E] text-[#E3E7E0] p-3 hover:bg-[#2A3324] transition-colors rounded-sm flex items-center justify-center">
+                                <iconify-icon icon="solar:arrow-right-linear" class="text-xl"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#D5DBD1] p-8 md:p-10 flex flex-col h-full border-t-2 border-[#2A3324]">
+                    <span class="text-lg font-normal text-[#2A3324]/50 mb-6">03</span>
+                    <h3 class="font-serif-custom text-3xl tracking-tight font-normal mb-8 pr-8 leading-tight">Lifecycle<br>Planning<br>&amp; Execution</h3>
+                    <div class="mt-auto">
+                        <p class="text-lg text-[#2A3324]/70 mb-8">From initial schematics to final structural deployment, we manage the complete lifecycle of your architectural project.</p>
+                        <div class="flex justify-end">
+                            <button class="bg-[#5C715E] text-[#E3E7E0] p-3 hover:bg-[#2A3324] transition-colors rounded-sm flex items-center justify-center">
+                                <iconify-icon icon="solar:arrow-right-linear" class="text-xl"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-16 md:py-24 border-t border-[#C4CFC0]">
+            <div class="mb-12 md:mb-16">
+                <span class="text-base uppercase tracking-widest text-[#2A3324]/70">Client Perspectives</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+                <div class="flex flex-col h-full">
+                    <p class="font-serif-custom text-2xl lg:text-3xl tracking-tight font-normal italic mb-8 flex-grow">"Vanguardis transformed our operational brief into a physical reality that exceeds all structural and aesthetic expectations."</p>
+                    <div class="flex items-center gap-4 pt-6 border-t border-[#C4CFC0]/60 mt-auto">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&h=150&auto=format&fit=crop" alt="Client" class="w-12 h-12 rounded-full object-cover shadow-sm">
+                        <div>
+                            <p class="text-sm uppercase tracking-widest text-[#2A3324] font-normal">Elena Rostova</p>
+                            <p class="text-xs uppercase tracking-widest text-[#2A3324]/60">Director, Nexus Corp</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col h-full">
+                    <p class="font-serif-custom text-2xl lg:text-3xl tracking-tight font-normal italic mb-8 flex-grow">"Their approach to passive thermal systems reduced our energy overhead drastically, without compromising the minimalist aesthetic we demanded."</p>
+                    <div class="flex items-center gap-4 pt-6 border-t border-[#C4CFC0]/60 mt-auto">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&h=150&auto=format&fit=crop" alt="Client" class="w-12 h-12 rounded-full object-cover shadow-sm">
+                        <div>
+                            <p class="text-sm uppercase tracking-widest text-[#2A3324] font-normal">Marcus Lin</p>
+                            <p class="text-xs uppercase tracking-widest text-[#2A3324]/60">Founder, Aura Developments</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col h-full">
+                    <p class="font-serif-custom text-2xl lg:text-3xl tracking-tight font-normal italic mb-8 flex-grow">"Uncompromising precision. The entire lifecycle planning executed by their studio was flawless from the initial sketches to deployment."</p>
+                    <div class="flex items-center gap-4 pt-6 border-t border-[#C4CFC0]/60 mt-auto">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=150&h=150&auto=format&fit=crop" alt="Client" class="w-12 h-12 rounded-full object-cover shadow-sm">
+                        <div>
+                            <p class="text-sm uppercase tracking-widest text-[#2A3324] font-normal">Sarah Jenkins</p>
+                            <p class="text-xs uppercase tracking-widest text-[#2A3324]/60">VP Operations, Meridian</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Full Width Image Block (Parallax) -->
+        <section class="py-8 border-t border-[#C4CFC0]">
+            <div class="relative w-full h-[500px] md:h-[700px] flex items-center justify-center text-center overflow-hidden parallax-container">
+                <div class="absolute inset-0 z-0 h-[130%] -top-[15%] w-full parallax-img">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1011c60a-8855-4004-9fb1-f4ec3c3c6c6f_1600w.webp" alt="Architecture structural wood" class="w-full h-full object-cover brightness-75">
+                </div>
+                <div class="relative z-10 text-[#E3E7E0] px-4">
+                    <span class="text-base uppercase tracking-widest mb-4 block">Perspective</span>
+                    <h2 class="font-serif-custom text-5xl md:text-7xl lg:text-8xl tracking-tight font-normal leading-tight">
+                        Construct Your<br>Masterpiece
+                    </h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- Details / Stats -->
+        <section class="py-16 md:py-24 border-t border-[#C4CFC0]">
+            <div class="flex justify-end mb-8">
+                <span class="text-base uppercase tracking-widest text-[#2A3324]/70">Metrics</span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <div class="flex flex-col justify-between">
+                    <p class="text-lg text-[#2A3324]/80 mb-12 lg:pr-12">
+                        Every structure we engineer reflects our dedication to establishing enduring, resilient habitats that accommodate future generations while respecting current topographies.
+                    </p>
+                    
+                    <!-- WebGL Enhanced Stats Image -->
+                    <div class="webgl-measure relative w-full h-64 md:h-80 mt-auto">
+                        <div class="absolute inset-0 w-full h-full bg-transparent">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5299d143-9d4c-4971-8471-be515b29c79e_1600w.webp" alt="Modern building structure" class="webgl-img w-full h-full object-cover mt-auto opacity-0">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="font-serif-custom text-4xl md:text-5xl tracking-tight font-normal mb-12">
+                        Forward-Thinking Spaces,<br>Engineered for Longevity
+                    </h2>
+                    
+                    <div class="flex flex-col text-lg">
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0]">
+                            <span class="text-[#2A3324]/70">Execution Year</span>
+                            <span class="font-normal">2024</span>
+                        </div>
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0]">
+                            <span class="text-[#2A3324]/70">Total Floor Area</span>
+                            <span class="font-normal">14,500 sq meters</span>
+                        </div>
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0]">
+                            <span class="text-[#2A3324]/70">Locally Sourced Materials</span>
+                            <span class="font-normal">85% by volume</span>
+                        </div>
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0]">
+                            <span class="text-[#2A3324]/70">Thermal Efficiency Rating</span>
+                            <span class="font-normal">A+ Certified</span>
+                        </div>
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0]">
+                            <span class="text-[#2A3324]/70">Energy Autonomy</span>
+                            <span class="font-normal">Solar Grid Integration</span>
+                        </div>
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0]">
+                            <span class="text-[#2A3324]/70">Structural Lifespan Est.</span>
+                            <span class="font-normal">120+ Years</span>
+                        </div>
+                        <div class="flex justify-between py-5 border-t border-[#C4CFC0] border-b">
+                            <span class="text-[#2A3324]/70">Maintenance Reduction</span>
+                            <span class="font-normal">30% lower overhead</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16 md:py-24 border-t border-[#C4CFC0] flex flex-col items-start relative">
+            <div class="flex justify-between w-full items-center mb-8">
+                <div class="flex gap-2">
+                    <button class="bg-[#2A3324] text-[#E3E7E0] p-2 hover:bg-[#5C715E] transition-colors rounded-sm flex items-center justify-center">
+                        <iconify-icon icon="solar:arrow-left-linear" class="text-xl"></iconify-icon>
+                    </button>
+                    <button class="bg-[#2A3324] text-[#E3E7E0] p-2 hover:bg-[#5C715E] transition-colors rounded-sm flex items-center justify-center">
+                        <iconify-icon icon="solar:arrow-right-linear" class="text-xl"></iconify-icon>
+                    </button>
+                </div>
+                <a href="#" class="text-lg uppercase tracking-widest border-b border-[#2A3324] pb-1 hover:opacity-70 transition-opacity">Full Archive</a>
+            </div>
+            
+            <div class="flex justify-between items-end w-full">
+                <h2 class="font-serif-custom text-6xl md:text-8xl lg:text-9xl tracking-tight font-normal leading-none z-10">
+                    Initiate Your<br>Next Structure
+                </h2>
+                <div class="text-[#5C715E] hidden md:block z-10">
+                    <iconify-icon icon="solar:arrow-right-up-linear" class="text-8xl lg:text-9xl" style="stroke-width: 1px;"></iconify-icon>
+                </div>
+            </div>
+            
+            <!-- Abstract background graphic -->
+            <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none w-1/2 h-full z-0 flex items-end justify-end overflow-hidden">
+                <svg viewBox="0 0 100 100" class="w-[800px] h-[800px] stroke-[#2A3324] fill-none stroke-[0.2]" preserveAspectRatio="none">
+                    <path d="M10,90 L90,90 L90,10 L50,40 Z M30,90 L30,50 L70,50 L70,90"></path>
+                    <line x1="10" y1="10" x2="90" y2="90"></line>
+                    <line x1="10" y1="30" x2="90" y2="30"></line>
+                    <line x1="10" y1="50" x2="90" y2="50"></line>
+                    <line x1="10" y1="70" x2="90" y2="70"></line>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="py-16 md:py-24 border-t border-[#C4CFC0]" id="contact">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+                <div class="flex flex-col">
+                    <span class="text-base uppercase tracking-widest text-[#2A3324]/70 block mb-6">Inquiries</span>
+                    <h2 class="font-serif-custom text-5xl md:text-6xl lg:text-7xl tracking-tight font-normal leading-tight mb-12">
+                        Let's discuss<br>your next project.
+                    </h2>
+                    <div class="flex flex-col gap-8 mt-auto">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-[#2A3324]/50 mb-2">Headquarters</p>
+                            <p class="text-lg">124 Vanguard Way<br>Architecture District<br>London, UK</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-[#2A3324]/50 mb-2">Direct Communications</p>
+                            <a href="mailto:studio@vanguardis.com" class="text-lg block hover:opacity-70 transition-opacity">studio@vanguardis.com</a>
+                            <a href="tel:+442012345678" class="text-lg block hover:opacity-70 transition-opacity mt-1">+44 20 1234 5678</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#D5DBD1] p-8 md:p-12 border-t-2 border-[#2A3324] flex flex-col justify-center">
+                    <form class="flex flex-col gap-8">
+                        <div class="relative">
+                            <input type="text" id="name" class="w-full bg-transparent border-b border-[#2A3324]/30 py-4 text-base focus:outline-none focus:border-[#2A3324] transition-colors placeholder-[#2A3324]/50" placeholder="Full Name">
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="email" class="w-full bg-transparent border-b border-[#2A3324]/30 py-4 text-base focus:outline-none focus:border-[#2A3324] transition-colors placeholder-[#2A3324]/50" placeholder="Email Address">
+                        </div>
+                        
+                        <!-- Custom Select Dropdown UI -->
+                        <div class="relative group cursor-pointer">
+                            <div class="w-full bg-transparent border-b border-[#2A3324]/30 py-4 flex items-center justify-between group-hover:border-[#2A3324] transition-colors">
+                                <span class="text-base text-[#2A3324]/50 group-hover:text-[#2A3324] transition-colors">Project Type</span>
+                                <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl text-[#2A3324]/50 group-hover:text-[#2A3324] transition-colors"></iconify-icon>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <textarea id="message" rows="3" class="w-full bg-transparent border-b border-[#2A3324]/30 py-4 text-base focus:outline-none focus:border-[#2A3324] transition-colors resize-none placeholder-[#2A3324]/50" placeholder="Brief Description"></textarea>
+                        </div>
+                        
+                        <button type="button" class="mt-4 bg-[#2A3324] text-[#E3E7E0] py-4 px-6 text-sm uppercase tracking-widest hover:bg-[#5C715E] transition-colors flex justify-between items-center w-full group">
+                            Submit Inquiry
+                            <iconify-icon icon="solar:arrow-right-linear" class="text-xl group-hover:translate-x-1 transition-transform"></iconify-icon>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#2A3324] text-[#E3E7E0] pt-16 md:pt-24 pb-8 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                <div>
+                    <h3 class="font-serif-custom text-3xl md:text-4xl tracking-tight font-normal mb-6">Vanguardis</h3>
+                    <p class="text-lg text-[#E3E7E0]/70 max-w-sm font-light">
+                        We engage in forging advanced habitats by merging progressive structural engineering with conscious material application.
+                    </p>
+                </div>
+                
+                <div class="flex md:justify-end items-end opacity-10 pointer-events-none select-none mt-12 md:mt-0">
+                    <h3 class="font-serif-custom text-8xl md:text-9xl leading-none tracking-tight">Vanguardis</h3>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-[#E3E7E0]/20 text-base uppercase tracking-widest text-[#E3E7E0]/60">
+                <nav class="flex flex-wrap justify-center gap-x-6 gap-y-4 mb-6 md:mb-0">
+                    <a href="#" class="hover:text-[#E3E7E0] transition-colors">Studio</a>
+                    <a href="#" class="hover:text-[#E3E7E0] transition-colors">Expertise</a>
+                    <a href="#" class="hover:text-[#E3E7E0] transition-colors">Vision</a>
+                    <a href="#" class="hover:text-[#E3E7E0] transition-colors">Portfolio</a>
+                    <a href="#" class="hover:text-[#E3E7E0] transition-colors">Journal</a>
+                </nav>
+                <p>© 2024 Vanguardis Ltd.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Animation Scripts -->
+    <script>
+        // --- GSAP Animations ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        const revealElements = document.querySelectorAll('.reveal-text');
+        revealElements.forEach(el => {
+            const text = el.innerText;
+            el.innerHTML = ''; 
+            text.split(' ').forEach(word => {
+                const wrapper = document.createElement('span');
+                wrapper.className = 'inline-block overflow-hidden align-bottom pb-1 -mb-1 mr-[0.25em]';
+                const inner = document.createElement('span');
+                inner.className = 'inline-block translate-y-[110%] reveal-word';
+                inner.innerText = word;
+                wrapper.appendChild(inner);
+                el.appendChild(wrapper);
+            });
+
+            gsap.to(el.querySelectorAll('.reveal-word'), {
+                y: '0%',
+                duration: 0.8,
+                stagger: 0.04,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        gsap.to('.parallax-img', {
+            yPercent: 20,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.parallax-container',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+
+        // --- WebGL Column Split Logic ---
+        
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '1'; 
+        document.body.appendChild(canvas);
+
+        const scene = new THREE.Scene();
+        const cameraZ = 600; 
+        const fov = 2 * Math.atan((window.innerHeight / 2) / cameraZ) * (180 / Math.PI);
+        const camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = cameraZ;
+
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform sampler2D uTexture;
+            uniform vec2 uImageRes;
+            uniform vec2 uPlaneRes;
+            uniform float uColIndex;
+            uniform float uCols;
+            uniform float uGrayscale;
+            varying vec2 vUv;
+
+            void main() {
+                vec2 fullUv = vec2((vUv.x + uColIndex) / uCols, vUv.y);
+                
+                vec2 ratio = vec2(
+                    min((uPlaneRes.x / uPlaneRes.y) / (uImageRes.x / uImageRes.y), 1.0),
+                    min((uPlaneRes.y / uPlaneRes.x) / (uImageRes.y / uImageRes.x), 1.0)
+                );
+                
+                vec2 uv = vec2(
+                    fullUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+                    fullUv.y * ratio.y + (1.0 - ratio.y) * 0.5
+                );
+
+                vec4 color = texture2D(uTexture, uv);
+                float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+                gl_FragColor = vec4(mix(color.rgb, vec3(gray), uGrayscale), color.a);
+            }
+        `;
+
+        const measures = document.querySelectorAll('.webgl-measure');
+        const items = [];
+        const textureLoader = new THREE.TextureLoader();
+        const columnsCount = 4;
+        const baseGeometry = new THREE.PlaneGeometry(1, 1);
+
+        measures.forEach(measure => {
+            const img = measure.querySelector('.webgl-img');
+            const hasGrayscale = measure.hasAttribute('data-grayscale');
+            const group = new THREE.Group();
+            const meshes = [];
+            
+            let targetGrayscale = hasGrayscale ? 1.0 : 0.0;
+            let currentGrayscale = targetGrayscale;
+
+            if (hasGrayscale) {
+                measure.addEventListener('mouseenter', () => { targetGrayscale = 0.0; });
+                measure.addEventListener('mouseleave', () => { targetGrayscale = 1.0; });
+            }
+
+            for (let i = 0; i < columnsCount; i++) {
+                const material = new THREE.ShaderMaterial({
+                    vertexShader,
+                    fragmentShader,
+                    uniforms: {
+                        uTexture: { value: null },
+                        uImageRes: { value: new THREE.Vector2(1, 1) },
+                        uPlaneRes: { value: new THREE.Vector2(1, 1) },
+                        uColIndex: { value: i },
+                        uCols: { value: columnsCount },
+                        uGrayscale: { value: currentGrayscale }
+                    },
+                    transparent: true
+                });
+
+                const mesh = new THREE.Mesh(baseGeometry, material);
+                // Position each column side-by-side to fill the 1x1 group area
+                mesh.position.x = (i / columnsCount) - 0.5 + (1 / (columnsCount * 2));
+                mesh.scale.set(1 / columnsCount, 1, 1);
+                
+                group.add(mesh);
+                meshes.push(mesh);
+            }
+
+            textureLoader.load(img.src, (texture) => {
+                meshes.forEach(mesh => {
+                    mesh.material.uniforms.uTexture.value = texture;
+                    mesh.material.uniforms.uImageRes.value.set(img.naturalWidth || 1, img.naturalHeight || 1);
+                });
+            });
+
+            scene.add(group);
+            items.push({ measure, group, meshes, hasGrayscale, get target() { return targetGrayscale; }, set current(v) { currentGrayscale = v; }, get current() { return currentGrayscale; } });
+        });
+
+        let scrollY = window.scrollY;
+        let smoothScroll = scrollY;
+        const staggers = [0.15, 0.35, 0.20, 0.40]; // Unique stagger factor per column
+
+        function render() {
+            scrollY = window.scrollY;
+            smoothScroll += (scrollY - smoothScroll) * 0.08;
+            
+            let velocity = scrollY - smoothScroll;
+            velocity = Math.max(Math.min(velocity, 300), -300);
+
+            items.forEach(item => {
+                const rect = item.measure.getBoundingClientRect();
+                
+                item.group.position.x = rect.left - window.innerWidth / 2 + rect.width / 2;
+                item.group.position.y = -rect.top + window.innerHeight / 2 - rect.height / 2;
+                item.group.scale.set(rect.width, rect.height, 1);
+
+                if (item.hasGrayscale) {
+                    item.current += (item.target - item.current) * 0.1;
+                }
+
+                item.meshes.forEach((mesh, i) => {
+                    const floatY = -velocity * staggers[i] * 0.8;
+                    mesh.position.y = floatY / rect.height;
+
+                    mesh.material.uniforms.uPlaneRes.value.set(rect.width, rect.height);
+                    if (item.hasGrayscale) {
+                        mesh.material.uniforms.uGrayscale.value = item.current;
+                    }
+                });
+            });
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(render);
+        }
+        
+        if(items.length > 0) {
+            render();
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.fov = 2 * Math.atan((window.innerHeight / 2) / cameraZ) * (180 / Math.PI);
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+
+</body></html>

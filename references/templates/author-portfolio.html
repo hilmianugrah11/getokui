@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jane Doe - Bestselling Author</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet"><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="bg-[#F7F5F0] text-[#2C2825] font-['Inter',sans-serif] antialiased overflow-x-hidden selection:bg-[#C27A63] selection:text-white font-light">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component top-0 w-full -z-10 absolute h-[800px] invert hue-rotate-90 saturate-150 brightness-150" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+  <div data-us-project="EET25BiXxR2StNXZvAzF" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+    <!-- WebGL Background Layer -->
+    <canvas id="webgl-canvas" class="fixed top-0 left-0 w-full h-screen -z-10 opacity-40 pointer-events-none" aria-hidden="true" width="1568" height="1021"></canvas>
+
+    <!-- Top Ticker -->
+    <div class="bg-[#2C2825] text-[#F7F5F0] text-xs uppercase tracking-[0.2rem] py-2 overflow-hidden flex items-center relative w-full h-8">
+      <div class="animate-ticker flex whitespace-nowrap w-max" style="transform: translateX(0);">
+        <span class="px-4">
+          * NEW NOVEL 'ECHOES OF TOMORROW' OUT NOW - ORDER YOUR SIGNED COPY *
+        </span>
+        <span class="px-4">
+          * NEW NOVEL 'ECHOES OF TOMORROW' OUT NOW - ORDER YOUR SIGNED COPY *
+        </span>
+        <span class="px-4">
+          * NEW NOVEL 'ECHOES OF TOMORROW' OUT NOW - ORDER YOUR SIGNED COPY *
+        </span>
+        <span class="px-4">
+          * NEW NOVEL 'ECHOES OF TOMORROW' OUT NOW - ORDER YOUR SIGNED COPY *
+        </span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="nav-bar border-b border-[#2C2825]/10 px-6 py-4 flex justify-between items-center relative z-20 bg-[#F7F5F0]/80 backdrop-blur-md">
+      <div class="text-xl font-normal tracking-tighter uppercase">JANE DOE</div>
+      <nav class="hidden md:flex gap-8 text-xs uppercase tracking-widest text-[#2C2825]/80">
+        <a href="#" class="hover:text-[#C27A63] transition-colors">Books</a>
+        <a href="#" class="hover:text-[#C27A63] transition-colors">About</a>
+        <a href="#" class="hover:text-[#C27A63] transition-colors">Events</a>
+        <a href="#" class="hover:text-[#C27A63] transition-colors">Journal</a>
+        <a href="#" class="hover:text-[#C27A63] transition-colors">More</a>
+      </nav>
+      <div class="flex gap-6 text-xs uppercase tracking-widest">
+        <a href="#" class="hover:text-[#C27A63] transition-colors">Login</a>
+        <a href="#" class="hover:text-[#C27A63] transition-colors">Bag (02)</a>
+      </div>
+    </header>
+
+    <main class="">
+      <!-- Hero Section -->
+      <section class="px-6 pt-16 pb-8 max-w-[1600px] mx-auto min-h-[85vh] flex flex-col justify-between">
+        <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+          <h1 class="hero-title text-5xl md:text-7xl lg:text-8xl leading-none tracking-tight uppercase font-normal max-w-5xl text-balance"><span style="display: inline-block; overflow: hidden; vertical-align: bottom;" class=""><span class="char inline-block translate-y-full opacity-0">C</span><span class="char inline-block translate-y-full opacity-0">R</span><span class="char inline-block translate-y-full opacity-0">A</span><span class="char inline-block translate-y-full opacity-0">F</span><span class="char inline-block translate-y-full opacity-0">T</span><span class="char inline-block translate-y-full opacity-0">I</span><span class="char inline-block translate-y-full opacity-0">N</span><span class="char inline-block translate-y-full opacity-0">G</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">S</span><span class="char inline-block translate-y-full opacity-0">T</span><span class="char inline-block translate-y-full opacity-0">O</span><span class="char inline-block translate-y-full opacity-0">R</span><span class="char inline-block translate-y-full opacity-0">I</span><span class="char inline-block translate-y-full opacity-0">E</span><span class="char inline-block translate-y-full opacity-0">S</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">T</span><span class="char inline-block translate-y-full opacity-0">H</span><span class="char inline-block translate-y-full opacity-0">A</span><span class="char inline-block translate-y-full opacity-0">T</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">L</span><span class="char inline-block translate-y-full opacity-0">I</span><span class="char inline-block translate-y-full opacity-0">N</span><span class="char inline-block translate-y-full opacity-0">G</span><span class="char inline-block translate-y-full opacity-0">E</span><span class="char inline-block translate-y-full opacity-0">R</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">L</span><span class="char inline-block translate-y-full opacity-0">O</span><span class="char inline-block translate-y-full opacity-0">N</span><span class="char inline-block translate-y-full opacity-0">G</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">A</span><span class="char inline-block translate-y-full opacity-0">F</span><span class="char inline-block translate-y-full opacity-0">T</span><span class="char inline-block translate-y-full opacity-0">E</span><span class="char inline-block translate-y-full opacity-0">R</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">T</span><span class="char inline-block translate-y-full opacity-0">H</span><span class="char inline-block translate-y-full opacity-0">E</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">F</span><span class="char inline-block translate-y-full opacity-0">I</span><span class="char inline-block translate-y-full opacity-0">N</span><span class="char inline-block translate-y-full opacity-0">A</span><span class="char inline-block translate-y-full opacity-0">L</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">P</span><span class="char inline-block translate-y-full opacity-0">A</span><span class="char inline-block translate-y-full opacity-0">G</span><span class="char inline-block translate-y-full opacity-0">E</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span><span class="char inline-block translate-y-full opacity-0">&nbsp;</span>&nbsp;</span></h1>
+
+          <div class="hero-meta flex flex-col items-center md:items-end gap-4 shrink-0 pr-8">
+            <div class="w-16 h-16 rounded-full overflow-hidden border border-[#2C2825]/10 group relative">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f59b84ca-1848-4b79-954a-fab4fed151e2_1600w.png" alt="Curator" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+            </div>
+            <button class="w-14 h-14 rounded-full bg-[#C27A63] text-[#F7F5F0] flex items-center justify-center hover:scale-105 transition-transform duration-300 shadow-lg shadow-[#C27A63]/20" aria-label="View Sale">
+              <iconify-icon icon="solar:arrow-right-up-linear" width="24" stroke-width="1.5"></iconify-icon>
+            </button>
+            <div class="text-xs text-center md:text-right mt-2 text-[#2C2825]/80">
+              <p class="font-normal">Latest Release</p>
+              <p>Echoes of Tomorrow</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+          <!-- Item 1 -->
+          <div class="hero-card group relative bg-[#EBE9E4] aspect-[4/5] overflow-hidden p-6 flex flex-col justify-between cursor-pointer border border-transparent hover:border-[#2C2825]/10 transition-colors duration-500">
+            <div class="flex justify-between items-start z-10">
+              <span class="text-xs bg-white/60 backdrop-blur-sm px-2 py-1 uppercase tracking-widest text-[#2C2825]/70">
+                New Release
+              </span>
+            </div>
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dd2b7cc4-b191-41fb-bc2d-77c3ec98efa0_3840w.png" alt="Monolith" class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-out">
+            <div class="flex justify-between items-end z-10 w-full">
+              <span class="uppercase text-sm font-normal text-[#ffffff] tracking-widest">
+                Echoes of Tomorrow
+              </span>
+              <iconify-icon icon="solar:arrow-right-up-linear" width="20" stroke-width="1.5" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300"></iconify-icon>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="hero-card group relative bg-[#EBE9E4] aspect-[4/5] overflow-hidden p-6 flex flex-col justify-between cursor-pointer border border-transparent hover:border-[#2C2825]/10 transition-colors duration-500">
+            <div class="flex justify-between items-start z-10">
+              <span class="text-xs bg-white/60 backdrop-blur-sm px-2 py-1 uppercase tracking-widest text-[#2C2825]/70">
+                Bestseller
+              </span>
+            </div>
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b2a71b4a-3a83-408e-9542-64e2bd8b2114_3840w.png" alt="Spaces" class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-105 transition-transform duration-1000 ease-out">
+            <div class="flex justify-between items-end z-10 w-full">
+              <span class="uppercase text-sm font-normal text-[#ffffff] tracking-widest">
+                The Silent City
+              </span>
+              <iconify-icon icon="solar:arrow-right-up-linear" width="20" stroke-width="1.5" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300"></iconify-icon>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="hero-card group relative bg-[#EBE9E4] aspect-[4/5] overflow-hidden p-6 flex flex-col justify-between cursor-pointer border border-transparent hover:border-[#2C2825]/10 transition-colors duration-500">
+            <div class="flex justify-between items-start z-10">
+              <span class="text-xs bg-white/60 backdrop-blur-sm px-2 py-1 uppercase tracking-widest text-[#2C2825]/70">
+                Anthology
+              </span>
+            </div>
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/86f3165f-3fb4-4573-906a-6d816f7b7a09_3840w.png" alt="Module" class="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-out">
+            <div class="flex justify-between items-end z-10 w-full">
+              <span class="uppercase text-sm font-normal text-[#ffffff] tracking-widest">
+                Whispers in the Dark
+              </span>
+              <iconify-icon icon="solar:arrow-right-up-linear" width="20" stroke-width="1.5" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300"></iconify-icon>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bestsellers Section -->
+      <section class="px-6 py-20 max-w-[1600px] mx-auto border-t border-[#2C2825]/10">
+        <div class="flex justify-between items-end mb-10">
+          <h2 class="text-3xl md:text-4xl tracking-tight uppercase font-normal">
+            Featured Works
+          </h2>
+          <div class="flex gap-2">
+            <button class="w-8 h-8 flex items-center justify-center border border-[#2C2825]/20 hover:bg-[#2C2825] hover:text-[#F7F5F0] transition-colors">
+              <iconify-icon icon="solar:alt-arrow-left-linear" width="16" stroke-width="1.5"></iconify-icon>
+            </button>
+            <button class="w-8 h-8 flex items-center justify-center border border-[#2C2825]/20 hover:bg-[#2C2825] hover:text-[#F7F5F0] transition-colors">
+              <iconify-icon icon="solar:alt-arrow-right-linear" width="16" stroke-width="1.5"></iconify-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Product 1 -->
+          <div class="scroll-up group flex flex-col gap-4">
+            <div class="bg-white aspect-square relative flex items-center justify-center overflow-hidden">
+              <span class="absolute top-4 left-4 text-xs bg-[#F7F5F0] px-2 py-1 text-[#2C2825]/60 uppercase">
+                Limited
+              </span>
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c00a893d-007e-41ef-88e9-f99469b13d3a_3840w.png" alt="Product" class="w-3/4 h-3/4 object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out">
+            </div>
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-between items-start">
+                <h3 class="text-sm uppercase font-normal w-1/2">
+                  Echoes of Tomorrow (Hardcover)
+                </h3>
+                <div class="flex gap-1">
+                  <div class="w-3 h-3 rounded-full bg-blue-600 border border-black/10 cursor-pointer"></div>
+                  <div class="w-3 h-3 rounded-full bg-gray-800 border border-black/10 cursor-pointer opacity-40 hover:opacity-100"></div>
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-xs border-t border-[#2C2825]/10 pt-2 mt-1">
+                <div class="flex items-center gap-1 text-[#C27A63]">
+                  <iconify-icon icon="solar:star-linear" width="12" stroke-width="1.5"></iconify-icon>
+                  <span class="text-[#2C2825]/60">4.9 (120)</span>
+                </div>
+                <span class="font-normal">$24.99</span>
+              </div>
+            </div>
+          </div>
+          <!-- Product 2 -->
+          <div class="scroll-up group flex flex-col gap-4" style="transition-delay: 100ms;">
+            <div class="bg-white aspect-square relative flex items-center justify-center overflow-hidden">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f78afac1-e918-4cd5-99bc-9bd507b541f2_3840w.png" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+            </div>
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-between items-start">
+                <h3 class="text-sm uppercase font-normal w-1/2">
+                  The Silent City (Paperback)
+                </h3>
+                <div class="flex gap-1">
+                  <div class="w-3 h-3 rounded-full bg-slate-200 border border-black/10 cursor-pointer"></div>
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-xs border-t border-[#2C2825]/10 pt-2 mt-1">
+                <div class="flex items-center gap-1 text-[#C27A63]">
+                  <iconify-icon icon="solar:star-linear" width="12" stroke-width="1.5"></iconify-icon>
+                  <span class="text-[#2C2825]/60">4.8 (84)</span>
+                </div>
+                <span class="font-normal">$16.99</span>
+              </div>
+            </div>
+          </div>
+          <!-- Product 3 -->
+          <div class="scroll-up group flex flex-col gap-4" style="transition-delay: 200ms;">
+            <div class="bg-white aspect-square relative flex items-center justify-center overflow-hidden">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/76935085-68ea-4c9b-8cfe-230d59d248d4_3840w.png" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale hover:grayscale-0">
+            </div>
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-between items-start">
+                <h3 class="text-sm uppercase font-normal w-1/2">
+                  Whispers in the Dark
+                </h3>
+                <div class="flex gap-1"></div>
+              </div>
+              <div class="flex justify-between items-center text-xs border-t border-[#2C2825]/10 pt-2 mt-1">
+                <div class="flex items-center gap-1 text-[#C27A63]">
+                  <iconify-icon icon="solar:star-linear" width="12" stroke-width="1.5"></iconify-icon>
+                  <span class="text-[#2C2825]/60">5.0 (22)</span>
+                </div>
+                <span class="font-normal">$18.50</span>
+              </div>
+            </div>
+          </div>
+          <!-- Product 4 -->
+          <div class="scroll-up group flex flex-col gap-4" style="transition-delay: 300ms;">
+            <div class="bg-white aspect-square relative flex items-center justify-center overflow-hidden">
+              <span class="absolute top-4 left-4 text-xs bg-[#F7F5F0] px-2 py-1 text-[#2C2825]/60 uppercase">
+                Signed
+              </span>
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d3490840-0b71-4461-bc8a-052b40095f78_3840w.png" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+            </div>
+            <div class="flex flex-col gap-2">
+              <div class="flex justify-between items-start">
+                <h3 class="text-sm uppercase font-normal w-1/2">
+                  Midnight Sun (Signed Edition)
+                </h3>
+                <div class="flex gap-1">
+                  <div class="w-3 h-3 rounded-full bg-orange-500 border border-black/10 cursor-pointer"></div>
+                  <div class="w-3 h-3 rounded-full bg-blue-900 border border-black/10 cursor-pointer opacity-40"></div>
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-xs border-t border-[#2C2825]/10 pt-2 mt-1">
+                <div class="flex items-center gap-1 text-[#C27A63]">
+                  <iconify-icon icon="solar:star-linear" width="12" stroke-width="1.5"></iconify-icon>
+                  <span class="text-[#2C2825]/60">4.7 (56)</span>
+                </div>
+                <span class="font-normal">$35.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Value Proposition Bar -->
+      <section class="bg-[#2C2825] text-[#F7F5F0] py-16 px-6 relative overflow-hidden">
+        <div class="shimmer-bg absolute top-0 bottom-0 left-0 w-full bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full pointer-events-none"></div>
+        <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 divide-y md:divide-y-0 md:divide-x divide-[#F7F5F0]/20 text-center relative z-10">
+          <div class="scroll-fade flex flex-col items-center gap-4 pt-6 md:pt-0">
+            <iconify-icon icon="solar:book-linear" width="32" stroke-width="1.5" class="text-[#C27A63]"></iconify-icon>
+            <div class="">
+              <h4 class="text-sm uppercase tracking-widest mb-2 font-normal">
+                Immersive Worlds
+              </h4>
+              <p class="text-xs text-[#F7F5F0]/60 max-w-[200px] mx-auto leading-relaxed">
+                Dive into rich, meticulously crafted universes.
+              </p>
+            </div>
+          </div>
+          <div class="scroll-fade flex flex-col items-center gap-4 pt-6 md:pt-0" style="transition-delay: 150ms;">
+            <iconify-icon icon="solar:medal-star-linear" width="32" stroke-width="1.5" class="text-[#C27A63]"></iconify-icon>
+            <div>
+              <h4 class="text-sm uppercase tracking-widest mb-2 font-normal">
+                Award Winning
+              </h4>
+              <p class="text-xs text-[#F7F5F0]/60 max-w-[200px] mx-auto leading-relaxed">
+                Recognized globally for outstanding storytelling.
+              </p>
+            </div>
+          </div>
+          <div class="scroll-fade flex flex-col items-center gap-4 pt-6 md:pt-0" style="transition-delay: 300ms;">
+            <iconify-icon icon="solar:pen-linear" width="32" stroke-width="1.5" class="text-[#C27A63]"></iconify-icon>
+            <div>
+              <h4 class="text-sm uppercase tracking-widest mb-2 font-normal">
+                Signed Copies
+              </h4>
+              <p class="text-xs text-[#F7F5F0]/60 max-w-[200px] mx-auto leading-relaxed">
+                Exclusive autographed editions available directly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section><section class="px-6 py-24 max-w-[1600px] mx-auto border-t border-[#2C2825]/10">
+  <div class="flex flex-col lg:flex-row gap-12 lg:gap-24 items-stretch">
+    <div class="lg:w-5/12 flex flex-col justify-center scroll-fade">
+      <div class="text-xs uppercase tracking-widest text-[#2C2825]/50 mb-8 flex items-center gap-4">
+        <span class="w-12 h-[1px] bg-[#2C2825]/20"></span>
+        From the Archives
+      </div>
+      <h2 class="text-4xl md:text-5xl tracking-tight uppercase font-normal leading-tight mb-8 text-balance">
+        "The memories we bury are the seeds of our future."
+      </h2>
+      <div class="text-sm text-[#2C2825]/70 leading-relaxed mb-10 space-y-4">
+        <p>
+          The city was silent, not with the peace of sleep, but with the heavy anticipation of a drawn breath. Elara stood at the edge of the monolith, her fingers tracing the etched runes that predated the foundation of the world. 
+        </p>
+        <p>
+          She had spent a lifetime running from the echoes, only to find that they had been waiting for her here, at the end of everything. The truth was no longer a shadow to be feared, but a light to be embraced.
+        </p>
+      </div>
+      <a href="#" class="inline-flex items-center gap-3 text-xs uppercase tracking-widest hover:text-[#C27A63] transition-colors group w-fit pb-2 border-b border-[#2C2825]/20 hover:border-[#C27A63]">
+        Read Chapter One
+        <iconify-icon icon="solar:arrow-right-linear" width="16" stroke-width="1.5" class="transform group-hover:translate-x-1 transition-transform"></iconify-icon>
+      </a>
+    </div>
+    <div class="lg:w-7/12 relative min-h-[500px] lg:min-h-[700px] bg-[#EBE9E4] overflow-hidden scroll-fade group" style="transition-delay: 150ms;">
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2ef84b35-6f41-4e21-b9d2-ad54ad740085_3840w.png" alt="Abstract Monolith" class="absolute inset-0 w-full h-full object-cover grayscale mix-blend-multiply opacity-90 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-1000 ease-out">
+      <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-[#2C2825]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+        <div class="bg-[#F7F5F0] p-6 max-w-sm transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-out">
+          <span class="text-[10px] uppercase tracking-widest text-[#2C2825]/60 block mb-2">Featured Excerpt</span>
+          <span class="text-sm uppercase font-normal tracking-wide">Echoes of Tomorrow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section><section class="bg-[#EBE9E4] px-6 py-24 border-t border-[#2C2825]/10">
+  <div class="max-w-[1600px] mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 scroll-fade">
+      <h2 class="text-3xl md:text-4xl tracking-tight uppercase font-normal max-w-lg text-balance">
+        Critical Acclaim
+      </h2>
+      <div class="flex gap-2">
+        <button class="w-8 h-8 flex items-center justify-center border border-[#2C2825]/20 hover:bg-[#2C2825] hover:text-[#F7F5F0] transition-colors" aria-label="Previous Review">
+          <iconify-icon icon="solar:alt-arrow-left-linear" width="16" stroke-width="1.5"></iconify-icon>
+        </button>
+        <button class="w-8 h-8 flex items-center justify-center border border-[#2C2825]/20 hover:bg-[#2C2825] hover:text-[#F7F5F0] transition-colors" aria-label="Next Review">
+          <iconify-icon icon="solar:alt-arrow-right-linear" width="16" stroke-width="1.5"></iconify-icon>
+        </button>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-[#F7F5F0] p-8 md:p-10 flex flex-col justify-between min-h-[300px] scroll-fade hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+        <div class="flex gap-1 text-[#C27A63] mb-6">
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+        </div>
+        <p class="text-lg md:text-xl font-normal leading-relaxed mb-8 text-balance">
+          "A masterclass in world-building. Doe crafts a universe so vivid, it demands to be lived in. Truly unforgettable."
+        </p>
+        <div class="text-xs uppercase tracking-widest text-[#2C2825]/50 flex items-center gap-2">
+          <span class="w-4 h-[1px] bg-[#2C2825]/20"></span>
+          The Times
+        </div>
+      </div>
+      
+      <div class="bg-[#F7F5F0] p-8 md:p-10 flex flex-col justify-between min-h-[300px] scroll-fade hover:shadow-xl hover:-translate-y-1 transition-all duration-500" style="transition-delay: 150ms;">
+        <div class="flex gap-1 text-[#C27A63] mb-6">
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+        </div>
+        <p class="text-lg md:text-xl font-normal leading-relaxed mb-8 text-balance">
+          "Evocative, haunting, and brilliantly paced. The most compelling narrative I've read this entire decade."
+        </p>
+        <div class="text-xs uppercase tracking-widest text-[#2C2825]/50 flex items-center gap-2">
+          <span class="w-4 h-[1px] bg-[#2C2825]/20"></span>
+          Literary Review
+        </div>
+      </div>
+      
+      <div class="bg-[#F7F5F0] p-8 md:p-10 flex flex-col justify-between min-h-[300px] scroll-fade hover:shadow-xl hover:-translate-y-1 transition-all duration-500" style="transition-delay: 300ms;">
+        <div class="flex gap-1 text-[#C27A63] mb-6">
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+          <iconify-icon icon="solar:star-bold" width="16"></iconify-icon>
+        </div>
+        <p class="text-lg md:text-xl font-normal leading-relaxed mb-8 text-balance">
+          "She doesn't just write stories; she constructs emotional architecture. Prepare to be completely immersed."
+        </p>
+        <div class="text-xs uppercase tracking-widest text-[#2C2825]/50 flex items-center gap-2">
+          <span class="w-4 h-[1px] bg-[#2C2825]/20"></span>
+          Guardian
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+      <!-- Feature Split Section -->
+      <section class="px-6 py-24 max-w-[1600px] mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <!-- Image Composition -->
+          <div class="relative h-[600px] w-full bg-[#EBE9E4] overflow-hidden group">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ef35cc34-b859-4a06-aead-1a23ed29140e_3840w.png" alt="Architecture" class="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000 ease-out">
+
+            <!-- Floating Card -->
+            <div class="absolute top-8 left-8 w-48 bg-[#F7F5F0] p-3 shadow-2xl flex flex-col gap-2 transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-700 ease-out">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/cffc2604-ce05-43fc-a3f8-383baa32fd19_3840w.png" alt="Detail" class="w-full aspect-square object-cover grayscale">
+              <div class="flex justify-between items-center text-xs uppercase tracking-widest pt-1 border-t border-[#2C2825]/10 mt-1">
+                <span>Author</span>
+                <iconify-icon icon="solar:arrow-right-up-linear" stroke-width="1.5"></iconify-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Content -->
+          <div class="scroll-slide-up flex flex-col items-start max-w-md lg:ml-12">
+            <h2 class="text-4xl md:text-5xl tracking-tight uppercase font-normal leading-tight mb-6 text-balance">
+              Writing the human
+              <br>
+              experience
+            </h2>
+            <p class="text-sm text-[#2C2825]/70 mb-10 leading-relaxed">
+              Jane Doe is a New York Times bestselling author known for her
+              evocative prose and complex characters. Her work explores the
+              intersections of memory, time, and identity.
+            </p>
+            <a href="#" class="inline-block bg-[#C27A63] text-white text-xs uppercase tracking-widest py-3 px-8 hover:bg-[#2C2825] transition-colors duration-300">
+              Read Biography
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="bg-[#EBE9E4] px-6 py-24">
+        <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div class="lg:col-span-5 scroll-fade">
+            <div class="bg-white p-6 max-w-sm mb-12 shadow-xl shadow-black/5 -mt-10 relative z-10 hidden lg:block">
+              <span class="text-xs uppercase tracking-widest text-[#2C2825]/50 mb-2 block">
+                Next Event
+              </span>
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c81b2af1-393a-4ee6-8b2e-8c5d8e1d63f5_3840w.png" alt="Item" class="w-full aspect-[4/3] object-cover mb-4">
+              <div class="flex justify-between items-center text-sm font-normal uppercase">
+                <span>London Book Fair</span>
+                <span>Oct 12-14</span>
+              </div>
+            </div>
+            <h2 class="text-4xl md:text-5xl tracking-tight uppercase font-normal leading-tight mb-4 text-balance">
+              Reader Questions?
+              <br>
+              Answered here.
+            </h2>
+            <p class="text-sm text-[#2C2825]/70 max-w-md leading-relaxed">
+              Find quick solutions to common queries about book signings,
+              international shipping, and upcoming releases.
+            </p>
+          </div>
+
+          <div class="lg:col-span-7 flex flex-col justify-center">
+            <div class="accordion-group border-t border-[#2C2825]/10">
+              <!-- Q1 -->
+              <div class="accordion-item border-b border-[#2C2825]/10 py-5">
+                <button class="accordion-btn w-full flex justify-between items-center text-left hover:text-[#C27A63] transition-colors group">
+                  <span class="text-sm md:text-base font-normal flex gap-4">
+                    <span class="text-[#2C2825]/40 text-xs">01.</span>
+                    When is your next book coming out?
+                  </span>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="transform transition-transform duration-300 group-[.active]:rotate-180"></iconify-icon>
+                </button>
+                <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out opacity-0">
+                  <p class="text-sm text-[#2C2825]/70 pt-4 pl-8 pb-2 leading-relaxed">
+                    My next novel is currently in the editing phase and is
+                    slated for a Fall 2024 release. Stay tuned to the newsletter
+                    for exclusive cover reveals.
+                  </p>
+                </div>
+              </div>
+              <!-- Q2 -->
+              <div class="accordion-item border-b border-[#2C2825]/10 py-5">
+                <button class="accordion-btn w-full flex justify-between items-center text-left hover:text-[#C27A63] transition-colors group">
+                  <span class="text-sm md:text-base font-normal flex gap-4">
+                    <span class="text-[#2C2825]/40 text-xs">02.</span>
+                    Do you do personalized book signings?
+                  </span>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="transform transition-transform duration-300 group-[.active]:rotate-180"></iconify-icon>
+                </button>
+                <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out opacity-0">
+                  <p class="text-sm text-[#2C2825]/70 pt-4 pl-8 pb-2 leading-relaxed">
+                    Yes, personalized signed copies can be ordered through this
+                    website during special promotional windows.
+                  </p>
+                </div>
+              </div>
+              <!-- Q3 -->
+              <div class="accordion-item border-b border-[#2C2825]/10 py-5">
+                <button class="accordion-btn w-full flex justify-between items-center text-left hover:text-[#C27A63] transition-colors group active">
+                  <span class="text-sm md:text-base font-normal flex gap-4">
+                    <span class="text-[#2C2825]/40 text-xs">03.</span>
+                    Are your books available in other languages?
+                  </span>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="transform transition-transform duration-300 group-[.active]:rotate-180"></iconify-icon>
+                </button>
+                <div class="accordion-content overflow-hidden max-h-[200px] transition-all duration-500 ease-in-out opacity-100">
+                  <p class="text-sm text-[#2C2825]/70 pt-4 pl-8 pb-2 leading-relaxed">
+                    Currently, my works are translated into 15 languages. Check
+                    with your local publishers or Amazon for specific regional
+                    availability.
+                  </p>
+                </div>
+              </div>
+              <!-- Q4 -->
+              <div class="accordion-item border-b border-[#2C2825]/10 py-5">
+                <button class="accordion-btn w-full flex justify-between items-center text-left hover:text-[#C27A63] transition-colors group">
+                  <span class="text-sm md:text-base font-normal flex gap-4">
+                    <span class="text-[#2C2825]/40 text-xs">04.</span>
+                    How long does shipping take for signed copies?
+                  </span>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="transform transition-transform duration-300 group-[.active]:rotate-180"></iconify-icon>
+                </button>
+                <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out opacity-0">
+                  <p class="text-sm text-[#2C2825]/70 pt-4 pl-8 pb-2 leading-relaxed">
+                    Signed copies typically take 2-3 weeks to process and ship,
+                    as I sign them in batches.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Minimal -->
+    <footer class="px-6 pt-16 pb-8 border-t border-[#2C2825]/10 text-[#2C2825] bg-[#F7F5F0]">
+      <div class="max-w-[1600px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+          <div class="flex flex-col">
+            <h2 class="text-2xl font-light tracking-tight uppercase mb-4">Jane Doe</h2>
+            <p class="text-sm text-[#2C2825]/60 leading-relaxed font-light max-w-xs">
+              Award-winning author crafting stories that linger. Based in the Pacific Northwest, weaving tales of magic and reality.
+            </p>
+          </div>
+          <div class="">
+            <h3 class="text-xs uppercase tracking-widest text-[#2C2825] mb-6 font-light">Explore</h3>
+            <nav class="flex flex-col gap-3 text-sm text-[#2C2825]/70 font-light">
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Books &amp; Publications</a>
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">About the Author</a>
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Upcoming Events</a>
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Personal Journal</a>
+            </nav>
+          </div>
+          <div class="">
+            <h3 class="text-xs uppercase tracking-widest text-[#2C2825] mb-6 font-light">Connect</h3>
+            <nav class="flex flex-col gap-3 text-sm text-[#2C2825]/70 font-light">
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Instagram</a>
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Goodreads</a>
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Substack</a>
+              <a href="#" class="hover:text-[#C27A63] transition-colors w-fit">Press Inquiries</a>
+            </nav>
+          </div>
+          <div class="">
+            <h3 class="text-xs uppercase tracking-widest text-[#2C2825] mb-6 font-light">Newsletter</h3>
+            <p class="text-sm text-[#2C2825]/60 mb-4 font-light">
+              Receive updates on new releases, events, and exclusive insights directly to your inbox.
+            </p>
+            <form class="flex flex-col mt-4">
+              <div class="relative">
+                <input type="email" placeholder="Your email address" class="w-full bg-transparent border-b border-[#2C2825]/20 py-2 text-sm focus:outline-none focus:border-[#C27A63] transition-colors placeholder:text-[#2C2825]/40 text-[#2C2825] font-light pr-8" required="">
+                <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 text-[#2C2825]/40 hover:text-[#C27A63] transition-colors" aria-label="Subscribe">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="pt-8 border-t border-[#2C2825]/10 flex flex-col md:flex-row justify-between items-center text-xs uppercase tracking-widest text-[#2C2825]/60 gap-6 md:gap-4 font-light">
+          <span>© 2024 Jane Doe. All rights reserved.</span>
+          <div class="flex flex-wrap justify-center gap-6 md:gap-8">
+            <a href="#" class="hover:text-[#C27A63] transition-colors">Privacy Policy</a>
+            <a href="#" class="hover:text-[#C27A63] transition-colors">Terms of Service</a>
+            <a href="#" class="hover:text-[#C27A63] transition-colors">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      // Text Splitting for Kinetic Typography
+      const splitText = (selector) => {
+          const el = document.querySelector(selector);
+          if(!el) return;
+          const text = el.innerText;
+          el.innerHTML = '';
+          text.split(' ').forEach(word => {
+              const wordSpan = document.createElement('span');
+              wordSpan.style.display = 'inline-block';
+              wordSpan.style.overflow = 'hidden';
+              wordSpan.style.verticalAlign = 'bottom';
+              wordSpan.innerHTML = word.split('').map(char => `<span class="char inline-block translate-y-full opacity-0">${char}</span>`).join('') + '&nbsp;';
+              el.appendChild(wordSpan);
+          });
+      };
+
+      // Accordion Logic
+      document.querySelectorAll('.accordion-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+              const item = this.parentElement;
+              const content = this.nextElementSibling;
+              const isActive = this.classList.contains('active');
+
+              document.querySelectorAll('.accordion-btn').forEach(b => {
+                  b.classList.remove('active');
+                  b.nextElementSibling.style.maxHeight = '0px';
+                  b.nextElementSibling.style.opacity = '0';
+              });
+
+              if (!isActive) {
+                  this.classList.add('active');
+                  content.style.maxHeight = content.scrollHeight + 'px';
+                  content.style.opacity = '1';
+              }
+          });
+      });
+
+      // GSAP Animations
+      document.addEventListener("DOMContentLoaded", (event) => {
+          gsap.registerPlugin(ScrollTrigger);
+          splitText('.hero-title');
+
+          // Ticker Animation
+          gsap.to(".animate-ticker", {
+              xPercent: -50,
+              ease: "none",
+              duration: 25,
+              repeat: -1
+          });
+
+          // Shimmer Background Animation
+          gsap.to(".shimmer-bg", {
+              x: "200%",
+              duration: 3,
+              repeat: -1,
+              ease: "none"
+          });
+
+          // Initial Timeline
+          const masterTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+          masterTl.fromTo("#webgl-canvas", { opacity: 0 }, { opacity: 0.3, duration: 2 }, 0);
+          masterTl.from(".nav-bar", { y: -20, opacity: 0, duration: 1 }, 0.2);
+
+          masterTl.to(".hero-title .char", {
+              y: 0,
+              opacity: 1,
+              stagger: 0.015,
+              duration: 0.8,
+              ease: "back.out(1.4)"
+          }, 0.5);
+
+          masterTl.from(".hero-meta > *", {
+              x: 20,
+              opacity: 0,
+              stagger: 0.1,
+              duration: 0.8
+          }, 1.0);
+
+          masterTl.from(".hero-card", {
+              y: 40,
+              opacity: 0,
+              stagger: 0.15,
+              duration: 1,
+              ease: "power2.out"
+          }, 1.2);
+
+          // Scroll Animations
+          gsap.utils.toArray('.scroll-up').forEach((el) => {
+              gsap.from(el, {
+                  scrollTrigger: { trigger: el, start: "top 85%" },
+                  y: 50, opacity: 0, duration: 0.8, ease: "power2.out"
+              });
+          });
+
+          gsap.utils.toArray('.scroll-fade').forEach((el) => {
+              gsap.from(el, {
+                  scrollTrigger: { trigger: el, start: "top 80%" },
+                  opacity: 0, scale: 0.95, duration: 1, ease: "power2.out"
+              });
+          });
+
+           gsap.from('.scroll-slide-up', {
+              scrollTrigger: { trigger: '.scroll-slide-up', start: "top 80%" },
+              y: 30, opacity: 0, duration: 0.8, ease: "power2.out"
+          });
+      });
+
+      // WebGL Background
+      const canvas = document.getElementById('webgl-canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+      if (gl) {
+          const vertexShaderSource = `
+              attribute vec2 position;
+              void main() { gl_Position = vec4(position, 0.0, 1.0); }
+          `;
+          const fragmentShaderSource = `
+              precision mediump float;
+              uniform vec2 u_resolution;
+              uniform float u_time;
+
+              vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+              vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+              vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+              float snoise(vec2 v) {
+                  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+                  vec2 i  = floor(v + dot(v, C.yy) );
+                  vec2 x0 = v -   i + dot(i, C.xx);
+                  vec2 i1;
+                  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+                  vec4 x12 = x0.xyxy + C.xxzz;
+                  x12.xy -= i1;
+                  i = mod289(i);
+                  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ) );
+                  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+                  m = m*m ;
+                  m = m*m ;
+                  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+                  vec3 h = abs(x) - 0.5;
+                  vec3 ox = floor(x + 0.5);
+                  vec3 a0 = x - ox;
+                  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+                  vec3 g;
+                  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+                  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                  return 130.0 * dot(m, g);
+              }
+
+              void main() {
+                  vec2 st = gl_FragCoord.xy/u_resolution.xy;
+                  st.x *= u_resolution.x/u_resolution.y;
+
+                  vec3 color1 = vec3(0.96, 0.95, 0.94);
+                  vec3 color2 = vec3(0.91, 0.89, 0.85);
+                  vec3 color3 = vec3(0.85, 0.82, 0.78);
+
+                  float n = snoise(st * 2.0 + u_time * 0.05);
+                  float n2 = snoise(st * 4.0 - u_time * 0.08);
+
+                  float mixVal = smoothstep(-1.0, 1.0, n + n2*0.5);
+                  vec3 finalColor = mix(mix(color1, color2, mixVal), color3, smoothstep(0.5, 1.0, mixVal));
+
+                  gl_FragColor = vec4(finalColor, 1.0);
+              }
+          `;
+
+          const createShader = (gl, type, source) => {
+              const shader = gl.createShader(type);
+              gl.shaderSource(shader, source);
+              gl.compileShader(shader);
+              if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                  console.error('Shader error:', gl.getShaderInfoLog(shader));
+                  gl.deleteShader(shader);
+                  return null;
+              }
+              return shader;
+          };
+
+          const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+          const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+          const program = gl.createProgram();
+
+          gl.attachShader(program, vertexShader);
+          gl.attachShader(program, fragmentShader);
+          gl.linkProgram(program);
+          gl.useProgram(program);
+
+          const positionBuffer = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+
+          const positionLocation = gl.getAttribLocation(program, "position");
+          gl.enableVertexAttribArray(positionLocation);
+          gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+          const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+          const timeLocation = gl.getUniformLocation(program, "u_time");
+
+          const resize = () => {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+              gl.viewport(0, 0, canvas.width, canvas.height);
+              gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+          };
+          window.addEventListener('resize', resize);
+          resize();
+
+          let startTime = Date.now();
+          const render = () => {
+              const time = (Date.now() - startTime) * 0.001;
+              gl.uniform1f(timeLocation, time);
+              gl.drawArrays(gl.TRIANGLES, 0, 6);
+              requestAnimationFrame(render);
+          };
+          render();
+      } else {
+          canvas.style.display = 'none';
+      }
+    </script>
+  
+</body></html>

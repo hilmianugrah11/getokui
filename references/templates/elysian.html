@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased scroll-smooth"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editorial Motion Layout</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="bg-[#dcd7ce] text-slate-800 relative font-sans selection:bg-slate-800 selection:text-white w-full overflow-x-hidden">
+    <!-- WebGL Background Layer (Fixed to cover entire scroll) -->
+    <canvas id="webgl-canvas" class="fixed inset-0 w-full h-full z-0 opacity-40 pointer-events-none" width="2144" height="1632" style="width: 1072px; height: 816px;"></canvas>
+
+    <!-- @hero Section -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-6 lg:px-10 lg:py-8 flex justify-between items-center mix-blend-difference text-white pointer-events-none">
+      <a href="#" class="text-xs tracking-[0.3em] font-normal uppercase flex items-center gap-2 pointer-events-auto hover:opacity-80 transition-opacity">
+        <div class="w-2 h-2 bg-white"></div>
+        Elysian
+      </a>
+      <div class="hidden md:flex gap-8 text-xs font-normal uppercase tracking-widest pointer-events-auto">
+        <a href="#feature" class="hover:text-white/70 transition-colors">
+          Work
+        </a>
+        <a href="#pricing" class="hover:text-white/70 transition-colors">
+          Models
+        </a>
+        <a href="#footer" class="hover:text-white/70 transition-colors">
+          Contact
+        </a>
+      </div>
+    </nav>
+    <header id="hero" class="relative w-full h-[100svh] overflow-hidden">
+      <!-- Desktop Layout (Original Absolute Composition) -->
+      <main class="hidden lg:block relative w-full h-full min-h-[700px] max-w-[1920px] mx-auto z-10" id="scene">
+        <!-- TOP LEFT: Text Content -->
+        <div class="absolute top-[12%] left-[6%] w-[28%] z-30" id="el-text-main">
+  <h1 class="text-white text-2xl lg:text-3xl font-normal tracking-tighter uppercase mb-4 overflow-hidden drop-shadow-md">
+    <span class="block translate-y-full opacity-0" data-text-line="">
+              Elysian
+            </span>
+    <span class="block translate-y-full opacity-0" data-text-line="">
+              Constructs
+            </span>
+  </h1>
+  <p class="text-white/90 font-serif text-sm leading-loose tracking-wide overflow-hidden drop-shadow">
+    <span class="block text-slate-600 opacity-0 translate-y-full" data-text-line="">
+              Exploring the delicate balance
+            </span>
+    <span class="block text-slate-600 opacity-0 translate-y-full" data-text-line="">
+              between brutalist geometry and
+            </span>
+    <span class="block text-slate-600 opacity-0 translate-y-full" data-text-line="">
+              organic fluid forms.
+            </span>
+  </p>
+</div>
+
+        <!-- TOP RIGHT: Background Portrait -->
+        <div class="absolute top-0 right-0 w-[42%] h-[60%] z-0 overflow-hidden clip-reveal" id="el-img-tr" style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <div class="w-full h-full scale-110 img-inner">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/679e506e-8085-471a-be28-8c5939bfdaac_3840w.png" alt="Portrait" class="w-full h-full object-cover object-[50%_20%]">
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#dcd7ce]/80 z-10 pointer-events-none" style="mix-blend-mode: multiply;"></div>
+        </div>
+
+        <!-- BOTTOM LEFT: Vertical Architecture Image -->
+        <div class="absolute bottom-[10%] left-[4%] w-[20%] h-[42%] z-20 overflow-hidden shadow-2xl clip-reveal" id="el-img-bl" style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <div class="w-full h-full scale-110 img-inner">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/89239595-8602-42dd-8ad0-8be14bbd9ab8_1600w.png" alt="Architecture" class="w-full h-full object-cover object-center">
+          </div>
+        </div>
+
+        <!-- BOTTOM LEFT: Logo -->
+        <div class="absolute bottom-[4%] left-[4%] flex items-center gap-3 text-white z-20 opacity-0" id="el-logo-bl">
+          <div class="w-3 h-3 bg-white"></div>
+          <span class="text-xs tracking-[0.25em] uppercase font-normal drop-shadow">
+            Aura
+          </span>
+        </div>
+
+        <!-- CENTER: Main Portrait -->
+        <div class="absolute top-1/2 left-[33%] -translate-y-1/2 w-[32%] h-[90%] z-10 overflow-hidden shadow-2xl clip-reveal" id="el-img-center" style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <div class="w-full h-full scale-110 img-inner">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/9460810f-1393-4d5e-89d1-2649a2c10e06_1600w.png" alt="Main Subject" class="w-full h-full object-cover object-[60%_30%]">
+          </div>
+        </div>
+
+        <!-- MID RIGHT: Horizontal Detail -->
+        <div class="absolute top-[42%] right-[14%] w-[24%] h-[28%] z-20 overflow-hidden shadow-xl border-4 border-[#dcd7ce] clip-reveal" id="el-img-mr" style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <div class="w-full h-full scale-110 img-inner">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6dfd2a3f-a95b-4754-9636-92fcc60d98cf_3840w.png" alt="Villa Detail" class="w-full h-full object-cover object-center">
+          </div>
+        </div>
+
+        <!-- BOTTOM RIGHT: Landscape -->
+        <div class="absolute bottom-0 right-0 w-[22%] h-[35%] z-0 overflow-hidden clip-reveal" id="el-img-br" style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <div class="w-full h-full scale-110 img-inner">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6ce97de4-6641-4650-b560-d61042634d39_3840w.png" alt="Landscape" class="w-full h-full object-cover object-left">
+          </div>
+        </div>
+
+        <!-- BOTTOM RIGHT: Info Card -->
+        <div class="absolute bottom-[6%] right-[6%] w-[22%] bg-white/95 backdrop-blur-sm p-6 lg:p-8 z-30 shadow-2xl opacity-0 translate-y-8" id="el-card">
+          <div class="w-8 h-[2px] bg-slate-300 mb-6 origin-left scale-x-0" id="el-card-line"></div>
+
+          <div class="flex gap-4 mb-6 items-start">
+            <div class="w-10 h-14 bg-slate-100 overflow-hidden shrink-0 clip-reveal" id="el-card-thumb" style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+              <div class="w-full h-full scale-110 img-inner">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2f563338-39fa-47ea-9761-658d4f3f84db_1600w.jpg" alt="Thumbnail" class="w-full h-full object-cover">
+              </div>
+            </div>
+            <p class="font-serif text-xs text-slate-500 leading-relaxed opacity-0 translate-y-2" id="el-card-desc">
+              Curated environments engineered for deep focus, tranquility, and
+              aesthetic permanence.
+            </p>
+          </div>
+
+          <ul class="font-serif text-xs text-slate-400 leading-loose mb-8 space-y-1 opacity-0 translate-y-2" id="el-card-list">
+            <li class="">• Minimalist material integration</li>
+            <li class="">• Sustainable raw sourcing</li>
+            <li class="">• Natural light trajectory mapping</li>
+          </ul>
+
+          <div class="text-xs font-normal tracking-[0.2em] uppercase text-slate-900 flex items-center gap-2 opacity-0" id="el-card-logo">
+            <iconify-icon icon="solar:buildings-2-linear" class="text-base" stroke-width="1.5"></iconify-icon>
+            Vertex
+          </div>
+        </div>
+      </main>
+
+      <!-- Mobile Layout (Stacked Fallback) -->
+      <main class="lg:hidden relative w-full h-full flex flex-col px-6 pt-24 pb-12 z-10 overflow-y-auto">
+        <div class="mb-8 z-30" id="mobile-text">
+          <h1 class="text-slate-900 text-3xl font-normal tracking-tight uppercase mb-4 leading-none">
+            Elysian
+            <br>
+            Constructs
+          </h1>
+          <p class="text-slate-600 font-serif text-sm leading-relaxed max-w-sm">
+            Exploring the delicate balance between brutalist geometry and
+            organic fluid forms.
+          </p>
+        </div>
+
+        <div class="relative w-full flex-grow min-h-[40vh] z-10 overflow-hidden shadow-2xl clip-reveal-mobile" id="mobile-img">
+          <div class="w-full h-full scale-110 img-inner-mobile">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/63c7bcf5-f365-4b37-89d3-ef1f59c8df06_1600w.png" alt="Main Subject" class="w-full h-full object-cover object-[60%_30%]">
+          </div>
+        </div>
+
+        <div class="mt-8 bg-white/90 p-6 shadow-xl opacity-0 translate-y-4" id="mobile-card">
+          <div class="w-8 h-[1px] bg-slate-300 mb-4"></div>
+          <p class="font-serif text-xs text-slate-500 leading-relaxed mb-4">
+            Curated environments engineered for deep focus, tranquility, and
+            aesthetic permanence.
+          </p>
+          <div class="text-xs font-normal tracking-[0.2em] uppercase text-slate-900 flex items-center gap-2">
+            <iconify-icon icon="solar:buildings-2-linear" class="text-base" stroke-width="1.5"></iconify-icon>
+            Vertex
+          </div>
+        </div>
+      </main>
+    </header>
+
+    <!-- @feature Section -->
+    <section class="relative z-10 w-full py-24 lg:py-32 bg-transparent" id="feature">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 lg:mb-24 gs-reveal">
+          <div class="">
+            <div class="flex items-center gap-3 text-slate-500 mb-4">
+              <span class="text-xs tracking-[0.2em] uppercase">Phase 01</span>
+              <div class="w-12 h-[1px] bg-slate-400"></div>
+            </div>
+            <h2 class="text-3xl md:text-5xl tracking-tight font-normal text-slate-900 uppercase leading-none">
+              Spatial
+              <br>
+              Dynamics
+            </h2>
+          </div>
+          <p class="text-sm text-slate-600 max-w-md font-serif leading-relaxed">
+            We approach every volume as an opportunity to define light, shadow,
+            and human interaction. Materials are selected not just for
+            appearance, but for resonance.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+          <!-- Feature 1 -->
+          <div class="group gs-reveal">
+            <div class="aspect-[4/5] overflow-hidden mb-6 relative shadow-lg">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/66a059a4-30a7-49f5-870b-88b88f77e54c_3840w.png" class="object-cover w-full h-full transition-transform duration-1000 ease-out group-hover:scale-105" alt="Detail">
+            </div>
+            <h3 class="text-lg tracking-tight font-normal uppercase mb-3">
+              Monolithic Presence
+            </h3>
+            <p class="text-sm text-slate-500 font-serif leading-relaxed max-w-sm">
+              Embracing the weight of raw materials to anchor spaces in their
+              natural environment.
+            </p>
+          </div>
+          <!-- Feature 2 -->
+          <div class="group md:mt-24 gs-reveal">
+            <div class="aspect-[4/5] overflow-hidden mb-6 relative shadow-lg">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/118d304b-41a5-4696-ac99-c179f32c0e0d_3840w.png" class="object-cover w-full h-full transition-transform duration-1000 ease-out group-hover:scale-105" alt="Detail">
+            </div>
+            <h3 class="text-lg tracking-tight font-normal uppercase mb-3">
+              Luminous Interventions
+            </h3>
+            <p class="text-sm text-slate-500 font-serif leading-relaxed max-w-sm">
+              Choreographing natural light to create dynamic, ever-shifting
+              atmospheres throughout the day.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="relative z-10 w-full py-24 lg:py-32 bg-transparent" id="feature-2">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 lg:mb-24 gs-reveal">
+          <div>
+            <div class="flex items-center gap-3 text-slate-500 mb-4">
+              <span class="text-xs tracking-[0.2em] uppercase">Phase 02</span>
+              <div class="w-12 h-[1px] bg-slate-400"></div>
+            </div>
+            <h2 class="text-3xl md:text-5xl tracking-tight font-normal text-slate-900 uppercase leading-none">
+              Material
+              <br>
+              Articulation
+            </h2>
+          </div>
+          <p class="text-sm text-slate-600 max-w-md font-serif leading-relaxed">
+            Sourcing rare and fundamental elements to craft textures that demand
+            tactile engagement and age gracefully, blending raw brutalism with
+            refinement.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+          <!-- Feature 1 -->
+          <div class="group gs-reveal">
+            <div class="aspect-[4/5] overflow-hidden mb-6 relative shadow-lg">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c009c114-54b5-48f1-a3a1-e57084439a3b_3840w.png" class="object-cover w-full h-full transition-transform duration-1000 ease-out group-hover:scale-105" alt="Detail">
+            </div>
+            <h3 class="text-lg tracking-tight font-normal uppercase mb-3">
+              Tactile Resonance
+            </h3>
+            <p class="text-sm text-slate-500 font-serif leading-relaxed max-w-sm">
+              Crafting surfaces that respond to touch and evolve in character
+              over time.
+            </p>
+          </div>
+          <!-- Feature 2 -->
+          <div class="group md:mt-24 gs-reveal">
+            <div class="aspect-[4/5] overflow-hidden mb-6 relative shadow-lg">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c0f7a160-3220-4f82-ae34-cba779fc23b0_3840w.png" class="object-cover w-full h-full transition-transform duration-1000 ease-out group-hover:scale-105" alt="Detail">
+            </div>
+            <h3 class="text-lg tracking-tight font-normal uppercase mb-3">
+              Structural Honesty
+            </h3>
+            <p class="text-sm text-slate-500 font-serif leading-relaxed max-w-sm">
+              Exposing the inherent beauty of constructive elements without
+              superficial adornment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative z-10 w-full py-24 lg:py-32 bg-transparent" id="feature-3">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 lg:mb-24 gs-reveal">
+          <div>
+            <div class="flex items-center gap-3 text-slate-500 mb-4">
+              <span class="text-xs tracking-[0.2em] uppercase">Phase 03</span>
+              <div class="w-12 h-[1px] bg-slate-400"></div>
+            </div>
+            <h2 class="text-3xl md:text-5xl tracking-tight font-normal text-slate-900 uppercase leading-none">
+              Environmental
+              <br>
+              Synthesis
+            </h2>
+          </div>
+          <p class="text-sm text-slate-600 max-w-md font-serif leading-relaxed">
+            Integrating built forms seamlessly with their surrounding landscapes
+            to blur the boundaries between interior and exterior dimensions.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+          <!-- Feature 1 -->
+          <div class="group gs-reveal">
+            <div class="aspect-[4/5] overflow-hidden mb-6 relative shadow-lg">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/21af099b-0394-4466-8639-78834301588e_1600w.png" class="object-cover w-full h-full transition-transform duration-1000 ease-out group-hover:scale-105" alt="Detail">
+            </div>
+            <h3 class="text-lg tracking-tight font-normal uppercase mb-3">
+              Fluid Boundaries
+            </h3>
+            <p class="text-sm text-slate-500 font-serif leading-relaxed max-w-sm">
+              Designing transitions that allow the natural world to effortlessly
+              permeate the living space.
+            </p>
+          </div>
+          <!-- Feature 2 -->
+          <div class="group md:mt-24 gs-reveal">
+            <div class="aspect-[4/5] overflow-hidden mb-6 relative shadow-lg">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4a884687-b9c6-44ee-be82-4350e7ab1015_1600w.png" class="object-cover w-full h-full transition-transform duration-1000 ease-out group-hover:scale-105" alt="Detail">
+            </div>
+            <h3 class="text-lg tracking-tight font-normal uppercase mb-3">
+              Holistic Ecosystems
+            </h3>
+            <p class="text-sm text-slate-500 font-serif leading-relaxed max-w-sm">
+              Ensuring that the architecture actively participates in and
+              supports the local environmental context.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- @testimonial Section -->
+    <section class="relative z-10 w-full py-32 lg:py-48 bg-slate-900 text-[#dcd7ce]" id="testimonial">
+      <div class="max-w-4xl mx-auto px-6 text-center gs-reveal">
+        <iconify-icon icon="solar:quote-left-linear" class="text-4xl text-slate-500 mb-10 opacity-50" stroke-width="1.5"></iconify-icon>
+        <p class="text-2xl md:text-4xl font-serif tracking-tight leading-relaxed mb-12 lg:px-12 text-white/90">
+          "The environment they constructed doesn't just house our operations;
+          it actively shapes the psychology of everyone who enters. A
+          masterclass in pure restraint."
+        </p>
+        <div class="flex items-center justify-center gap-4 text-slate-400">
+          <div class="w-8 h-[1px] bg-slate-600"></div>
+          <span class="text-xs uppercase tracking-[0.2em]">
+            Marcus V., Director
+          </span>
+          <div class="w-8 h-[1px] bg-slate-600"></div>
+        </div>
+      </div>
+    </section>
+    <section class="relative z-10 w-full py-24 lg:py-32 bg-transparent" id="testimonials-grid">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 lg:mb-24 gs-reveal">
+          <h2 class="text-3xl md:text-4xl tracking-tight font-normal uppercase mb-4 text-slate-900">
+            Client Perspectives
+          </h2>
+          <p class="text-sm text-slate-600 font-serif">
+            Reflections on the environments we've shaped.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div class="bg-[#dcd7ce]/50 backdrop-blur-sm p-8 border border-slate-300 hover:bg-white/80 transition-all duration-500 gs-reveal">
+            <iconify-icon icon="solar:quote-left-linear" class="text-3xl text-slate-400 mb-6 opacity-50" stroke-width="1.5"></iconify-icon>
+            <p class="text-sm font-serif text-slate-600 leading-relaxed mb-8">
+              "An absolute transformation of our space. The attention to natural
+              light and raw materials has created a sanctuary we never want to
+              leave. Their vision is truly unique."
+            </p>
+            <div class="flex items-center gap-4 mt-auto">
+              <div class="w-8 h-[1px] bg-slate-400"></div>
+              <span class="text-xs uppercase tracking-[0.2em] text-slate-900 font-normal">
+                Sarah J.
+              </span>
+            </div>
+          </div>
+          <div class="bg-[#dcd7ce]/50 backdrop-blur-sm p-8 border border-slate-300 hover:bg-white/80 transition-all duration-500 gs-reveal">
+            <iconify-icon icon="solar:quote-left-linear" class="text-3xl text-slate-400 mb-6 opacity-50" stroke-width="1.5"></iconify-icon>
+            <p class="text-sm font-serif text-slate-600 leading-relaxed mb-8">
+              "Elysian Constructs delivered beyond our expectations. Their
+              understanding of brutalist geometry combined with fluid organic
+              forms is unparalleled in modern architecture."
+            </p>
+            <div class="flex items-center gap-4 mt-auto">
+              <div class="w-8 h-[1px] bg-slate-400"></div>
+              <span class="text-xs uppercase tracking-[0.2em] text-slate-900 font-normal">
+                David M.
+              </span>
+            </div>
+          </div>
+          <div class="bg-[#dcd7ce]/50 backdrop-blur-sm p-8 border border-slate-300 hover:bg-white/80 transition-all duration-500 gs-reveal">
+            <iconify-icon icon="solar:quote-left-linear" class="text-3xl text-slate-400 mb-6 opacity-50" stroke-width="1.5"></iconify-icon>
+            <p class="text-sm font-serif text-slate-600 leading-relaxed mb-8">
+              "The meticulous curation of every detail in our office has
+              completely shifted our team's dynamic. It is a masterclass in
+              environmental synthesis and pure restraint."
+            </p>
+            <div class="flex items-center gap-4 mt-auto">
+              <div class="w-8 h-[1px] bg-slate-400"></div>
+              <span class="text-xs uppercase tracking-[0.2em] text-slate-900 font-normal">
+                Elena R.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- @pricing Section -->
+    <section class="relative z-10 w-full py-24 lg:py-32 bg-transparent" id="pricing">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 lg:mb-24 gs-reveal">
+          <h2 class="text-3xl md:text-4xl tracking-tight font-normal uppercase mb-4">
+            Engagement Models
+          </h2>
+          <p class="text-sm text-slate-600 font-serif">
+            Tailored structural and spatial interventions.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          <!-- Tier 1 -->
+          <div class="bg-[#dcd7ce]/50 backdrop-blur-sm border border-slate-300 p-8 flex flex-col hover:bg-white/80 transition-all duration-500 gs-reveal">
+            <h3 class="text-sm tracking-[0.1em] font-normal uppercase mb-2 text-slate-500">
+              Phase I
+            </h3>
+            <div class="text-2xl tracking-tight font-normal mb-4 text-slate-900">
+              Concept
+            </div>
+            <p class="text-sm text-slate-600 font-serif mb-8 flex-grow">
+              Initial spatial analysis and material narrative development to
+              define project boundaries.
+            </p>
+            <ul class="text-sm space-y-4 mb-10 text-slate-700 font-serif">
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-400"></iconify-icon>
+                Topographic study
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-400"></iconify-icon>
+                Form exploration
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-400"></iconify-icon>
+                Feasibility report
+              </li>
+            </ul>
+            <button class="w-full py-4 border border-slate-900 text-xs uppercase tracking-[0.2em] hover:bg-slate-900 hover:text-white transition-colors duration-300">
+              Inquire
+            </button>
+          </div>
+
+          <!-- Tier 2 -->
+          <div class="bg-slate-900 border border-slate-800 p-8 flex flex-col shadow-xl -translate-y-2 gs-reveal">
+            <h3 class="text-sm tracking-[0.1em] font-normal uppercase mb-2 text-slate-400">
+              Phase II
+            </h3>
+            <div class="text-2xl tracking-tight font-normal mb-4 text-white">
+              Design
+            </div>
+            <p class="text-sm text-slate-300 font-serif mb-8 flex-grow">
+              Comprehensive architectural drafting, interior flow mapping, and
+              fixture specification.
+            </p>
+            <ul class="text-sm space-y-4 mb-10 text-slate-300 font-serif">
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-500"></iconify-icon>
+                Complete schematics
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-500"></iconify-icon>
+                Material sourcing
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-500"></iconify-icon>
+                Light trajectory modeling
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-500"></iconify-icon>
+                Custom joinery details
+              </li>
+            </ul>
+            <button class="w-full py-4 bg-white text-slate-900 text-xs uppercase tracking-[0.2em] hover:bg-slate-200 transition-colors duration-300">
+              Commence
+            </button>
+          </div>
+
+          <!-- Tier 3 -->
+          <div class="bg-[#dcd7ce]/50 backdrop-blur-sm border border-slate-300 p-8 flex flex-col hover:bg-white/80 transition-all duration-500 gs-reveal">
+            <h3 class="text-sm tracking-[0.1em] font-normal uppercase mb-2 text-slate-500">
+              Phase III
+            </h3>
+            <div class="text-2xl tracking-tight font-normal mb-4 text-slate-900">
+              Execution
+            </div>
+            <p class="text-sm text-slate-600 font-serif mb-8 flex-grow">
+              End-to-end project management, ensuring absolute fidelity to the
+              original design intent.
+            </p>
+            <ul class="text-sm space-y-4 mb-10 text-slate-700 font-serif">
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-400"></iconify-icon>
+                Contractor curation
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-400"></iconify-icon>
+                On-site supervision
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:check-circle-linear" class="mt-1 text-slate-400"></iconify-icon>
+                Precision auditing
+              </li>
+            </ul>
+            <button class="w-full py-4 border border-slate-900 text-xs uppercase tracking-[0.2em] hover:bg-slate-900 hover:text-white transition-colors duration-300">
+              Inquire
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- @footer Section -->
+    <footer class="relative z-10 border-t border-slate-300 py-12 px-6 bg-[#dcd7ce]" id="footer">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="text-xs tracking-[0.3em] font-normal uppercase text-slate-900 flex items-center gap-2">
+          <div class="w-2 h-2 bg-slate-900"></div>
+          Elysian
+        </div>
+
+        <div class="flex gap-8 text-xs font-normal uppercase tracking-widest text-slate-500">
+          <a href="#" class="hover:text-slate-900 transition-colors">Index</a>
+          <a href="#" class="hover:text-slate-900 transition-colors">Journal</a>
+          <a href="#" class="hover:text-slate-900 transition-colors">Contact</a>
+        </div>
+
+        <div class="text-xs text-slate-400 font-serif italic">
+          © 2024. Impeccably resolved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // --- 1. WebGL Background (Three.js Fluid Gradient) ---
+          const initWebGL = () => {
+              const canvas = document.getElementById('webgl-canvas');
+              if (!canvas) return;
+
+              const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+              renderer.setSize(window.innerWidth, window.innerHeight);
+              renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+              const scene = new THREE.Scene();
+              const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+              const geometry = new THREE.PlaneGeometry(2, 2);
+
+              const material = new THREE.ShaderMaterial({
+                  uniforms: {
+                      uTime: { value: 0 },
+                      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                      uScrollY: { value: 0 }
+                  },
+                  vertexShader: `
+                      varying vec2 vUv;
+                      void main() {
+                          vUv = uv;
+                          gl_Position = vec4(position, 1.0);
+                      }
+                  `,
+                  fragmentShader: `
+                      uniform float uTime;
+                      uniform vec2 uResolution;
+                      uniform float uScrollY;
+                      varying vec2 vUv;
+
+                      vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+                      float snoise(vec2 v){
+                          const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+                          vec2 i  = floor(v + dot(v, C.yy) );
+                          vec2 x0 = v -   i + dot(i, C.xx);
+                          vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+                          vec4 x12 = x0.xyxy + C.xxzz;
+                          x12.xy -= i1;
+                          i = mod(i, 289.0);
+                          vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
+                          vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+                          m = m*m; m = m*m;
+                          vec3 x = 2.0 * fract(p * C.www) - 1.0;
+                          vec3 h = abs(x) - 0.5;
+                          vec3 ox = floor(x + 0.5);
+                          vec3 a0 = x - ox;
+                          m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+                          vec3 g;
+                          g.x  = a0.x  * x0.x  + h.x  * x0.y;
+                          g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                          return 130.0 * dot(m, g);
+                      }
+
+                      void main() {
+                          vec2 st = gl_FragCoord.xy/uResolution.xy;
+                          st.x *= uResolution.x/uResolution.y;
+
+                          // Adjusting coordinates based on scroll for subtle parallax
+                          st.y += uScrollY * 0.5;
+
+                          vec3 color1 = vec3(0.86, 0.84, 0.81);
+                          vec3 color2 = vec3(0.91, 0.89, 0.85);
+                          vec3 color3 = vec3(0.78, 0.75, 0.71);
+
+                          float n = snoise(st * 1.5 + uTime * 0.1);
+                          float n2 = snoise(st * 2.0 - uTime * 0.15);
+
+                          vec3 finalColor = mix(color1, color2, n + 0.5);
+                          finalColor = mix(finalColor, color3, n2 * 0.5);
+
+                          gl_FragColor = vec4(finalColor, 1.0);
+                      }
+                  `
+              });
+
+              const mesh = new THREE.Mesh(geometry, material);
+              scene.add(mesh);
+
+              const animate = () => {
+                  requestAnimationFrame(animate);
+                  material.uniforms.uTime.value += 0.01;
+                  // Pass scroll position to shader
+                  material.uniforms.uScrollY.value = window.scrollY / window.innerHeight;
+                  renderer.render(scene, camera);
+              };
+              animate();
+
+              window.addEventListener('resize', () => {
+                  renderer.setSize(window.innerWidth, window.innerHeight);
+                  material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+              });
+          };
+          initWebGL();
+
+          // --- 2. GSAP Motion Sequence ---
+          gsap.config({ force3D: true });
+
+          // Desktop Hero Animation
+          if(window.innerWidth >= 1024) {
+              gsap.set(".clip-reveal", { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" });
+              const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.8 } });
+
+              tl.to("#webgl-canvas", { opacity: 0.6, duration: 2, ease: "power2.inOut" }, 0)
+                .to("#el-img-center", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 2 }, 0.2)
+                .to("#el-img-center .img-inner", { scale: 1, duration: 2.5 }, 0.2)
+                .set("#el-img-tr", { clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }, 0)
+                .to("#el-img-tr", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 2 }, 0.4)
+                .to("#el-img-tr .img-inner", { scale: 1, duration: 2.5 }, 0.4)
+                .to("#el-img-bl", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }, 0.6)
+                .to("#el-img-bl .img-inner", { scale: 1, duration: 2 }, 0.6)
+                .to("[data-text-line]", { y: 0, opacity: 1, stagger: 0.1, duration: 1.2, ease: "power3.out" }, 1.0)
+                .set("#el-img-mr", { clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)" }, 0)
+                .to("#el-img-mr", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 1.5 }, 1.2)
+                .to("#el-img-mr .img-inner", { scale: 1, duration: 2 }, 1.2)
+                .to("#el-logo-bl", { opacity: 1, duration: 1 }, 1.4)
+                .to("#el-img-br", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 1.5 }, 1.6)
+                .to("#el-img-br .img-inner", { scale: 1, duration: 2 }, 1.6)
+                .to("#el-card", { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, 1.8)
+                .to("#el-card-line", { scaleX: 1, duration: 1 }, 2.0)
+                .to("#el-card-thumb", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 1 }, 2.1)
+                .to("#el-card-thumb .img-inner", { scale: 1, duration: 1.5 }, 2.1)
+                .to("#el-card-desc", { y: 0, opacity: 1, duration: 0.8 }, 2.3)
+                .to("#el-card-list", { y: 0, opacity: 1, duration: 0.8 }, 2.4)
+                .to("#el-card-logo", { opacity: 1, duration: 1 }, 2.6);
+
+              const scene = document.getElementById("scene");
+              scene.addEventListener("mousemove", (e) => {
+                  const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                  const y = (e.clientY / window.innerHeight - 0.5) * 2;
+                  gsap.to("#el-img-center .img-inner", { x: x * -10, y: y * -10, duration: 2, ease: "power2.out" });
+                  gsap.to("#el-img-tr .img-inner", { x: x * 15, y: y * 15, duration: 2, ease: "power2.out" });
+                  gsap.to("#el-img-bl .img-inner", { x: x * -15, y: y * -15, duration: 2, ease: "power2.out" });
+                  gsap.to("#el-img-mr .img-inner", { x: x * 20, y: y * 20, duration: 2, ease: "power2.out" });
+              });
+          } else {
+              // Mobile Hero Animation
+              gsap.set(".clip-reveal-mobile", { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" });
+              const mTl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.5 } });
+
+              mTl.to("#mobile-text", { opacity: 1, y: 0, duration: 1 }, 0.2)
+                 .to("#mobile-img", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", opacity: 1, duration: 1.5 }, 0.4)
+                 .to(".img-inner-mobile", { scale: 1, duration: 2 }, 0.4)
+                 .to("#mobile-card", { opacity: 1, y: 0, duration: 1 }, 1.0);
+          }
+
+          // --- 3. Scroll Reveal Animations for Sections ---
+          const revealElements = document.querySelectorAll(".gs-reveal");
+          revealElements.forEach((el) => {
+              gsap.fromTo(el,
+                  { opacity: 0, y: 40 },
+                  {
+                      opacity: 1,
+                      y: 0,
+                      duration: 1.2,
+                      ease: "power3.out",
+                      scrollTrigger: {
+                          trigger: el,
+                          start: "top 85%",
+                          toggleActions: "play none none reverse"
+                      }
+                  }
+              );
+          });
+      });
+    </script>
+  
+</body></html>

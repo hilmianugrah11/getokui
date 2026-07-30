@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maison Aurelia — Grand Cru Champagne Since 1842</title>
+<meta name="description" content="Maison Aurelia has crafted exceptional champagne in the heart of Epernay for over 180 years. Discover our Grand Cru collections.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Manrope:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--cream:#FAF7F2;
+--cream-dark:#F0EBE2;
+--cream-border:#E0D9CE;
+--warm-white:#FFFDF9;
+--text:#1C1917;
+--text-muted:#6E6961;
+--text-dim:#A8A29E;
+--burgundy:#7A2E3B;
+--burgundy-light:#9A4B5A;
+--burgundy-deep:#5E1F2C;
+--rose:#BE8A8A;
+--rose-light:#D4ABAB;
+--gold:#B89356;
+--gold-light:#D4B07A;
+--olive:#5B6B4C;
+--olive-light:#7A8E6B;
+--font-display:'Fraunces',Georgia,serif;
+--font-body:'Manrope',system-ui,sans-serif;
+--ease:cubic-bezier(0.16,1,0.3,1);
+--ease-smooth:cubic-bezier(0.45,0,0.15,1);
+}
+html{overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+ul{list-style:none}
+::selection{background:var(--burgundy);color:var(--cream)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--cream-border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--burgundy-light)}
+.container{max-width:1340px;margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem)}
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.25rem 0;transition:all 0.5s}
+.nav.scrolled{background:rgba(250,247,242,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--cream-border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--font-display);font-size:1.15rem;font-weight:400;letter-spacing:0.1em;font-style:italic;color:var(--gold-light);transition:color 0.5s}
+.nav.scrolled .nav-logo{color:var(--burgundy)}
+.nav-links{display:flex;gap:2.5rem;align-items:center}
+.nav-link{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;color:rgba(255,253,249,0.75);transition:color 0.3s;position:relative}
+.nav-link::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--burgundy);transition:width 0.4s var(--ease)}
+.nav-link:hover{color:var(--warm-white)}
+.nav-link:hover::after{width:100%}
+.nav.scrolled .nav-link{color:var(--text-muted)}
+.nav.scrolled .nav-link:hover{color:var(--text)}
+.nav-cta{padding:0.55rem 1.4rem;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:var(--burgundy);color:var(--cream);border-radius:100px;transition:all 0.3s;box-shadow:0 2px 12px rgba(122,46,59,0.15)}
+.nav-cta:hover{background:var(--burgundy-deep);box-shadow:0 4px 20px rgba(122,46,59,0.25);transform:translateY(-1px)}
+.nav-hamburger{display:none;width:26px;height:16px;position:relative;cursor:pointer;z-index:600}
+.nav-hamburger span{position:absolute;left:0;width:100%;height:1px;background:var(--warm-white);transition:all 0.3s}
+.nav.scrolled .nav-hamburger span{background:var(--text)}
+.nav-hamburger span:nth-child(1){top:0}
+.nav-hamburger span:nth-child(2){top:50%;transform:translateY(-50%)}
+.nav-hamburger span:nth-child(3){bottom:0;width:50%}
+.mobile-nav{position:fixed;inset:0;z-index:550;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;visibility:hidden;transition:all 0.5s}
+.mobile-nav.open{opacity:1;visibility:visible}
+.mobile-nav a{font-family:var(--font-display);font-size:1.5rem;font-weight:400;font-style:italic;color:var(--burgundy)}
+/* ===== ORNAMENT ===== */
+.ornament{display:flex;align-items:center;justify-content:center;gap:1rem;padding:0.5rem 0}
+.ornament-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.ornament-line:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
+.ornament-diamond{width:6px;height:6px;transform:rotate(45deg);background:var(--gold);opacity:0.6}
+/* ===== HERO ===== */
+.hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.65) saturate(0.85)}
+/* Alpha mask edges */
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 80% at 50% 45%,rgba(28,25,23,0.25) 0%,rgba(28,25,23,0.7) 100%)}
+.hero-bg-bottom{position:absolute;bottom:0;left:0;right:0;height:30%;background:linear-gradient(to top,var(--cream),transparent);z-index:1}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:800px;padding:0 2rem}
+.hero-est{font-family:var(--font-mono,var(--font-body));font-size:0.6rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1.5rem}
+.hero-title{font-family:var(--font-display);font-size:clamp(3rem,7.5vw,6rem);font-weight:300;line-height:0.95;color:var(--warm-white);letter-spacing:-0.02em;font-style:italic}
+.hero-title strong{font-weight:600;font-style:normal}
+.hero-sub{font-size:clamp(0.85rem,1.1vw,1rem);font-weight:300;line-height:1.8;color:rgba(255,253,249,0.75);max-width:500px;margin:1.5rem auto 0}
+.hero-divider{margin:2rem auto;width:60px}
+.hero-divider .ornament-line{background:linear-gradient(90deg,transparent,var(--gold-light))}
+.hero-divider .ornament-line:last-child{background:linear-gradient(90deg,var(--gold-light),transparent)}
+.hero-divider .ornament-diamond{background:var(--gold-light)}
+.hero-buttons{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.btn-wine{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2rem;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--burgundy);color:var(--cream);border-radius:100px;transition:all 0.4s;box-shadow:0 4px 20px rgba(122,46,59,0.3);position:relative;overflow:hidden}
+.btn-wine::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--burgundy-deep),var(--burgundy));opacity:0;transition:opacity 0.4s;border-radius:100px}
+.btn-wine:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(122,46,59,0.4)}
+.btn-wine:hover::before{opacity:1}
+.btn-wine span,.btn-wine .iconify{position:relative;z-index:1}
+.btn-cream{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2rem;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border:1px solid rgba(255,253,249,0.3);color:var(--warm-white);border-radius:100px;transition:all 0.3s;backdrop-filter:blur(8px)}
+.btn-cream:hover{background:rgba(255,253,249,0.1);border-color:rgba(255,253,249,0.5)}
+/* On light sections */
+.btn-outline-dark{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2rem;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--cream-border);color:var(--text);border-radius:100px;transition:all 0.3s}
+.btn-outline-dark:hover{border-color:var(--burgundy);color:var(--burgundy)}
+/* ===== SECTION COMMON ===== */
+.section{padding:clamp(6rem,14vh,10rem) 0;position:relative}
+.section-label{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:1.5rem}
+.section-title{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;line-height:1.15;color:var(--text);font-style:italic}
+.section-title strong{font-weight:600;font-style:normal;color:var(--burgundy)}
+/* Reveal animations (opacity+transform only — aura.build compatible, no clip-path) */
+.reveal-right{opacity:0;transform:translateX(-40px);transition:opacity 1s var(--ease-smooth),transform 1s var(--ease-smooth)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-left{opacity:0;transform:translateX(40px);transition:opacity 1s var(--ease-smooth),transform 1s var(--ease-smooth)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-center{opacity:0;transform:scale(0.95);transition:opacity 1s var(--ease-smooth),transform 1s var(--ease-smooth)}
+.reveal-center.visible{opacity:1;transform:scale(1)}
+/* Fade up */
+.reveal-up{opacity:0;transform:translateY(40px);transition:opacity 0.8s var(--ease),transform 0.8s var(--ease)}
+.reveal-up.visible{opacity:1;transform:translateY(0)}
+.fd1{transition-delay:0.1s}.fd2{transition-delay:0.2s}.fd3{transition-delay:0.3s}.fd4{transition-delay:0.4s}
+/* ===== INTRO ===== */
+.intro{background:var(--cream)}
+.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(4rem,8vw,8rem);align-items:center}
+.intro-text{max-width:480px}
+.intro-quote{font-family:var(--font-display);font-size:clamp(1.2rem,2vw,1.55rem);font-weight:300;font-style:italic;line-height:1.6;color:var(--text);margin:1.5rem 0}
+.intro-quote strong{font-weight:500;color:var(--burgundy);font-style:normal}
+.intro-body{font-size:0.9rem;font-weight:300;line-height:1.9;color:var(--text-muted)}
+.intro-visual{position:relative}
+.intro-img{border-radius:4px;overflow:hidden;aspect-ratio:3/4}
+.intro-img img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.intro-img:hover img{transform:scale(1.04)}
+/* Decorative offset frame */
+.intro-frame{position:absolute;top:2rem;right:-2rem;bottom:-2rem;left:2rem;border:1px solid var(--gold);opacity:0.25;border-radius:4px;pointer-events:none;z-index:-1}
+/* Small badge */
+.intro-badge{position:absolute;bottom:2rem;left:-1.5rem;z-index:2;padding:1rem 1.5rem;background:var(--warm-white);box-shadow:0 8px 30px rgba(28,25,23,0.08);border-radius:4px;display:flex;align-items:center;gap:0.75rem}
+.intro-badge-icon{font-size:1.5rem;color:var(--gold)}
+.intro-badge-text span{display:block;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.intro-badge-text strong{display:block;font-size:0.85rem;font-weight:600;color:var(--text);margin-top:0.1rem}
+/* ===== COLLECTION (Staggered grid) ===== */
+.collection{background:var(--cream-dark);padding:clamp(6rem,14vh,10rem) 0;overflow:hidden}
+.collection-header{text-align:center;margin-bottom:clamp(4rem,8vw,6rem)}
+.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;align-items:start}
+.collection-item{position:relative;cursor:pointer}
+.collection-item:nth-child(2){margin-top:3rem}
+.collection-item:nth-child(3){margin-top:1.5rem}
+.collection-item-img{overflow:hidden;border-radius:4px;aspect-ratio:3/4;position:relative}
+.collection-item-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s var(--ease),filter 0.8s}
+.collection-item:hover .collection-item-img img{transform:scale(1.06);filter:brightness(0.9)}
+/* Alpha mask from bottom */
+.collection-item-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(28,25,23,0.6),transparent);pointer-events:none;z-index:1}
+.collection-item-info{position:absolute;bottom:0;left:0;right:0;padding:clamp(1rem,2vw,2rem);z-index:2}
+.collection-item-name{font-family:var(--font-display);font-size:clamp(1.1rem,1.8vw,1.4rem);font-weight:400;color:var(--warm-white);font-style:italic;margin-bottom:0.2rem}
+.collection-item-detail{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,253,249,0.7);font-weight:400}
+.collection-item-price{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--gold-light);margin-top:0.5rem}
+/* Hover arrow */
+.collection-item-arrow{position:absolute;top:1.25rem;right:1.25rem;z-index:3;width:40px;height:40px;border-radius:50%;background:rgba(255,253,249,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,253,249,0.2);display:flex;align-items:center;justify-content:center;color:var(--warm-white);font-size:1rem;opacity:0;transform:translate(-8px,8px);transition:all 0.5s var(--ease)}
+.collection-item:hover .collection-item-arrow{opacity:1;transform:translate(0,0)}
+/* ===== HERITAGE ===== */
+.heritage{position:relative;min-height:60vh;display:flex;align-items:center;overflow:hidden}
+.heritage-bg{position:absolute;inset:0}
+.heritage-bg img{width:100%;height:120%;object-fit:cover;filter:brightness(0.45) saturate(0.75);position:absolute;top:-10%;left:0}
+.heritage-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,25,23,0.7) 0%,transparent 60%)}
+.heritage-mask-top{position:absolute;top:0;left:0;right:0;height:60px;background:linear-gradient(to bottom,rgba(28,25,23,0.6),transparent);z-index:1}
+.heritage-mask-bottom{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--cream),transparent);z-index:1}
+.heritage-content{position:relative;z-index:2;max-width:550px;padding-top:clamp(4rem,8vw,6rem);padding-bottom:clamp(4rem,8vw,6rem)}
+.heritage-title{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:300;font-style:italic;line-height:1.15;color:var(--warm-white);margin-bottom:1.5rem}
+.heritage-title strong{font-weight:600;font-style:normal}
+.heritage-body{font-size:0.9rem;font-weight:300;line-height:1.9;color:rgba(255,253,249,0.7);margin-bottom:2.5rem}
+.heritage-stats{display:flex;gap:3rem}
+.heritage-stat{border-left:1px solid var(--gold);padding-left:1.25rem}
+.heritage-stat-val{font-family:var(--font-display);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:500;color:var(--gold-light)}
+.heritage-stat-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,253,249,0.5);margin-top:0.25rem}
+/* ===== EXPERIENCE ===== */
+.experience{background:var(--cream);overflow:hidden}
+.experience-header{text-align:center;margin-bottom:clamp(3rem,6vw,5rem)}
+.experience-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.experience-card{padding:clamp(1.5rem,2.5vw,2rem);background:var(--warm-white);border:1px solid var(--cream-border);border-radius:12px;text-align:center;transition:all 0.5s var(--ease);position:relative;overflow:hidden}
+.experience-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(28,25,23,0.06);border-color:rgba(122,46,59,0.15)}
+/* Border gradient hover */
+.experience-card::before{content:'';position:absolute;inset:0;border-radius:12px;padding:1px;background:linear-gradient(135deg,rgba(122,46,59,0.2),transparent 40%,transparent 60%,rgba(184,147,86,0.15));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.5s}
+.experience-card:hover::before{opacity:1}
+.experience-card-icon{width:56px;height:56px;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,rgba(122,46,59,0.06),rgba(184,147,86,0.06));font-size:1.5rem;color:var(--burgundy)}
+.experience-card h3{font-family:var(--font-display);font-size:1.1rem;font-weight:500;font-style:italic;margin-bottom:0.5rem}
+.experience-card p{font-size:0.78rem;font-weight:300;line-height:1.7;color:var(--text-muted)}
+/* ===== GALLERY (Masonry) ===== */
+.gallery{padding:clamp(6rem,14vh,10rem) 0;background:var(--cream-dark)}
+.gallery-header{text-align:center;margin-bottom:clamp(3rem,6vw,5rem)}
+.gallery-grid{columns:3;gap:1.25rem;max-width:1200px;margin:0 auto}
+.gallery-item{break-inside:avoid;margin-bottom:1.25rem;border-radius:4px;overflow:hidden;position:relative;cursor:pointer}
+.gallery-item img{width:100%;display:block;transition:transform 0.8s var(--ease),filter 0.8s}
+.gallery-item:hover img{transform:scale(1.05);filter:brightness(0.85)}
+/* Alpha mask overlay on hover */
+.gallery-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(28,25,23,0.5),transparent 50%);opacity:0;transition:opacity 0.5s;pointer-events:none}
+.gallery-item:hover::after{opacity:1}
+/* ===== TESTIMONIAL ===== */
+.testimonial{padding:clamp(6rem,14vh,10rem) 0;background:var(--cream);text-align:center;position:relative}
+.testimonial::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(184,147,86,0.04),transparent 60%);pointer-events:none}
+.testimonial-inner{max-width:700px;margin:0 auto;position:relative}
+.testimonial-mark{font-family:var(--font-display);font-size:6rem;font-weight:300;line-height:1;color:var(--cream-border);margin-bottom:-2rem;font-style:italic}
+.testimonial-quote{font-family:var(--font-display);font-size:clamp(1.2rem,2.2vw,1.7rem);font-weight:300;font-style:italic;line-height:1.7;color:var(--text);margin-bottom:2rem}
+.testimonial-quote strong{font-weight:500;color:var(--burgundy);font-style:normal}
+.testimonial-author{display:flex;align-items:center;justify-content:center;gap:1rem}
+.testimonial-avatar{width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid var(--cream-border)}
+.testimonial-avatar img{width:100%;height:100%;object-fit:cover}
+.testimonial-info{text-align:left}
+.testimonial-info h5{font-size:0.85rem;font-weight:600}
+.testimonial-info p{font-size:0.72rem;color:var(--text-muted);margin-top:0.1rem}
+.testimonial-dots{display:flex;justify-content:center;gap:0.6rem;margin-top:2.5rem}
+.testimonial-dots button{width:28px;height:2px;background:var(--cream-border);transition:all 0.4s;cursor:pointer;border:none}
+.testimonial-dots button.active{background:var(--burgundy);width:40px}
+/* ===== CTA ===== */
+.cta{position:relative;overflow:hidden}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;min-height:500px}
+.cta-image{position:relative}
+.cta-image img{width:100%;height:100%;object-fit:cover;display:block}
+.cta-image::after{content:'';position:absolute;top:0;bottom:0;left:0;right:-2px;background:linear-gradient(90deg,transparent 35%,var(--cream-dark) 100%);z-index:1}
+.cta-content{display:flex;align-items:center;padding:clamp(3rem,6vw,5rem);background:var(--cream-dark)}
+.cta-inner{max-width:440px}
+.cta-title{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:400;font-style:italic;line-height:1.15;margin-bottom:1rem}
+.cta-title strong{font-weight:600;font-style:normal;color:var(--burgundy)}
+.cta-body{font-size:0.9rem;font-weight:300;line-height:1.8;color:var(--text-muted);margin-bottom:2rem}
+.cta-form{display:flex;gap:0.5rem}
+.cta-input{flex:1;padding:0.8rem 1.25rem;font-size:0.82rem;font-family:var(--font-body);background:var(--warm-white);border:1px solid var(--cream-border);border-radius:100px;color:var(--text);outline:none;transition:border-color 0.3s}
+.cta-input::placeholder{color:var(--text-dim)}
+.cta-input:focus{border-color:var(--burgundy)}
+.cta-submit{padding:0.8rem 1.5rem;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:var(--burgundy);color:var(--cream);border-radius:100px;border:none;cursor:pointer;transition:all 0.3s;white-space:nowrap}
+.cta-submit:hover{background:var(--burgundy-deep)}
+.cta-note{font-size:0.68rem;color:var(--text-dim);margin-top:0.75rem}
+/* ===== FOOTER ===== */
+.footer{padding:clamp(4rem,8vw,6rem) 0 2rem;background:var(--text);color:var(--cream)}
+.footer-top{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:clamp(2rem,4vw,4rem);margin-bottom:3rem}
+.footer-brand-logo{font-family:var(--font-display);font-size:1.15rem;font-weight:400;font-style:italic;letter-spacing:0.08em;color:var(--gold-light);margin-bottom:1.25rem}
+.footer-brand p{font-size:0.78rem;font-weight:300;color:rgba(250,247,242,0.5);line-height:1.7;max-width:280px}
+.footer-social{display:flex;gap:0.6rem;margin-top:1.25rem}
+.footer-social a{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(250,247,242,0.1);border-radius:50%;color:rgba(250,247,242,0.5);font-size:0.9rem;transition:all 0.3s}
+.footer-social a:hover{border-color:var(--gold);color:var(--gold)}
+.footer-col h4{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem}
+.footer-col li{margin-bottom:0.6rem}
+.footer-col a{font-size:0.78rem;font-weight:300;color:rgba(250,247,242,0.5);transition:color 0.3s}
+.footer-col a:hover{color:var(--cream)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid rgba(250,247,242,0.06);flex-wrap:wrap;gap:1rem}
+.footer-bottom p{font-size:0.68rem;color:rgba(250,247,242,0.35)}
+.footer-bottom-links{display:flex;gap:1.5rem}
+.footer-bottom-links a{font-size:0.68rem;color:rgba(250,247,242,0.35);transition:color 0.3s}
+.footer-bottom-links a:hover{color:var(--cream)}
+.footer-age{font-size:0.6rem;color:rgba(250,247,242,0.25);text-align:center;margin-top:1.5rem}
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+.intro-grid{grid-template-columns:1fr;gap:3rem}
+.intro-frame{display:none}
+.intro-badge{position:relative;left:0;bottom:0;margin-top:1.5rem;display:inline-flex}
+.collection-grid{grid-template-columns:1fr 1fr}
+.collection-item:nth-child(2),.collection-item:nth-child(3){margin-top:0}
+.experience-grid{grid-template-columns:repeat(2,1fr)}
+.gallery-grid{columns:2}
+.footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+.nav-links{display:none}
+.nav-hamburger{display:block}
+.collection-grid{grid-template-columns:1fr}
+.experience-grid{grid-template-columns:1fr}
+.heritage-stats{flex-direction:column;gap:1.5rem}
+.cta-grid{grid-template-columns:1fr}
+.cta-image{height:300px}
+.cta-image::after{background:linear-gradient(to top,var(--cream-dark) 10%,transparent 60%)}
+.gallery-grid{columns:2}
+.hero-buttons{flex-direction:column;align-items:center}
+.footer-top{grid-template-columns:1fr;gap:2rem}
+.cta-form{flex-direction:column}
+}
+@media(max-width:480px){
+.gallery-grid{columns:1}
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+<div class="container nav-inner">
+<a href="#" class="nav-logo">Maison Aurelia</a>
+<div class="nav-links">
+  <a href="#intro" class="nav-link">La Maison</a>
+  <a href="#collection" class="nav-link">Collection</a>
+  <a href="#heritage" class="nav-link">Heritage</a>
+  <a href="#experience" class="nav-link">Experiences</a>
+  <a href="#gallery" class="nav-link">Gallery</a>
+  <a href="#cta" class="nav-cta">Visit Us</a>
+</div>
+<div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+</div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+<a href="#intro">La Maison</a>
+<a href="#collection">Collection</a>
+<a href="#heritage">Heritage</a>
+<a href="#experience">Experiences</a>
+<a href="#gallery">Gallery</a>
+<a href="#cta">Visit Us</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+<div class="hero-bg">
+  <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1920&q=85&auto=format" alt="Golden sunrise over the Champagne vineyards of Maison Aurelia" id="heroBgImg">
+  <div class="hero-bg-bottom"></div>
+</div>
+<div class="hero-content">
+  <div class="hero-est">Epernay, France -- Since 1842</div>
+  <h1 class="hero-title"><strong>Aurelia</strong><br>L'art du Champagne</h1>
+  <p class="hero-sub">Six generations of meticulous craftsmanship, devoted to creating champagne that transcends the ordinary and becomes the extraordinary.</p>
+  <div class="hero-divider ornament">
+    <span class="ornament-line"></span>
+    <span class="ornament-diamond"></span>
+    <span class="ornament-line"></span>
+  </div>
+  <div class="hero-buttons">
+    <a href="#collection" class="btn-wine"><span>Discover Collection</span><span class="iconify" data-icon="solar:arrow-right-linear"></span></a>
+    <a href="#experience" class="btn-cream"><span class="iconify" data-icon="solar:play-bold"></span><span>Our Story</span></a>
+  </div>
+</div>
+</section>
+
+<!-- Intro -->
+<section class="intro section" id="intro">
+<div class="container">
+<div class="intro-grid">
+  <div class="intro-text">
+    <div class="section-label reveal-up">La Maison</div>
+    <h2 class="section-title reveal-up fd1">A legacy written in <strong>bubbles</strong></h2>
+    <p class="intro-quote reveal-up fd2">"Champagne is not merely a drink -- it is a <strong>philosophy of living</strong>, a celebration of the patience required to turn sunlight and soil into something eternal."</p>
+    <p class="intro-body reveal-up fd3">Founded in 1842 by Auguste Aurelia in the chalky cellars beneath Epernay, Maison Aurelia has remained a family affair for six generations. We tend 62 hectares of Grand Cru vineyards across the Cote des Blancs and Montagne de Reims, practicing biodynamic viticulture and hand-harvesting every cluster.</p>
+    <div class="ornament reveal-up fd4" style="justify-content:flex-start;margin:2rem 0 0">
+      <span class="ornament-line"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-line"></span>
+    </div>
+  </div>
+  <div class="intro-visual">
+    <div class="intro-img reveal-right">
+      <img src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=800&q=80&auto=format" alt="Wine being poured in the tasting room of Maison Aurelia" loading="lazy">
+    </div>
+    <div class="intro-frame"></div>
+    <div class="intro-badge reveal-up">
+      <div class="intro-badge-icon"><span class="iconify" data-icon="solar:medal-ribbons-star-bold"></span></div>
+      <div class="intro-badge-text">
+        <span>Robert Parker</span>
+        <strong>98 Points -- Exceptional</strong>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Collection -->
+<section class="collection" id="collection">
+<div class="container">
+<div class="collection-header">
+  <div class="section-label reveal-up">The Collection</div>
+  <h2 class="section-title reveal-up fd1">Our finest <strong>cuvees</strong></h2>
+  <div class="ornament reveal-up fd2" style="margin-top:1.5rem"><span class="ornament-line"></span><span class="ornament-diamond"></span><span class="ornament-line"></span></div>
+</div>
+<div class="collection-grid">
+  <div class="collection-item reveal-up">
+    <div class="collection-item-img reveal-center">
+      <img src="https://images.unsplash.com/photo-1594372365401-3b5ff14eaaed?w=700&q=80&auto=format" alt="Aurelia Grand Cru Blanc de Blancs bottle" loading="lazy">
+    </div>
+    <div class="collection-item-info">
+      <div class="collection-item-name">Grand Cru Blanc de Blancs</div>
+      <div class="collection-item-detail">100% Chardonnay -- Cote des Blancs</div>
+      <div class="collection-item-price">EUR 185</div>
+    </div>
+    <div class="collection-item-arrow"><span class="iconify" data-icon="solar:arrow-right-up-linear"></span></div>
+  </div>
+  <div class="collection-item reveal-up fd1">
+    <div class="collection-item-img reveal-center">
+      <img src="https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=700&q=80&auto=format" alt="Aurelia Rose Prestige champagne" loading="lazy">
+    </div>
+    <div class="collection-item-info">
+      <div class="collection-item-name">Rose Prestige</div>
+      <div class="collection-item-detail">Pinot Noir -- Montagne de Reims</div>
+      <div class="collection-item-price">EUR 220</div>
+    </div>
+    <div class="collection-item-arrow"><span class="iconify" data-icon="solar:arrow-right-up-linear"></span></div>
+  </div>
+  <div class="collection-item reveal-up fd2">
+    <div class="collection-item-img reveal-center">
+      <img src="https://images.unsplash.com/photo-1582819509237-d5b75f20ff7a?w=700&q=80&auto=format" alt="Aurelia Cuvee Eternelle vintage champagne" loading="lazy">
+    </div>
+    <div class="collection-item-info">
+      <div class="collection-item-name">Cuvee Eternelle 2012</div>
+      <div class="collection-item-detail">Grand Cru Vintage -- Limited Release</div>
+      <div class="collection-item-price">EUR 450</div>
+    </div>
+    <div class="collection-item-arrow"><span class="iconify" data-icon="solar:arrow-right-up-linear"></span></div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Heritage -->
+<section class="heritage" id="heritage">
+<div class="heritage-bg">
+  <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=1920&q=80&auto=format" alt="The ancient chalk cellars of Maison Aurelia" loading="lazy" id="heritageBgImg">
+</div>
+<div class="heritage-mask-top"></div>
+<div class="heritage-mask-bottom"></div>
+<div class="container heritage-content">
+  <div class="section-label reveal-up" style="color:var(--gold-light)">Our Heritage</div>
+  <h2 class="heritage-title reveal-up fd1"><strong>180 years</strong> beneath the chalk</h2>
+  <p class="heritage-body reveal-up fd2">Our cellars extend two kilometers beneath the hills of Epernay, carved into Cretaceous chalk 30 meters below the surface. Here, at a constant 12 degrees Celsius, millions of bottles undergo the slow, sacred transformation from wine to champagne.</p>
+  <div class="heritage-stats reveal-up fd3">
+    <div class="heritage-stat">
+      <div class="heritage-stat-val" data-count="182">0</div>
+      <div class="heritage-stat-label">Years of Heritage</div>
+    </div>
+    <div class="heritage-stat">
+      <div class="heritage-stat-val" data-count="62">0</div>
+      <div class="heritage-stat-label">Hectares Grand Cru</div>
+    </div>
+    <div class="heritage-stat">
+      <div class="heritage-stat-val" data-count="6">0</div>
+      <div class="heritage-stat-label">Generations</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Experience -->
+<section class="experience section" id="experience">
+<div class="container">
+<div class="experience-header">
+  <div class="section-label reveal-up">Experiences</div>
+  <h2 class="section-title reveal-up fd1">Immerse yourself in <strong>Aurelia</strong></h2>
+</div>
+<div class="experience-grid">
+  <div class="experience-card reveal-up">
+    <div class="experience-card-icon"><span class="iconify" data-icon="mdi:wine"></span></div>
+    <h3>Private Tasting</h3>
+    <p>A guided journey through our complete collection, paired with artisanal canapes, in our 19th-century salon prive.</p>
+  </div>
+  <div class="experience-card reveal-up fd1">
+    <div class="experience-card-icon"><span class="iconify" data-icon="solar:map-point-bold"></span></div>
+    <h3>Vineyard Walk</h3>
+    <p>Stroll through our Grand Cru vineyards with our chef de cave, learning the secrets of terroir and biodynamic viticulture.</p>
+  </div>
+  <div class="experience-card reveal-up fd2">
+    <div class="experience-card-icon"><span class="iconify" data-icon="solar:star-bold"></span></div>
+    <h3>Cellar Descent</h3>
+    <p>Descend 30 meters into our chalk cellars, where millions of bottles age in silence. A sensory experience unlike any other.</p>
+  </div>
+  <div class="experience-card reveal-up fd3">
+    <div class="experience-card-icon"><span class="iconify" data-icon="solar:chef-hat-bold"></span></div>
+    <h3>Gastronomic Dinner</h3>
+    <p>A seven-course dinner by our Michelin-starred chef, each dish designed to illuminate a different facet of champagne.</p>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery" id="gallery">
+<div class="container">
+<div class="gallery-header">
+  <div class="section-label reveal-up">Moments</div>
+  <h2 class="section-title reveal-up fd1">The world of <strong>Aurelia</strong></h2>
+</div>
+<div class="gallery-grid">
+  <div class="gallery-item reveal-right"><img src="https://images.unsplash.com/photo-1474722883778-792e7990302f?w=600&q=80&auto=format" alt="Champagne glasses in golden hour light" loading="lazy"></div>
+  <div class="gallery-item reveal-left"><img src="https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?w=600&q=80&auto=format" alt="Vine rows at sunrise in Champagne region" loading="lazy"></div>
+  <div class="gallery-item reveal-right"><img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80&auto=format" alt="Fine dining table set with champagne" loading="lazy"></div>
+  <div class="gallery-item reveal-left"><img src="https://images.unsplash.com/photo-1598306442928-4d90f32c6866?w=600&q=80&auto=format" alt="Harvest time in the vineyards" loading="lazy"></div>
+  <div class="gallery-item reveal-right"><img src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=600&q=80&auto=format" alt="Champagne bottles aging in chalk cellars" loading="lazy"></div>
+  <div class="gallery-item reveal-left"><img src="https://images.unsplash.com/photo-1504279577054-acfeccf8fc52?w=600&q=80&auto=format" alt="Riddling racks in the cellar" loading="lazy"></div>
+</div>
+</div>
+</section>
+
+<!-- Testimonial -->
+<section class="testimonial">
+<div class="container">
+<div class="testimonial-inner">
+  <div class="testimonial-mark reveal-up">"</div>
+  <p class="testimonial-quote reveal-up fd1" id="tQuote">"The Cuvee Eternelle is not simply champagne -- it is <strong>liquid memory</strong>. Each sip returns you to the golden autumn afternoon when those grapes surrendered themselves to destiny. I have tasted thousands of wines. This one made me weep."</p>
+  <div class="testimonial-author reveal-up fd2" id="tAuthor">
+    <div class="testimonial-avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80&auto=format" alt="Wine critic portrait" id="tAvatar"></div>
+    <div class="testimonial-info">
+      <h5 id="tName">Isabelle Moreau</h5>
+      <p id="tRole">Head Sommelier, Le Cinq, Paris</p>
+    </div>
+  </div>
+  <div class="testimonial-dots">
+    <button class="active" data-i="0"></button>
+    <button data-i="1"></button>
+    <button data-i="2"></button>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+<div class="cta-grid">
+<div class="cta-image reveal-up">
+  <img src="https://images.unsplash.com/photo-1543353071-873f17a7a088?w=900&q=80&auto=format" alt="The elegant tasting salon of Maison Aurelia" loading="lazy">
+</div>
+<div class="cta-content">
+  <div class="cta-inner">
+    <div class="section-label reveal-up">Visit Us</div>
+    <h2 class="cta-title reveal-up fd1">Begin your <strong>Aurelia</strong> journey</h2>
+    <p class="cta-body reveal-up fd2">Join us in Epernay for a private tasting, or receive our collection at your door. Subscribe to our cellar letter for first access to new releases and exclusive invitations.</p>
+    <div class="cta-form reveal-up fd3">
+      <input type="email" class="cta-input" placeholder="Your email address" aria-label="Email address">
+      <button class="cta-submit" type="button">Subscribe</button>
+    </div>
+    <p class="cta-note reveal-up fd4"><span class="iconify" data-icon="solar:lock-bold" style="color:var(--gold);font-size:0.8rem;vertical-align:middle;margin-right:0.25rem"></span> We respect your privacy. Unsubscribe anytime.</p>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-top">
+  <div class="footer-brand">
+    <div class="footer-brand-logo">Maison Aurelia</div>
+    <p>Crafting Grand Cru champagne in Epernay since 1842. Six generations of devotion to the art of effervescence.</p>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><span class="iconify" data-icon="solar:gallery-bold"></span></a>
+      <a href="#" aria-label="Pinterest"><span class="iconify" data-icon="solar:pin-bold"></span></a>
+      <a href="#" aria-label="YouTube"><span class="iconify" data-icon="solar:play-bold"></span></a>
+    </div>
+  </div>
+  <div class="footer-col">
+    <h4>La Maison</h4>
+    <ul>
+      <li><a href="#">Our History</a></li>
+      <li><a href="#">The Vineyards</a></li>
+      <li><a href="#">Winemaking</a></li>
+      <li><a href="#">Sustainability</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Collection</h4>
+    <ul>
+      <li><a href="#">Blanc de Blancs</a></li>
+      <li><a href="#">Rose Prestige</a></li>
+      <li><a href="#">Cuvee Eternelle</a></li>
+      <li><a href="#">Gift Sets</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Experience</h4>
+    <ul>
+      <li><a href="#">Book a Visit</a></li>
+      <li><a href="#">Private Tasting</a></li>
+      <li><a href="#">Corporate Events</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>2024 Maison Aurelia. Epernay, France.</p>
+  <div class="footer-bottom-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Legal</a>
+  </div>
+</div>
+<p class="footer-age">Please drink responsibly. You must be of legal drinking age in your country to access this site.</p>
+</div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+gsap.registerPlugin(ScrollTrigger);
+
+function initPage(){
+
+/* ===== HERO ENTRANCE ===== */
+const hTl=gsap.timeline();
+hTl
+  .from('.hero-est',{y:20,opacity:0,duration:0.7,ease:'power3.out'})
+  .from('.hero-title',{y:50,opacity:0,duration:1,ease:'power3.out'},'-=0.3')
+  .from('.hero-sub',{y:30,opacity:0,duration:0.7},'-=0.4')
+  .from('.hero-divider',{scaleX:0,opacity:0,duration:0.6},'-=0.3')
+  .from('.hero-buttons',{y:25,opacity:0,duration:0.7},'-=0.2');
+
+/* ===== HERO PARALLAX ===== */
+gsap.to('#heroBgImg',{y:'20%',ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+/* ===== NAV SCROLL ===== */
+ScrollTrigger.create({
+  trigger:'.hero',start:'bottom-=200 top',
+  onEnter:()=>document.getElementById('nav').classList.add('scrolled'),
+  onLeaveBack:()=>document.getElementById('nav').classList.remove('scrolled')
+});
+
+/* ===== FADE UP OBSERVER ===== */
+const fades=document.querySelectorAll('.reveal-up');
+const fadeObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObs.unobserve(e.target)}});
+},{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+fades.forEach(el=>fadeObs.observe(el));
+
+/* ===== REVEAL OBSERVER (directional) ===== */
+const clips=document.querySelectorAll('.reveal-right,.reveal-left,.reveal-center');
+const clipObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');clipObs.unobserve(e.target)}});
+},{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+clips.forEach(el=>clipObs.observe(el));
+
+/* ===== HERITAGE PARALLAX ===== */
+gsap.to('#heritageBgImg',{y:'15%',ease:'none',scrollTrigger:{trigger:'.heritage',start:'top bottom',end:'bottom top',scrub:true}});
+
+/* ===== HERITAGE COUNTERS ===== */
+document.querySelectorAll('.heritage-stat-val').forEach(el=>{
+  const target=parseInt(el.dataset.count);
+  ScrollTrigger.create({trigger:el,start:'top 85%',once:true,onEnter:()=>{
+    gsap.to({v:0},{v:target,duration:2,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v)}});
+  }});
+});
+
+/* ===== EXPERIENCE CARDS (handled by reveal-up CSS + IntersectionObserver) ===== */
+
+/* ===== GALLERY (handled by reveal-right CSS + IntersectionObserver) ===== */
+
+/* ===== CTA ENTRANCE (handled by reveal-up CSS + IntersectionObserver) ===== */
+
+/* ===== FOOTER ===== */
+gsap.from('.footer-top > *',{y:25,opacity:0,duration:0.6,stagger:0.08,immediateRender:false,scrollTrigger:{trigger:'.footer-top',start:'top 88%'}});
+
+} // end initPage
+initPage();
+
+/* ===== TESTIMONIAL CAROUSEL ===== */
+const tData=[
+  {quote:'"The Cuvee Eternelle is not simply champagne -- it is <strong>liquid memory</strong>. Each sip returns you to the golden autumn afternoon when those grapes surrendered themselves to destiny. I have tasted thousands of wines. This one made me weep."',name:'Isabelle Moreau',role:'Head Sommelier, Le Cinq, Paris',img:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80&auto=format'},
+  {quote:'"Aurelia\'s Blanc de Blancs possesses a precision and mineral tension that is <strong>almost architectural</strong>. It builds on the palate like a cathedral -- layer upon layer of chalk, citrus, and brioche, culminating in a finish that seems to last for minutes."',name:'Henri Belmont',role:'Wine Director, The Dorchester, London',img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&auto=format'},
+  {quote:'"In thirty years of covering Champagne, I have never encountered a house so <strong>quietly radical</strong>. Their biodynamic practices and minimal intervention produce wines of startling purity. Aurelia is the future of tradition."',name:'Clara Fontaine',role:'Editor, Revue du Vin de France',img:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format'}
+];
+let tIdx=0;
+document.querySelectorAll('.testimonial-dots button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const i=parseInt(btn.dataset.i);if(i===tIdx)return;tIdx=i;
+    const t=tData[tIdx];
+    gsap.to(['#tQuote','#tName','#tRole','#tAvatar'],{opacity:0,y:15,duration:0.3,stagger:0.04,onComplete:()=>{
+      document.getElementById('tQuote').innerHTML=t.quote;
+      document.getElementById('tName').textContent=t.name;
+      document.getElementById('tRole').textContent=t.role;
+      document.getElementById('tAvatar').src=t.img;
+      gsap.to(['#tQuote','#tName','#tRole','#tAvatar'],{opacity:1,y:0,duration:0.5,stagger:0.04,ease:'power3.out'});
+    }});
+    document.querySelectorAll('.testimonial-dots button').forEach((b,j)=>b.classList.toggle('active',j===tIdx));
+  });
+});
+
+/* ===== MOBILE NAV ===== */
+const hamburger=document.getElementById('navHamburger'),mobileNav=document.getElementById('mobileNav');
+let mobOpen=false;
+hamburger.addEventListener('click',()=>{mobOpen=!mobOpen;mobileNav.classList.toggle('open',mobOpen);document.body.style.overflow=mobOpen?'hidden':''});
+mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobOpen=false;mobileNav.classList.remove('open');document.body.style.overflow=''}));
+
+/* ===== SMOOTH SCROLL ===== */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();const y=t.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top:y,behavior:'smooth'})}
+  });
+});
+
+})();
+</script>
+</body>
+</html>

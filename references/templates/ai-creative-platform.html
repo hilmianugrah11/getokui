@@ -1,0 +1,2457 @@
+<html lang="en" class="scroll-smooth"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velora — Creative Intelligence</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #030303;
+color: #e2e8f0;
+overflow-x: hidden;f
+}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #030303; }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #374151; }
+/* Typography selections */
+::selection { background: rgba(255, 255, 255, 0.2); color: #fff; }
+/* Section 1: Floating Animations */
+@keyframes float {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+50% { transform: translateY(-20px) rotate(2deg); }
+}
+@keyframes float-reverse {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+50% { transform: translateY(20px) rotate(-2deg); }
+}
+.anim-float { animation: float 8s ease-in-out infinite; }
+.anim-float-rev { animation: float-reverse 10s ease-in-out infinite; }
+/* Section 2: Marquee Animation */
+@keyframes marquee {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+.anim-marquee { animation: marquee 30s linear infinite; }
+/* Section 3: Scroll Reveal (JS triggered) */
+.reveal-item {
+opacity: 0;
+transform: translateY(40px);
+transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-item.is-revealed {
+opacity: 1;
+transform: translateY(0);
+}
+/* Section 4: Line Draw Animation */
+.draw-path {
+stroke-dasharray: 1000;
+stroke-dashoffset: 1000;
+transition: stroke-dashoffset 2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.draw-path.is-drawn { stroke-dashoffset: 0; }
+/* Section 5: 3D Tilt handled via JS inline styles */
+.tilt-card { transition: transform 0.1s ease-out; transform-style: preserve-3d; }
+.tilt-content { transform: translateZ(30px); }
+/* Section 6: Spotlight via CSS variables */
+.spotlight-wrapper { position: relative; }
+.spotlight-wrapper::before {
+content: "";
+position: absolute;
+inset: -1px;
+background: radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255, 255, 255, 0.08), transparent 40%);
+opacity: 0;
+transition: opacity 0.3s ease;
+z-index: 1;
+pointer-events: none;
+border-radius: inherit;
+}
+.spotlight-wrapper:hover::before { opacity: 1; }
+/* Section 7: Accordion Hover Transition */
+.pricing-row {
+transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+grid-template-rows: 0fr;
+}
+.pricing-container:hover .pricing-row {
+grid-template-rows: 1fr;
+}
+.pricing-content { overflow: hidden; }
+/* Section 9: Pulsing Rings */
+@keyframes ping-slow {
+0% { transform: scale(1); opacity: 0.8; }
+100% { transform: scale(2.5); opacity: 0; }
+}
+.anim-ring { animation: ping-slow 4s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.anim-ring-delayed { animation: ping-slow 4s cubic-bezier(0, 0, 0.2, 1) infinite 2s; }
+/* Utilities */
+.glass-panel {
+background: rgba(10, 10, 10, 0.4);
+backdrop-filter: blur(24px);
+-webkit-backdrop-filter: blur(24px);
+border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.text-gradient {
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+</style>
+<style id="hero-ai-styles">
+/* Hero Specific Animations */
+@keyframes emerald-glow {
+0%, 100% { text-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+50% { text-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
+}
+.emerald-text-glow:hover {
+animation: emerald-glow 2s ease-in-out infinite;
+}
+@keyframes energy-wave {
+0% { transform: translateY(100%) scaleY(1); opacity: 0; }
+50% { opacity: 0.5; }
+100% { transform: translateY(-100%) scaleY(1.5); opacity: 0; }
+}
+@keyframes particle-rise {
+0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+10% { opacity: 1; }
+90% { opacity: 1; }
+100% { transform: translateY(-20vh) translateX(20px); opacity: 0; }
+}
+@keyframes scan-light {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(200%); }
+}
+@keyframes pulse-bar {
+0%, 100% { height: 20%; }
+50% { height: 80%; }
+}
+@keyframes pulse-bar-2 {
+0%, 100% { height: 50%; }
+50% { height: 90%; }
+}
+@keyframes pulse-bar-3 {
+0%, 100% { height: 30%; }
+50% { height: 70%; }
+}
+@keyframes typing {
+from { width: 0 }
+to { width: 100% }
+}
+@keyframes blink-caret {
+from, to { border-color: transparent }
+50% { border-color: rgba(16, 185, 129, 1); }
+}
+.typewriter-text {
+overflow: hidden;
+border-right: .15em solid rgba(16, 185, 129, 1);
+white-space: nowrap;
+margin: 0;
+animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+.glass-panel-green {
+background: rgba(16, 185, 129, 0.03);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(16, 185, 129, 0.2);
+box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.05), 0 10px 30px rgba(0,0,0,0.5);
+}
+.hero-spotlight {
+position: relative;
+overflow: hidden;
+}
+.hero-spotlight::before {
+content: "";
+position: absolute;
+inset: -1px;
+background: radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(16, 185, 129, 0.15), transparent 40%);
+opacity: 0;
+transition: opacity 0.3s ease;
+z-index: 1;
+pointer-events: none;
+border-radius: inherit;
+}
+.hero-spotlight:hover::before { opacity: 1; }
+.btn-scan {
+position: relative;
+overflow: hidden;
+}
+.btn-scan::after {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 50%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+animation: scan-light 3s linear infinite;
+pointer-events: none;
+}
+.btn-ripple {
+position: relative;
+overflow: hidden;
+}
+.btn-ripple:hover::after {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 50%);
+transform: translate(-50%, -50%) scale(0);
+animation: ripple 1s ease-out forwards;
+pointer-events: none;
+}
+@keyframes ripple {
+to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+@keyframes scroll-probe {
+0%, 100% { transform: translateY(-100%); opacity: 0; }
+50% { opacity: 1; }
+100% { transform: translateY(200%); opacity: 0; }
+}
+.parallax-container {
+perspective: 1000px;
+transform-style: preserve-3d;
+}
+.parallax-panel {
+transition: transform 0.2s ease-out;
+will-change: transform;
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="antialiased selection:bg-white/20 selection:text-white relative">
+    <!-- Background (component) added by Aura -->
+<div class="aura-background-component top-0 w-full h-screen -z-10 absolute" data-alpha-mask="80" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent);">
+
+  <!-- shifted unicorn layer -->
+  <div class="unicorn-bg absolute top-0 -right-[32%] w-[130%] h-full z-0 overflow-hidden pointer-events-none">
+  <div class="absolute inset-0 w-full h-full opacity-60 mix-blend-screen">
+    <div data-us-project="Br3ptQ7QHHo83vuxzIgC" data-us-dpi="1.5" data-us-fps="60" data-us-lazyload="true" data-us-production="true" class="absolute inset-0 w-full h-full">
+    </div>
+  </div>
+</div>
+
+  <script>
+    (function () {
+      function initUnicorn() {
+        if (window.UnicornStudio && window.UnicornStudio.init) {
+          if (!window.UnicornStudio.isInitialized) {
+            window.UnicornStudio.init();
+            window.UnicornStudio.isInitialized = true;
+          }
+        }
+      }
+
+      if (window.UnicornStudio && window.UnicornStudio.init) {
+        initUnicorn();
+        return;
+      }
+
+      if (!window.UnicornStudio) {
+        window.UnicornStudio = { isInitialized: false };
+      }
+
+      if (!document.querySelector("script[data-unicorn-loader]")) {
+        var s = document.createElement("script");
+        s.src =
+          "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.0-1/dist/unicornStudio.umd.js";
+
+        s.setAttribute("data-unicorn-loader", "true");
+
+        s.onload = function () {
+          initUnicorn();
+        };
+
+        (document.head || document.body).appendChild(s);
+      }
+    })();
+  </script>
+</div>
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+      <div class="absolute inset-0 bg-[#030303]/60 backdrop-blur-xl border-b border-white/5"></div>
+      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-10">
+        <div class="flex items-center gap-3">
+          
+          <span class="text-sm font-medium tracking-tight text-white">
+            Velora
+          </span>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-8 text-xs font-medium text-white/50">
+          <a href="#" class="hover:text-white transition-colors">
+            Intelligence
+          </a>
+          <a href="#" class="hover:text-white transition-colors">Synthesis</a>
+          <a href="#" class="hover:text-white transition-colors">Studios</a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-6">
+          <a href="#" class="text-xs font-medium text-white/50 hover:text-white transition-colors">
+            Portal
+          </a>
+          <a href="#" class="px-5 py-2.5 rounded-full bg-white text-black text-xs font-medium hover:bg-white/90 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+            Initialize
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="">
+      <!-- 1. Hero Section (Floating/Drifting Animation) -->
+      <section class="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden" id="hero-section">
+        <!-- Volumetric Fog & Energy Singularity Background -->
+        <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <!-- Base fog -->
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.08)_0%,transparent_60%)] blur-[80px]"></div>
+
+          <!-- Vertical Energy Waves -->
+          <div class="absolute inset-0 opacity-40">
+            <div class="absolute left-[20%] w-32 h-[150%] bg-gradient-to-t from-transparent via-[#10b981]/10 to-transparent blur-[40px] animate-[energy-wave_8s_ease-in-out_infinite]"></div>
+            <div class="absolute left-[50%] w-48 h-[150%] bg-gradient-to-t from-transparent via-[#10b981]/5 to-transparent blur-[50px] animate-[energy-wave_12s_ease-in-out_infinite_2s]"></div>
+            <div class="absolute right-[20%] w-24 h-[150%] bg-gradient-to-t from-transparent via-[#10b981]/10 to-transparent blur-[30px] animate-[energy-wave_10s_ease-in-out_infinite_4s]"></div>
+          </div>
+
+          <!-- Neural Signals (Particles) -->
+          <div class="absolute inset-0">
+            <div class="absolute left-[25%] w-[2px] h-8 bg-gradient-to-t from-transparent to-[#10b981] rounded-full blur-[1px] animate-[particle-rise_5s_linear_infinite]"></div>
+            <div class="absolute left-[45%] w-[2px] h-12 bg-gradient-to-t from-transparent to-[#10b981] rounded-full blur-[2px] animate-[particle-rise_7s_linear_infinite_1s]"></div>
+            <div class="absolute left-[65%] w-[1px] h-6 bg-gradient-to-t from-transparent to-[#10b981] rounded-full blur-[1px] animate-[particle-rise_6s_linear_infinite_2s]"></div>
+            <div class="absolute left-[85%] w-[2px] h-10 bg-gradient-to-t from-transparent to-[#10b981] rounded-full blur-[1px] animate-[particle-rise_8s_linear_infinite_3s]"></div>
+            <div class="absolute left-[35%] w-[3px] h-16 bg-gradient-to-t from-transparent to-[#10b981] rounded-full blur-[3px] animate-[particle-rise_9s_linear_infinite_0.5s]"></div>
+          </div>
+
+          <!-- The Singularity / Portal Ring -->
+          <div class="absolute top-1/2 right-[5%] md:right-[15%] -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full border border-[#10b981]/20 shadow-[0_0_120px_rgba(16,185,129,0.15),inset_0_0_80px_rgba(16,185,129,0.1)] flex items-center justify-center">
+            <!-- Inner glowing ring -->
+            <div class="absolute w-[70%] h-[70%] rounded-full border border-[#10b981]/30 shadow-[0_0_60px_rgba(16,185,129,0.2)] animate-[ping-slow_5s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+            <div class="absolute w-[50%] h-[50%] rounded-full border border-[#10b981]/40 shadow-[0_0_40px_rgba(16,185,129,0.3)] animate-[ping-slow_5s_cubic-bezier(0,0,0.2,1)_infinite_2.5s]"></div>
+
+            <!-- Orbital Dots -->
+            <div class="absolute w-[90%] h-[90%] rounded-full animate-[spin_15s_linear_infinite]">
+              <div class="absolute top-0 left-1/2 w-1.5 h-1.5 bg-[#10b981] rounded-full shadow-[0_0_10px_#10b981] -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+            <div class="absolute w-[110%] h-[110%] rounded-full border border-[#10b981]/5 animate-[spin_25s_linear_infinite_reverse]">
+              <div class="absolute bottom-0 left-1/2 w-1 h-1 bg-white/60 rounded-full shadow-[0_0_8px_white] -translate-x-1/2 translate-y-1/2"></div>
+              <div class="absolute top-1/2 right-0 w-2 h-2 bg-[#10b981]/80 rounded-full shadow-[0_0_12px_#10b981] translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 lg:gap-6 relative z-10 w-full items-center">
+          <!-- Editorial Typography -->
+          <div class="lg:col-span-6 flex flex-col justify-center relative z-20 pointer-events-none">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#10b981]/20 bg-[#10b981]/5 backdrop-blur-md text-[#10b981] text-[10px] font-medium uppercase tracking-widest mb-8 w-max shadow-[0_0_15px_rgba(16,185,129,0.1)] pointer-events-auto">
+              <div class="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shadow-[0_0_5px_#10b981]"></div>
+              System Active: V.4 Omni
+            </div>
+
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-8 leading-[1.05] emerald-text-glow transition-all duration-500 pointer-events-auto">
+              Creative
+              <br>
+              <span class="text-gradient bg-gradient-to-r from-white via-emerald-100 to-[#10b981] drop-shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                Omniscience.
+              </span>
+            </h1>
+
+            <p class="text-base md:text-lg text-white/60 mb-10 max-w-md font-light leading-relaxed pointer-events-auto">
+              The world’s first autonomous creative matrix. Synthesize
+              campaigns, direct motion systems, and conjure brand realities from
+              pure thought within a living neural interface.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-start pointer-events-auto">
+              <button class="btn-scan px-8 py-4 rounded-full bg-[#10b981] text-black text-xs font-semibold hover:scale-105 transition-transform duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] flex items-center gap-2 border border-[#10b981]">
+                Commence Creation
+                <iconify-icon icon="solar:arrow-right-linear" class="text-sm"></iconify-icon>
+              </button>
+              <button class="btn-ripple px-8 py-4 rounded-full border border-[#10b981]/30 bg-[#10b981]/5 backdrop-blur-md text-white text-xs font-medium hover:bg-[#10b981]/10 hover:border-[#10b981]/50 transition-all duration-300 flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+                <iconify-icon icon="solar:play-circle-linear" class="text-sm text-[#10b981]"></iconify-icon>
+                View Transmissions
+              </button>
+            </div>
+          </div>
+
+          <!-- Orbiting Parallax Panels -->
+          <div class="lg:col-span-6 relative h-[500px] md:h-[600px] w-full hidden sm:block parallax-container z-10" id="hero-parallax">
+            <!-- Panel 1: Parameter Dashboard -->
+            <div class="parallax-panel absolute top-[10%] right-[15%] w-[240px] glass-panel-green hero-spotlight rounded-2xl flex flex-col p-5 shadow-2xl z-10 anim-float" data-depth="0.15">
+              <div class="flex justify-between items-center mb-4 opacity-70">
+                <div class="flex items-center gap-2">
+                  <iconify-icon icon="solar:chart-square-linear" class="text-[#10b981] text-lg"></iconify-icon>
+                  <span class="text-[9px] text-[#10b981] uppercase tracking-widest font-mono">
+                    SYS.PARAMS
+                  </span>
+                </div>
+                <div class="w-1 h-1 bg-[#10b981] rounded-full animate-pulse shadow-[0_0_4px_#10b981]"></div>
+              </div>
+              <div class="flex items-end gap-1.5 h-16 mt-2 border-b border-[#10b981]/20 pb-1">
+                <div class="w-full bg-gradient-to-t from-[#10b981]/40 to-[#10b981]/80 rounded-t-sm animate-[pulse-bar_2s_ease-in-out_infinite]"></div>
+                <div class="w-full bg-gradient-to-t from-[#10b981]/20 to-[#10b981]/60 rounded-t-sm animate-[pulse-bar-2_2.5s_ease-in-out_infinite]"></div>
+                <div class="w-full bg-gradient-to-t from-[#10b981]/50 to-[#10b981] rounded-t-sm animate-[pulse-bar-3_1.8s_ease-in-out_infinite] shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+                <div class="w-full bg-gradient-to-t from-[#10b981]/30 to-[#10b981]/70 rounded-t-sm animate-[pulse-bar_3s_ease-in-out_infinite]"></div>
+                <div class="w-full bg-gradient-to-t from-[#10b981]/20 to-[#10b981]/50 rounded-t-sm animate-[pulse-bar-2_2.2s_ease-in-out_infinite]"></div>
+              </div>
+            </div>
+
+            <!-- Panel 2: Prompt Generation -->
+            <div class="parallax-panel absolute top-[35%] left-[5%] w-[360px] glass-panel-green hero-spotlight border border-[#10b981]/30 rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.6)] overflow-hidden z-30 anim-float-rev" data-depth="0.4">
+              <div class="absolute inset-0 bg-gradient-to-br from-[#10b981]/5 to-transparent pointer-events-none"></div>
+              <div class="relative z-10 p-8 flex flex-col h-full">
+                <div class="flex items-center gap-2 mb-6 opacity-60">
+                  <div class="w-2 h-2 rounded-full bg-[#10b981]/50"></div>
+                  <div class="w-2 h-2 rounded-full bg-[#10b981]/30"></div>
+                  <div class="w-2 h-2 rounded-full bg-[#10b981]/10"></div>
+                  <span class="ml-auto text-[9px] text-[#10b981] font-mono tracking-widest uppercase">
+                    Input Stream
+                  </span>
+                </div>
+                <div>
+                  <p class="text-[10px] text-white/60 uppercase tracking-widest font-medium mb-3 flex items-center gap-2">
+                    <iconify-icon icon="solar:pen-new-square-linear" class="text-[#10b981]"></iconify-icon>
+                    Generating Reality
+                  </p>
+                  <div class="text-lg text-white font-medium tracking-tight leading-snug w-full h-14">
+                    <span class="typewriter-text inline-block">
+                      "A hyper-realistic cinematic portrait...
+                    </span>
+                  </div>
+                  <div class="w-full h-1 bg-[#10b981]/10 rounded-full mt-6 overflow-hidden relative">
+                    <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-[#10b981]/50 to-[#10b981] w-[60%] shadow-[0_0_10px_#10b981]">
+                      <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-r from-transparent to-white/80"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3: Neural Match Indicator -->
+            <div class="parallax-panel absolute bottom-[10%] right-[5%] w-[180px] glass-panel-green hero-spotlight rounded-2xl z-20 flex items-center justify-center p-6 border-[#10b981]/20 shadow-[0_20px_40px_rgba(0,0,0,0.4)] anim-float" data-depth="0.25">
+              <div class="text-center w-full">
+                <div class="flex items-center justify-center gap-2 mb-2 opacity-80">
+                  <iconify-icon icon="solar:cpu-linear" class="text-[#10b981] text-xl"></iconify-icon>
+                </div>
+                <div class="text-4xl font-medium tracking-tight text-white mb-1 flex items-center justify-center">
+                  <span class="counter-up" data-target="99.8">0.8</span>
+                  <span class="text-sm text-[#10b981] ml-1">%</span>
+                </div>
+                <div class="text-[9px] text-white/50 uppercase tracking-widest font-medium font-mono">
+                  Neural Match
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+          <span class="text-[9px] text-[#10b981] uppercase tracking-widest font-mono">
+            Descend
+          </span>
+          <div class="w-px h-10 bg-gradient-to-b from-[#10b981]/30 to-transparent relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-4 bg-[#10b981] shadow-[0_0_8px_#10b981] animate-[scroll-probe_1.5s_ease-in-out_infinite]"></div>
+          </div>
+        </div>
+
+        <script>
+          (function() {
+              const heroSection = document.getElementById('hero-section');
+              const panels = heroSection ? heroSection.querySelectorAll('.parallax-panel') : [];
+
+              if(heroSection && panels.length > 0) {
+                  heroSection.addEventListener('mousemove', (e) => {
+                      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+                      panels.forEach(panel => {
+                          const depth = parseFloat(panel.getAttribute('data-depth')) || 0.2;
+                          const moveX = x * 40 * depth;
+                          const moveY = y * 40 * depth;
+                          const rotateX = -y * 8 * depth;
+                          const rotateY = x * 8 * depth;
+
+                          panel.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                      });
+                  });
+
+                  heroSection.addEventListener('mouseleave', () => {
+                      panels.forEach(panel => {
+                          panel.style.transform = `translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg)`;
+                      });
+                  });
+              }
+
+              const spotlights = heroSection ? heroSection.querySelectorAll('.hero-spotlight') : [];
+              spotlights.forEach(spotlight => {
+                  spotlight.addEventListener('mousemove', (e) => {
+                      const rect = spotlight.getBoundingClientRect();
+                      const x = e.clientX - rect.left;
+                      const y = e.clientY - rect.top;
+                      spotlight.style.setProperty('--mouse-x', `${x}px`);
+                      spotlight.style.setProperty('--mouse-y', `${y}px`);
+                  });
+              });
+
+              const counter = heroSection ? heroSection.querySelector('.counter-up') : null;
+              if (counter) {
+                  let start = 0;
+                  const target = parseFloat(counter.getAttribute('data-target'));
+                  const duration = 2000;
+                  const increment = target / (duration / 16);
+
+                  const updateCounter = () => {
+                      start += increment;
+                      if (start < target) {
+                          counter.innerText = start.toFixed(1);
+                          requestAnimationFrame(updateCounter);
+                      } else {
+                          counter.innerText = target.toFixed(1);
+                      }
+                  };
+                  setTimeout(updateCounter, 800);
+              }
+          })();
+        </script>
+      </section>
+
+      <!-- 2. Brand Trust (Infinite Masked Marquee Animation) -->
+      <section class="py-12 border-y border-white/5 bg-[#050505] overflow-hidden relative">
+        <!-- Fade masks for edges -->
+        <div class="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10"></div>
+        <div class="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10"></div>
+
+        <div class="flex items-center gap-12 whitespace-nowrap anim-marquee">
+          <!-- Group 1 -->
+          <div class="flex items-center gap-12">
+            <span class="text-sm font-medium text-white/30 uppercase tracking-[0.2em]">
+              Empowering The Avant-Garde
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Studio Alpha
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Nexus Collectif
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Kinetix Design
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Oblivion Arts
+            </span>
+          </div>
+          <!-- Group 2 (Clone for infinite effect) -->
+          <div class="flex items-center gap-12 ml-12">
+            <span class="text-sm font-medium text-white/30 uppercase tracking-[0.2em]">
+              Empowering The Avant-Garde
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Studio Alpha
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Nexus Collectif
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Kinetix Design
+            </span>
+            <iconify-icon icon="solar:star-fall-linear" class="text-white/20"></iconify-icon>
+            <span class="text-xl md:text-2xl font-light text-white tracking-tight">
+              Oblivion Arts
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Capabilities (Staggered Scroll Reveal) -->
+      <section class="py-24 bg-[#050505] relative font-sans text-white overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-10">
+          <!-- Header -->
+          <div class="mb-16">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-2 h-2 rounded-[2px] bg-[#00FF66] shadow-[0_0_8px_rgba(0,255,102,0.8)] animate-pulse"></span>
+              <span class="text-[10px] uppercase tracking-[0.1em] text-[#888888] font-medium">
+                Intelligence Suite
+              </span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-medium tracking-tight text-white mb-6 leading-[0.95]">
+              Instruments of
+              <br>
+              <span class="bg-gradient-to-b from-white to-[#888888] bg-clip-text text-transparent">
+                Imaginative Supremacy.
+              </span>
+            </h2>
+            <p class="text-[#888888] text-sm leading-relaxed max-w-xl">
+              Abandon rigid templates. Velora offers a fluid suite of
+              intelligence tools that adapt to your creative frequency, turning
+              abstract concepts into concrete masterworks.
+            </p>
+          </div>
+
+          <!-- Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Card 1: Visual Synthesis -->
+            <div class="md:col-span-2 md:row-span-2 hover:border-[#444444] transition-colors duration-300 overflow-hidden flex flex-col min-h-[300px] group bg-[#020603] border-[#222222] border rounded-[4px] relative pt-6 pr-6 pb-6 pl-6">
+              <!-- Ambient background glow -->
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_72%_50%,rgba(0,255,102,0.07)_0%,transparent_48%)] opacity-70 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none animate-[pulse_6s_ease-in-out_infinite_alternate] z-0"></div>
+
+              <!-- Globe background -->
+              <canvas id="globe-canvas-aura-emmp0ef4jf87c46y" class="absolute inset-0 w-full h-full z-[1] block pointer-events-none" width="1304" height="600"></canvas>
+
+              <!-- Top row -->
+              <div class="relative z-10 flex justify-between items-start mb-8">
+                <span class="text-[10px] uppercase tracking-[0.1em] text-[#888888] block">
+                  Module 01
+                </span>
+                <span class="font-mono text-xs text-[#00FF66]">● ACTIVE</span>
+              </div>
+
+              <!-- Bottom content -->
+              <div class="relative z-10 mt-auto max-w-sm">
+                <div class="w-10 h-10 border border-[#222222] bg-[#111111]/80 rounded-[2px] flex items-center justify-center mb-6 text-white group-hover:border-[#444444] transition-colors backdrop-blur-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                    <circle cx="9" cy="9" r="2"></circle>
+                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                  </svg>
+                </div>
+
+                <h3 class="text-2xl font-medium tracking-tight mb-2 text-white">
+                  Visual Synthesis
+                </h3>
+
+                <p class="text-[#888888] text-sm leading-relaxed max-w-sm">
+                  Render impossible geometries, ultra-realistic product shots,
+                  and surreal atmospheres using our proprietary latent diffusion
+                  architecture.
+                </p>
+              </div>
+
+              <script>
+                (function () {
+                  const canvas = document.getElementById('globe-canvas-aura-emmp0ef4jf87c46y');
+                  if (!canvas) return;
+
+                  const ctx = canvas.getContext('2d');
+                  if (!ctx) return;
+
+                  let width = 0;
+                  let height = 0;
+                  let cx = 0;
+                  let cy = 0;
+                  let radius = 0;
+                  let dpr = window.devicePixelRatio || 1;
+
+                  const dots = [];
+                  const numPoints = 1400;
+                  const phi = Math.PI * (3 - Math.sqrt(5));
+
+                  for (let i = 0; i < numPoints; i++) {
+                    const y = 1 - (i / (numPoints - 1)) * 2;
+                    const r = Math.sqrt(1 - y * y);
+                    const theta = phi * i;
+
+                    const x = Math.cos(theta) * r;
+                    const z = Math.sin(theta) * r;
+
+                    const n1 = Math.sin(x * 3.4) * Math.cos(y * 3.2) + Math.sin(z * 3.5);
+                    const n2 = Math.sin(x * 6.2) * Math.cos(y * 6.4) + Math.sin(z * 6.0);
+                    const val = n1 + n2 * 0.42;
+
+                    if (val > 0.28) {
+                      dots.push({
+                        x,
+                        y,
+                        z,
+                        phase: Math.random() * Math.PI * 2,
+                        baseSize: 0.7 + Math.random() * 0.65
+                      });
+                    }
+                  }
+
+                  function resize() {
+                    const rect = canvas.parentElement.getBoundingClientRect();
+                    dpr = window.devicePixelRatio || 1;
+
+                    width = rect.width;
+                    height = rect.height;
+
+                    canvas.width = Math.floor(width * dpr);
+                    canvas.height = Math.floor(height * dpr);
+
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    ctx.scale(dpr, dpr);
+
+                    cx = width * 0.72;
+                    cy = height * 0.52;
+                    radius = Math.min(width, height) * 0.42;
+                  }
+
+                  window.addEventListener('resize', resize);
+                  resize();
+
+                  let time = 0;
+                  const tilt = 0.33;
+
+                  function project(x, y, z, rotY) {
+                    const rx = x * Math.cos(rotY) - z * Math.sin(rotY);
+                    const rz = x * Math.sin(rotY) + z * Math.cos(rotY);
+
+                    const ty = y * Math.cos(tilt) - rz * Math.sin(tilt);
+                    const tz = y * Math.sin(tilt) + rz * Math.cos(tilt);
+
+                    return { x: rx, y: ty, z: tz };
+                  }
+
+                  function drawGrid(rotation) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    ctx.clip();
+
+                    ctx.strokeStyle = 'rgba(0,255,102,0.045)';
+                    ctx.lineWidth = 1;
+
+                    for (let i = 0; i < 16; i++) {
+                      const lon = (i / 16) * Math.PI * 2;
+                      ctx.beginPath();
+                      let started = false;
+
+                      for (let j = 0; j <= 50; j++) {
+                        const lat = Math.PI * (j / 50 - 0.5);
+                        const x = Math.cos(lat) * Math.cos(lon);
+                        const y = Math.sin(lat);
+                        const z = Math.cos(lat) * Math.sin(lon);
+
+                        const p = project(x, y, z, rotation);
+                        if (p.z < -0.02) {
+                          started = false;
+                          continue;
+                        }
+
+                        const px = cx + p.x * radius;
+                        const py = cy - p.y * radius;
+
+                        if (!started) {
+                          ctx.moveTo(px, py);
+                          started = true;
+                        } else {
+                          ctx.lineTo(px, py);
+                        }
+                      }
+
+                      ctx.stroke();
+                    }
+
+                    for (let i = 1; i < 12; i++) {
+                      const lat = Math.PI * (i / 12 - 0.5);
+                      ctx.beginPath();
+                      let started = false;
+
+                      for (let j = 0; j <= 80; j++) {
+                        const lon = (j / 80) * Math.PI * 2;
+                        const x = Math.cos(lat) * Math.cos(lon);
+                        const y = Math.sin(lat);
+                        const z = Math.cos(lat) * Math.sin(lon);
+
+                        const p = project(x, y, z, rotation);
+                        if (p.z < -0.02) {
+                          started = false;
+                          continue;
+                        }
+
+                        const px = cx + p.x * radius;
+                        const py = cy - p.y * radius;
+
+                        if (!started) {
+                          ctx.moveTo(px, py);
+                          started = true;
+                        } else {
+                          ctx.lineTo(px, py);
+                        }
+                      }
+
+                      ctx.stroke();
+                    }
+
+                    ctx.restore();
+                  }
+
+                  function animate() {
+                    time += 0.0032;
+                    ctx.clearRect(0, 0, width, height);
+
+                    const glow = ctx.createRadialGradient(cx, cy, radius * 0.65, cx, cy, radius * 1.45);
+                    glow.addColorStop(0, 'rgba(0,255,102,0.09)');
+                    glow.addColorStop(0.45, 'rgba(0,255,102,0.035)');
+                    glow.addColorStop(1, 'rgba(0,255,102,0)');
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius * 1.45, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    const sphereFill = ctx.createRadialGradient(
+                      cx - radius * 0.28,
+                      cy - radius * 0.22,
+                      0,
+                      cx,
+                      cy,
+                      radius
+                    );
+                    sphereFill.addColorStop(0, 'rgba(0,70,26,0.16)');
+                    sphereFill.addColorStop(0.55, 'rgba(0,20,8,0.08)');
+                    sphereFill.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = sphereFill;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    drawGrid(time);
+
+                    const projectedDots = dots
+                      .map(dot => {
+                        const p = project(dot.x, dot.y, dot.z, time);
+                        return {
+                          ...dot,
+                          px: cx + p.x * radius,
+                          py: cy - p.y * radius,
+                          pz: p.z
+                        };
+                      })
+                      .sort((a, b) => a.pz - b.pz);
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    ctx.clip();
+
+                    projectedDots.forEach(dot => {
+                      const twinkle = 0.72 + 0.28 * Math.sin(time * 8 + dot.phase);
+
+                      if (dot.pz < 0) {
+                        const alpha = 0.03 + twinkle * 0.035;
+                        ctx.fillStyle = `rgba(0,255,102,${alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(dot.px, dot.py, dot.baseSize * 0.65, 0, Math.PI * 2);
+                        ctx.fill();
+                      } else {
+                        const alpha = 0.28 + twinkle * 0.38;
+                        const size = dot.baseSize + twinkle * 0.65;
+                        ctx.fillStyle = `rgba(0,255,102,${alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(dot.px, dot.py, size, 0, Math.PI * 2);
+                        ctx.fill();
+                      }
+                    });
+
+                    ctx.restore();
+
+                    ctx.strokeStyle = 'rgba(0,255,102,0.13)';
+                    ctx.lineWidth = 1.1;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    requestAnimationFrame(animate);
+                  }
+
+                  animate();
+                })();
+              </script>
+            </div>
+
+            <!-- Card 2: Motion Directing -->
+            <div class="md:col-span-2 bg-[#0A0A0A] border border-[#222222] rounded-[4px] p-6 hover:border-[#444444] transition-colors duration-300 flex flex-col justify-between group">
+              <div class="flex justify-between items-start mb-6">
+                <span class="text-[10px] uppercase tracking-[0.1em] text-[#888888] block">
+                  Module 02
+                </span>
+                <span class="font-mono text-xs text-[#888888]">SYS.MD</span>
+              </div>
+              <div class="flex gap-4 items-start">
+                <div class="w-12 h-12 border border-[#222222] bg-[#111111] rounded-[2px] shrink-0 flex items-center justify-center text-[#888888] group-hover:text-white transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video">
+                    <path d="m22 8-6 4 6 4V8Z"></path>
+                    <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
+                  </svg>
+                </div>
+                <div class="">
+                  <h3 class="text-lg font-medium tracking-tight mb-1 text-white">
+                    Motion Directing
+                  </h3>
+                  <p class="text-[#888888] text-sm leading-relaxed">
+                    Animate static vectors into fluid cinematic sequences with
+                    physics-based intelligence.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Semantic Copy -->
+            <div class="md:col-span-2 bg-[#0A0A0A] border border-[#222222] rounded-[4px] p-6 hover:border-[#444444] transition-colors duration-300 flex flex-col justify-between group">
+              <div class="flex justify-between items-start mb-6">
+                <span class="text-[10px] uppercase tracking-[0.1em] text-[#888888] block">
+                  Module 03
+                </span>
+                <span class="font-mono text-xs text-[#888888]">SYS.TXT</span>
+              </div>
+              <div class="flex gap-4 items-start">
+                <div class="w-12 h-12 border border-[#222222] bg-[#111111] rounded-[2px] shrink-0 flex items-center justify-center text-[#888888] group-hover:text-white transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen-tool">
+                    <path d="m12 19 7-7 3 3-7 7-3-3z"></path>
+                    <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                    <path d="m2 2 7.586 7.586"></path>
+                    <circle cx="11" cy="11" r="2"></circle>
+                  </svg>
+                </div>
+                <div class="">
+                  <h3 class="text-lg font-medium tracking-tight mb-1 text-white">
+                    Semantic Copy
+                  </h3>
+                  <p class="text-[#888888] text-sm leading-relaxed">
+                    Generate editorial narratives and microcopy that match
+                    visual tone instantly.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Brand DNA Extraction -->
+            <div class="md:col-span-4 bg-[#0A0A0A] border border-[#222222] rounded-[4px] p-6 md:p-8 hover:border-[#444444] transition-colors duration-300 flex flex-col md:flex-row gap-8 justify-between group mt-2">
+              <div class="md:w-1/2 flex flex-col justify-between">
+                <div class="">
+                  <span class="text-[10px] uppercase tracking-[0.1em] text-[#888888] mb-4 block">
+                    Core Feature
+                  </span>
+                  <h3 class="text-2xl font-medium tracking-tight mb-3 text-white">
+                    Brand DNA Extraction
+                  </h3>
+                  <p class="text-[#888888] text-sm leading-relaxed max-w-md">
+                    Feed Velora your existing assets. It learns your typography,
+                    color math, and spacing rules, ensuring every generated
+                    asset is perfectly on-brand and structurally sound.
+                  </p>
+                </div>
+              </div>
+
+              <div class="md:w-1/2 flex items-end">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full border-t border-[#222222] pt-6 mt-6 md:mt-auto md:border-t-0 md:pt-0">
+                  <div class="bg-[#111111] border border-[#222222] rounded-[4px] p-4 flex flex-col gap-1 transition-colors hover:border-[#444444]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type text-[#00FF66] opacity-80 mb-1">
+                      <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                      <line x1="9" x2="15" y1="20" y2="20"></line>
+                      <line x1="12" x2="12" y1="4" y2="20"></line>
+                    </svg>
+                    <span class="text-[13px] font-medium text-white tracking-tight">
+                      Type
+                    </span>
+                    <span class="font-mono text-[10px] text-[#888888]">
+                      Hierarchy
+                    </span>
+                  </div>
+
+                  <div class="bg-[#111111] border border-[#222222] rounded-[4px] p-4 flex flex-col gap-1 transition-colors hover:border-[#444444]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette text-[#4488ff] opacity-80 mb-1">
+                      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.836-.437-1.124-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                    </svg>
+                    <span class="text-[13px] font-medium text-white tracking-tight">
+                      Color
+                    </span>
+                    <span class="font-mono text-[10px] text-[#888888]">
+                      Palettes
+                    </span>
+                  </div>
+
+                  <div class="bg-[#111111] border border-[#222222] rounded-[4px] p-4 flex flex-col gap-1 transition-colors hover:border-[#444444]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid text-[#ffaa00] opacity-80 mb-1">
+                      <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+                      <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                      <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+                      <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+                    </svg>
+                    <span class="text-[13px] font-medium text-white tracking-tight">
+                      Grid
+                    </span>
+                    <span class="font-mono text-[10px] text-[#888888]">
+                      Structure
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Process/Workflow (SVG Line Draw Animation) -->
+      <section class="overflow-hidden bg-[#050505] pt-32 pb-32 relative">
+  <style>
+    .logic-grid {
+      background-image:
+        linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+      background-size: 120px 120px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
+      -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
+    }
+
+    .logic-line-bg {
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 2;
+      stroke-dasharray: 4 6;
+    }
+
+    .logic-line-progress {
+      stroke: #00ff66;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      filter: drop-shadow(0 0 8px rgba(0, 255, 102, 0.6));
+      transition: stroke-dashoffset 0.8s ease;
+    }
+
+    .logic-step {
+      opacity: 0.35;
+      transform: translateY(30px);
+      transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+    }
+
+    .logic-step.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .logic-node {
+      transition:
+        border-color 0.5s ease,
+        box-shadow 0.5s ease,
+        background 0.5s ease,
+        transform 0.5s ease;
+    }
+
+    .logic-step.is-visible .logic-node {
+      border-color: rgba(0, 255, 102, 0.42);
+      box-shadow:
+        0 0 0 1px rgba(0, 255, 102, 0.08),
+        0 0 24px rgba(0, 255, 102, 0.08),
+        inset 0 0 30px rgba(0, 255, 102, 0.04);
+      background:
+        radial-gradient(circle at center, rgba(0, 255, 102, 0.08), rgba(5, 5, 5, 1) 70%);
+      transform: scale(1.03);
+    }
+
+    .logic-step.is-visible .logic-card {
+      border-color: rgba(0, 255, 102, 0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 0 0 1px rgba(0, 255, 102, 0.02),
+        0 18px 60px rgba(0, 0, 0, 0.24);
+    }
+
+    .logic-step.is-visible .logic-accent {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .logic-card {
+      position: relative;
+      overflow: hidden;
+      transition:
+        border-color 0.5s ease,
+        box-shadow 0.5s ease,
+        opacity 0.5s ease,
+        transform 0.5s ease;
+    }
+
+    .logic-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(0, 255, 102, 0.05) 50%,
+        transparent 100%
+      );
+      transform: translateX(-130%);
+      transition: transform 0.9s ease;
+      pointer-events: none;
+    }
+
+    .logic-step.is-visible .logic-card::after {
+      transform: translateX(130%);
+    }
+
+    .logic-accent {
+      opacity: 0;
+      transform: scaleX(0.3);
+      transform-origin: left;
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+    }
+
+    .logic-bars span {
+      transform-origin: left center;
+      animation: logicBarPulse 2.6s ease-in-out infinite;
+    }
+
+    .logic-bars span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .logic-bars span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .logic-squares div {
+      animation: logicSquarePulse 2.8s ease-in-out infinite;
+    }
+
+    .logic-squares div:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .logic-squares div:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .logic-wave span {
+      animation: logicWave 1.8s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+
+    .logic-wave span:nth-child(2) {
+      animation-delay: 0.12s;
+    }
+
+    .logic-wave span:nth-child(3) {
+      animation-delay: 0.24s;
+    }
+
+    .logic-wave span:nth-child(4) {
+      animation-delay: 0.36s;
+    }
+
+    .logic-wave span:nth-child(5) {
+      animation-delay: 0.48s;
+    }
+
+    .logic-orbit::before,
+    .logic-orbit::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(0, 255, 102, 0.12);
+      border-radius: 9999px;
+      inset: 18px;
+    }
+
+    .logic-orbit::after {
+      inset: 28px;
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .logic-orbit-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #00ff66;
+      box-shadow: 0 0 14px rgba(0, 255, 102, 0.5);
+      top: 50%;
+      left: 50%;
+      margin-top: -4px;
+      margin-left: -4px;
+      animation: logicOrbit 5s linear infinite;
+    }
+
+    .logic-orbit-dot.delay-1 {
+      animation-delay: -1.6s;
+    }
+
+    .logic-orbit-dot.delay-2 {
+      animation-delay: -3.2s;
+    }
+
+    @keyframes logicBarPulse {
+      0%, 100% {
+        opacity: 0.28;
+        transform: scaleX(0.55);
+      }
+      50% {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+    }
+
+    @keyframes logicSquarePulse {
+      0%, 100% {
+        opacity: 0.35;
+        transform: translateY(0) scale(1);
+        border-color: rgba(255, 255, 255, 0.14);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-2px) scale(1.03);
+        border-color: rgba(0, 255, 102, 0.35);
+      }
+    }
+
+    @keyframes logicWave {
+      0%, 100% {
+        transform: scaleY(0.45);
+        opacity: 0.35;
+      }
+      50% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes logicOrbit {
+      0% {
+        transform: rotate(0deg) translateX(34px) rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg) translateX(34px) rotate(-360deg);
+      }
+    }
+  </style>
+
+  <div class="logic-grid absolute inset-0 pointer-events-none"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,102,0.06),transparent_55%)] pointer-events-none"></div>
+
+  <div class="max-w-3xl mx-auto px-6 text-center mb-24 relative z-10">
+    <h2 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-4">
+      The Logic of Creation.
+    </h2>
+    <p class="text-white/50 text-sm font-light">
+      From absolute void to polished campaign in five algorithmic steps.
+    </p>
+  </div>
+
+  <div class="z-10 max-w-5xl mx-auto px-6 relative">
+    <!-- center animated line -->
+    <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-20 -translate-x-1/2 pointer-events-none flex justify-center">
+      <svg height="100%" width="2" class="absolute inset-y-0 left-1/2 -translate-x-1/2 overflow-visible">
+        <line x1="1" y1="0" x2="1" y2="100%" class="logic-line-bg"></line>
+        <line x1="1" y1="0" x2="1" y2="100%" class="logic-line-progress" id="logic-process-line" pathLength="1" style="stroke-dashoffset: 1;"></line>
+      </svg>
+    </div>
+
+    <div class="space-y-28 md:space-y-32 relative" id="logic-steps">
+      <!-- Step 1 -->
+      <div class="logic-step flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-0 relative min-h-[170px]" data-step="1">
+        <div class="md:w-5/12 text-left md:text-right pr-0 md:pr-12 pl-20 md:pl-0">
+          <h3 class="text-xl font-medium text-white tracking-tight mb-2">
+            Ingestion
+          </h3>
+          <p class="text-xs text-white/50 font-light leading-relaxed">
+            Upload raw ideas, text briefs, or moodboards. The semantic
+            engine parses intent and conceptual boundaries.
+          </p>
+        </div>
+
+        <div class="absolute left-0 md:left-1/2 top-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+          <div class="logic-node w-20 h-20 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)]">
+            <span class="text-xs font-mono text-white/70">01</span>
+          </div>
+        </div>
+
+        <div class="md:w-5/12 pl-20 md:pl-12 transition-all duration-500">
+          <div class="logic-card h-24 bg-[#111] border border-white/5 rounded-xl p-4 flex items-center gap-4">
+            <iconify-icon icon="solar:document-text-linear" class="text-2xl text-[#00ff66]/60"></iconify-icon>
+            <div class="space-y-2 w-full">
+              <div class="logic-accent h-px bg-gradient-to-r from-[#00ff66] to-transparent w-full rounded-full"></div>
+              <div class="logic-bars space-y-2">
+                <span class="block h-1 bg-white/10 rounded w-full"></span>
+                <span class="block h-1 bg-white/10 rounded w-3/4"></span>
+                <span class="block h-1 bg-[#00ff66]/20 rounded w-1/2"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="logic-step flex flex-col md:flex-row-reverse items-start md:items-center justify-between gap-8 md:gap-0 relative min-h-[170px]" data-step="2">
+        <div class="md:w-5/12 text-left pl-20 md:pl-12">
+          <h3 class="text-xl font-medium text-white tracking-tight mb-2">
+            Synthesis
+          </h3>
+          <p class="text-xs text-white/50 font-light leading-relaxed">
+            Neural networks iterate thousands of visual possibilities,
+            applying brand rules and spatial mathematics.
+          </p>
+        </div>
+
+        <div class="absolute left-0 md:left-1/2 top-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+          <div class="logic-node w-20 h-20 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)]">
+            <span class="text-xs font-mono text-white/70">02</span>
+          </div>
+        </div>
+
+        <div class="md:w-5/12 pr-0 md:pr-12 pl-20 md:pl-0 transition-all duration-500">
+          <div class="logic-card h-24 bg-[#111] border border-white/5 rounded-xl p-4 flex items-center justify-center gap-3">
+            <div class="logic-squares flex items-center gap-3">
+              <div class="w-8 h-8 rounded border border-white/20 bg-white/5"></div>
+              <div class="w-8 h-8 rounded border border-[#00ff66]/20 bg-[#00ff66]/[0.04]"></div>
+              <div class="w-8 h-8 rounded border border-white/20 bg-white/5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="logic-step flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-0 relative min-h-[170px]" data-step="3">
+        <div class="md:w-5/12 text-left md:text-right pr-0 md:pr-12 pl-20 md:pl-0">
+          <h3 class="text-xl font-medium text-white tracking-tight mb-2">
+            Calibration
+          </h3>
+          <p class="text-xs text-white/50 font-light leading-relaxed">
+            The engine aligns hierarchy, tone, rhythm, and composition
+            until the output locks into your visual intelligence system.
+          </p>
+        </div>
+
+        <div class="absolute left-0 md:left-1/2 top-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+          <div class="logic-node w-20 h-20 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)]">
+            <span class="text-xs font-mono text-white/70">03</span>
+          </div>
+        </div>
+
+        <div class="md:w-5/12 pl-20 md:pl-12">
+          <div class="logic-card h-24 bg-[#111] border border-white/5 rounded-xl p-4 flex items-center justify-center">
+            <div class="logic-wave flex items-end gap-1.5 h-10">
+              <span class="block w-2 h-4 rounded-full bg-white/20"></span>
+              <span class="block w-2 h-8 rounded-full bg-[#00ff66]/55"></span>
+              <span class="block w-2 h-6 rounded-full bg-white/25"></span>
+              <span class="block w-2 h-9 rounded-full bg-[#00ff66]/30"></span>
+              <span class="block w-2 h-5 rounded-full bg-white/15"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="logic-step flex flex-col md:flex-row-reverse items-start md:items-center justify-between gap-8 md:gap-0 relative min-h-[170px]" data-step="4">
+        <div class="md:w-5/12 text-left pl-20 md:pl-12">
+          <h3 class="text-xl font-medium text-white tracking-tight mb-2">
+            Expansion
+          </h3>
+          <p class="text-xs text-white/50 font-light leading-relaxed">
+            The system multiplies the approved direction into campaigns,
+            variants, motion frames, and cross-platform compositions.
+          </p>
+        </div>
+
+        <div class="absolute left-0 md:left-1/2 top-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+          <div class="logic-node w-20 h-20 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)]">
+            <span class="text-xs font-mono text-white/70">04</span>
+          </div>
+        </div>
+
+        <div class="md:w-5/12 pr-0 md:pr-12 pl-20 md:pl-0">
+          <div class="logic-card logic-orbit h-24 bg-[#111] border border-white/5 rounded-xl p-4 relative flex items-center justify-center">
+            <div class="logic-orbit-dot"></div>
+            <div class="logic-orbit-dot delay-1"></div>
+            <div class="logic-orbit-dot delay-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="logic-step flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-0 relative min-h-[170px]" data-step="5">
+        <div class="md:w-5/12 text-left md:text-right pr-0 md:pr-12 pl-20 md:pl-0">
+          <h3 class="text-xl font-medium text-white tracking-tight mb-2">
+            Materialization
+          </h3>
+          <p class="text-xs text-white/50 font-light leading-relaxed">
+            Output production-ready assets across all formats. Vectors,
+            layered files, and high-fidelity renders delivered instantly.
+          </p>
+        </div>
+
+        <div class="absolute left-0 md:left-1/2 top-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+          <div class="logic-node w-20 h-20 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,1)]">
+            <span class="text-xs font-mono text-white/70">05</span>
+          </div>
+        </div>
+
+        <div class="md:w-5/12 pl-20 md:pl-12">
+          <div class="logic-card h-24 bg-gradient-to-br from-[#0e1610] to-[#111] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+            <div class="logic-accent absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff66] to-transparent"></div>
+            <span class="text-[10px] font-medium tracking-widest uppercase text-white">
+              Campaign_Ready.zip
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const section = document.currentScript.closest('section');
+      if (!section) return;
+
+      const steps = Array.from(section.querySelectorAll('.logic-step'));
+      const line = section.querySelector('#logic-process-line');
+      let visibleCount = 0;
+
+      const updateLine = () => {
+        const progress = visibleCount / steps.length;
+        line.style.strokeDashoffset = `${1 - progress}`;
+      };
+
+      updateLine();
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const index = steps.indexOf(entry.target);
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('is-visible');
+              visibleCount = Math.max(
+                visibleCount,
+                steps.filter((step) => step.classList.contains('is-visible')).length
+              );
+              updateLine();
+            }, index * 120);
+          }
+        });
+      }, {
+        threshold: 0.45,
+        rootMargin: "0px 0px -8% 0px"
+      });
+
+      steps.forEach((step) => observer.observe(step));
+    })();
+  </script>
+</section>
+
+      <!-- 5. Showcase (Subtle 3D Tilt on Hover) -->
+      <section class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6 mb-16 flex justify-between items-end">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-2">
+              Hallucinated Realities.
+            </h2>
+            <p class="text-white/40 text-sm font-light">
+              Recent outputs generated entirely within Velora.
+            </p>
+          </div>
+          <a href="#" class="hidden md:flex text-xs font-medium text-white hover:text-zinc-300 transition-colors uppercase tracking-widest gap-2 items-center">
+            Explore Gallery
+            <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+          </a>
+        </div>
+
+        <!-- Masonry-style Grid -->
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Item 1 -->
+          <div class="tilt-card h-80 rounded-2xl overflow-hidden relative group cursor-crosshair">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/6e2eed6d-3318-4314-b0da-7ee3e7d578f7/800w.png" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 grayscale group-hover:grayscale-0" alt="Abstract render">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6 tilt-content">
+              <p class="text-white font-medium tracking-tight mb-1">
+                Fluid Dynamics
+              </p>
+              <p class="text-[10px] uppercase tracking-widest text-white/50">
+                Motion System
+              </p>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="tilt-card h-96 rounded-2xl overflow-hidden relative group cursor-crosshair lg:translate-y-12">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6553c87d-98bb-4178-8a36-0e807a5ea183_800w.jpg" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 grayscale group-hover:grayscale-0" alt="Architecture render">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6 tilt-content">
+              <p class="text-white font-medium tracking-tight mb-1">
+                Neo-Brutalism
+              </p>
+              <p class="text-[10px] uppercase tracking-widest text-white/50">
+                Visual Concept
+              </p>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="tilt-card h-80 rounded-2xl overflow-hidden relative group cursor-crosshair">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/5202a3f6-ebd4-48e0-8f98-745016767579/800w.png" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 grayscale group-hover:grayscale-0" alt="3D object">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6 tilt-content">
+              <p class="text-white font-medium tracking-tight mb-1">
+                Glass Topography
+              </p>
+              <p class="text-[10px] uppercase tracking-widest text-white/50">
+                Product Asset
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Collaborative System (Spotlight Hover Interaction) -->
+      <section class="bg-[#0a0a0a] border-white/5 border-t pt-32 pb-32 relative overflow-hidden">
+        <!-- ambient background -->
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-white/[0.025] blur-[140px] rounded-full"></div>
+          <div class="absolute inset-0 opacity-[0.04] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:22px_22px]"></div>
+        </div>
+
+        <style>
+          #spotlight-grid .spotlight-wrapper {
+            position: relative;
+            overflow: hidden;
+            background:
+              linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
+              #101010;
+            box-shadow:
+              inset 0 1px 0 rgba(255,255,255,0.04),
+              0 20px 60px rgba(0,0,0,0.35);
+            transition:
+              transform 0.45s cubic-bezier(.2,.8,.2,1),
+              border-color 0.45s ease,
+              background 0.45s ease,
+              box-shadow 0.45s ease;
+          }
+
+          #spotlight-grid .spotlight-wrapper:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,255,255,0.12);
+            background:
+              linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02)),
+              #121212;
+            box-shadow:
+              inset 0 1px 0 rgba(255,255,255,0.06),
+              0 30px 80px rgba(0,0,0,0.45),
+              0 0 0 1px rgba(255,255,255,0.02);
+          }
+
+          #spotlight-grid .spotlight-wrapper::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+              120deg,
+              transparent 0%,
+              rgba(255,255,255,0.045) 20%,
+              transparent 40%
+            );
+            transform: translateX(-120%);
+            transition: transform 1.1s ease;
+            pointer-events: none;
+          }
+
+          #spotlight-grid .spotlight-wrapper:hover::before {
+            transform: translateX(120%);
+          }
+
+          #spotlight-grid .schema-line {
+            stroke: rgba(255,255,255,0.14);
+            stroke-width: 1;
+            fill: none;
+            stroke-dasharray: 6 10;
+            animation: flowLine 12s linear infinite;
+          }
+
+          #spotlight-grid .schema-dot {
+            fill: rgba(255,255,255,0.26);
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.14));
+            animation: pulseDot 3.5s ease-in-out infinite;
+          }
+
+          #spotlight-grid .schema-dot.delay-1 { animation-delay: 0.8s; }
+          #spotlight-grid .schema-dot.delay-2 { animation-delay: 1.6s; }
+          #spotlight-grid .schema-dot.delay-3 { animation-delay: 2.2s; }
+
+          #spotlight-grid .tiny-grid {
+            background-image:
+              linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 18px 18px;
+            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+          }
+
+          #spotlight-grid .progress-flow {
+            position: relative;
+            overflow: hidden;
+          }
+
+          #spotlight-grid .progress-flow::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            width: 40%;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(255,255,255,0.18),
+              transparent
+            );
+            animation: progressSweep 3.8s ease-in-out infinite;
+          }
+
+          #spotlight-grid .render-frame {
+            position: relative;
+            overflow: hidden;
+          }
+
+          #spotlight-grid .render-frame::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(
+              135deg,
+              transparent 20%,
+              rgba(255,255,255,0.06) 50%,
+              transparent 80%
+            );
+            animation: frameScan 4.5s linear infinite;
+          }
+
+          #spotlight-grid .bars > div {
+            animation: barPulse 3s ease-in-out infinite;
+            transform-origin: bottom;
+          }
+
+          #spotlight-grid .bars > div:nth-child(2) { animation-delay: 0.35s; }
+          #spotlight-grid .bars > div:nth-child(3) { animation-delay: 0.7s; }
+          #spotlight-grid .bars > div:nth-child(4) { animation-delay: 1.05s; }
+
+          @keyframes flowLine {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: -160; }
+          }
+
+          @keyframes pulseDot {
+            0%, 100% {
+              opacity: 0.35;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 1;
+              transform: scale(1.18);
+            }
+          }
+
+          @keyframes progressSweep {
+            0% { transform: translateX(-130%); }
+            100% { transform: translateX(340%); }
+          }
+
+          @keyframes frameScan {
+            0% { transform: translateX(-120%) translateY(20%); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateX(140%) translateY(-20%); opacity: 0; }
+          }
+
+          @keyframes barPulse {
+            0%, 100% {
+              transform: scaleY(0.9);
+              opacity: 0.65;
+            }
+            50% {
+              transform: scaleY(1.08);
+              opacity: 1;
+            }
+          }
+        </style>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+          <div class="flex flex-col items-center text-center mb-16">
+            <div class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center mb-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <iconify-icon icon="solar:network-linear" class="text-2xl text-white/30"></iconify-icon>
+            </div>
+
+            <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">
+              Collective Neural Sync.
+            </h2>
+
+            <p class="text-white/50 text-sm md:text-[15px] font-light max-w-xl leading-relaxed">
+              Creativity is no longer isolated. Velora turns your studio into a
+              shared intelligence layer where signals, approvals, and generated
+              variations move together in real time.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="spotlight-grid">
+            <!-- Card 1 -->
+            <div class="spotlight-wrapper rounded-2xl p-8 border border-white/5 flex flex-col h-72">
+              <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              <div class="absolute inset-0 tiny-grid opacity-40 pointer-events-none"></div>
+
+              <div class="relative z-10 flex items-center gap-3 mb-auto">
+                <div class="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-[10px] text-white shadow-[0_0_20px_rgba(255,255,255,0.06)]">
+                  E
+                </div>
+                <div>
+                  <span class="text-xs text-white/70 block">
+                    Elena altered parameters
+                  </span>
+                  <span class="text-[10px] text-white/30 tracking-[0.18em] uppercase">
+                    Live collaboration
+                  </span>
+                </div>
+              </div>
+
+              <div class="relative z-10">
+                <div class="mb-4 h-[56px] w-full rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3">
+                  <svg viewBox="0 0 260 56" class="w-full h-full">
+                    <path class="schema-line" d="M16 28 L70 28 L100 14 L145 14 L180 40 L244 40"></path>
+                    <circle class="schema-dot" cx="16" cy="28" r="3"></circle>
+                    <circle class="schema-dot delay-1" cx="100" cy="14" r="3"></circle>
+                    <circle class="schema-dot delay-2" cx="180" cy="40" r="3"></circle>
+                    <circle class="schema-dot delay-3" cx="244" cy="40" r="3"></circle>
+                  </svg>
+                </div>
+
+                <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden mb-2 progress-flow">
+                  <div class="h-full w-[38%] bg-gradient-to-r from-white/10 via-white/30 to-white/10"></div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <p class="text-[10px] font-mono tracking-wide text-white/30">
+                    Variance: High
+                  </p>
+                  <p class="text-[10px] font-mono tracking-wide text-white/25">
+                    signal updated
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="spotlight-wrapper rounded-2xl p-8 border border-white/5 flex flex-col h-72">
+              <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              <div class="absolute right-0 top-0 w-32 h-32 bg-white/[0.03] blur-3xl rounded-full pointer-events-none"></div>
+
+              <div class="relative z-10 flex items-center gap-3 mb-auto">
+                <div class="w-9 h-9 rounded-full bg-white/15 border border-white/10 text-white flex items-center justify-center text-[10px] shadow-[0_0_20px_rgba(255,255,255,0.06)]">
+                  M
+                </div>
+                <div>
+                  <span class="text-xs text-white">Marcus approved render</span>
+                  <span class="text-[10px] text-white/30 tracking-[0.18em] uppercase block">
+                    Review state
+                  </span>
+                </div>
+              </div>
+
+              <div class="relative z-10">
+                <div class="mb-4 h-[56px] w-full rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3">
+                  <svg viewBox="0 0 260 56" class="w-full h-full">
+                    <path class="schema-line" d="M22 28 L82 28 L110 16 L150 16 L180 28 L236 28"></path>
+                    <circle class="schema-dot" cx="22" cy="28" r="3"></circle>
+                    <circle class="schema-dot delay-1" cx="110" cy="16" r="3"></circle>
+                    <circle class="schema-dot delay-2" cx="180" cy="28" r="3"></circle>
+                    <circle class="schema-dot delay-3" cx="236" cy="28" r="3"></circle>
+                  </svg>
+                </div>
+
+                <div class="flex gap-3">
+                  <div class="render-frame w-14 h-14 bg-white/5 rounded-xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"></div>
+                  <div class="render-frame w-14 h-14 bg-white/[0.07] rounded-xl border border-white/20 shadow-[0_0_18px_rgba(255,255,255,0.12),inset_0_1px_0_rgba(255,255,255,0.06)]"></div>
+                  <div class="render-frame w-14 h-14 bg-white/5 rounded-xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] opacity-70"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="spotlight-wrapper rounded-2xl p-8 border border-white/5 flex flex-col h-72">
+              <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white/[0.02] to-transparent pointer-events-none"></div>
+
+              <div class="relative z-10 flex items-center gap-3 mb-auto">
+                <div class="w-9 h-9 rounded-full bg-white/15 border border-white/10 text-white flex items-center justify-center text-[10px] shadow-[0_0_20px_rgba(255,255,255,0.06)]">
+                  S
+                </div>
+                <div>
+                  <span class="text-xs text-white/60 block">
+                    System generated variations
+                  </span>
+                  <span class="text-[10px] text-white/30 tracking-[0.18em] uppercase">
+                    Autonomous output
+                  </span>
+                </div>
+              </div>
+
+              <div class="relative z-10">
+                <div class="mb-4 h-[56px] w-full rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3">
+                  <svg viewBox="0 0 260 56" class="w-full h-full">
+                    <path class="schema-line" d="M20 34 L70 34 L102 20 L144 20 L176 34 L238 34"></path>
+                    <circle class="schema-dot" cx="20" cy="34" r="3"></circle>
+                    <circle class="schema-dot delay-1" cx="102" cy="20" r="3"></circle>
+                    <circle class="schema-dot delay-2" cx="176" cy="34" r="3"></circle>
+                    <circle class="schema-dot delay-3" cx="238" cy="34" r="3"></circle>
+                  </svg>
+                </div>
+
+                <div class="bars flex gap-1.5 items-end h-10">
+                  <div class="w-2.5 bg-white/10 rounded-t h-[38%]"></div>
+                  <div class="w-2.5 bg-white/15 rounded-t h-[58%]"></div>
+                  <div class="w-2.5 bg-white/55 rounded-t shadow-[0_0_12px_rgba(255,255,255,0.18)] h-[88%]"></div>
+                  <div class="w-2.5 bg-white/20 rounded-t h-[48%]"></div>
+                  <div class="w-2.5 bg-white/10 rounded-t h-[28%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Pricing/Plans (Accordion Interactive Layout) -->
+      <section class="py-32 relative overflow-hidden bg-[#030303]">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">
+              Access Tiers.
+            </h2>
+            <p class="text-white/40 text-sm font-light max-w-xl mx-auto">
+              Select the appropriate intelligence matrix for your creative
+              scale. Upgrade or downgrade seamlessly as your requirements
+              evolve.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4 max-w-4xl mx-auto">
+            <!-- Tier 1 -->
+            <div class="pricing-container bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden cursor-pointer group transition-colors hover:border-white/20">
+              <div class="p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10 bg-[#0a0a0a]">
+                <div>
+                  <h3 class="text-2xl font-medium text-white tracking-tight mb-1">
+                    Core Intelligence
+                  </h3>
+                  <p class="text-xs text-white/40 font-light">
+                    For independent creators and micro-studios.
+                  </p>
+                </div>
+                <div class="flex items-center gap-6">
+                  <div class="text-right">
+                    <span class="text-3xl font-light text-white tracking-tight">
+                      $49
+                    </span>
+                    <span class="text-[10px] text-white/40 uppercase tracking-widest block">
+                      /month
+                    </span>
+                  </div>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" class="text-white/20 group-hover:text-white transition-colors text-xl transform group-hover:-rotate-90 duration-300"></iconify-icon>
+                </div>
+              </div>
+
+              <!-- Expandable Content -->
+              <div class="pricing-row grid bg-[#111]">
+                <div class="pricing-content min-h-0">
+                  <div class="p-8 md:p-10 pt-0 border-t border-white/5 mt-4">
+                    <div class="grid md:grid-cols-2 gap-8 mt-6">
+                      <ul class="space-y-3">
+                        <li class="flex items-center gap-3 text-sm text-white/70 font-light">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-white/30 text-lg"></iconify-icon>
+                          500 Synthesis Credits/mo
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-white/70 font-light">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-white/30 text-lg"></iconify-icon>
+                          Base Motion Directing
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-white/70 font-light">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-white/30 text-lg"></iconify-icon>
+                          Standard Resolution Outputs
+                        </li>
+                      </ul>
+                      <div class="flex items-end justify-start md:justify-end">
+                        <button class="px-6 py-3 rounded-full bg-white/10 text-white text-xs font-medium hover:bg-white/20 transition-colors">
+                          Initialize Core
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tier 2 -->
+            <div class="pricing-container bg-[#0a0a0a] border border-white/30 rounded-3xl overflow-hidden cursor-pointer group relative shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+              <div class="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+              <div class="p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10 bg-transparent">
+                <div class="">
+                  <div class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-white/20 text-white text-[9px] font-medium uppercase tracking-widest mb-3">
+                    Recommended
+                  </div>
+                  <h3 class="text-2xl font-medium text-white tracking-tight mb-1">
+                    Studio Nexus
+                  </h3>
+                  <p class="text-xs text-white/40 font-light">
+                    For growing teams requiring collaborative neural sync.
+                  </p>
+                </div>
+                <div class="flex items-center gap-6">
+                  <div class="text-right">
+                    <span class="text-3xl font-light text-white tracking-tight">
+                      $129
+                    </span>
+                    <span class="text-[10px] text-white/40 uppercase tracking-widest block">
+                      /month
+                    </span>
+                  </div>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" class="text-white/20 group-hover:text-white transition-colors text-xl transform group-hover:-rotate-90 duration-300"></iconify-icon>
+                </div>
+              </div>
+
+              <!-- Expandable Content -->
+              <div class="pricing-row grid bg-[#111]">
+                <div class="pricing-content min-h-0">
+                  <div class="p-8 md:p-10 pt-0 border-t border-white/5 mt-4 relative z-10">
+                    <div class="grid md:grid-cols-2 gap-8 mt-6">
+                      <ul class="space-y-3">
+                        <li class="flex items-center gap-3 text-sm text-white/90 font-light">
+                          <iconify-icon icon="solar:check-circle-bold" class="text-white text-lg"></iconify-icon>
+                          2000 Synthesis Credits/mo
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-white/90 font-light">
+                          <iconify-icon icon="solar:check-circle-bold" class="text-white text-lg"></iconify-icon>
+                          Advanced Motion Directing
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-white/90 font-light">
+                          <iconify-icon icon="solar:check-circle-bold" class="text-white text-lg"></iconify-icon>
+                          4K Resolution Outputs
+                        </li>
+                      </ul>
+                      <div class="flex items-end justify-start md:justify-end">
+                        <button class="px-6 py-3 rounded-full bg-white text-black text-xs font-medium hover:bg-white/90 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                          Deploy Nexus
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tier 3 -->
+            <div class="pricing-container bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden cursor-pointer group transition-colors hover:border-white/20">
+              <div class="p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10 bg-[#0a0a0a]">
+                <div>
+                  <h3 class="text-2xl font-medium text-white tracking-tight mb-1">
+                    Enterprise Matrix
+                  </h3>
+                  <p class="text-xs text-white/40 font-light">
+                    Unlimited access for full-scale creative agencies.
+                  </p>
+                </div>
+                <div class="flex items-center gap-6">
+                  <div class="text-right">
+                    <span class="text-3xl font-light text-white tracking-tight">
+                      $299
+                    </span>
+                    <span class="text-[10px] text-white/40 uppercase tracking-widest block">
+                      /month
+                    </span>
+                  </div>
+                  <iconify-icon icon="solar:alt-arrow-down-linear" class="text-white/20 group-hover:text-white transition-colors text-xl transform group-hover:-rotate-90 duration-300"></iconify-icon>
+                </div>
+              </div>
+
+              <!-- Expandable Content -->
+              <div class="pricing-row grid bg-[#111]">
+                <div class="pricing-content min-h-0">
+                  <div class="p-8 md:p-10 pt-0 border-t border-white/5 mt-4">
+                    <div class="grid md:grid-cols-2 gap-8 mt-6">
+                      <ul class="space-y-3">
+                        <li class="flex items-center gap-3 text-sm text-white/70 font-light">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-white/70 text-lg"></iconify-icon>
+                          Unlimited Synthesis Credits
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-white/70 font-light">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-white/70 text-lg"></iconify-icon>
+                          Neural Brand DNA Extraction
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-white/70 font-light">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-white/70 text-lg"></iconify-icon>
+                          8K &amp; Custom Resolution Outputs
+                        </li>
+                      </ul>
+                      <div class="flex items-end justify-start md:justify-end">
+                        <button class="px-6 py-3 rounded-full bg-white text-black text-xs font-medium hover:bg-white/90 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                          Contact Engineering
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-32 bg-[#050505] relative border-t border-white/5 overflow-hidden">
+        <style>
+          @keyframes testimonialFloat {
+
+            0%,
+            100% {
+              transform: translateY(0px);
+            }
+
+            50% {
+              transform: translateY(-8px);
+            }
+          }
+
+          @keyframes testimonialPulse {
+
+            0%,
+            100% {
+              opacity: 0.18;
+              transform: scale(1);
+            }
+
+            50% {
+              opacity: 0.34;
+              transform: scale(1.08);
+            }
+          }
+
+          @keyframes testimonialScan {
+            0% {
+              transform: translateX(-120%);
+              opacity: 0;
+            }
+
+            20% {
+              opacity: 0.35;
+            }
+
+            100% {
+              transform: translateX(140%);
+              opacity: 0;
+            }
+          }
+
+          @keyframes testimonialBars {
+
+            0%,
+            100% {
+              transform: scaleY(0.45);
+              opacity: 0.25;
+            }
+
+            50% {
+              transform: scaleY(1);
+              opacity: 0.8;
+            }
+          }
+
+          @keyframes testimonialOrb {
+
+            0%,
+            100% {
+              transform: scale(1) translateY(0px);
+              opacity: 0.12;
+            }
+
+            50% {
+              transform: scale(1.08) translateY(-6px);
+              opacity: 0.22;
+            }
+          }
+
+          .testimonial-reveal {
+            opacity: 0;
+            transform: translateY(26px);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+            will-change: transform, opacity;
+          }
+
+          .testimonial-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          .testimonial-card {
+            transform: translateY(0);
+            transition:
+              transform 0.45s ease,
+              border-color 0.45s ease,
+              background-color 0.45s ease,
+              box-shadow 0.45s ease,
+              opacity 0.45s ease;
+            will-change: transform;
+          }
+
+          .testimonial-card:hover {
+            transform: translateY(-8px);
+          }
+
+          .testimonial-quote-icon {
+            animation: testimonialFloat 5.5s ease-in-out infinite;
+          }
+
+          .testimonial-orb {
+            animation: testimonialOrb 7s ease-in-out infinite;
+          }
+
+          .testimonial-scan::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg,
+                transparent 0%,
+                transparent 35%,
+                rgba(255, 255, 255, 0.06) 50%,
+                transparent 65%,
+                transparent 100%);
+            transform: translateX(-120%);
+            animation: testimonialScan 7s linear infinite;
+            pointer-events: none;
+          }
+
+          .testimonial-mini-bars span {
+            transform-origin: bottom;
+            animation: testimonialBars 1.8s ease-in-out infinite;
+          }
+
+          .testimonial-mini-bars span:nth-child(2) {
+            animation-delay: 0.2s;
+          }
+
+          .testimonial-mini-bars span:nth-child(3) {
+            animation-delay: 0.4s;
+          }
+
+          .testimonial-mini-bars span:nth-child(4) {
+            animation-delay: 0.6s;
+          }
+
+          .testimonial-mini-bars span:nth-child(5) {
+            animation-delay: 0.8s;
+          }
+        </style>
+
+        <!-- background noise/grid -->
+        <div class="opacity-[0.03] absolute top-0 right-0 bottom-0 left-0"></div>
+
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="testimonial-orb absolute -top-24 left-[18%] w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.06)_0%,transparent_65%)] blur-3xl"></div>
+          <div class="testimonial-orb absolute bottom-0 right-[8%] w-[340px] h-[340px] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.04)_0%,transparent_65%)] blur-3xl [animation-delay:1.5s]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+          <div class="flex flex-col md:flex-row gap-12 items-end mb-20 testimonial-reveal">
+            <h2 class="text-4xl md:text-6xl font-medium tracking-tight text-white leading-[1.1] md:w-1/2">
+              Echoes from the
+              <br>
+              <span class="text-white/30">Singularity.</span>
+            </h2>
+            <div class="md:w-1/2">
+              <p class="text-white/50 text-sm font-light leading-relaxed border-l border-white/20 pl-6">
+                Transmissions from avant-garde directors, synthetic architects,
+                and creative scientists who have integrated Velora into their
+                cognitive workflows.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-4 h-auto md:h-[600px]">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card testimonial-reveal testimonial-scan md:col-span-2 md:row-span-2 bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-white/30 transition-colors flex flex-col justify-between" style="transition-delay: 120ms;">
+              <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.07)_0%,transparent_45%)]"></div>
+
+              <div class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-50 transition-opacity">
+                <iconify-icon icon="lucide:quote" class="testimonial-quote-icon text-6xl text-white"></iconify-icon>
+              </div>
+
+              <div class="relative z-10 mb-8">
+                <p class="text-2xl md:text-3xl font-light text-white tracking-tight leading-snug">
+                  "Velora doesn't just execute commands. It anticipates the
+                  aesthetic trajectory of my thoughts. It's less like a tool and
+                  more like a highly cultured creative partner."
+                </p>
+              </div>
+
+              <div class="flex items-center gap-4 relative z-10 mt-auto">
+                <div class="w-12 h-12 rounded-full bg-white/10 border border-white/20 overflow-hidden grayscale transition-transform duration-500 group-hover:scale-105">
+                  <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f8322831-e2ba-4007-9960-8e7e82b00480_320w.webp" alt="Elara Vance" class="w-full h-full object-cover">
+                </div>
+                <div class="">
+                  <p class="text-sm font-medium text-white tracking-tight">
+                    Elara Vance
+                  </p>
+                  <p class="text-[10px] uppercase tracking-widest text-white/50">
+                    Creative Director, Nexus
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Abstract block -->
+            <div class="testimonial-card testimonial-reveal hidden md:flex md:col-span-1 md:row-span-1 bg-gradient-to-br from-white/5 to-transparent border border-white/5 rounded-3xl items-center justify-center relative overflow-hidden group" style="transition-delay: 240ms;">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+              <div class="w-full h-full p-4 flex flex-col justify-between opacity-30 relative z-10">
+                <div class="flex justify-between w-full">
+                  <div class="w-2 h-2 bg-white rounded-full"></div>
+                  <div class="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+
+                <div class="flex flex-col items-center gap-3">
+                  <div class="testimonial-mini-bars flex items-end gap-1 h-7">
+                    <span class="block w-1 h-3 bg-white/60 rounded-full"></span>
+                    <span class="block w-1 h-5 bg-white/60 rounded-full"></span>
+                    <span class="block w-1 h-6 bg-white/90 rounded-full"></span>
+                    <span class="block w-1 h-4 bg-white/60 rounded-full"></span>
+                    <span class="block w-1 h-2 bg-white/50 rounded-full"></span>
+                  </div>
+                  <div class="text-center font-mono text-[10px] text-white">
+                    SYS_LOG_901
+                  </div>
+                </div>
+
+                <div class="flex justify-between w-full">
+                  <div class="w-2 h-2 bg-white rounded-full"></div>
+                  <div class="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card testimonial-reveal md:col-span-1 md:row-span-2 bg-[#111] border border-white/5 rounded-3xl p-6 relative flex flex-col justify-between group hover:bg-[#151515] transition-colors" style="transition-delay: 360ms;">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_45%)] rounded-3xl pointer-events-none"></div>
+
+              <p class="text-sm font-light text-white/70 leading-relaxed mb-6 relative z-10">
+                "The spatial math it applies to typography and layout is
+                flawless. We've reduced our conceptualization phase from weeks
+                to literal minutes."
+              </p>
+
+              <div class="mt-auto relative z-10">
+                <div class="w-8 h-px bg-white/20 mb-4 transition-all duration-500 group-hover:w-16 group-hover:bg-white/40"></div>
+                <p class="text-xs font-medium text-white tracking-tight">
+                  Julian Thorne
+                </p>
+                <p class="text-[9px] uppercase tracking-widest text-white/40">
+                  Lead Designer
+                </p>
+              </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card testimonial-reveal md:col-span-1 md:row-span-2 bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 relative flex flex-col justify-between group hover:border-white/20 transition-colors" style="transition-delay: 480ms;">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05)_0%,transparent_55%)] rounded-3xl pointer-events-none"></div>
+
+              <p class="text-sm font-light text-white/70 leading-relaxed mb-6 relative z-10">
+                "I fed it a 30-page brand manifesto, and it generated an entire
+                architectural language for our virtual spaces. Unprecedented."
+              </p>
+
+              <div class="mt-auto relative z-10">
+                <div class="w-8 h-px bg-white/20 mb-4 transition-all duration-500 group-hover:w-16 group-hover:bg-white/40"></div>
+                <p class="text-xs font-medium text-white tracking-tight">
+                  Dr. Aris Thorne
+                </p>
+                <p class="text-[9px] uppercase tracking-widest text-white/40">
+                  Synthetic Architect
+                </p>
+              </div>
+            </div>
+
+            <!-- Testimonial 4 -->
+            <div class="testimonial-card testimonial-reveal md:col-span-2 md:row-span-1 bg-gradient-to-r from-[#111] to-[#0a0a0a] border border-white/10 rounded-3xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:shadow-[0_0_30px_rgba(255,255,255,0.02)] transition-shadow relative overflow-hidden group" style="transition-delay: 600ms;">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_0%,transparent_45%,rgba(255,255,255,0.02)_100%)] pointer-events-none"></div>
+
+              <div class="flex gap-4 items-center md:w-1/3 relative z-10">
+                <div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10 transition-transform duration-500 group-hover:scale-105 group-hover:border-white/20">
+                  <iconify-icon icon="lucide:activity" class="text-white/50"></iconify-icon>
+                </div>
+                <div class="">
+                  <p class="text-xs font-medium text-white tracking-tight">
+                    Studio Kinetix
+                  </p>
+                  <p class="text-[9px] uppercase tracking-widest text-white/40">
+                    Motion Agency
+                  </p>
+                </div>
+              </div>
+
+              <p class="text-sm font-light text-white/70 leading-relaxed md:w-2/3 border-l-0 md:border-l border-t md:border-t-0 border-white/10 pl-0 md:pl-6 pt-4 md:pt-0 relative z-10">
+                "Velora bridges the gap between static vectors and fluid motion
+                seamlessly. The interpolation algorithms are lightyears ahead of
+                anything we've used."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          (() => {
+            const section = document.currentScript.closest('section');
+            if (!section) return;
+
+            const items = section.querySelectorAll('.testimonial-reveal');
+
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const index = [...items].indexOf(entry.target);
+                  entry.target.style.transitionDelay = `${index * 120}ms`;
+                  entry.target.classList.add('is-visible');
+                  observer.unobserve(entry.target);
+                }
+              });
+            }, { threshold: 0.16 });
+
+            items.forEach((item) => observer.observe(item));
+          })();
+        </script>
+      </section>
+    </main>
+    <footer class="bg-[#030303] pt-32 pb-10 border-t border-white/10 relative overflow-hidden">
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80vw] h-[400px] bg-white/5 rounded-[100%] blur-[100px] pointer-events-none"></div>
+
+      <div class="z-10 max-w-7xl mr-auto ml-auto pr-6 pl-6 relative">
+        <div class="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-6 mb-32 border-b border-white/10 pb-20">
+          <!-- Brand -->
+          <div class="col-span-2 md:col-span-4 flex flex-col justify-between">
+            <div class="">
+              <div class="flex items-center gap-3 mb-6">
+                
+                <span class="text-lg font-medium tracking-tight text-white">
+                  Velora
+                </span>
+              </div>
+              <p class="text-sm font-light text-white/40 max-w-xs">
+                Creative Intelligence Matrix.
+                <br>
+                Built for the avant-garde.
+              </p>
+            </div>
+            <button class="mt-12 w-max px-6 py-3 rounded-full border border-white/20 bg-transparent text-white text-xs font-medium hover:bg-white/10 transition-colors flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+              System Status: Operational
+            </button>
+          </div>
+
+          <!-- Links -->
+          <div class="col-span-1 md:col-span-2 md:col-start-7">
+            <h4 class="text-[10px] uppercase tracking-widest text-white/30 mb-6 font-medium">
+              Intelligence
+            </h4>
+            <ul class="space-y-4">
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors">
+                  Visual Synthesis
+                </a>
+              </li>
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors">
+                  Motion Directing
+                </a>
+              </li>
+              <li class="">
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors">
+                  Semantic Copy
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-span-1 md:col-span-2">
+            <h4 class="text-[10px] uppercase tracking-widest text-white/30 mb-6 font-medium">
+              Ecosystem
+            </h4>
+            <ul class="space-y-4">
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors">
+                  Studio Protocol
+                </a>
+              </li>
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors">
+                  Neural Sync
+                </a>
+              </li>
+              <li class="">
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors">
+                  API Access
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-span-2 md:col-span-2">
+            <h4 class="text-[10px] uppercase tracking-widest text-white/30 mb-6 font-medium">
+              Coordinates
+            </h4>
+            <ul class="space-y-4">
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                  <iconify-icon icon="lucide:twitter" class="text-sm"></iconify-icon>
+                  Twitter / X
+                </a>
+              </li>
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                  <iconify-icon icon="lucide:github" class="text-sm"></iconify-icon>
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="#" class="text-xs font-light text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                  <iconify-icon icon="lucide:dribbble" class="text-sm"></iconify-icon>
+                  Dribbble
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Giant Typography -->
+        <div class="overflow-hidden flex select-none pointer-events-none w-full mb-10 items-center justify-center" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 15%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 15%, transparent);">
+          <h1 class="text-[15vw] leading-none bg-clip-text uppercase font-medium text-transparent tracking-tighter text-center bg-gradient-to-b from-white to-white/10 opacity-20 w-full z-10">
+            Velora
+          </h1>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-white/30 font-medium uppercase tracking-widest">
+          <p>© 2024 Velora Intelligence. All rights reserved.</p>
+          <div class="flex gap-6">
+            <a href="#" class="hover:text-white/60 transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" class="hover:text-white/60 transition-colors">
+              Terms of Service
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  
+</body></html>

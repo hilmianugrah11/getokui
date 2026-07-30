@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased scroll-smooth"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertexa - Build Beyond the Ordinary</title>
+<!-- Fonts: Using Inter to accurately emulate the requested Geist structure -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<!-- Tailwind Config -->
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+'vertex-bg': '#02040a',
+'vertex-blue': '#2D43E6',
+'vertex-blue-bright': '#374EF0',
+'vertex-border': '#374151',
+'vertex-text-pri': '#D1D5DB',
+'vertex-text-sec': '#FFFFFF',
+},
+fontFamily: {
+sans: ['Inter', 'system-ui', 'sans-serif'],
+}
+}
+}
+}
+</script>
+<style>
+/* Custom Utilities */
+.gradient-shell {
+background: linear-gradient(180deg, rgba(55, 65, 81, 0.8) 0%, rgba(55, 65, 81, 0) 100%);
+}
+.scanline-overlay {
+background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(0, 0, 0, 0.6) 2px, rgba(0, 0, 0, 0.6) 4px);
+}
+/* Hide scrollbar for clean horizontal scrolling areas if any */
+.no-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.no-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+/* FAQ Accordion Transitions */
+.faq-content {
+transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+max-height: 0;
+opacity: 0;
+overflow: hidden;
+}
+.faq-item.active .faq-content {
+max-height: 200px;
+opacity: 1;
+}
+.faq-item.active .faq-icon {
+transform: rotate(45deg);
+}
+</style>
+<meta name="aura-font-heading-class" content="font-geist"><meta name="aura-font-body-class" content="font-geist"><meta name="aura-font-heading-label" content="Geist"><meta name="aura-font-body-label" content="Geist"><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><meta name="disabled-font-classes" content="font-roboto,font-montserrat,font-poppins,font-playfair,font-instrument-serif,font-merriweather,font-bricolage,font-jakarta,font-manrope,font-space-grotesk,font-work-sans,font-pt-serif,font-geist-mono,font-space-mono,font-quicksand,font-nunito,font-newsreader,font-google-sans-flex,font-oswald,font-dm-sans,font-cormorant"><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="bg-vertex-bg text-vertex-text-pri font-sans overflow-x-hidden selection:bg-vertex-blue/30 selection:text-white relative min-h-screen">
+    <!-- Fixed Canvas Background Layer -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="opacity: 0.85;">
+      <canvas id="pixel-canvas" class="absolute inset-0 w-full h-full" width="1024" height="2048"></canvas>
+      <div class="absolute inset-0 scanline-overlay opacity-50 mix-blend-overlay"></div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+      <!-- Header -->
+      <header class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 py-6 flex justify-between items-center bg-vertex-bg/50 backdrop-blur-md sticky top-0 z-50 border-b border-vertex-border/30">
+        <!-- Logo -->
+        <div class="flex gap-4 mb-8 gap-x-4 gap-y-4 items-center">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[32px] h-[32px]" stroke-width="2" data-icon-replaced="true" style="color: rgb(209, 213, 219); width: 32px; height: 32px;">
+            <path d="M16 28L4 8H10L16 18L22 8H28L16 28Z" fill="#3B82F6"></path>
+            <path d="M16 14.5L11 6H21L16 14.5Z" fill="#93C5FD"></path>
+          </svg>
+          <span class="text-[22px] tracking-[0.15em] text-white font-geist font-semibold">
+            VERTEXA
+          </span>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-vertex-text-pri hover:text-white transition-colors duration-200 text-sm font-normal font-geist">
+            Features
+          </a>
+          <a href="#how-it-works" class="text-vertex-text-pri hover:text-white transition-colors duration-200 text-sm font-normal font-geist">
+            Workflow
+          </a>
+          <a href="#pricing" class="text-vertex-text-pri hover:text-white transition-colors duration-200 text-sm font-normal font-geist">
+            Pricing
+          </a>
+          <a href="#faq" class="text-vertex-text-pri hover:text-white transition-colors duration-200 text-sm font-normal font-geist">
+            FAQ
+          </a>
+        </nav>
+
+        <!-- Header CTA -->
+        <a href="#pricing" class="hidden items-center justify-center text-vertex-text-pri border-vertex-border hover:bg-gray-800/50 hover:text-white transition-all duration-200 sm:inline-flex text-sm font-normal border rounded-md px-4 py-2 font-geist">
+          Sign In
+        </a>
+      </header>
+
+      <!-- Hero Section -->
+      <main class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-8 pt-20 pb-32">
+        <!-- Left Column: Content -->
+        <div class="w-full lg:w-[45%] max-w-2xl relative z-10 shrink-0">
+          <!-- Masked Reveal Title -->
+          <h1 id="hero-title" class="text-5xl md:text-7xl lg:text-8xl font-thin tracking-tighter leading-[1.05] mb-6 text-white">
+            <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+              <span class="reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                Build
+              </span>
+            </span>
+            <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+              <span class="reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                Beyond
+              </span>
+            </span>
+            <br class="hidden sm:block">
+            <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+              <span class="reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                the
+              </span>
+            </span>
+            <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+              <span class="reveal-word block text-vertex-blue font-geist font-semibold" style="transform: translateY(110%);">
+                Ordinary.
+              </span>
+            </span>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="text-lg md:text-xl text-vertex-text-pri max-w-lg leading-relaxed mb-10 opacity-0 font-geist font-semibold" id="hero-desc">
+            We architect scalable digital products and experiences that empower
+            ambitious engineering teams to ship faster with absolute precision.
+          </p>
+
+          <!-- CTA Button -->
+          <div class="flex items-center gap-6 opacity-0" id="hero-cta">
+            <a href="#pricing" class="inline-flex items-center gap-2 bg-vertex-blue hover:bg-vertex-blue-bright text-white px-6 py-3.5 rounded-lg font-normal text-base transition-all duration-200 shadow-[0_0_20px_rgba(45,67,230,0.3)] hover:shadow-[0_0_30px_rgba(45,67,230,0.5)] group font-geist">
+              Start Building
+              <i data-lucide="arrow-up-right" style="stroke-width: 1.5;" class="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </a>
+            <a href="#features" class="inline-flex items-center gap-2 text-vertex-text-pri hover:text-white px-4 py-3 rounded-md font-light text-base transition-all duration-200 font-geist">
+              Explore Platform
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: UI Mockup -->
+        <div class="relative w-full lg:w-[58%] min-h-[620px] flex items-center justify-center overflow-visible">
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute left-1/2 top-1/2 h-[520px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-600/20 blur-[140px]">
+    </div>
+    <div class="absolute right-0 bottom-12 h-[260px] w-[360px] rounded-full bg-cyan-400/10 blur-[100px]"></div>
+  </div>
+
+  <div class="absolute right-20 top-24 h-4 w-4 bg-blue-600/30"></div>
+
+  <div class="absolute right-0 bottom-28 h-10 w-10 bg-blue-600/25"></div>
+
+  <div class="relative z-10 w-full max-w-[920px]">
+    <div class="relative w-full h-[455px] overflow-hidden rounded-xl border border-blue-500/30 bg-[#070b14]/95 shadow-[0_0_0_1px_rgba(59,130,246,0.08),0_30px_90px_rgba(0,0,0,0.75),0_0_80px_rgba(37,99,235,0.18)] backdrop-blur-xl">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_15%,rgba(37,99,235,0.18),transparent_35%),linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent)]">
+      </div>
+
+      <div class="relative flex h-full">
+        <aside class="hidden h-full w-[172px] shrink-0 border-r border-white/10 bg-[#050913]/90 p-5 sm:block">
+          <div class="mb-8 flex items-center gap-2">
+            <div class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-600/10">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+                <path d="M16 28L3 5H11L16 16L21 5H29L16 28Z" fill="#2447FF"></path>
+              </svg>
+            </div>
+            <span class="text-[13px] font-medium tracking-wide text-white/85 font-geist">
+                      VERTEXA
+                    </span>
+          </div>
+
+          <nav class="space-y-1.5 text-[12px]">
+            <a class="flex items-center gap-3 rounded-lg bg-blue-600/15 px-3 py-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] font-geist" href="#">
+              <i data-lucide="home" class="h-3.5 w-3.5 text-white"></i>
+              Overview
+            </a>
+            <a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-white/55 hover:bg-white/5 hover:text-white font-geist" href="#">
+              <i data-lucide="folder" class="h-3.5 w-3.5"></i>
+              Projects
+            </a>
+            <a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-white/55 hover:bg-white/5 hover:text-white font-geist" href="#">
+              <i data-lucide="layers" class="h-3.5 w-3.5"></i>
+              Deployments
+            </a>
+            <a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-white/55 hover:bg-white/5 hover:text-white font-geist" href="#">
+              <i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>
+              Analytics
+            </a>
+            <a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-white/55 hover:bg-white/5 hover:text-white font-geist" href="#">
+              <i data-lucide="users" class="h-3.5 w-3.5"></i>
+              Team
+            </a>
+            <a class="mt-4 flex items-center gap-3 rounded-lg px-3 py-2.5 text-white/55 hover:bg-white/5 hover:text-white font-geist" href="#">
+              <i data-lucide="settings" class="h-3.5 w-3.5"></i>
+              Settings
+            </a>
+          </nav>
+        </aside>
+
+        <main class="flex-1 p-5">
+          <div class="mb-5 flex items-center justify-between">
+            <h3 class="text-[13px] font-medium text-white/90 font-geist">
+              Project Overview
+            </h3>
+
+            <div class="flex items-center gap-3">
+              <button class="hidden items-center gap-2 rounded-md border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-white/65 md:flex font-geist">
+                        Last 30 days
+                        <i data-lucide="chevron-down" class="h-3 w-3"></i>
+                      </button>
+              <i data-lucide="bell" class="h-4 w-4 text-white/45"></i>
+              <div class="flex h-7 w-7 items-center justify-center rounded-full border border-blue-500/30 bg-blue-600/20 text-[11px] font-medium text-white font-geist">
+                AK
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <div class="flex flex-col h-full rounded-lg border border-white/10 bg-[#0b1221]/90 p-4">
+              <p class="mb-2 text-[11px] text-white/45 whitespace-nowrap font-geist">Deployments</p>
+              <p class="text-2xl tracking-tight text-white whitespace-nowrap font-geist font-semibold">
+                156
+              </p>
+              <p class="mt-auto pt-2 flex items-center gap-1 text-[11px] text-emerald-400">
+                <i data-lucide="arrow-up" class="h-3 w-3 shrink-0"></i>
+                <span class="truncate font-geist">18% from last month</span>
+              </p>
+            </div>
+
+            <div class="flex flex-col h-full rounded-lg border border-white/10 bg-[#0b1221]/90 p-4">
+              <p class="mb-2 text-[11px] text-white/45 whitespace-nowrap font-geist">Success Rate</p>
+              <p class="text-2xl tracking-tight text-white whitespace-nowrap font-geist font-semibold">
+                99.9%
+              </p>
+              <p class="mt-auto pt-2 flex items-center gap-1 text-[11px] text-emerald-400">
+                <i data-lucide="arrow-up" class="h-3 w-3 shrink-0"></i>
+                <span class="truncate font-geist">2.1% from last month</span>
+              </p>
+            </div>
+
+            <div class="flex flex-col h-full rounded-lg border border-white/10 bg-[#0b1221]/90 p-4">
+              <p class="mb-2 text-[11px] text-white/45 whitespace-nowrap font-geist">Avg. Build Time</p>
+              <p class="text-2xl tracking-tight text-white whitespace-nowrap font-geist font-semibold">
+                2m 34s
+              </p>
+              <p class="mt-auto pt-2 flex items-center gap-1 text-[11px] text-white/35">
+                <i data-lucide="arrow-down" class="h-3 w-3 shrink-0"></i>
+                <span class="truncate font-geist">8% from last month</span>
+              </p>
+            </div>
+
+            <div class="flex flex-col h-full rounded-lg border border-white/10 bg-[#0b1221]/90 p-4">
+              <p class="mb-2 text-[11px] text-white/45 whitespace-nowrap font-geist">Active Projects</p>
+              <p class="text-2xl tracking-tight text-white whitespace-nowrap font-geist font-semibold">
+                24
+              </p>
+              <p class="mt-auto pt-2 flex items-center gap-1 text-[11px] text-emerald-400">
+                <i data-lucide="arrow-up" class="h-3 w-3 shrink-0"></i>
+                <span class="truncate font-geist">12% from last month</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] mt-6 gap-x-4 gap-y-4">
+            <div class="rounded-lg border border-white/10 bg-[#0b1221]/90 p-4">
+              <h4 class="mb-4 text-[12px] font-medium text-white/85 font-geist">
+                Deployment Activity
+              </h4>
+
+              <div class="relative h-[155px] pl-8 pr-2 pb-6">
+                <div class="absolute left-0 top-0 bottom-6 flex flex-col justify-between text-[10px] text-white/25">
+                  <span class="font-geist">60</span>
+                  <span class="font-geist">40</span>
+                  <span class="font-geist">20</span>
+                  <span class="font-geist">0</span>
+                </div>
+
+                <div class="absolute bottom-0 left-8 right-2 flex justify-between text-[10px] text-white/25">
+                  <span class="font-geist">May 1</span>
+                  <span class="font-geist">May 8</span>
+                  <span class="font-geist">May 15</span>
+                  <span class="font-geist">May 22</span>
+                  <span class="font-geist">May 29</span>
+                </div>
+
+                <div class="absolute left-8 right-2 top-2 bottom-6 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[length:100%_33%]">
+                </div>
+
+                <svg viewBox="0 0 100 44" preserveAspectRatio="none" class="relative h-full w-full overflow-visible text-blue-500">
+                  <defs>
+                    <linearGradient id="deploymentFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="currentColor" stop-opacity="0.35"></stop>
+                      <stop offset="100%" stop-color="currentColor" stop-opacity="0"></stop>
+                    </linearGradient>
+                    <filter id="lineGlow">
+                      <feGaussianBlur stdDeviation="1.8" result="blur"></feGaussianBlur>
+                      <feMerge>
+                        <feMergeNode in="blur"></feMergeNode>
+                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  <path d="M0 26 C8 30 13 18 21 22 C30 28 33 38 42 25 C51 11 57 29 65 21 C73 10 79 8 86 21 C93 32 96 16 100 3 L100 44 L0 44 Z" fill="url(#deploymentFill)"></path>
+                  <path d="M0 26 C8 30 13 18 21 22 C30 28 33 38 42 25 C51 11 57 29 65 21 C73 10 79 8 86 21 C93 32 96 16 100 3" fill="none" stroke="currentColor" stroke-width="1.8" filter="url(#lineGlow)"></path>
+                  <circle cx="100" cy="3" r="2" fill="#3b82f6"></circle>
+                </svg>
+              </div>
+            </div>
+
+            <div class="rounded-lg border border-white/10 bg-[#0b1221]/90 p-4">
+              <h4 class="mb-4 text-[12px] font-medium text-white/85 font-geist">
+                Recent Deployments
+              </h4>
+
+              <div class="space-y-3.5 text-[11px]">
+                <div class="flex items-center justify-between gap-3 border-b border-white/5 pb-2.5">
+                  <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>
+                    <span class="text-blue-300 font-geist">checkout-service</span>
+                  </div>
+                  <span class="rounded bg-white/5 px-2 py-0.5 font-mono text-white/35 font-geist">
+                            v2.4.1
+                          </span>
+                  <span class="text-white/35 font-geist">2m ago</span>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 border-b border-white/5 pb-2.5">
+                  <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>
+                    <span class="text-blue-300 font-geist">user-dashboard</span>
+                  </div>
+                  <span class="rounded bg-white/5 px-2 py-0.5 font-mono text-white/35 font-geist">
+                            v1.8.3
+                          </span>
+                  <span class="text-white/35 font-geist">15m ago</span>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 border-b border-white/5 pb-2.5">
+                  <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>
+                    <span class="text-blue-300 font-geist">payment-gateway</span>
+                  </div>
+                  <span class="rounded bg-white/5 px-2 py-0.5 font-mono text-white/35 font-geist">
+                            v3.2.0
+                          </span>
+                  <span class="text-white/35 font-geist">1h ago</span>
+                </div>
+
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>
+                    <span class="text-blue-300 font-geist">marketing-site</span>
+                  </div>
+                  <span class="rounded bg-white/5 px-2 py-0.5 font-mono text-white/35 font-geist">
+                            v1.3.7
+                          </span>
+                  <span class="text-white/35 font-geist">3h ago</span>
+                </div>
+              </div>
+
+              <a href="#" class="mt-5 flex items-center gap-1.5 text-[12px] text-blue-400 font-geist">
+                View All Deployments
+                <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="absolute -right-20 top-[280px] z-20 hidden w-[520px] overflow-hidden rounded-xl border border-blue-500/25 bg-[#070b14] shadow-[0_30px_80px_rgba(0,0,0,0.75),0_0_50px_rgba(37,99,235,0.2)] lg:block">
+      <div class="flex items-center gap-2 border-b border-white/10 bg-[#0b1221] px-4 py-3">
+        <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-yellow-500"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+
+        <div class="ml-4 rounded-md bg-white/5 px-3 py-1 text-[11px] text-white/60 font-geist">
+          api.service.ts
+        </div>
+      </div>
+
+      <div class="flex max-h-[285px] overflow-hidden p-4 font-mono text-[11px] leading-[1.75]">
+        <div class="mr-4 select-none text-right text-white/20">
+          <div class="font-geist">1</div>
+          <div class="font-geist">2</div>
+          <div class="font-geist">3</div>
+          <div class="font-geist">4</div>
+          <div class="font-geist">5</div>
+          <div class="font-geist">6</div>
+          <div class="font-geist">7</div>
+          <div class="font-geist">8</div>
+          <div class="font-geist">9</div>
+          <div class="font-geist">10</div>
+          <div class="font-geist">11</div>
+          <div class="font-geist">12</div>
+          <div class="font-geist">13</div>
+          <div class="font-geist">14</div>
+          <div class="font-geist">15</div>
+        </div>
+
+        <pre class="overflow-hidden text-white/70"><code class="font-geist"><span class="text-purple-400 font-geist">import</span> { <span class="text-yellow-300 font-geist">Injectable</span> } <span class="text-purple-400 font-geist">from</span> <span class="text-emerald-300 font-geist">'@nestjs/common'</span>;
+<span class="text-purple-400 font-geist">import</span> { <span class="text-yellow-300 font-geist">PrismaService</span> } <span class="text-purple-400 font-geist">from</span> <span class="text-emerald-300 font-geist">'@/core/prisma.service'</span>;
+
+<span class="text-blue-300 font-geist">@Injectable</span>()
+<span class="text-purple-400 font-geist">export class</span> <span class="text-yellow-300 font-geist">ApiService</span> {
+  <span class="text-purple-400 font-geist">constructor</span>(<span class="text-purple-400 font-geist">private</span> <span class="text-red-300 font-geist">prisma</span>: <span class="text-yellow-300 font-geist">PrismaService</span>) {}
+
+  <span class="text-purple-400 font-geist">async</span> <span class="text-blue-300 font-geist">getMetrics</span>() {
+    <span class="text-purple-400 font-geist">const</span> [deployments, successRate, avgBuildTime] =
+      <span class="text-purple-400 font-geist">await</span> <span class="text-yellow-300 font-geist">Promise</span>.<span class="text-blue-300 font-geist">all</span>([
+        <span class="text-cyan-300 font-geist">this</span>.prisma.deployment.count(),
+        <span class="text-cyan-300 font-geist">this</span>.prisma.deployment.groupBy({
+          <span class="text-orange-300 font-geist">by</span>: [<span class="text-emerald-300 font-geist">'status'</span>],
+        }),
+      ]);
+  }
+}</code></pre>
+      </div>
+    </div>
+
+    </div>
+</div>
+      </main>
+
+      <!-- Features Section -->
+      <section class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 py-24 md:py-32" id="features">
+        <div class="w-full mb-16 gs-reveal flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+          <div class="max-w-2xl">
+            <h2 class="mask-reveal-heading text-3xl md:text-5xl font-thin tracking-tight text-white mb-6">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+                <span class="scroll-reveal-word block font-geist font-semibold">Precision</span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+                <span class="scroll-reveal-word block font-geist font-semibold">at</span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;" class="">
+                <span class="scroll-reveal-word block font-geist font-semibold">scale.</span>
+              </span>
+            </h2>
+            <p class="text-base md:text-lg text-gray-400 font-light leading-relaxed font-geist">
+              Our architecture is designed from the ground up to eliminate
+              bottlenecks, providing a foundation that scales organically with
+              your codebase.
+            </p>
+          </div>
+
+          <button class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/[0.08] bg-[#0b1221] hover:border-blue-500/30 text-white rounded-xl font-normal hover:bg-blue-600/10 hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.2)] transition-all duration-500 w-full md:w-auto flex-shrink-0 group">
+            <span class="font-geist">Learn More</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform duration-300"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-x-6 gap-y-6">
+  
+  <style>
+    @keyframes ms-dash-flow {
+      0% { stroke-dashoffset: 8; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes ms-dash-flow-reverse {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 8; }
+    }
+    @keyframes ms-pulse-node {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+    @keyframes ms-float-element {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes ms-float-element-alt {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(4px); }
+    }
+    @keyframes ms-pulse-glow {
+      0%, 100% { filter: brightness(1); opacity: 0.6; }
+      50% { filter: brightness(1.5); opacity: 1; }
+    }
+    @keyframes ms-dash-draw {
+      0% { stroke-dashoffset: 200; }
+      40%, 100% { stroke-dashoffset: 0; }
+    }
+  </style>
+
+  <!-- Feature 1 -->
+  <div class="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0b1221] overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] gs-reveal">
+    <div class="h-[240px] w-full relative flex items-center justify-center border-b border-white/[0.05] bg-gradient-to-b from-[#050810] to-[#0b1221] overflow-hidden">
+      <div class="absolute inset-0 bg-blue-600/5 blur-3xl rounded-full scale-150 transform group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+      <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 w-[70%] h-auto max-w-[200px] transform group-hover:-translate-y-1 transition-transform duration-500">
+        <!-- Globe -->
+        <circle cx="100" cy="80" r="40" fill="#0f172a" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-50"></circle>
+        <circle cx="100" cy="80" r="30" fill="url(#globeGrad1)"></circle>
+        <path d="M70 80 Q100 50 130 80 Q100 110 70 80" stroke="#3b82f6" stroke-width="1" fill="none" class="opacity-40" style="animation: ms-pulse-glow 4s infinite;"></path>
+        <path d="M100 50 Q70 80 100 110 Q130 80 100 50" stroke="#3b82f6" stroke-width="1" fill="none" class="opacity-40" style="animation: ms-pulse-glow 4s infinite 2s;"></path>
+        
+        <!-- Connecting lines -->
+        <path d="M100 80 L40 40" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-60" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+        <path d="M100 80 L160 40" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-60" style="animation: ms-dash-flow-reverse 1.5s linear infinite;"></path>
+        <path d="M100 80 L100 20" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-60" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+        
+        <!-- Servers -->
+        <g style="animation: ms-float-element 3s infinite;">
+          <rect x="30" y="25" width="20" height="25" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <line x1="34" y1="31" x2="46" y2="31" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></line>
+          <line x1="34" y1="38" x2="46" y2="38" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></line>
+          <circle cx="43" cy="44" r="1.5" fill="#60a5fa" style="animation: ms-pulse-node 2s infinite; transform-origin: 43px 44px;"></circle>
+        </g>
+        
+        <g style="animation: ms-float-element 3.5s infinite 0.5s;">
+          <rect x="150" y="25" width="20" height="25" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <line x1="154" y1="31" x2="166" y2="31" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></line>
+          <line x1="154" y1="38" x2="166" y2="38" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></line>
+          <circle cx="163" cy="44" r="1.5" fill="#60a5fa" style="animation: ms-pulse-node 2s infinite 1s; transform-origin: 163px 44px;"></circle>
+        </g>
+
+        <g style="animation: ms-float-element-alt 3s infinite 1s;">
+          <rect x="90" y="5" width="20" height="25" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5" class=""></rect>
+          <line x1="94" y1="11" x2="106" y2="11" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></line>
+          <line x1="94" y1="18" x2="106" y2="18" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></line>
+          <circle cx="103" cy="24" r="1.5" fill="#60a5fa" style="animation: ms-pulse-node 2s infinite 0.5s; transform-origin: 103px 24px;"></circle>
+        </g>
+
+        <defs>
+          <radialGradient id="globeGrad1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(100 80) rotate(90) scale(30)">
+            <stop stop-color="#1e3a8a"></stop>
+            <stop offset="1" stop-color="#0f172a"></stop>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="p-8">
+      <h3 class="text-lg font-extralight tracking-tight text-white mb-3 font-geist">
+        Edge Compute
+      </h3>
+      <p class="text-sm text-gray-400 font-extralight leading-relaxed font-geist">
+        Deploy logic instantly across our global edge network,
+        minimizing latency and maximizing throughput for your users
+        worldwide.
+      </p>
+    </div>
+  </div>
+
+  <!-- Feature 2 -->
+  <div class="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0b1221] overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] gs-reveal delay-100">
+    <div class="h-[240px] w-full relative flex items-center justify-center border-b border-white/[0.05] bg-gradient-to-b from-[#050810] to-[#0b1221] overflow-hidden">
+      <div class="absolute inset-0 bg-blue-600/5 blur-3xl rounded-full scale-150 transform group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+      <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 w-[70%] h-auto max-w-[200px] transform group-hover:-translate-y-1 transition-transform duration-500">
+        <ellipse cx="100" cy="60" rx="80" ry="25" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-40" style="animation: ms-dash-flow 2s linear infinite;"></ellipse>
+        <ellipse cx="100" cy="60" rx="60" ry="40" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-30" style="animation: ms-dash-flow-reverse 2.5s linear infinite;"></ellipse>
+
+        <g style="animation: ms-float-element 4s ease-in-out infinite;">
+          <path d="M100 20 L130 30 V60 C130 85 100 100 100 100 C100 100 70 85 70 60 V30 L100 20 Z" fill="#0f172a" stroke="#3b82f6" stroke-width="2"></path>
+          <path d="M100 20 L130 30 V60 C130 85 100 100 100 100 V20 Z" fill="#1e3a8a" class="opacity-80"></path>
+          <rect x="90" y="55" width="20" height="15" rx="3" fill="#60a5fa"></rect>
+          <path d="M94 55 V48 C94 44 106 44 106 48 V55" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"></path>
+          <circle cx="100" cy="62" r="2" fill="#0f172a"></circle>
+        </g>
+
+        <g style="animation: ms-pulse-glow 3s infinite;">
+          <circle cx="40" cy="60" r="8" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5" class=""></circle>
+          <path d="M37 60 L39 62 L44 57" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+
+        <g style="animation: ms-pulse-glow 3s infinite 1.5s;">
+          <circle cx="160" cy="40" r="8" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></circle>
+          <path d="M157 40 L159 42 L164 37" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+      </svg>
+    </div>
+    <div class="p-8">
+      <h3 class="text-lg font-extralight tracking-tight text-white mb-3 font-geist">
+        Zero-Trust Security
+      </h3>
+      <p class="text-sm text-gray-400 font-extralight leading-relaxed font-geist">
+        Every internal request is cryptographically signed and verified,
+        ensuring your infrastructure remains impenetrable by default.
+      </p>
+    </div>
+  </div>
+
+  <!-- Feature 3 -->
+  <div class="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0b1221] overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] gs-reveal delay-200">
+    <div class="h-[240px] w-full relative flex items-center justify-center border-b border-white/[0.05] bg-gradient-to-b from-[#050810] to-[#0b1221] overflow-hidden">
+      <div class="absolute inset-0 bg-blue-600/5 blur-3xl rounded-full scale-150 transform group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+      <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 w-[70%] h-auto max-w-[200px] transform group-hover:-translate-y-1 transition-transform duration-500">
+        <rect x="40" y="20" width="120" height="80" rx="6" fill="#0f172a" stroke="#1e40af" stroke-width="1.5" class="opacity-90"></rect>
+        <path d="M40 35 L160 35" stroke="#1e40af" stroke-width="1.5" class="opacity-80"></path>
+        <circle cx="50" cy="27.5" r="2.5" fill="#475569"></circle>
+        <circle cx="60" cy="27.5" r="2.5" fill="#475569"></circle>
+        <circle cx="70" cy="27.5" r="2.5" fill="#475569"></circle>
+
+        <line x1="55" y1="50" x2="100" y2="50" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" class="opacity-90" style="animation: ms-pulse-glow 2s infinite;"></line>
+        <line x1="55" y1="65" x2="130" y2="65" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" class="opacity-60" style="animation: ms-pulse-glow 2s infinite 0.4s;"></line>
+        <line x1="70" y1="80" x2="110" y2="80" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" class="opacity-60" style="animation: ms-pulse-glow 2s infinite 0.8s;"></line>
+
+        <g style="animation: ms-float-element 3s infinite;">
+          <rect x="135" y="60" width="40" height="24" rx="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <path d="M145 72 L155 72 M145 68 L150 68" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"></path>
+        </g>
+      </svg>
+    </div>
+    <div class="p-8">
+      <h3 class="text-lg font-extralight tracking-tight text-white mb-3 font-geist">
+        Declarative Config
+      </h3>
+      <p class="text-sm text-gray-400 font-extralight leading-relaxed font-geist">
+        Manage your entire stack through version-controlled
+        configuration files. Infrastructure as code, simplified and
+        predictable.
+      </p>
+    </div>
+  </div>
+
+  <!-- Feature 4 -->
+  <div class="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0b1221] overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] gs-reveal">
+    <div class="h-[240px] w-full relative flex items-center justify-center border-b border-white/[0.05] bg-gradient-to-b from-[#050810] to-[#0b1221] overflow-hidden">
+      <div class="absolute inset-0 bg-blue-600/5 blur-3xl rounded-full scale-150 transform group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+      <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 w-[70%] h-auto max-w-[200px] transform group-hover:-translate-y-1 transition-transform duration-500">
+        <path d="M40 20 V100 M70 20 V100 M100 20 V100 M130 20 V100 M160 20 V100" stroke="#1e40af" stroke-width="1" class="opacity-30"></path>
+        <path d="M40 100 H160 M40 75 H160 M40 50 H160 M40 25 H160" stroke="#1e40af" stroke-width="1" class="opacity-30"></path>
+        
+        <path d="M40 90 L70 60 L100 70 L130 30 L160 40" stroke="#60a5fa" stroke-width="2.5" fill="none" stroke-linejoin="round" style="stroke-dasharray: 200; stroke-dashoffset: 0; animation: ms-dash-draw 3s ease-out infinite;"></path>
+        
+        <circle cx="70" cy="60" r="3" fill="#93c5fd" style="animation: ms-pulse-node 2s infinite 0.5s; transform-origin: 70px 60px;"></circle>
+        <circle cx="100" cy="70" r="3" fill="#93c5fd" style="animation: ms-pulse-node 2s infinite 1s; transform-origin: 100px 70px;"></circle>
+        <circle cx="130" cy="30" r="3" fill="#93c5fd" style="animation: ms-pulse-node 2s infinite 1.5s; transform-origin: 130px 30px;"></circle>
+        <circle cx="160" cy="40" r="3" fill="#93c5fd" style="animation: ms-pulse-node 2s infinite 2s; transform-origin: 160px 40px;"></circle>
+
+        <g style="animation: ms-float-element 4s infinite;">
+          <rect x="80" y="20" width="35" height="16" rx="2" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1"></rect>
+          <circle cx="86" cy="28" r="2" fill="#60a5fa"></circle>
+          <line x1="92" y1="28" x2="108" y2="28" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+        </g>
+      </svg>
+    </div>
+    <div class="p-8">
+      <h3 class="text-lg font-extralight tracking-tight text-white mb-3 font-geist">
+        Granular Telemetry
+      </h3>
+      <p class="text-sm text-gray-400 font-extralight leading-relaxed font-geist">
+        Sub-millisecond resolution metrics and distributed tracing built
+        directly into the runtime. Complete observability without
+        overhead.
+      </p>
+    </div>
+  </div>
+
+  <!-- Feature 5 -->
+  <div class="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0b1221] overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] gs-reveal delay-100">
+    <div class="h-[240px] w-full relative flex items-center justify-center border-b border-white/[0.05] bg-gradient-to-b from-[#050810] to-[#0b1221] overflow-hidden">
+      <div class="absolute inset-0 bg-blue-600/5 blur-3xl rounded-full scale-150 transform group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+      <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 w-[70%] h-auto max-w-[200px] transform group-hover:-translate-y-1 transition-transform duration-500">
+        <!-- Connections -->
+        <path d="M100 60 Q130 40 140 35" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+        <path d="M100 60 Q130 80 140 85" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+        <path d="M100 60 Q70 40 60 35" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow-reverse 1.5s linear infinite;"></path>
+        <path d="M100 60 Q70 80 60 85" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow-reverse 1.5s linear infinite;"></path>
+
+        <!-- Center DB -->
+        <g transform="translate(85, 40)" style="animation: ms-float-element 3s infinite;">
+          <path d="M0 8 C0 3.58172 6.71573 0 15 0 C23.2843 0 30 3.58172 30 8 V32 C30 36.4183 23.2843 40 15 40 C6.71573 40 0 36.4183 0 32 V8 Z" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></path>
+          <path d="M0 8 C0 12.4183 6.71573 16 15 16 C23.2843 16 30 12.4183 30 8" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+          <path d="M0 18 C0 22.4183 6.71573 26 15 26 C23.2843 26 30 22.4183 30 18" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+          <path d="M0 28 C0 32.4183 6.71573 36 15 36 C23.2843 36 30 32.4183 30 28" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+        </g>
+
+        <!-- Top Right DB -->
+        <g transform="translate(140, 20)" style="animation: ms-float-element-alt 3.5s infinite 1s;">
+          <path d="M0 6 C0 2.68629 5.37258 0 12 0 C18.6274 0 24 2.68629 24 6 V18 C24 21.3137 18.6274 24 12 24 C5.37258 24 0 21.3137 0 18 V6 Z" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"></path>
+          <path d="M0 6 C0 9.31371 5.37258 12 12 12 C18.6274 12 24 9.31371 24 6" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+          <path d="M0 12 C0 15.3137 5.37258 18 12 18 C18.6274 18 24 15.3137 24 12" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+        </g>
+
+        <!-- Bottom Right DB -->
+        <g transform="translate(140, 75)" style="animation: ms-float-element 4s infinite 0.5s;">
+          <path d="M0 6 C0 2.68629 5.37258 0 12 0 C18.6274 0 24 2.68629 24 6 V18 C24 21.3137 18.6274 24 12 24 C5.37258 24 0 21.3137 0 18 V6 Z" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"></path>
+          <path d="M0 6 C0 9.31371 5.37258 12 12 12 C18.6274 12 24 9.31371 24 6" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+          <path d="M0 12 C0 15.3137 5.37258 18 12 18 C18.6274 18 24 15.3137 24 12" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+        </g>
+
+        <!-- Top Left DB -->
+        <g transform="translate(36, 20)" style="animation: ms-float-element-alt 3s infinite 1.5s;">
+          <path d="M0 6 C0 2.68629 5.37258 0 12 0 C18.6274 0 24 2.68629 24 6 V18 C24 21.3137 18.6274 24 12 24 C5.37258 24 0 21.3137 0 18 V6 Z" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"></path>
+          <path d="M0 6 C0 9.31371 5.37258 12 12 12 C18.6274 12 24 9.31371 24 6" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+          <path d="M0 12 C0 15.3137 5.37258 18 12 18 C18.6274 18 24 15.3137 24 12" stroke="#3b82f6" stroke-width="1.5" fill="none" class="opacity-60"></path>
+        </g>
+
+        <!-- Bottom Left Square/Node -->
+        <g style="animation: ms-pulse-glow 2s infinite;">
+          <rect x="40" y="78" width="16" height="16" rx="2" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <rect x="44" y="82" width="8" height="8" rx="1" fill="#60a5fa" class="opacity-60"></rect>
+        </g>
+      </svg>
+    </div>
+    <div class="p-8">
+      <h3 class="text-lg font-extralight tracking-tight text-white mb-3 font-geist">
+        Distributed State
+      </h3>
+      <p class="text-sm text-gray-400 font-extralight leading-relaxed font-geist">
+        Strongly consistent, globally distributed key-value store. Read
+        from anywhere with single-digit millisecond latency.
+      </p>
+    </div>
+  </div>
+
+  <!-- Feature 6 -->
+  <div class="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0b1221] overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] gs-reveal delay-200">
+    <div class="h-[240px] w-full relative flex items-center justify-center border-b border-white/[0.05] bg-gradient-to-b from-[#050810] to-[#0b1221] overflow-hidden">
+      <div class="absolute inset-0 bg-blue-600/5 blur-3xl rounded-full scale-150 transform group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+      <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 w-[70%] h-auto max-w-[200px] transform group-hover:-translate-y-1 transition-transform duration-500">
+        
+        <!-- Connecting Lines -->
+        <path d="M55 60 L75 60 Q90 60 100 35 T130 35" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+        <path d="M55 60 L130 60" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+        <path d="M55 60 L75 60 Q90 60 100 85 T130 85" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" fill="none" class="opacity-80" style="animation: ms-dash-flow 1.5s linear infinite;"></path>
+
+        <!-- User Box -->
+        <g style="animation: ms-float-element 3s infinite;">
+          <rect x="25" y="45" width="30" height="30" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <circle cx="40" cy="55" r="4" fill="#60a5fa"></circle>
+          <path d="M32 66 C32 62 36 60 40 60 C44 60 48 62 48 66" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round"></path>
+        </g>
+
+        <!-- Nodes/Servers -->
+        <g style="animation: ms-float-element-alt 3.5s infinite 0.5s;">
+          <rect x="130" y="22" width="40" height="26" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <line x1="135" y1="30" x2="145" y2="30" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+          <line x1="135" y1="38" x2="155" y2="38" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+          <circle cx="162" cy="30" r="2" fill="#60a5fa" style="animation: ms-pulse-glow 2s infinite;"></circle>
+          <circle cx="162" cy="38" r="2" fill="#60a5fa" style="animation: ms-pulse-glow 2s infinite 0.5s;"></circle>
+        </g>
+
+        <g style="animation: ms-float-element 4s infinite 1s;">
+          <rect x="130" y="47" width="40" height="26" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <line x1="135" y1="55" x2="145" y2="55" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+          <line x1="135" y1="63" x2="155" y2="63" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+          <circle cx="162" cy="55" r="2" fill="#60a5fa" style="animation: ms-pulse-glow 2s infinite 1s;"></circle>
+          <circle cx="162" cy="63" r="2" fill="#60a5fa" style="animation: ms-pulse-glow 2s infinite 1.5s;"></circle>
+        </g>
+
+        <g style="animation: ms-float-element-alt 3.5s infinite 1.5s;">
+          <rect x="130" y="72" width="40" height="26" rx="3" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"></rect>
+          <line x1="135" y1="80" x2="145" y2="80" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+          <line x1="135" y1="88" x2="155" y2="88" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></line>
+          <circle cx="162" cy="80" r="2" fill="#60a5fa" style="animation: ms-pulse-glow 2s infinite 0.3s;"></circle>
+          <circle cx="162" cy="88" r="2" fill="#60a5fa" style="animation: ms-pulse-glow 2s infinite 0.8s;"></circle>
+        </g>
+
+        <!-- Particles/Dots on lines -->
+        <circle cx="90" cy="48" r="2" fill="#60a5fa" style="animation: ms-pulse-node 1.5s infinite; transform-origin: 90px 48px;"></circle>
+        <circle cx="95" cy="60" r="2" fill="#60a5fa" style="animation: ms-pulse-node 1.5s infinite 0.5s; transform-origin: 95px 60px;"></circle>
+        <circle cx="90" cy="72" r="2" fill="#60a5fa" style="animation: ms-pulse-node 1.5s infinite 1s; transform-origin: 90px 72px;"></circle>
+
+        <!-- Dotted lines to right -->
+        <line x1="175" y1="35" x2="190" y2="35" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" style="animation: ms-dash-flow 1s linear infinite;"></line>
+        <line x1="175" y1="60" x2="190" y2="60" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" style="animation: ms-dash-flow 1s linear infinite;"></line>
+        <line x1="175" y1="85" x2="190" y2="85" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="4 4" style="animation: ms-dash-flow 1s linear infinite;"></line>
+      </svg>
+    </div>
+    <div class="p-8">
+      <h3 class="text-lg font-extralight tracking-tight text-white mb-3 font-geist">
+        Smart Routing
+      </h3>
+      <p class="text-sm text-gray-400 font-extralight leading-relaxed font-geist">
+        Dynamic request routing based on load, geography, and custom
+        metadata. Ensure optimal pathing for every single packet.
+      </p>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="overflow-hidden lg:px-12 md:py-32 w-full max-w-[90rem] rounded-none mx-auto px-6 py-24 relative" id="how-it-works">
+        <!-- Ambient Background Effects -->
+        <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-900/50 to-transparent"></div>
+        <div class="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] blur-[120px] rounded-[100%] pointer-events-none"></div>
+
+        <!-- Subtle Grid Pattern -->
+        <div class="absolute bottom-0 left-0 right-0 h-64 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDU5LCAxMzAsIDI0NiwgMC4wNSkiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] [mask-image:linear-gradient(to_top,white,transparent)] pointer-events-none opacity-40"></div>
+
+        <div class="flex flex-col lg:flex-row gap-16 lg:gap-24 relative z-10">
+          <!-- Left Column -->
+          <div class="lg:w-5/12 flex flex-col justify-center">
+            <!-- Badge -->
+            <div class="mb-8 inline-flex items-center gap-3 rounded-full border border-blue-500/20 px-4 py-1.5 w-fit shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500 shadow-[0_0_8px_#3b82f6]"></span>
+              </span>
+              <span class="text-xs font-medium tracking-wider text-gray-400 uppercase font-geist">
+                Built for speed.
+                <span class="text-white font-geist">Designed for scale.</span>
+              </span>
+            </div>
+
+            <!-- Title -->
+            <h2 class="mask-reveal-heading mb-6 text-5xl md:text-6xl lg:text-[4.5rem] font-semibold tracking-tight text-white leading-[1.05]">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  The
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  deployment
+                </span>
+              </span>
+              <br class="hidden lg:block">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  pipeline,
+                </span>
+              </span>
+              <br>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block bg-gradient-to-r from-blue-300 via-blue-500 to-indigo-500 bg-clip-text text-transparent font-geist font-semibold" style="transform: translateY(110%);">
+                  re-engineered.
+                </span>
+              </span>
+            </h2>
+
+            <!-- Description -->
+            <p class="mb-10 text-lg font-light leading-relaxed text-gray-400 max-w-lg font-geist">
+              Move from local development to global production in under three
+              seconds. No containers to manage, no clusters to provision.
+            </p>
+
+            <!-- CTA -->
+            <a href="#" class="inline-flex items-center gap-3 w-fit rounded-lg border border-blue-500/30 px-6 py-3.5 text-base font-medium text-blue-400 transition-all hover:bg-blue-500/10 hover:border-blue-500/60 hover:text-blue-300 group shadow-[0_0_20px_rgba(59,130,246,0.05)] font-geist">
+              Read the documentation
+              <i data-lucide="arrow-right" style="stroke-width: 1.5;" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
+            </a>
+          </div>
+
+          <!-- Right Column (Timeline) -->
+          <div class="lg:w-7/12 relative py-4 pl-2 md:pl-0">
+            <!-- Vertical Line -->
+            <div class="absolute left-[31px] md:left-[39px] top-16 bottom-16 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500/50 to-blue-900/20 hidden sm:block z-0"></div>
+
+            <!-- Decorative dashes on the line to simulate the dotted effect -->
+            <div class="absolute left-[31px] md:left-[39px] top-[30%] h-[8%] w-[2px] hidden sm:block z-0"></div>
+            <div class="absolute left-[31px] md:left-[39px] top-[65%] h-[8%] w-[2px] hidden sm:block z-0"></div>
+
+            <div class="flex flex-col gap-8 relative z-10">
+              <!-- Step 1 -->
+              <div class="flex flex-col sm:flex-row gap-6 md:gap-8 group items-start">
+                <!-- Dot Container -->
+                <div class="relative shrink-0 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 mt-2">
+                  <div class="absolute inset-0 rounded-full border border-blue-500/10 scale-100 group-hover:scale-110 transition-transform duration-500"></div>
+                  <div class="absolute inset-2 md:inset-2.5 rounded-full border border-blue-500/20"></div>
+                  <div class="absolute inset-4 md:inset-5 rounded-full border border-blue-500/30"></div>
+                  <div class="relative w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-500 shadow-[0_0_20px_#3b82f6] border-2"></div>
+                </div>
+
+                <!-- Card -->
+                <div class="flex-1 flex flex-col sm:flex-row gap-5 md:gap-6 rounded-2xl border border-blue-500/20 backdrop-blur-xl p-6 md:p-8 transition-all duration-300 hover:border-blue-500/40 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)]">
+                  <!-- Content -->
+                  <div class="flex-1 pt-1">
+                    <h3 class="text-xl md:text-2xl text-white mb-3 tracking-tight font-geist font-semibold">
+                      <span class="text-blue-500 mr-2 font-geist font-semibold">1.</span>
+                      Push to Repository
+                    </h3>
+                    <p class="text-base text-gray-400 leading-relaxed font-light font-geist">
+                      Connect your GitHub, GitLab, or Bitbucket. Every push to
+                      your designated branch triggers an immutable build
+                      process.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="flex flex-col sm:flex-row gap-6 md:gap-8 group items-start">
+                <div class="relative shrink-0 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 mt-2">
+                  <div class="absolute inset-0 rounded-full border border-blue-500/10 scale-100 group-hover:scale-110 transition-transform duration-500"></div>
+                  <div class="absolute inset-2 md:inset-2.5 rounded-full border border-blue-500/20"></div>
+                  <div class="absolute inset-4 md:inset-5 rounded-full border border-blue-500/30"></div>
+                  <div class="relative w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-500 shadow-[0_0_20px_#3b82f6] border-2"></div>
+                </div>
+
+                <div class="flex-1 flex flex-col sm:flex-row gap-5 md:gap-6 rounded-2xl border border-blue-500/20 backdrop-blur-xl p-6 md:p-8 transition-all duration-300 hover:border-blue-500/40 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)]">
+                  <div class="flex-1 pt-1">
+                    <h3 class="text-xl md:text-2xl text-white mb-3 tracking-tight font-geist font-semibold">
+                      <span class="text-blue-500 mr-2 font-geist font-semibold">2.</span>
+                      Static Analysis &amp; Build
+                    </h3>
+                    <p class="text-base text-gray-400 leading-relaxed font-light font-geist">
+                      Our compiler analyzes dependencies, strips dead code, and
+                      generates highly optimized WebAssembly binaries specific
+                      to your application's architecture.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="flex flex-col sm:flex-row gap-6 md:gap-8 group items-start">
+                <div class="relative shrink-0 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 mt-2">
+                  <div class="absolute inset-0 rounded-full border border-blue-500/10 scale-100 group-hover:scale-110 transition-transform duration-500"></div>
+                  <div class="absolute inset-2 md:inset-2.5 rounded-full border border-blue-500/20"></div>
+                  <div class="absolute inset-4 md:inset-5 rounded-full border border-blue-500/30"></div>
+                  <div class="relative w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-500 shadow-[0_0_20px_#3b82f6] border-2"></div>
+                </div>
+
+                <div class="flex-1 flex flex-col sm:flex-row gap-5 md:gap-6 rounded-2xl border border-blue-500/20 backdrop-blur-xl p-6 md:p-8 transition-all duration-300 hover:border-blue-500/40 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.15)] shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)]">
+                  <div class="flex-1 pt-1">
+                    <h3 class="text-xl md:text-2xl text-white mb-3 tracking-tight font-geist font-semibold">
+                      <span class="text-blue-500 mr-2 font-geist font-semibold">3.</span>
+                      Global Distribution
+                    </h3>
+                    <p class="text-base text-gray-400 leading-relaxed font-light font-geist">
+                      The resulting artifacts are atomically distributed across
+                      200+ edge nodes. The old version remains active until the
+                      new version is verified globally.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing Section -->
+      <section id="pricing" class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 py-24 md:py-32">
+        <div class="w-full mb-16 gs-reveal flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+          <div class="max-w-2xl">
+            <h2 class="mask-reveal-heading text-3xl md:text-5xl font-thin tracking-tight text-white mb-6">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  Transparent
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  compute.
+                </span>
+              </span>
+            </h2>
+            <p class="text-base md:text-lg text-gray-400 font-light leading-relaxed font-geist">
+              Pay only for the resources you consume. No hidden fees, no
+              artificial limits.
+            </p>
+          </div>
+          <div class="inline-flex items-center gap-1 bg-[#0b1221] border border-white/[0.08] rounded-xl p-1.5 w-full md:w-auto flex-shrink-0">
+            <button class="px-5 py-2 text-sm font-medium text-white bg-blue-600/20 border border-blue-500/30 rounded-lg shadow-sm transition-all font-geist">
+              Monthly
+            </button>
+            <button class="px-5 py-2 text-sm font-normal text-gray-400 hover:text-white rounded-lg transition-all font-geist">
+              Annually
+              <span class="text-blue-400 ml-1 font-geist">-20%</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8">
+          <!-- Standard Plan -->
+          <div class="p-[1px] gradient-shell rounded-lg h-full gs-reveal">
+            <div class="bg-vertex-bg rounded-[7px] p-8 h-full flex flex-col">
+              <h3 class="text-lg font-normal tracking-tight text-white mb-2 font-geist">
+                Developer
+              </h3>
+              <p class="text-xs text-vertex-text-pri mb-6 font-geist">
+                For individuals and small teams building next-gen applications.
+              </p>
+              <div class="mb-8">
+                <span class="text-4xl tracking-tighter text-white font-geist font-semibold">
+                  $20
+                </span>
+                <span class="text-xs text-vertex-text-pri font-geist">/ seat / mo</span>
+              </div>
+
+              <ul class="flex-1 space-y-4 mb-8">
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  100GB Global Edge Bandwidth
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  1M Serverless Invocations
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  Basic Telemetry (7-day retention)
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  Community Support
+                </li>
+              </ul>
+              <button class="w-full py-3 text-xs font-medium text-vertex-text-pri border border-vertex-border hover:bg-gray-800/50 hover:text-white rounded-md transition-all duration-200 font-geist">
+                Start for Free
+              </button>
+            </div>
+          </div>
+
+          <!-- Pro Plan -->
+          <div class="p-[1px] bg-gradient-to-b from-vertex-blue/80 to-vertex-blue/20 rounded-lg h-full shadow-[0_0_30px_rgba(45,67,230,0.15)] relative gs-reveal delay-100">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-vertex-blue text-white text-[10px] font-medium px-3 py-1 rounded-full uppercase tracking-widest font-geist">
+              Recommended
+            </div>
+            <div class="bg-vertex-bg rounded-[7px] p-8 h-full flex flex-col">
+              <h3 class="text-lg font-normal tracking-tight text-white mb-2 font-geist">
+                Enterprise
+              </h3>
+              <p class="text-xs text-vertex-text-pri mb-6 font-geist">
+                For mission-critical production environments requiring high SLA.
+              </p>
+              <div class="mb-8">
+                <span class="text-4xl tracking-tighter text-white font-geist font-semibold">
+                  $99
+                </span>
+                <span class="text-xs text-vertex-text-pri font-geist">/ seat / mo</span>
+              </div>
+
+              <ul class="flex-1 space-y-4 mb-8">
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  5TB Global Edge Bandwidth
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  Unlimited Invocations
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  Granular Telemetry (90-day retention)
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  Dedicated 24/7 Support &amp; SLA
+                </li>
+                <li class="flex items-start gap-3 text-xs text-vertex-text-pri font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" style="stroke-width: 1.5;" class="text-vertex-blue text-base shrink-0"></iconify-icon>
+                  VPC Peering
+                </li>
+              </ul>
+              <button class="w-full py-3 text-xs font-medium text-white bg-vertex-blue hover:bg-vertex-blue-bright rounded-lg transition-all duration-200 shadow-[0_0_15px_rgba(45,67,230,0.3)] hover:shadow-[0_0_25px_rgba(45,67,230,0.5)] font-geist">
+                Upgrade to Enterprise
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonial Section -->
+      <section class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 py-24 md:py-32 border-t border-white/5 relative">
+        <!-- Header Section -->
+        <div class="w-full mb-16 lg:mb-24 gs-reveal flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+          <div class="max-w-2xl">
+            <h2 class="mask-reveal-heading text-3xl md:text-5xl font-thin tracking-tight text-white mb-6">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  Trusted
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  by
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  engineering
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  leaders.
+                </span>
+              </span>
+            </h2>
+            <p class="text-base md:text-lg text-gray-400 font-light leading-relaxed font-geist">
+              See how high-performance teams are radically accelerating their
+              deployment workflows with Vertexa.
+            </p>
+          </div>
+          <button class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/[0.08] bg-[#0b1221] hover:border-blue-500/30 text-white rounded-xl font-normal hover:bg-blue-600/10 hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.2)] transition-all duration-500 w-full md:w-auto flex-shrink-0 group">
+            <span class="font-geist">Read Stories</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform duration-300"></i>
+          </button>
+        </div>
+
+        <!-- Testimonial Card -->
+        <div class="max-w-[76rem] mx-auto rounded-[2rem] border border-blue-500/20 bg-[#020617]/80 backdrop-blur-xl p-8 md:p-12 lg:p-16 shadow-[0_0_80px_rgba(37,99,235,0.07)] relative overflow-hidden flex flex-col lg:flex-row gap-12 lg:gap-20">
+          <!-- Ambient Glow Effects inside Card -->
+          <div class="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] -translate-x-1/4 -translate-y-1/4 pointer-events-none"></div>
+          <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] translate-x-1/4 translate-y-1/4 pointer-events-none"></div>
+
+          <!-- Left Column (Testimonial) -->
+          <div class="lg:w-[55%] flex flex-col relative z-10">
+            <div class="mb-8 flex">
+              <i data-lucide="quote" class="w-14 h-14 text-blue-600 fill-blue-600" style="stroke-width: 1.5;"></i>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl leading-relaxed text-gray-300 tracking-tight mb-16 font-geist font-semibold">
+              "Vertexa completely transformed our deployment cadence. What used
+              to take
+              <span class="text-blue-500 font-geist font-semibold">hours</span>
+              of wrestling with Kubernetes manifests now happens in
+              <span class="text-blue-500 font-geist font-semibold">seconds</span>
+              . The
+              <span class="text-blue-500 font-geist font-semibold">
+                edge latency reduction
+              </span>
+              alone justified the migration."
+            </h3>
+
+            <div class="flex items-center gap-5 mt-auto">
+              <div class="relative w-16 h-16 rounded-full p-[2px] bg-gradient-to-b from-blue-500 to-blue-900/20">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&h=200&auto=format&fit=crop" alt="Elena Rostova" class="w-full h-full rounded-full object-cover border-2 border-[#020617]">
+              </div>
+              <div>
+                <div class="text-xl text-white mb-1 font-geist font-semibold">
+                  Elena Rostova
+                </div>
+                <div class="text-sm text-gray-400 mb-2 font-light font-geist">
+                  VP of Engineering at FinScale
+                </div>
+                <div class="flex items-center gap-1.5 text-blue-600 text-sm font-medium font-geist">
+                  <i data-lucide="shield-check" class="w-4 h-4" style="stroke-width: 1.5;"></i>
+                  Verified Review
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vertical Divider -->
+          <div class="hidden lg:block w-px bg-gradient-to-b from-transparent via-blue-900/30 to-transparent"></div>
+          <!-- Horizontal Divider -->
+          <div class="block lg:hidden h-px w-full bg-gradient-to-r from-transparent via-blue-900/30 to-transparent"></div>
+
+          <!-- Right Column (Impact) -->
+          <div class="lg:w-[45%] flex flex-col relative z-10 pl-0 lg:pl-2">
+            <div class="">
+              <div class="flex items-center gap-4 mb-10">
+                <span class="text-xs font-medium tracking-[0.2em] text-blue-500 uppercase font-geist">
+                  Measurable Impact
+                </span>
+                <div class="h-px flex-1 bg-gradient-to-r from-blue-900/50 to-transparent"></div>
+              </div>
+
+              <div class="space-y-10">
+                <!-- Stat 1 -->
+                <div class="flex items-center gap-6">
+                  <div class="flex flex-row items-center gap-5">
+                    <div class="text-5xl text-blue-600 w-[5rem] tracking-tighter shrink-0 font-geist font-semibold">
+                      10x
+                    </div>
+                    <div class="flex flex-col justify-center">
+                      <div class="text-base font-medium text-gray-200 mb-1 font-geist">
+                        Faster Deployments
+                      </div>
+                      <div class="text-sm text-gray-500 font-light font-geist">
+                        Ship changes in a fraction of the time
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Stat 2 -->
+                <div class="flex items-center gap-6">
+                  <div class="flex flex-row items-center gap-5">
+                    <div class="text-5xl text-blue-600 w-[5rem] tracking-tighter shrink-0 font-geist font-semibold">
+                      90%
+                    </div>
+                    <div class="flex flex-col justify-center">
+                      <div class="text-base font-medium text-gray-200 mb-1 font-geist">
+                        Less Time Spent
+                      </div>
+                      <div class="text-sm text-gray-500 font-light font-geist">
+                        Automate the heavy lifting
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="flex items-center gap-6">
+                  <div class="flex flex-row items-center gap-5">
+                    <div class="text-5xl text-blue-600 w-[5rem] tracking-tighter shrink-0 font-geist font-semibold">
+                      60%
+                    </div>
+                    <div class="flex flex-col justify-center">
+                      <div class="text-base font-medium text-gray-200 mb-1 font-geist">
+                        Edge Latency Reduction
+                      </div>
+                      <div class="text-sm text-gray-500 font-light font-geist">
+                        Better performance for every user
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-14 pt-8 flex flex-col gap-3 border-t border-blue-900/20">
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="star" class="w-5 h-5 text-blue-600 fill-blue-600" style="stroke-width: 1.5;"></i>
+                <i data-lucide="star" class="w-5 h-5 text-blue-600 fill-blue-600" style="stroke-width: 1.5;"></i>
+                <i data-lucide="star" class="w-5 h-5 text-blue-600 fill-blue-600" style="stroke-width: 1.5;"></i>
+                <i data-lucide="star" class="w-5 h-5 text-blue-600 fill-blue-600" style="stroke-width: 1.5;"></i>
+                <i data-lucide="star" class="w-5 h-5 text-blue-600 fill-blue-600" style="stroke-width: 1.5;"></i>
+              </div>
+              <a href="#" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-blue-400 transition-colors font-light font-geist">
+                Read more reviews on G2
+                <i data-lucide="external-link" class="w-4 h-4" style="stroke-width: 1.5;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 py-24 md:py-32" id="faq">
+        <!-- Header -->
+        <div class="w-full mb-16 gs-reveal flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+          <div class="max-w-2xl">
+            <h2 class="mask-reveal-heading text-3xl md:text-5xl font-thin tracking-tight text-white mb-6">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  Technical
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  specifications.
+                </span>
+              </span>
+            </h2>
+            <p class="text-base md:text-lg text-gray-400 font-light leading-relaxed font-geist">
+              Everything you need to know about our edge architecture.
+            </p>
+          </div>
+          <button class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/[0.08] bg-[#0b1221] hover:border-blue-500/30 text-white rounded-xl font-normal hover:bg-blue-600/10 hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.2)] transition-all duration-500 w-full md:w-auto flex-shrink-0 group">
+            <span class="font-geist">View Docs</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform duration-300"></i>
+          </button>
+        </div>
+
+        <!-- FAQ Container -->
+        <div class="space-y-3 gs-reveal max-w-4xl w-full mx-auto">
+          <!-- FAQ 1 -->
+          <div class="faq-item border border-vertex-border/40 bg-gray-900/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-vertex-border/80 hover:bg-gray-900/50 hover:shadow-[0_0_30px_rgba(255,255,255,0.02)] backdrop-blur-sm">
+            <button class="group w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-xl" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-content-1">
+              <span class="text-base font-medium text-white tracking-tight transition-colors duration-300 group-hover:text-blue-400 font-geist">
+                Does Vertexa support stateful WebSockets?
+              </span>
+              <iconify-icon icon="solar:add-linear" class="faq-icon text-xl text-vertex-text-pri transition-all duration-300 group-hover:rotate-90 group-hover:text-blue-400"></iconify-icon>
+            </button>
+            <div id="faq-content-1" class="faq-content bg-gray-900/40 px-6">
+              <p class="text-sm text-vertex-text-pri pb-6 leading-relaxed opacity-90 font-geist">
+                Yes, our edge network maintains persistent connections natively.
+                You can broadcast to millions of clients simultaneously using
+                our distributed pub/sub architecture without managing connection
+                pools.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="faq-item border border-vertex-border/40 bg-gray-900/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-vertex-border/80 hover:bg-gray-900/50 hover:shadow-[0_0_30px_rgba(255,255,255,0.02)] backdrop-blur-sm">
+            <button class="group w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-xl" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-content-2">
+              <span class="text-base font-medium text-white tracking-tight transition-colors duration-300 group-hover:text-blue-400 font-geist">
+                How is cold start latency handled?
+              </span>
+              <iconify-icon icon="solar:add-linear" class="faq-icon text-xl text-vertex-text-pri transition-all duration-300 group-hover:rotate-90 group-hover:text-blue-400"></iconify-icon>
+            </button>
+            <div id="faq-content-2" class="faq-content bg-gray-900/40 px-6">
+              <p class="text-sm text-vertex-text-pri pb-6 leading-relaxed opacity-90 font-geist">
+                By utilizing V8 isolates instead of traditional containers or
+                VMs, we've eliminated cold starts entirely. Instantiation
+                happens in under 5ms globally, ensuring consistent performance
+                for every request.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="faq-item border border-vertex-border/40 bg-gray-900/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-vertex-border/80 hover:bg-gray-900/50 hover:shadow-[0_0_30px_rgba(255,255,255,0.02)] backdrop-blur-sm">
+            <button class="group w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-xl" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-content-3">
+              <span class="text-base font-medium text-white tracking-tight transition-colors duration-300 group-hover:text-blue-400 font-geist">
+                Can I run custom binaries?
+              </span>
+              <iconify-icon icon="solar:add-linear" class="faq-icon text-xl text-vertex-text-pri transition-all duration-300 group-hover:rotate-90 group-hover:text-blue-400"></iconify-icon>
+            </button>
+            <div id="faq-content-3" class="faq-content bg-gray-900/40 px-6">
+              <p class="text-sm text-vertex-text-pri pb-6 leading-relaxed opacity-90 font-geist">
+                Currently, we support Wasm (WebAssembly) targets. Any language
+                that can compile down to Wasm (Rust, Go, C++, Zig) is supported
+                natively on our edge runtime with near-native performance.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="faq-item border border-vertex-border/40 bg-gray-900/30 rounded-xl overflow-hidden transition-all duration-300 hover:border-vertex-border/80 hover:bg-gray-900/50 hover:shadow-[0_0_30px_rgba(255,255,255,0.02)] backdrop-blur-sm">
+            <button class="group w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded-xl" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-content-4">
+              <span class="text-base font-medium text-white tracking-tight transition-colors duration-300 group-hover:text-blue-400 font-geist">
+                Is there a local development environment?
+              </span>
+              <iconify-icon icon="solar:add-linear" class="faq-icon text-xl text-vertex-text-pri transition-all duration-300 group-hover:rotate-90 group-hover:text-blue-400"></iconify-icon>
+            </button>
+            <div id="faq-content-4" class="faq-content bg-gray-900/40 px-6">
+              <p class="text-sm text-vertex-text-pri pb-6 leading-relaxed opacity-90 font-geist">
+                Yes. The Vertexa CLI includes a lightweight emulator of our
+                distributed architecture. What you test locally via `vtx dev` is
+                exact 1:1 behavioral parity with our global production network.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="w-full max-w-[90rem] mx-auto px-6 lg:px-12 py-24 md:py-32 border-t border-white/5 relative">
+        <!-- Header Section -->
+
+        <!-- Testimonial Card -->
+
+        <!-- Call to Action Section -->
+        <div class="overflow-hidden flex flex-col md:p-16 lg:p-20 lg:mt-0 lg:ml-auto lg:mr-auto text-center bg-[#020617]/80 max-w-[76rem] border-blue-500/20 border rounded-[2rem] mt-24 mr-auto ml-auto px-8 py-8 relative shadow-[0_0_80px_rgba(37,99,235,0.07)] backdrop-blur-xl items-center justify-center">
+          <!-- Ambient Glow Effects inside CTA -->
+          <div class="absolute top-0 left-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+          <div class="absolute bottom-0 left-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
+          <div class="relative z-10 max-w-3xl mx-auto">
+            <h2 class="mask-reveal-heading text-4xl md:text-5xl font-light tracking-tight text-white mb-6">
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  Ready
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  to
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  accelerate
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  your
+                </span>
+              </span>
+              <span style="overflow: hidden; display: inline-block; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em;">
+                <span class="scroll-reveal-word block font-geist font-semibold" style="transform: translateY(110%);">
+                  deployment?
+                </span>
+              </span>
+            </h2>
+            <p class="text-lg text-gray-400 font-light mb-10 font-geist">
+              Join high-performance teams worldwide shipping with absolute
+              precision and zero friction.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+              <a href="#" class="flex w-full sm:w-auto items-center justify-center h-12 md:h-14 px-8 rounded-xl bg-blue-600 text-white font-normal hover:bg-blue-500 transition-colors gap-2 shadow-[0_0_30px_rgba(37,99,235,0.2)] font-geist">
+                Start building for free
+                <i data-lucide="arrow-right" class="w-5 h-5" style="stroke-width: 1.5;"></i>
+              </a>
+              <a href="#" class="flex w-full sm:w-auto items-center justify-center h-12 md:h-14 px-8 rounded-xl border border-white/10 bg-white/5 text-white font-normal hover:bg-white/10 transition-colors gap-2 font-geist">
+                Talk to an expert
+              </a>
+            </div>
+
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-400 font-light">
+              <div class="flex items-center gap-2 font-geist">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500" style="stroke-width: 1.5;"></i>
+                No credit card required
+              </div>
+              <div class="hidden sm:block w-1 h-1 rounded-full bg-gray-700"></div>
+              <div class="flex items-center gap-2 font-geist">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500" style="stroke-width: 1.5;"></i>
+                14-day free trial
+              </div>
+              <div class="hidden sm:block w-1 h-1 rounded-full bg-gray-700"></div>
+              <div class="flex items-center gap-2 font-geist">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500" style="stroke-width: 1.5;"></i>
+                Cancel anytime
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="border-vertex-border/30 w-full border-t mt-auto backdrop-blur-sm">
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-12 py-20 font-sans">
+          <div class="flex flex-col lg:flex-row w-full gap-0">
+            <!-- Left Column -->
+            <div class="w-full lg:w-[360px] shrink-0 lg:pr-14 flex flex-col relative">
+              <!-- Logo -->
+              <div class="flex gap-4 mb-8 gap-x-4 gap-y-4 items-center">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[32px] h-[32px]" stroke-width="2" data-icon-replaced="true" style="color: rgb(209, 213, 219); width: 32px; height: 32px;">
+                  <path d="M16 28L4 8H10L16 18L22 8H28L16 28Z" fill="#3B82F6"></path>
+                  <path d="M16 14.5L11 6H21L16 14.5Z" fill="#93C5FD"></path>
+                </svg>
+                <span class="text-[22px] tracking-[0.15em] text-white font-geist font-semibold">
+                  VERTEXA
+                </span>
+              </div>
+
+              <p class="text-neutral-400 text-[15px] leading-relaxed mb-10 pr-4 font-geist">
+                Engineered for high-performance teams deploying resilient,
+                globally distributed systems with zero friction.
+              </p>
+
+              <a href="#" class="flex items-center justify-between px-5 py-3.5 rounded-xl border border-blue-900/60 bg-blue-950/20 text-blue-400 hover:bg-blue-900/30 transition-all mb-6 group w-full sm:w-[85%] lg:w-full">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="globe" class="w-[18px] h-[18px] stroke-[1.5]"></i>
+                  <span class="text-[15px] font-normal font-geist">Deploy globally</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 stroke-[1.5] group-hover:translate-x-1 transition-transform"></i>
+              </a>
+
+              <a href="#" class="flex items-center justify-between px-5 py-4 rounded-xl border border-white/[0.06] bg-white/[0.01] hover:bg-white/[0.03] transition-all mb-12 group w-full sm:w-[85%] lg:w-full">
+                <div class="flex items-center gap-4">
+                  <div class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/80"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+                  </div>
+                  <div class="flex flex-col gap-0.5">
+                    <div class="text-[13px] text-neutral-500 font-normal font-geist">
+                      System Status
+                    </div>
+                    <div class="text-[15px] text-green-400 font-normal font-geist">
+                      All systems operational
+                    </div>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-neutral-600 stroke-[1.5] group-hover:translate-x-1 transition-transform group-hover:text-neutral-400"></i>
+              </a>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="hidden lg:block w-[1px] bg-gradient-to-b from-transparent via-white/[0.1] to-transparent self-stretch my-2"></div>
+
+            <!-- Right Column -->
+            <div class="w-full lg:flex-1 lg:pl-16 pt-16 lg:pt-0 flex flex-col">
+              <!-- Link Grid -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 mb-16">
+                <!-- Column 1 -->
+                <div class="">
+                  <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-1.5 h-1.5 bg-blue-600 rounded-sm"></div>
+                    <h4 class="text-[12px] font-medium text-blue-500 uppercase tracking-[0.15em] font-geist">
+                      Product
+                    </h4>
+                  </div>
+                  <ul class="flex flex-col">
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Edge Compute</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Distributed State</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Global Network</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Pricing</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="">
+                  <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-1.5 h-1.5 bg-blue-600 rounded-sm"></div>
+                    <h4 class="text-[12px] font-medium text-blue-500 uppercase tracking-[0.15em] font-geist">
+                      Developers
+                    </h4>
+                  </div>
+                  <ul class="flex flex-col">
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Documentation</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">API Reference</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">CLI Tool</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Status</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="">
+                  <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-1.5 h-1.5 bg-blue-600 rounded-sm"></div>
+                    <h4 class="text-[12px] font-medium text-blue-500 uppercase tracking-[0.15em] font-geist">
+                      Company
+                    </h4>
+                  </div>
+                  <ul class="flex flex-col">
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">About Us</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Blog</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Careers</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="flex items-center justify-between py-3.5 text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Contact</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Column 4 -->
+                <div class="">
+                  <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-1.5 h-1.5 bg-blue-600 rounded-sm"></div>
+                    <h4 class="text-[12px] font-medium text-blue-500 uppercase tracking-[0.15em] font-geist">
+                      Legal
+                    </h4>
+                  </div>
+                  <ul class="flex flex-col">
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Privacy Policy</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 border-b border-white/[0.04] text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Terms of Service</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center justify-between py-3.5 text-[15px] text-neutral-400 hover:text-white group transition-colors">
+                        <span class="font-geist">Cookie Policy</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-neutral-700 stroke-[1.5] group-hover:text-neutral-400 transition-colors"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Newsletter -->
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-5 rounded-2xl border border-white/[0.06] bg-[#050914] gap-6 mt-auto">
+                <div class="flex items-center gap-5">
+                  <div class="flex flex-col gap-1">
+                    <h5 class="text-white font-medium text-[15px] font-geist">
+                      Join the newsletter
+                    </h5>
+                    <p class="text-neutral-500 text-[13px] font-geist">
+                      Updates on edge infrastructure, releases, and more.
+                    </p>
+                  </div>
+                </div>
+                <form class="flex w-full md:w-auto gap-3 items-center shrink-0">
+                  <input type="email" placeholder="Enter your email" class="bg-white/[0.02] border border-white/[0.08] rounded-xl px-4 py-2.5 text-[15px] text-white placeholder-neutral-600 focus:outline-none focus:border-blue-500/50 w-full md:w-[280px] transition-colors">
+                  <button type="submit" class="bg-[#1D4ED8] hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-[14px] font-normal transition-colors flex items-center gap-2 whitespace-nowrap shadow-lg shadow-blue-900/20 shrink-0 font-geist">
+                    Subscribe
+                    <i data-lucide="chevron-right" class="w-4 h-4 stroke-[1.5]"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Bar -->
+          <div class="w-full mt-24 relative pt-8">
+            <!-- Glowing line effect -->
+            <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/[0.1] to-transparent"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent"></div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] text-neutral-500">
+              <p class="font-geist">© 2024 Vertexa Inc. All rights reserved.</p>
+              <div class="flex items-center gap-2.5">
+                <div class="w-1.5 h-1.5 bg-blue-600 rounded-sm"></div>
+                <p class="font-geist">Designed with absolute precision.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+      // --- 1. GSAP Animations ---
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero Animation
+      const heroTimeline = gsap.timeline();
+
+      heroTimeline.to(".reveal-word", {
+          y: "0%",
+          duration: 1.2,
+          ease: "power4.out",
+          stagger: 0.15,
+          delay: 0.2
+      })
+      .to(["#hero-desc", "#hero-cta"], {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.2,
+          startAt: { y: 20 },
+      }, "-=0.6");
+
+      // Scroll Animations for sections
+      const revealElements = document.querySelectorAll('.gs-reveal');
+      revealElements.forEach((el) => {
+          gsap.fromTo(el,
+              { autoAlpha: 0, y: 30 },
+              {
+                  autoAlpha: 1,
+                  y: 0,
+                  duration: 0.8,
+                  ease: "power3.out",
+                  scrollTrigger: {
+                      trigger: el,
+                      start: "top 85%",
+                      toggleActions: "play none none reverse"
+                  }
+              }
+          );
+      });
+
+      // --- 2. FAQ Accordion Logic ---
+      function toggleFaq(button) {
+          const item = button.parentElement;
+          const allItems = document.querySelectorAll('.faq-item');
+
+          // Close others
+          allItems.forEach(el => {
+              if(el !== item) el.classList.remove('active');
+          });
+
+          // Toggle current
+          item.classList.toggle('active');
+      }
+
+      // --- 3. Canvas Pixel Wave Effect (Optimized for full page scrolling) ---
+      const canvas = document.getElementById('pixel-canvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      let width, height;
+      const blockSize = 28;
+      let blocks = [];
+
+      function resize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
+          initBlocks();
+      }
+
+      function initBlocks() {
+          blocks = [];
+          const columns = Math.ceil(width / blockSize);
+          const rows = Math.ceil(height / blockSize);
+
+          for (let c = 0; c < columns; c++) {
+              let normalizedX = c / columns;
+              let curve = Math.pow(normalizedX, 4);
+              let startRow = rows - Math.floor(rows * curve * 0.9) - Math.floor(Math.random() * 4);
+
+              for (let r = 0; r < rows; r++) {
+                  let shouldAdd = false;
+                  let blockType = 'base';
+
+                  if (r >= startRow) {
+                      if (Math.random() > 0.05) shouldAdd = true;
+                  } else if (r >= startRow - 4 && normalizedX > 0.4) {
+                      if (Math.random() > 0.6) {
+                          shouldAdd = true;
+                          blockType = 'sparse';
+                      }
+                  } else if (normalizedX > 0.6 && Math.random() > 0.98) {
+                      shouldAdd = true;
+                      blockType = 'sparse';
+                  }
+
+                  if (shouldAdd) {
+                      let rColor = 0;
+                      let gColor = 0;
+                      let bColor = 255;
+                      let maxAlpha = 1;
+
+                      let rand = Math.random();
+                      if (rand > 0.8) {
+                          rColor = 45; gColor = 67; bColor = 230; // Match Vertex Blue #2D43E6 approx
+                      } else if (rand > 0.4) {
+                          rColor = 20; gColor = 30; bColor = 200;
+                      } else {
+                          rColor = 10; gColor = 15; bColor = 100;
+                          maxAlpha = 0.5;
+                      }
+
+                      if(blockType === 'sparse') maxAlpha *= 0.4;
+
+                      blocks.push({
+                          x: c * blockSize,
+                          y: r * blockSize,
+                          r: rColor,
+                          g: gColor,
+                          b: bColor,
+                          alpha: Math.random() * maxAlpha,
+                          targetAlpha: Math.random() * maxAlpha,
+                          maxAlpha: maxAlpha,
+                          speed: Math.random() * 0.02 + 0.005
+                      });
+                  }
+              }
+          }
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      function animate() {
+          ctx.fillStyle = '#02040a';
+          ctx.fillRect(0, 0, width, height);
+
+          blocks.forEach(b => {
+              b.alpha += (b.targetAlpha - b.alpha) * b.speed;
+
+              if (Math.abs(b.alpha - b.targetAlpha) < 0.02) {
+                  b.targetAlpha = Math.random() * b.maxAlpha;
+              }
+
+              ctx.fillStyle = `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha})`;
+              ctx.fillRect(b.x, b.y, blockSize - 1, blockSize - 1);
+
+              ctx.fillStyle = `rgba(255, 255, 255, ${b.alpha * 0.1})`;
+              ctx.fillRect(b.x, b.y, blockSize - 1, 2);
+          });
+
+          requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+
+    <script>
+      const maskRevealHeadings = document.querySelectorAll('.mask-reveal-heading');
+      maskRevealHeadings.forEach((heading) => {
+          gsap.to(heading.querySelectorAll('.scroll-reveal-word'), {
+              y: '0%',
+              duration: 1.2,
+              ease: 'power4.out',
+              stagger: 0.15,
+              scrollTrigger: {
+                  trigger: heading,
+                  start: 'top 85%',
+                  toggleActions: 'play none none reverse'
+              }
+          });
+      });
+    </script>
+  
+</body></html>

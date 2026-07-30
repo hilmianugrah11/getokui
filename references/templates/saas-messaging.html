@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasher | Speed of Thought</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #0A0A0A;
+color: #d4d4d8;
+-webkit-font-smoothing: antialiased;
+}
+/* Custom Scrollbar for inner elements */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 69, 0, 0.3); }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 69, 0, 0.6); }
+/* Carousel Animation */
+@keyframes testimonial-scroll {
+from { transform: translateX(0); }
+to { transform: translateX(-50%); }
+}
+.testimonial-track {
+width: max-content;
+animation: testimonial-scroll 40s linear infinite;
+}
+.testimonial-track:hover { animation-play-state: paused; }
+/* Flow Animation for Footer */
+@keyframes flow {
+0% { transform: translateY(0); }
+100% { transform: translateY(-50%); }
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="selection:bg-[#FF4500] selection:text-white flex flex-col items-center py-0 lg:py-16 overflow-x-hidden px-0 lg:px-12 w-full">
+
+    <!-- Navbar Overlay (Sticky outside frames) -->
+    <nav class="fixed top-0 left-0 w-full z-50 mix-blend-difference pointer-events-none px-6 lg:px-12 py-6 flex justify-between items-center">
+        <div class="font-medium tracking-tighter text-white text-lg pointer-events-auto">DASHER</div>
+        <button class="pointer-events-auto text-white hover:text-[#FF4500] transition-colors">
+            <iconify-icon icon="solar:hamburger-menu-linear" style="font-size: 1.5rem;" stroke-width="1.5"></iconify-icon>
+        </button>
+    </nav>
+
+    <!-- Master Framework Shell -->
+    <section class="w-full flex justify-center relative z-10">
+        <div class="w-full max-w-[1400px] bg-transparent lg:bg-[#F4F3ED] p-0 lg:p-3 relative shadow-none lg:shadow-2xl lg:shadow-black/50 mt-0 lg:mt-12">
+            <!-- Ivory Shell Corner Markers -->
+            <div class="hidden lg:block absolute top-3 left-3 w-1.5 h-1.5 border border-[#0A0A0A] bg-transparent opacity-30"></div>
+            <div class="hidden lg:block absolute top-3 right-3 w-1.5 h-1.5 border border-[#0A0A0A] bg-transparent opacity-30"></div>
+            <div class="hidden lg:block absolute bottom-3 left-3 w-1.5 h-1.5 border border-[#0A0A0A] bg-transparent opacity-30"></div>
+            <div class="hidden lg:block absolute bottom-3 right-3 w-1.5 h-1.5 border border-[#0A0A0A] bg-transparent opacity-30"></div>
+
+            <div class="relative bg-transparent lg:bg-gradient-to-b lg:from-zinc-500/40 lg:via-zinc-800/40 lg:to-black/80 p-0 lg:p-[1px] h-full">
+                <main class="bg-[#0F0F0F] relative flex flex-col w-full overflow-hidden">
+                    
+                    <!-- SECTION 1: Hero -->
+                    <div class="relative flex flex-col lg:flex-row w-full min-h-screen lg:min-h-[85vh] overflow-hidden border-b border-white/10">
+                        <!-- Container Lines & Grid Structure -->
+                        <div class="absolute inset-0 pointer-events-none flex justify-between z-0">
+                            <div class="w-[1px] h-full bg-white/5 relative left-[8%] hidden md:block">
+                                <div class="absolute top-0 -translate-x-[2px] w-[5px] h-[5px] bg-[#0F0F0F] border border-white/20"></div>
+                                <div class="absolute bottom-0 -translate-x-[2px] w-[5px] h-[5px] bg-[#0F0F0F] border border-white/20"></div>
+                            </div>
+                            <div class="w-[1px] h-full bg-white/5 relative left-[40%] hidden lg:block"></div>
+                            <div class="w-[1px] h-full bg-white/5 relative right-[8%] hidden md:block">
+                                <div class="absolute top-0 -translate-x-[2px] w-[5px] h-[5px] bg-[#0F0F0F] border border-white/20"></div>
+                                <div class="absolute bottom-0 -translate-x-[2px] w-[5px] h-[5px] bg-[#0F0F0F] border border-white/20"></div>
+                            </div>
+                        </div>
+
+                        <!-- Horizontal Header Rail -->
+                        <header class="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center justify-between px-6 lg:px-12 z-30 bg-[#0F0F0F]/80 backdrop-blur-sm">
+                            <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                                <span class="w-2 h-2 rounded-full bg-white/20"></span>
+                                Aether Framework
+                            </div>
+                            <div class="flex items-center gap-2 text-zinc-400">
+                                <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-600 hidden md:inline">Sys_Log</span>
+                            </div>
+                        </header>
+                        
+                        <!-- Left Column: Typography -->
+                        <div class="flex-1 px-6 md:px-12 lg:px-20 pt-28 pb-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/10 relative z-20">
+                            <div class="mb-12">
+                                <div class="font-mono text-[10px] text-[#FF4500] uppercase tracking-widest mb-8 flex items-center gap-2">
+                                    <iconify-icon icon="solar:bolt-linear" style="font-size: 1rem;" stroke-width="1.5"></iconify-icon>
+                                    V. 2.0 Live
+                                </div>
+                                
+                                <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] tracking-tighter font-light text-white leading-[1.05] reveal-container">
+                                    <span style="display: inline-block; overflow: hidden; vertical-align: bottom;"><span class="reveal-word block" style="transform: translateY(110%);">Connect at</span></span><br>
+                                    <span style="display: inline-block; overflow: hidden; vertical-align: bottom;"><span class="reveal-word block text-zinc-500" style="transform: translateY(110%);">the speed</span></span><br>
+                                    <span style="display: inline-block; overflow: hidden; vertical-align: bottom;"><span class="reveal-word block text-[#FF4500]" style="transform: translateY(110%);">of thought.</span></span>
+                                </h1>
+                            </div>
+                            
+                            <div class="flex flex-col md:flex-row gap-8 justify-between items-start w-full max-w-2xl mt-8">
+                                <p class="text-[10px] font-mono text-zinc-500 leading-relaxed max-w-sm uppercase tracking-widest">
+                                    The most performant messaging architecture built for teams that refuse to be slowed down by their tools.
+                                </p>
+                                
+                                <button class="group flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#F4F3ED] bg-[#FF4500] hover:bg-[#FF4500]/90 px-6 py-3 transition-colors duration-300">
+                                    Start Chatting
+                                    <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Visual System (Updated WebGL) -->
+                        <div class="w-full lg:w-[45%] flex flex-col relative z-20 min-h-[50vh] lg:min-h-0 bg-[#050505] overflow-hidden">
+                            <div class="absolute inset-0 z-0 opacity-90 mix-blend-screen pointer-events-none flex items-center justify-center scale-125">
+                                <canvas id="hero-canvas" class="w-full h-full"></canvas>
+                            </div>
+                            <!-- Ambient Particles -->
+                            <div id="particle-container" class="absolute inset-0 pointer-events-none z-0 overflow-hidden"></div>
+                            
+                            <div class="absolute bottom-12 right-8 z-10 flex flex-col items-end gap-2 text-[10px] font-mono text-zinc-500 uppercase tracking-widest text-right">
+                                <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#FF4500] rounded-full animate-pulse"></span> Latency: 12ms</span>
+                                <span>E2E Encrypted</span>
+                                <span>Nodes: 24,091</span>
+                            </div>
+                        </div>
+
+                        <!-- Infinite Marquee -->
+                        <div class="absolute bottom-0 left-0 w-full h-8 border-t border-white/10 bg-[#0A0A0A] text-zinc-500 font-mono text-[10px] uppercase flex items-center overflow-hidden z-30">
+                            <div class="marquee-content flex whitespace-nowrap gap-12 pl-12 items-center">
+                                <span class="flex items-center gap-2"><iconify-icon icon="solar:shield-check-linear"></iconify-icon> ZERO KNOWLEDGE ARCHITECTURE</span>
+                                <span class="flex items-center gap-2 text-white"><iconify-icon icon="solar:database-linear"></iconify-icon> INFINITE HISTORY</span>
+                                <span class="flex items-center gap-2"><iconify-icon icon="solar:users-group-rounded-linear"></iconify-icon> UNLIMITED CHANNELS</span>
+                                <span class="flex items-center gap-2 text-[#FF4500]"><iconify-icon icon="solar:global-linear"></iconify-icon> GLOBAL EDGE NETWORK</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: UI Showcase -->
+                    <div class="relative w-full overflow-hidden px-6 py-24 md:px-12 lg:px-20 border-b border-white/10">
+                        <div class="absolute inset-0 pointer-events-none flex justify-between z-0">
+                            <div class="w-[1px] h-full bg-white/5 relative left-[8%] hidden md:block"></div>
+                            <div class="w-[1px] h-full bg-white/5 relative left-[40%] hidden lg:block"></div>
+                            <div class="w-[1px] h-full bg-white/5 relative right-[8%] hidden md:block"></div>
+                        </div>
+
+                        <header class="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center justify-between px-6 lg:px-12 z-30 bg-[#0F0F0F]/80 backdrop-blur-sm">
+                            <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                                <span class="w-2 h-2 rounded-full bg-white/20"></span> Interface Module
+                            </div>
+                        </header>
+
+                        <div class="text-center mb-16 relative z-10 mt-8">
+                            <div class="font-mono text-[10px] text-[#FF4500] uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
+                                <iconify-icon icon="solar:ruler-cross-pen-linear" style="font-size: 1rem;" stroke-width="1.5"></iconify-icon> Layout Engine
+                            </div>
+                            <h2 class="text-3xl md:text-4xl lg:text-5xl tracking-tight font-light text-white mb-4">Precision Interface</h2>
+                            <p class="text-xs font-mono tracking-widest uppercase text-zinc-500 max-w-xl mx-auto">Every pixel optimized for flow state. Experience a decluttered workspace.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto relative z-10">
+                            <!-- UI Card 1: Chat Stream -->
+                            <div class="relative bg-[#050505] flex flex-col border border-white/10 p-6 h-[500px]">
+                                <div class="flex justify-between items-center text-[10px] uppercase tracking-widest font-mono text-zinc-500 mb-8 border-b border-white/10 pb-4">
+                                    <span># engineering</span>
+                                    <iconify-icon icon="solar:hashtag-linear" class="text-lg"></iconify-icon>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-2">
+                                    <div class="flex gap-3">
+                                        <div class="w-8 h-8 bg-zinc-800 flex-shrink-0 flex items-center justify-center text-xs text-zinc-500">A</div>
+                                        <div>
+                                            <div class="flex items-baseline gap-2 mb-1"><span class="text-sm font-medium text-white">Alex</span><span class="text-[10px] font-mono text-zinc-600">10:42 AM</span></div>
+                                            <div class="bg-zinc-900 border border-white/5 p-3 text-sm text-zinc-300 font-light">API integration is complete. Tests are passing.</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3 flex-row-reverse">
+                                        <div class="w-8 h-8 bg-white flex-shrink-0 flex items-center justify-center text-xs text-black">M</div>
+                                        <div class="items-end flex flex-col">
+                                            <div class="flex items-baseline gap-2 mb-1 flex-row-reverse"><span class="text-sm font-medium text-white">Me</span><span class="text-[10px] font-mono text-zinc-600">10:45 AM</span></div>
+                                            <div class="bg-[#FF4500]/20 border border-[#FF4500]/50 p-3 text-sm text-[#F4F3ED] font-light">Excellent. Let's merge it before the sync.</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3 mt-2">
+                                        <div class="w-8 h-8 bg-zinc-800 flex-shrink-0 flex items-center justify-center text-xs text-zinc-500">S</div>
+                                        <div>
+                                            <div class="flex items-baseline gap-2 mb-1"><span class="text-sm font-medium text-white">Sarah</span><span class="text-[10px] font-mono text-zinc-600">10:46 AM</span></div>
+                                            <div class="bg-zinc-900 border border-white/5 p-3 text-sm text-zinc-300 font-light">Reviewing the PR now. Looks solid.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 bg-zinc-900/50 border border-white/10 px-4 py-3 flex items-center justify-between text-zinc-500 text-sm">
+                                    <span class="text-xs font-mono uppercase tracking-widest">Message #engineering...</span>
+                                    <iconify-icon icon="solar:plain-linear"></iconify-icon>
+                                </div>
+                            </div>
+
+                            <!-- UI Card 2: Voice & Focus -->
+                            <div class="relative bg-[#FF4500] flex flex-col items-center justify-center border border-white/10 p-6 h-[500px] text-center lg:-translate-y-4 shadow-2xl shadow-black group overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-[#FFB800]/40 via-transparent to-[#9A00FF]/30 mix-blend-overlay blur-2xl transition-transform duration-[2s] group-hover:scale-125 group-hover:rotate-3"></div>
+                                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 16px 16px;"></div>
+                                <div class="relative z-10 text-[10px] uppercase tracking-widest font-mono text-[#F4F3ED]/80 mix-blend-plus-lighter mb-auto w-full flex justify-between">
+                                    <span>Huddle Active</span>
+                                    <span>04:12</span>
+                                </div>
+                                <div class="relative z-10 w-32 h-32 rounded-full border border-white/20 flex items-center justify-center my-12 mix-blend-plus-lighter">
+                                    <div class="absolute inset-0 rounded-full border border-white/20 animate-ping opacity-50" style="animation-duration: 3s;"></div>
+                                    <div class="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+                                         <div class="w-full flex justify-center gap-1 items-end h-8">
+                                             <div class="w-1 bg-white h-full animate-[pulse_1s_ease-in-out_infinite]"></div>
+                                             <div class="w-1 bg-white h-1/2 animate-[pulse_1.2s_ease-in-out_infinite_0.2s]"></div>
+                                             <div class="w-1 bg-white h-3/4 animate-[pulse_0.9s_ease-in-out_infinite_0.4s]"></div>
+                                             <div class="w-1 bg-white h-1/3 animate-[pulse_1.5s_ease-in-out_infinite_0.1s]"></div>
+                                         </div>
+                                    </div>
+                                </div>
+                                <div class="relative z-10 mt-auto flex flex-col items-center w-full mix-blend-plus-lighter text-[#F4F3ED]">
+                                    <h3 class="text-xl tracking-tight font-light mb-2">Design Review</h3>
+                                    <p class="text-[10px] font-mono tracking-widest uppercase opacity-80 mb-6">3 participants</p>
+                                    <div class="flex gap-4">
+                                        <button class="w-12 h-12 bg-white text-black flex items-center justify-center hover:bg-zinc-200 transition-colors">
+                                            <iconify-icon icon="solar:microphone-bold" class="text-xl"></iconify-icon>
+                                        </button>
+                                        <button class="w-12 h-12 bg-black/50 border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-colors">
+                                            <iconify-icon icon="solar:end-call-linear" class="text-xl"></iconify-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- UI Card 3: Settings & Logs -->
+                            <div class="relative bg-[#050505] flex flex-col border border-white/10 p-6 h-[500px]">
+                                <div class="flex justify-between items-center text-[10px] uppercase tracking-widest font-mono text-zinc-500 mb-8 border-b border-white/10 pb-4">
+                                    <span>Preferences</span>
+                                    <iconify-icon icon="solar:settings-linear" class="text-lg"></iconify-icon>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-4">
+                                    <div class="flex justify-between items-center p-4 border border-white/10 bg-zinc-900/30">
+                                        <div>
+                                            <div class="text-sm font-medium text-white mb-1">Focus Mode</div>
+                                            <div class="text-[10px] text-zinc-500 font-mono tracking-widest uppercase">Mute non-essential</div>
+                                        </div>
+                                        <div class="w-10 h-5 bg-[#FF4500] relative cursor-pointer border border-[#FF4500]">
+                                            <div class="absolute right-1 top-[2px] w-4 h-4 bg-white shadow-sm"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center p-4 border border-white/10 bg-zinc-900/30">
+                                        <div>
+                                            <div class="text-sm font-medium text-white mb-1">Theme Structure</div>
+                                            <div class="text-[10px] text-zinc-500 font-mono tracking-widest uppercase">Current: Monochrome</div>
+                                        </div>
+                                        <iconify-icon icon="solar:alt-arrow-right-linear" class="text-zinc-500"></iconify-icon>
+                                    </div>
+                                    <div class="mt-4 pt-4 border-t border-white/10 flex flex-col gap-4">
+                                        <div class="text-[10px] font-mono tracking-widest uppercase text-zinc-500 mb-2">Recent Activity</div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-6 h-6 bg-[#FF4500]/20 text-[#FF4500] flex items-center justify-center"><iconify-icon icon="solar:document-linear" class="text-xs"></iconify-icon></div>
+                                            <span class="text-xs text-zinc-400 font-light">File shared in #design</span>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-6 h-6 bg-zinc-800 text-zinc-400 flex items-center justify-center"><iconify-icon icon="solar:user-plus-linear" class="text-xs"></iconify-icon></div>
+                                            <span class="text-xs text-zinc-400 font-light">David joined the workspace</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: Features Grid -->
+                    <div class="relative w-full overflow-hidden px-6 py-24 md:px-12 lg:px-20 border-b border-white/10">
+                        <div class="absolute inset-0 pointer-events-none flex justify-between z-0">
+                            <div class="w-[1px] h-full bg-white/5 relative left-[8%] hidden md:block"></div>
+                            <div class="w-[1px] h-full bg-white/5 relative left-[40%] hidden lg:block"></div>
+                            <div class="w-[1px] h-full bg-white/5 relative right-[8%] hidden md:block"></div>
+                        </div>
+
+                        <header class="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center justify-between px-6 lg:px-12 z-30 bg-[#0F0F0F]/80 backdrop-blur-sm">
+                            <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                                <span class="w-2 h-2 rounded-full bg-white/20"></span> Infrastructure
+                            </div>
+                        </header>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16 max-w-6xl mx-auto relative z-10 mt-8">
+                            <!-- Feature 1 -->
+                            <div class="group flex flex-col h-full cursor-pointer">
+                                <div class="aspect-[4/3] w-full mb-6 overflow-hidden border border-white/10 relative bg-[#050505]">
+                                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=80" alt="Server infrastructure" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                                    <span class="absolute top-4 left-4 text-[10px] font-mono tracking-widest uppercase text-white bg-black/80 px-2 py-1 border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Explore Architecture</span>
+                                </div>
+                                <div class="flex justify-between items-baseline mb-2">
+                                    <h4 class="text-xl font-light tracking-tight text-white">Edge Sync</h4>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] text-[#FF4500] mb-3 font-mono uppercase tracking-widest">
+                                    <span>Multi-region</span>
+                                    <span>•</span>
+                                    <span>&lt; 50ms</span>
+                                </div>
+                                <p class="text-sm text-zinc-400 font-light border-t border-white/10 pt-4 leading-relaxed">
+                                    Messages route through the closest global node, ensuring instant delivery regardless of geographical distance.
+                                </p>
+                            </div>
+
+                            <!-- Feature 2 -->
+                            <div class="group flex flex-col h-full cursor-pointer md:translate-y-8">
+                                <div class="aspect-[4/3] w-full mb-6 overflow-hidden border border-white/10 relative bg-[#050505]">
+                                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80" alt="Code abstract" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                                </div>
+                                <div class="flex justify-between items-baseline mb-2">
+                                    <h4 class="text-xl font-light tracking-tight text-white">Cryptographic Core</h4>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] text-[#FF4500] mb-3 font-mono uppercase tracking-widest">
+                                    <span>E2EE</span>
+                                    <span>•</span>
+                                    <span>Signal Protocol</span>
+                                </div>
+                                <p class="text-sm text-zinc-400 font-light border-t border-white/10 pt-4 leading-relaxed">
+                                    Absolute privacy by default. Only the intended recipients possess the keys to decrypt the communication stream.
+                                </p>
+                            </div>
+
+                            <!-- Feature 3 -->
+                            <div class="group flex flex-col h-full cursor-pointer">
+                                <div class="aspect-[4/3] w-full mb-6 overflow-hidden border border-white/10 relative bg-[#050505]">
+                                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80" alt="Data streams" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                                </div>
+                                <div class="flex justify-between items-baseline mb-2">
+                                    <h4 class="text-xl font-light tracking-tight text-white">Infinite Context</h4>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] text-[#FF4500] mb-3 font-mono uppercase tracking-widest">
+                                    <span>Vector DB</span>
+                                    <span>•</span>
+                                    <span>Instant Search</span>
+                                </div>
+                                <p class="text-sm text-zinc-400 font-light border-t border-white/10 pt-4 leading-relaxed">
+                                    Decades of team knowledge indexed and searchable in milliseconds without impacting application performance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: Customer Insights -->
+                    <div class="relative w-full overflow-hidden flex flex-col border-b border-white/10">
+                        <header class="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center justify-between px-6 lg:px-12 z-30 bg-[#0F0F0F]/80 backdrop-blur-sm">
+                            <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                                <span class="w-2 h-2 rounded-full bg-white/20"></span> Performance Metrics
+                            </div>
+                        </header>
+
+                        <!-- Grid pattern overlay -->
+                        <div class="absolute inset-0 z-0 pointer-events-none opacity-20" style="background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, black 0%, transparent 80%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 80%);"></div>
+
+                        <div class="px-6 py-24 md:px-12 lg:px-20 w-full relative z-10 mt-8">
+                            <div class="flex flex-col items-center text-center mb-20">
+                                <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tighter font-light text-white mb-6 gsap-reveal-2 flex flex-wrap justify-center gap-x-3">
+                                    <span class="overflow-hidden inline-flex pb-2"><span class="translate-y-[110%] word-2 inline-block">Engineered</span></span>
+                                    <span class="overflow-hidden inline-flex pb-2"><span class="translate-y-[110%] word-2 inline-block text-[#FF4500]">for</span></span>
+                                    <span class="overflow-hidden inline-flex pb-2"><span class="translate-y-[110%] word-2 inline-block">scale</span></span>
+                                </h2>
+                                <p class="text-[10px] text-zinc-500 font-mono tracking-widest uppercase max-w-xl leading-relaxed">
+                                    See why top-tier engineering organizations migrate their operations to our infrastructure.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto w-full">
+                                <!-- Insight Card 1 -->
+                                <div class="relative p-[1px] bg-gradient-to-b from-white/10 to-transparent hover:from-white/20 transition-colors duration-700 group">
+                                    <div class="h-full bg-[#050505] p-8 flex flex-col relative overflow-hidden border border-white/5">
+                                        <div class="flex items-center gap-4 mb-8">
+                                            <div class="w-10 h-10 border border-white/10 bg-zinc-900 flex items-center justify-center text-white font-medium text-sm">O</div>
+                                            <div>
+                                                <h4 class="text-[10px] font-mono tracking-widest uppercase text-white">Operations</h4>
+                                                <p class="text-[10px] font-mono tracking-widest uppercase text-zinc-500 mt-1">Global Logistics</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-zinc-300 font-light leading-relaxed grow">
+                                            "The predictability of the application state across thousands of concurrent users has eliminated our communication blind spots entirely."
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Insight Card 2 (Highlight) -->
+                                <div class="relative p-[1px] bg-gradient-to-b from-[#FF4500]/50 to-transparent hover:from-[#FF4500]/70 transition-colors duration-700 group md:-translate-y-4 shadow-xl shadow-black">
+                                    <div class="h-full bg-[#0F0F0F] p-8 flex flex-col relative overflow-hidden border border-white/10">
+                                        <div class="flex items-center gap-4 mb-8">
+                                            <div class="w-10 h-10 bg-[#FF4500] flex items-center justify-center text-white font-medium text-sm">E</div>
+                                            <div>
+                                                <h4 class="text-[10px] font-mono tracking-widest uppercase text-white">Engineering</h4>
+                                                <p class="text-[10px] font-mono tracking-widest uppercase text-[#FF4500] mt-1">Fintech Platform</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-white font-light leading-relaxed grow">
+                                            "I've evaluated every tool. The underlying architecture here is a masterclass in efficiency. It consumes minimal resources while delivering instantaneous updates."
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Insight Card 3 -->
+                                <div class="relative p-[1px] bg-gradient-to-b from-white/10 to-transparent hover:from-white/20 transition-colors duration-700 group">
+                                    <div class="h-full bg-[#050505] p-8 flex flex-col relative overflow-hidden border border-white/5">
+                                        <div class="flex items-center gap-4 mb-8">
+                                            <div class="w-10 h-10 border border-white/10 bg-zinc-900 flex items-center justify-center text-white font-medium text-sm">P</div>
+                                            <div>
+                                                <h4 class="text-[10px] font-mono tracking-widest uppercase text-white">Product</h4>
+                                                <p class="text-[10px] font-mono tracking-widest uppercase text-zinc-500 mt-1">SaaS Enterprise</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-zinc-300 font-light leading-relaxed grow">
+                                            "The signal-to-noise ratio is perfect. By striping away legacy bloat, our team focuses solely on execution rather than managing the tool itself."
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 5: Testimonials Carousel -->
+                    <div class="relative w-full overflow-hidden py-24 border-b border-white/10">
+                        <header class="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center justify-between px-6 lg:px-12 z-30 bg-[#0F0F0F]/80 backdrop-blur-sm">
+                            <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                                <span class="w-2 h-2 rounded-full bg-white/20"></span> System Feedback
+                            </div>
+                        </header>
+
+                        <div class="absolute top-[15%] left-0 w-full text-center pointer-events-none select-none z-0">
+                            <h2 class="text-[12vw] font-bold tracking-tighter text-white/5 leading-none">
+                                REVIEWS
+                            </h2>
+                        </div>
+
+                        <div class="relative z-10 mb-12 px-6 lg:px-20 flex justify-between items-end mt-8">
+                            <p class="text-[10px] font-mono tracking-widest uppercase text-zinc-500 max-w-xs">Trusted by thousands of distributed teams globally.</p>
+                            <div class="text-[10px] font-mono text-[#FF4500] uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-[#FF4500] rounded-full animate-pulse"></span> System Status: Optimal
+                            </div>
+                        </div>
+
+                        <div class="relative overflow-hidden w-full" style="mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);">
+                            <div class="testimonial-track flex gap-6 px-6 pb-8">
+                                <!-- Card Templates -->
+                                <div class="min-w-[300px] md:min-w-[340px] bg-[#050505] p-6 border border-white/10 flex flex-col gap-4">
+                                    <div class="flex text-[#FF4500] gap-1 text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div>
+                                    <p class="text-sm text-zinc-300 font-light leading-relaxed">"Switching saved us hours of lost context weekly. The search is shockingly fast."</p>
+                                    <div class="mt-auto pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                        <span class="text-white">Sarah Jenkins</span>
+                                        <span class="text-zinc-600">Design Lead</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="min-w-[300px] md:min-w-[340px] bg-[#050505] p-6 border border-white/10 flex flex-col gap-4">
+                                    <div class="flex text-[#FF4500] gap-1 text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div>
+                                    <p class="text-sm text-zinc-300 font-light leading-relaxed">"The cleanest UI in the market. It gets out of the way and lets you work."</p>
+                                    <div class="mt-auto pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                        <span class="text-white">Marcus Reed</span>
+                                        <span class="text-zinc-600">CTO</span>
+                                    </div>
+                                </div>
+
+                                <div class="min-w-[300px] md:min-w-[340px] bg-[#050505] p-6 border border-white/10 flex flex-col gap-4">
+                                    <div class="flex text-[#FF4500] gap-1 text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold-duotone"></iconify-icon></div>
+                                    <p class="text-sm text-zinc-300 font-light leading-relaxed">"Audio huddles consume zero CPU compared to our old video tool. Incredible."</p>
+                                    <div class="mt-auto pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                        <span class="text-white">Elena Vance</span>
+                                        <span class="text-zinc-600">Product Mngr</span>
+                                    </div>
+                                </div>
+
+                                <div class="min-w-[300px] md:min-w-[340px] bg-[#050505] p-6 border border-white/10 flex flex-col gap-4">
+                                    <div class="flex text-[#FF4500] gap-1 text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div>
+                                    <p class="text-sm text-zinc-300 font-light leading-relaxed">"End-to-end encryption by default was the selling point for our infosec team."</p>
+                                    <div class="mt-auto pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                        <span class="text-white">Julian Silva</span>
+                                        <span class="text-zinc-600">Security Ops</span>
+                                    </div>
+                                </div>
+
+                                <!-- Duplicates for infinite scroll -->
+                                <div class="min-w-[300px] md:min-w-[340px] bg-[#050505] p-6 border border-white/10 flex flex-col gap-4">
+                                    <div class="flex text-[#FF4500] gap-1 text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div>
+                                    <p class="text-sm text-zinc-300 font-light leading-relaxed">"Switching saved us hours of lost context weekly. The search is shockingly fast."</p>
+                                    <div class="mt-auto pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                        <span class="text-white">Sarah Jenkins</span>
+                                        <span class="text-zinc-600">Design Lead</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="min-w-[300px] md:min-w-[340px] bg-[#050505] p-6 border border-white/10 flex flex-col gap-4">
+                                    <div class="flex text-[#FF4500] gap-1 text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div>
+                                    <p class="text-sm text-zinc-300 font-light leading-relaxed">"The cleanest UI in the market. It gets out of the way and lets you work."</p>
+                                    <div class="mt-auto pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                        <span class="text-white">Marcus Reed</span>
+                                        <span class="text-zinc-600">CTO</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 6: Footer CTA -->
+                    <div class="relative w-full h-[80vh] overflow-hidden flex flex-col">
+                        <header class="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center justify-between px-6 lg:px-12 z-30 bg-[#0F0F0F]/80 backdrop-blur-sm">
+                            <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                                <span class="w-2 h-2 rounded-full bg-[#FF4500]"></span> Deployment Protocol
+                            </div>
+                        </header>
+
+                        <!-- Background Tech Grid Overlay -->
+                        <div class="absolute inset-0 pointer-events-none z-0 flex justify-center opacity-20">
+                            <div class="w-full h-full grid grid-cols-2 md:grid-cols-4 relative">
+                                <div class="border-l border-dashed border-white/10 relative">
+                                    <div class="absolute top-32 -left-[2.5px] w-[4px] h-[4px] bg-white/40"></div>
+                                    <div class="absolute bottom-48 -left-[2.5px] w-[4px] h-[4px] bg-white/40"></div>
+                                </div>
+                                <div class="border-l border-dashed border-white/10 relative hidden md:block">
+                                    <div class="absolute top-64 -left-[2.5px] w-[4px] h-[4px] bg-white/40"></div>
+                                </div>
+                                <div class="border-l border-dashed border-white/10 relative hidden md:block">
+                                    <div class="absolute top-24 -left-[2.5px] w-[4px] h-[4px] bg-white/40"></div>
+                                </div>
+                                <div class="border-l border-r border-dashed border-white/10 relative">
+                                    <div class="absolute top-48 -right-[2.5px] w-[4px] h-[4px] bg-white/40"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Animated Data Tracks (Protocol Initialize Adapted) -->
+                        <div class="absolute inset-0 pointer-events-none flex justify-center items-end" style="perspective: 1000px; transform-style: preserve-3d;">
+                            <div class="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-[#0F0F0F] to-transparent z-10"></div>
+                            
+                            <div class="w-[150%] md:w-[120%] h-[150vh] relative flex justify-center origin-bottom opacity-40" style="transform: rotateX(72deg) translateZ(-100px); transform-style: preserve-3d;">
+                                <div class="absolute inset-0 w-full h-[200%] flex" style="animation: flow 15s linear infinite;">
+                                    <!-- Base Tracks mapped to Aether colors -->
+                                    <div class="absolute left-[15%] w-[12%] h-full bg-gradient-to-b from-[#FF4500]/80 to-[#FF4500]/10"></div>
+                                    <div class="absolute left-[27%] w-[18%] h-full bg-gradient-to-b from-white/20 to-transparent"></div>
+                                    <div class="absolute left-[45%] w-[8%] h-full bg-[#0F0F0F]"></div>
+                                    <div class="absolute left-[53%] w-[22%] h-full bg-gradient-to-b from-zinc-700/80 to-zinc-900/10"></div>
+                                    <div class="absolute left-[75%] w-[15%] h-full bg-gradient-to-b from-[#FF4500]/60 to-[#FF4500]/5"></div>
+                                    <div class="absolute left-[90%] w-[8%] h-full bg-gradient-to-b from-zinc-600/50 to-transparent"></div>
+
+                                    <!-- Overlapping Segments -->
+                                    <div class="absolute left-[20%] top-[10%] w-[15%] h-[25%] bg-white/10 mix-blend-screen"></div>
+                                    <div class="absolute left-[27%] top-[40%] w-[18%] h-[30%] bg-[#FF4500]/40 mix-blend-overlay"></div>
+                                    <div class="absolute left-[53%] top-[20%] w-[10%] h-[40%] bg-zinc-400/20 mix-blend-plus-lighter"></div>
+                                    <div class="absolute left-[65%] top-[60%] w-[10%] h-[20%] bg-[#FF4500]/60"></div>
+                                    
+                                    <!-- Duplicated for seamless loop -->
+                                    <div class="absolute left-[15%] top-[50%] w-[12%] h-[20%] bg-zinc-500/30"></div>
+                                    <div class="absolute left-[75%] top-[80%] w-[15%] h-[20%] bg-white/10 mix-blend-screen"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 w-full px-6 lg:px-20 pt-32">
+                            <div class="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
+                                
+                                <!-- Left Links -->
+                                <div class="flex gap-12 md:gap-24 font-light">
+                                    <div class="flex flex-col gap-4">
+                                        <span class="text-[10px] text-[#FF4500] font-mono tracking-widest uppercase mb-2">Product</span>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Features</a>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Security</a>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Enterprise</a>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Pricing</a>
+                                    </div>
+                                    <div class="flex flex-col gap-4">
+                                        <span class="text-[10px] text-[#FF4500] font-mono tracking-widest uppercase mb-2">Resources</span>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Documentation</a>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">API Reference</a>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Status</a>
+                                        <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300">Blog</a>
+                                    </div>
+                                </div>
+
+                                <!-- Right CTA -->
+                                <div class="max-w-sm flex flex-col items-start bg-[#050505]/80 backdrop-blur-sm p-8 border border-white/10 relative overflow-hidden group">
+                                    <div class="absolute inset-0 bg-[#FF4500]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+                                    <h2 class="text-3xl tracking-tight font-light text-white mb-3 relative z-10">Initialize Workspace</h2>
+                                    <p class="text-xs text-zinc-400 mb-8 leading-relaxed font-mono tracking-widest uppercase relative z-10">Deploy the next generation of team communication infrastructure.</p>
+                                    
+                                    <button class="w-full relative px-6 py-4 text-[10px] uppercase tracking-widest font-medium text-[#F4F3ED] bg-[#FF4500] hover:bg-[#FF4500]/80 transition-colors flex justify-center items-center gap-2 border border-[#FF4500]">
+                                        Deploy Now
+                                        <iconify-icon icon="solar:rocket-linear" class="text-base"></iconify-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto p-6 lg:px-20 relative z-10 flex justify-between items-center text-[10px] font-mono tracking-widest uppercase text-zinc-600 border-t border-white/10 bg-[#0A0A0A]">
+                            <span>© 2024 Dasher Inc.</span>
+                            <div class="font-medium tracking-tighter text-white/50">DASHER /// SYS</div>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Words Reveal
+        const words = document.querySelectorAll('.reveal-word');
+        if(words.length) {
+            gsap.to(words, {
+                y: "0%", duration: 1.2, stagger: 0.1, ease: "power4.out", delay: 0.2
+            });
+        }
+
+        // Insights Section Reveal
+        const words2 = document.querySelectorAll('.word-2');
+        if(words2.length) {
+            gsap.to(words2, {
+                y: "0%", duration: 1, stagger: 0.1, ease: "power3.out",
+                scrollTrigger: {
+                    trigger: ".gsap-reveal-2", start: "top 85%"
+                }
+            });
+        }
+
+        // Marquee Duplication for seamless loop
+        const marqueeContent = document.querySelectorAll('.marquee-content');
+        marqueeContent.forEach(marquee => {
+            if(marquee) {
+                marquee.innerHTML += marquee.innerHTML;
+                gsap.to(marquee, {
+                    xPercent: -50, ease: "none", duration: 25, repeat: -1
+                });
+            }
+        });
+
+        // Dense Point Sphere mapped to Aether layout
+        const initHeroCanvas = () => {
+            const canvas = document.getElementById('hero-canvas');
+            if(!canvas) return;
+            
+            const scene = new THREE.Scene();
+            const container = canvas.parentElement;
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+            
+            // Adjusted depth to map to standard density
+            camera.position.z = 4;
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Dense sphere structure 
+            const segments = 48;
+            const geometry = new THREE.SphereGeometry(1.5, segments, segments);
+
+            const wireframeGeo = new THREE.WireframeGeometry(geometry);
+            const lineMat = new THREE.LineBasicMaterial({ 
+                color: 0xFF4500, // Aether Core Color
+                transparent: true, 
+                opacity: 0.15,
+                linewidth: 1 
+            });
+            const lines = new THREE.LineSegments(wireframeGeo, lineMat);
+            scene.add(lines);
+
+            const pointsMat = new THREE.PointsMaterial({ 
+                color: 0xffffff, 
+                size: 0.015, 
+                transparent: true, 
+                opacity: 0.5 
+            });
+            const points = new THREE.Points(geometry, pointsMat);
+            scene.add(points);
+
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = ((e.clientX - rect.left) / container.clientWidth - 0.5) * 2;
+                mouseY = ((e.clientY - rect.top) / container.clientHeight - 0.5) * 2;
+            });
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                // Rotational velocity combined with minimal parallax
+                lines.rotation.y += 0.0015 + (mouseX * 0.002);
+                lines.rotation.x += 0.0005 + (mouseY * 0.002);
+                points.rotation.y += 0.0015 + (mouseX * 0.002);
+                points.rotation.x += 0.0005 + (mouseY * 0.002);
+                
+                renderer.render(scene, camera);
+            };
+            animate();
+        };
+
+        // Ambient particles floating
+        const initAmbientParticles = () => {
+            const particleContainer = document.getElementById('particle-container');
+            if (!particleContainer) return;
+            
+            const particles = [];
+            const numParticles = 20;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'absolute bg-white rounded-full';
+                particle.style.width = Math.random() > 0.5 ? '2px' : '3px';
+                particle.style.height = particle.style.width;
+                particle.style.left = (Math.random() * 100) + '%';
+                particle.style.opacity = (Math.random() * 0.2 + 0.05).toString();
+                
+                particle._y = Math.random() * 100;
+                particle._speed = Math.random() * 0.05 + 0.02;
+                
+                particleContainer.appendChild(particle);
+                particles.push(particle);
+            }
+
+            function animateParticles() {
+                particles.forEach(p => {
+                    p._y -= p._speed;
+                    if (p._y < -5) { 
+                        p._y = 105;
+                        p.style.left = (Math.random() * 100) + '%';
+                    }
+                    p.style.top = p._y + '%';
+                });
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initHeroCanvas();
+            initAmbientParticles();
+        });
+    </script>
+</body>
+</html>

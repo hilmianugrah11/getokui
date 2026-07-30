@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black scroll-smooth"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOIRFRAME® | Editorial Fashion Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root {
+--white: #f7efe4;
+--muted: rgba(247, 239, 228, 0.58);
+--faint: rgba(247, 239, 228, 0.14);
+--line: rgba(247, 239, 228, 0.13);
+--line-strong: rgba(247, 239, 228, 0.26);
+--black: #000;
+}
+* {
+box-sizing: border-box;
+}
+html,
+body {
+margin: 0;
+min-height: 100%;
+background: #030202;
+color: var(--white);
+font-family: "Inter", sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+body {
+overflow-x: hidden;
+}
+/* Keep this class for the intro state, but do not permanently lock the page if a CDN/image hangs. */
+body.is-loading {
+overflow-x: hidden;
+}
+body.scroll-locked {
+height: 100vh;
+overflow: hidden;
+}
+html.lenis,
+html.lenis body {
+height: auto;
+}
+.lenis.lenis-smooth {
+scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+pointer-events: none;
+}
+::selection {
+background: var(--white);
+color: #000;
+}
+::-webkit-scrollbar {
+width: 0;
+height: 0;
+}
+.hairline-border {
+border-color: var(--line);
+}
+.text-soft {
+color: var(--muted);
+}
+.text-faint {
+color: rgba(244, 244, 240, 0.34);
+}
+.noise {
+pointer-events: none;
+position: fixed;
+inset: 0;
+z-index: 9998;
+opacity: 0.055;
+mix-blend-mode: screen;
+background-image:
+radial-gradient(circle at 20% 30%, rgba(255, 255, 255, .26) 0 1px, transparent 1px),
+radial-gradient(circle at 80% 70%, rgba(255, 255, 255, .18) 0 1px, transparent 1px);
+background-size: 22px 22px, 31px 31px;
+}
+.scanline {
+pointer-events: none;
+position: fixed;
+inset: 0;
+z-index: 9997;
+opacity: 0.08;
+background: linear-gradient(to bottom, transparent 0, transparent 4px, rgba(255, 255, 255, .16) 5px, transparent 6px);
+background-size: 100% 7px;
+}
+.cross-marker {
+position: absolute;
+width: 9px;
+height: 9px;
+pointer-events: none;
+}
+.cross-marker::before,
+.cross-marker::after {
+content: "";
+position: absolute;
+background: rgba(244, 244, 240, .38);
+}
+.cross-marker::before {
+width: 100%;
+height: 1px;
+top: 50%;
+left: 0;
+transform: translateY(-50%);
+}
+.cross-marker::after {
+height: 100%;
+width: 1px;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+}
+.corner {
+position: absolute;
+width: 10px;
+height: 10px;
+pointer-events: none;
+border-color: var(--line-strong);
+}
+.corner-tl {
+top: -1px;
+left: -1px;
+border-top: 1px solid;
+border-left: 1px solid;
+}
+.corner-tr {
+top: -1px;
+right: -1px;
+border-top: 1px solid;
+border-right: 1px solid;
+}
+.corner-bl {
+bottom: -1px;
+left: -1px;
+border-bottom: 1px solid;
+border-left: 1px solid;
+}
+.corner-br {
+bottom: -1px;
+right: -1px;
+border-bottom: 1px solid;
+border-right: 1px solid;
+}
+.frame {
+position: relative;
+border: 1px solid var(--line);
+background: #020202;
+}
+.media-reveal,
+.hero-media,
+.work-media {
+clip-path: inset(0 0 0 0);
+will-change: clip-path, transform;
+}
+.img-cover {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+will-change: transform;
+}
+.line-mask {
+display: block;
+overflow: hidden;
+}
+.line-mask>span {
+display: block;
+will-change: transform;
+}
+.label {
+font-size: 10px;
+line-height: 1;
+text-transform: uppercase;
+letter-spacing: .16em;
+color: rgba(244, 244, 240, .44);
+font-weight: 500;
+}
+.mono-label {
+font-size: 10px;
+line-height: 1;
+text-transform: uppercase;
+letter-spacing: .12em;
+color: rgba(244, 244, 240, .52);
+font-weight: 500;
+}
+.accordion-content {
+display: grid;
+grid-template-rows: 0fr;
+transition: grid-template-rows .45s cubic-bezier(.16, 1, .3, 1);
+}
+.accordion-content>div {
+overflow: hidden;
+}
+.accordion-item.is-open .accordion-content {
+grid-template-rows: 1fr;
+}
+.accordion-item.is-open .accordion-icon {
+transform: rotate(45deg);
+}
+.loader {
+position: fixed;
+inset: 0;
+z-index: 10000;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #000;
+color: var(--white);
+}
+.loader-frame {
+position: relative;
+width: min(460px, calc(100vw - 48px));
+height: 160px;
+border: 1px solid var(--line);
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 28px;
+overflow: hidden;
+}
+.loader-word {
+font-size: 13px;
+letter-spacing: .18em;
+text-transform: uppercase;
+margin-bottom: 28px;
+}
+.loader-track {
+position: relative;
+width: 100%;
+height: 1px;
+background: rgba(244, 244, 240, .12);
+overflow: hidden;
+}
+.loader-line {
+width: 100%;
+height: 100%;
+transform-origin: left center;
+transform: scaleX(0);
+background: var(--white);
+}
+.loader-meta {
+display: flex;
+justify-content: space-between;
+margin-top: 16px;
+font-size: 9px;
+line-height: 1;
+text-transform: uppercase;
+letter-spacing: .14em;
+color: rgba(244, 244, 240, .42);
+}
+.site-header {
+will-change: transform, opacity;
+}
+.hero-title {
+font-family: "Playfair Display", serif;
+letter-spacing: -0.055em;
+font-weight: 400;
+}
+.giant-word {
+letter-spacing: -0.095em;
+}
+.editorial-card {
+position: relative;
+will-change: transform, opacity;
+}
+.editorial-media {
+clip-path: inset(0 0 0 0);
+will-change: transform, clip-path;
+}
+.editorial-img {
+will-change: transform;
+}
+@media (min-width: 768px) {
+.editorial-card:nth-child(even) {
+margin-left: auto;
+}
+}
+.nav-link.is-active {
+color: #fff;
+}
+.nav-link {
+position: relative;
+}
+.nav-link::after {
+content: "";
+position: absolute;
+left: 0;
+right: 0;
+bottom: -10px;
+height: 1px;
+transform: scaleX(0);
+transform-origin: left center;
+background: rgba(247, 239, 228, .85);
+transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+.nav-link:hover::after,
+.nav-link.is-active::after {
+transform: scaleX(1);
+}
+.mobile-nav-link {
+border-bottom: 1px solid var(--line);
+}
+.mobile-nav-link:hover {
+color: #fff;
+}
+.site-header {
+transition: transform .45s cubic-bezier(.16, 1, .3, 1), opacity .45s cubic-bezier(.16, 1, .3, 1);
+}
+.site-header.is-scrolled > div {
+background: rgba(0, 0, 0, .78);
+}
+.hero-section .gs-hero-copy {
+opacity: 1;
+visibility: visible;
+pointer-events: auto;
+}
+/* Keep hero clean: no floating labels or background elements leaking behind the main frame */
+.hero-section {
+isolation: isolate;
+}
+.hero-section .gs-scatter {
+display: none !important;
+}
+.gs-hero-frame {
+overflow: hidden;
+}
+/* Premium on-load animation */
+body.is-ready .load-reveal {
+opacity: 1;
+}
+.load-reveal {
+opacity: 0;
+will-change: transform, opacity, clip-path;
+}
+/* Header + hero behave like the reference video:
+the hero appears first, then the nav slides down into place on top of the same frame. */
+.hero-shell {
+position: relative;
+transform-origin: center top;
+will-change: transform, opacity;
+}
+.hero-shell .site-header {
+position: absolute;
+left: 0;
+right: 0;
+top: 0;
+z-index: 60;
+transform-origin: center top;
+will-change: transform, opacity;
+}
+.hero-shell .site-header > div {
+border-color: rgba(247, 239, 228, .22);
+background: rgba(0, 0, 0, .72);
+}
+.hero-shell .gs-hero-frame {
+margin-top: 0;
+}
+@media (max-width: 768px) {
+.hero-section { padding-top: 10px; padding-bottom: 10px; }
+.hero-shell .gs-hero-frame { min-height: 680px; height: calc(100svh - 20px); }
+}
+/* Cinematic reference-video inspired hero
+This effect is a pinned parallax hero with a tiled mask reveal. */
+.hero-section {
+min-height: 100svh;
+perspective: 1200px;
+}
+.hero-bg-wash {
+position: absolute;
+inset: 0;
+z-index: 0;
+opacity: .72;
+background:
+radial-gradient(circle at 72% 18%, rgba(247,239,228,.11), transparent 34%),
+linear-gradient(180deg, #070605 0%, #030202 52%, #000 100%);
+}
+.gs-hero-frame.hero-cinematic {
+transform-origin: center center;
+will-change: transform, opacity, clip-path;
+}
+.hero-media {
+transform-origin: center center;
+will-change: transform, clip-path;
+}
+.gs-hero-img {
+transform-origin: 50% 35%;
+will-change: transform, opacity, filter;
+}
+.hero-title-wrap {
+overflow: hidden;
+}
+.hero-title {
+will-change: transform, opacity;
+}
+.hero-kicker,
+.hero-bottom-rail,
+.hero-top-copy,
+.hero-reg-mark {
+will-change: transform, opacity;
+}
+.hero-top-copy {
+text-shadow: 0 14px 38px rgba(0,0,0,.75);
+}
+.hero-reg-mark {
+text-shadow: 0 14px 42px rgba(0,0,0,.85);
+}
+.hero-bottom-rail {
+position: absolute;
+left: 0;
+right: 0;
+bottom: 0;
+z-index: 30;
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+gap: 1px;
+border-top: 1px solid rgba(247,239,228,.16);
+background: rgba(0,0,0,.28);
+backdrop-filter: blur(14px);
+}
+.hero-bottom-rail > span {
+min-height: 44px;
+display: flex;
+align-items: center;
+padding: 0 18px;
+font-size: 10px;
+line-height: 1;
+text-transform: uppercase;
+letter-spacing: .14em;
+color: rgba(247,239,228,.58);
+}
+.hero-bottom-rail > span:nth-child(2) {
+justify-content: center;
+border-left: 1px solid rgba(247,239,228,.14);
+border-right: 1px solid rgba(247,239,228,.14);
+}
+.hero-bottom-rail > span:last-child {
+justify-content: flex-end;
+}
+.hero-mask-grid {
+pointer-events: none;
+position: absolute;
+inset: 0;
+z-index: 28;
+overflow: hidden;
+}
+.hero-mask-tile {
+position: absolute;
+background: #030202;
+border: 1px solid rgba(247,239,228,.06);
+box-shadow: 0 30px 80px rgba(0,0,0,.45);
+will-change: transform, opacity, clip-path;
+}
+.hero-mask-tile:nth-child(1) { left: 0; top: 0; width: 31%; height: 42%; }
+.hero-mask-tile:nth-child(2) { left: 31%; top: 0; width: 19%; height: 27%; background: #f7efe4; }
+.hero-mask-tile:nth-child(3) { left: 50%; top: 0; width: 24%; height: 34%; }
+.hero-mask-tile:nth-child(4) { right: 0; top: 0; width: 26%; height: 46%; background: #f7efe4; }
+.hero-mask-tile:nth-child(5) { left: 0; bottom: 0; width: 18%; height: 36%; background: #f7efe4; }
+.hero-mask-tile:nth-child(6) { left: 18%; bottom: 0; width: 29%; height: 23%; }
+.hero-mask-tile:nth-child(7) { left: 47%; bottom: 0; width: 21%; height: 31%; background: #f7efe4; }
+.hero-mask-tile:nth-child(8) { right: 0; bottom: 0; width: 32%; height: 27%; }
+.scroll-wipe-section {
+position: relative;
+z-index: 2;
+}
+@media (max-width: 768px) {
+.hero-bottom-rail {
+grid-template-columns: 1fr;
+}
+.hero-bottom-rail > span {
+min-height: 34px;
+padding: 0 12px;
+font-size: 8px;
+}
+.hero-bottom-rail > span:nth-child(2),
+.hero-bottom-rail > span:last-child {
+justify-content: flex-start;
+border-left: 0;
+border-right: 0;
+border-top: 1px solid rgba(247,239,228,.12);
+}
+.hero-reg-mark {
+display: none;
+}
+}
+@media (max-width: 768px) {
+.hero-title {
+letter-spacing: -0.055em;
+}
+.work-grid {
+min-height: auto !important;
+}
+.work-card {
+position: relative !important;
+top: auto !important;
+left: auto !important;
+right: auto !important;
+width: 100% !important;
+margin-bottom: 32px;
+}
+.loader-frame {
+height: 138px;
+}
+}
+/* === Pinned hero fix, no on-load animation === */
+.load-reveal {
+opacity: 1;
+visibility: visible;
+}
+.hero-section {
+z-index: 1;
+background: #000;
+contain: paint;
+}
+.hero-shell {
+isolation: isolate;
+}
+.gs-hero-frame.hero-cinematic {
+background: #030202;
+transform-style: preserve-3d;
+backface-visibility: hidden;
+}
+.hero-media {
+visibility: visible;
+backface-visibility: hidden;
+clip-path: inset(0% 0% 0% 0%);
+}
+.gs-hero-img {
+filter: blur(0px);
+}
+.hero-mask-grid {
+display: none !important;
+}
+.scroll-wipe-section {
+position: relative;
+z-index: 30;
+min-height: 100svh;
+background: #030202;
+box-shadow: 0 -80px 120px rgba(0,0,0,.72);
+will-change: transform;
+}
+.scroll-wipe-section::before {
+content: "";
+position: absolute;
+inset: 0 0 auto 0;
+height: 1px;
+background: rgba(247, 239, 228, .16);
+pointer-events: none;
+}
+@media (max-width: 768px) {
+.gs-hero-copy {
+max-width: calc(100vw - 40px);
+}
+}
+/* === Sticky header + hero spacing fix === */
+.site-header,
+.hero-shell .site-header {
+position: fixed !important;
+top: 12px;
+left: 50%;
+right: auto;
+z-index: 1000;
+width: min(calc(100vw - 32px), 1536px);
+margin: 0;
+translate: -50% 0;
+transform-origin: center top;
+}
+.site-header > div,
+.hero-shell .site-header > div {
+border-color: rgba(247, 239, 228, .22);
+background: rgba(0, 0, 0, .78);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+}
+.hero-section {
+align-items: flex-start !important;
+padding-top: 12px !important;
+padding-bottom: 12px !important;
+}
+.hero-shell {
+padding-top: 72px;
+}
+.hero-shell .gs-hero-frame {
+margin-top: 12px !important;
+height: calc(100svh - 108px) !important;
+min-height: 620px;
+}
+/* === Center header navigation fix === */
+@media (min-width: 768px) {
+.site-header > div > .flex,
+.hero-shell .site-header > div > .flex {
+display: grid !important;
+grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+align-items: center;
+gap: 24px;
+}
+.site-header > div > .flex > a:first-child,
+.hero-shell .site-header > div > .flex > a:first-child {
+justify-self: start;
+}
+.site-header nav,
+.hero-shell .site-header nav {
+justify-self: center;
+}
+.site-header > div > .flex > div:last-of-type,
+.hero-shell .site-header > div > .flex > div:last-of-type {
+justify-self: end;
+}
+}
+@media (max-width: 768px) {
+.site-header,
+.hero-shell .site-header {
+top: 10px;
+width: min(calc(100vw - 20px), 1536px);
+}
+.hero-section {
+padding-top: 10px !important;
+padding-bottom: 10px !important;
+}
+.hero-shell {
+padding-top: 70px;
+}
+.hero-shell .gs-hero-frame {
+margin-top: 10px !important;
+height: calc(100svh - 100px) !important;
+min-height: 560px;
+}
+}
+/* === FINAL FIX: true centered sticky header ===
+The previous left:50% + translate setup could be overwritten by GSAP transforms,
+which made the header start from the middle/right side of the screen.
+This pins the header with real left/right spacing and centers the nav absolutely. */
+:root {
+--header-side-gap: 16px;
+--header-max-width: 1536px;
+}
+.site-header,
+.hero-shell .site-header {
+position: fixed !important;
+top: 14px !important;
+left: max(var(--header-side-gap), calc((100vw - var(--header-max-width)) / 2)) !important;
+right: max(var(--header-side-gap), calc((100vw - var(--header-max-width)) / 2)) !important;
+width: auto !important;
+max-width: none !important;
+margin: 0 !important;
+translate: none !important;
+transform: none !important;
+z-index: 1000 !important;
+}
+.site-header > div,
+.hero-shell .site-header > div {
+width: 100% !important;
+}
+@media (min-width: 768px) {
+.site-header > div > .flex,
+.hero-shell .site-header > div > .flex {
+position: relative !important;
+display: flex !important;
+align-items: center !important;
+justify-content: space-between !important;
+gap: 24px !important;
+}
+.site-header > div > .flex > a:first-child,
+.hero-shell .site-header > div > .flex > a:first-child {
+position: relative !important;
+z-index: 2 !important;
+flex: 0 0 auto !important;
+}
+.site-header nav,
+.hero-shell .site-header nav {
+position: absolute !important;
+left: 50% !important;
+top: 50% !important;
+z-index: 1 !important;
+display: flex !important;
+width: max-content !important;
+transform: translate(-50%, -50%) !important;
+justify-self: auto !important;
+}
+.site-header > div > .flex > div:last-of-type,
+.hero-shell .site-header > div > .flex > div:last-of-type {
+position: relative !important;
+z-index: 2 !important;
+flex: 0 0 auto !important;
+margin-left: auto !important;
+justify-self: auto !important;
+}
+}
+@media (max-width: 767px) {
+.site-header,
+.hero-shell .site-header {
+top: 10px !important;
+left: 10px !important;
+right: 10px !important;
+}
+}
+/* === FINAL LAYOUT FIX: shared page margins for sticky header + hero frame ===
+Header and hero now use the same max width and the same left/right gutter,
+so the whole opening composition aligns with the sections below. */
+:root {
+--page-max-width: 1536px;
+--page-gutter: clamp(16px, 2.6vw, 48px);
+--sticky-header-height: 58px;
+--header-hero-gap: 12px;
+}
+.hero-section {
+align-items: flex-start !important;
+justify-content: center !important;
+min-height: 100svh !important;
+padding: 0 !important;
+overflow: hidden !important;
+}
+.hero-shell {
+width: min(calc(100vw - (var(--page-gutter) * 2)), var(--page-max-width)) !important;
+max-width: var(--page-max-width) !important;
+margin-inline: auto !important;
+padding-top: calc(var(--page-gutter) + var(--sticky-header-height) + var(--header-hero-gap)) !important;
+}
+.site-header,
+.hero-shell .site-header {
+position: fixed !important;
+top: var(--page-gutter) !important;
+left: max(var(--page-gutter), calc((100vw - var(--page-max-width)) / 2)) !important;
+right: max(var(--page-gutter), calc((100vw - var(--page-max-width)) / 2)) !important;
+width: auto !important;
+max-width: none !important;
+margin: 0 !important;
+translate: none !important;
+transform: none !important;
+}
+.site-header > div,
+.hero-shell .site-header > div {
+min-height: var(--sticky-header-height) !important;
+display: flex !important;
+align-items: center !important;
+}
+.site-header > div > .flex,
+.hero-shell .site-header > div > .flex {
+width: 100% !important;
+}
+.hero-shell .gs-hero-frame {
+width: 100% !important;
+margin-top: 0 !important;
+height: calc(100svh - var(--page-gutter) - var(--sticky-header-height) - var(--header-hero-gap) - var(--page-gutter)) !important;
+min-height: 620px !important;
+}
+@media (min-width: 768px) {
+.site-header > div > .flex,
+.hero-shell .site-header > div > .flex {
+position: relative !important;
+display: grid !important;
+grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr) !important;
+align-items: center !important;
+gap: 24px !important;
+}
+.site-header nav,
+.hero-shell .site-header nav {
+position: static !important;
+transform: none !important;
+justify-self: center !important;
+width: max-content !important;
+}
+.site-header > div > .flex > a:first-child,
+.hero-shell .site-header > div > .flex > a:first-child {
+justify-self: start !important;
+}
+.site-header > div > .flex > div:last-of-type,
+.hero-shell .site-header > div > .flex > div:last-of-type {
+justify-self: end !important;
+margin-left: 0 !important;
+}
+}
+@media (max-width: 767px) {
+:root {
+--page-gutter: 12px;
+--sticky-header-height: 58px;
+--header-hero-gap: 10px;
+}
+.hero-shell .gs-hero-frame {
+min-height: 560px !important;
+}
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+<body class="relative text-neutral-400 is-ready">
+    <div class="noise"></div>
+    <div class="scanline"></div>
+
+    
+<!-- Sticky Header -->
+
+
+<main id="app" class="">
+        <!-- Hero -->
+        <section class="hero-section relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-4 text-white md:px-8 md:py-4">
+            <div class="hero-bg-wash"></div>
+
+            <div class="hero-shell relative z-10 w-full max-w-screen-2xl">
+    <header class="site-header load-reveal relative z-50 w-full text-white">
+    <div class="relative overflow-hidden border hairline-border bg-black/72 px-3 py-3 backdrop-blur-xl md:px-4">
+        <span class="corner corner-tl"></span>
+        <span class="corner corner-tr"></span>
+        <span class="corner corner-bl"></span>
+        <span class="corner corner-br"></span>
+
+        <div class="flex items-center justify-between gap-4">
+            <a href="#" class="group flex items-center gap-3">
+                <span class="relative flex h-8 w-8 items-center justify-center border hairline-border bg-white text-black transition duration-300 group-hover:rotate-45">
+                    <span class="text-[11px] font-semibold leading-none transition duration-300 group-hover:-rotate-45">N</span>
+                </span>
+                <span class="leading-none">
+                    <span class="block text-[11px] font-medium uppercase tracking-[.18em] text-white">NOIRFRAME®</span>
+                    <span class="mt-1 hidden text-[9px] uppercase tracking-[.16em] text-white/35 sm:block">Editorial fashion system</span>
+                </span>
+            </a>
+
+            <nav class="hidden items-center gap-8 md:flex">
+                <a href="#about" class="nav-link text-[10px] font-medium uppercase tracking-[.16em] text-white/58 transition hover:text-white">Studio</a>
+                <a href="#works" class="nav-link text-[10px] font-medium uppercase tracking-[.16em] text-white/58 transition hover:text-white">Editorials</a>
+                <a href="#insights" class="nav-link text-[10px] font-medium uppercase tracking-[.16em] text-white/58 transition hover:text-white">System</a>
+                <a href="#pricing" class="nav-link text-[10px] font-medium uppercase tracking-[.16em] text-white/58 transition hover:text-white">Pricing</a>
+            </nav>
+
+            <div class="hidden items-center gap-2 md:flex">
+                <a href="#pricing" class="group inline-flex items-center gap-3 border hairline-border bg-white px-4 py-2.5 text-[10px] font-medium uppercase tracking-[.16em] text-black transition hover:bg-[#f7efe4]">
+                    Start
+                    <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+                </a>
+            </div>
+
+            <button id="mobile-menu-toggle" class="relative flex h-9 w-9 items-center justify-center border hairline-border bg-black/40 transition hover:bg-white hover:text-black md:hidden" aria-label="Open menu" aria-expanded="false">
+                <i data-lucide="menu" class="h-4 w-4"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden border-t hairline-border pt-3 mt-3 md:hidden">
+            <div class="grid gap-1">
+                <a href="#about" class="mobile-nav-link flex items-center justify-between px-2 py-3 text-[11px] uppercase tracking-[.16em] text-white/70">
+                    Studio <span class="text-white/25">01</span>
+                </a>
+                <a href="#works" class="mobile-nav-link flex items-center justify-between px-2 py-3 text-[11px] uppercase tracking-[.16em] text-white/70">
+                    Editorials <span class="text-white/25">02</span>
+                </a>
+                <a href="#insights" class="mobile-nav-link flex items-center justify-between px-2 py-3 text-[11px] uppercase tracking-[.16em] text-white/70">
+                    System <span class="text-white/25">03</span>
+                </a>
+                <a href="#pricing" class="mobile-nav-link flex items-center justify-between px-2 py-3 text-[11px] uppercase tracking-[.16em] text-white/70">
+                    Pricing <span class="text-white/25">04</span>
+                </a>
+                <a href="#pricing" class="mt-2 flex items-center justify-center gap-3 bg-white px-4 py-3 text-[10px] font-medium uppercase tracking-[.16em] text-black">
+                    Start a project <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+            <div class="gs-hero-frame hero-cinematic load-reveal frame relative z-10 h-[calc(100svh-32px)] min-h-[680px] w-full overflow-hidden p-2 md:h-[calc(100svh-32px)] md:min-h-[720px] md:p-4">
+                <span class="cross-marker -left-1 -top-1"></span><span class="cross-marker -right-1 -top-1"></span>
+                <span class="cross-marker -bottom-1 -left-1"></span><span class="cross-marker -bottom-1 -right-1"></span>
+
+                <div class="hero-media relative h-full w-full overflow-hidden bg-neutral-900" style="clip-path: inset(0% 50% 0% 50%);">
+                    <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/5bd6211c-bd4c-467c-b442-4312cac4712c/1781991354681-b9c0b415-f500-4f2d-9218-ede59182f599.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b3f4c75d-5cc9-4c15-bbc7-8abd94007977_3840w.webp" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Editorial fashion campaign image" class="gs-hero-img img-cover scale-110 opacity-75"></video>
+                    <div class="absolute inset-0 bg-black/18"></div>
+                    <div class="absolute inset-y-0 left-0 w-[78%] bg-gradient-to-r from-black/86 via-black/38 to-transparent"></div>
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/84 via-black/22 to-transparent"></div>
+                </div>
+
+                <div class="hero-mask-grid" aria-hidden="true">
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                    <span class="hero-mask-tile"></span>
+                </div>
+
+                <div class="hero-top-copy absolute left-5 top-6 z-30 max-w-[260px] md:left-10 md:top-10">
+                    <p class="text-[11px] leading-[1.35] tracking-[-.01em] text-white/82 md:text-[13px]">
+                        Creating visual narratives for fashion brands with cinematic direction and editorial motion.
+                    </p>
+                </div>
+
+                <div class="hero-reg-mark absolute right-6 top-[34%] z-30 flex h-11 w-11 items-center justify-center rounded-full border border-white/70 text-xl font-medium text-white md:right-12">
+                    ®
+                </div>
+
+                <div class="gs-hero-copy absolute left-5 bottom-20 z-30 max-w-[980px] md:left-10 md:bottom-24 lg:left-14">
+                    <div class="space-y-6">
+                        <p class="hero-kicker text-[10px] font-medium uppercase tracking-[.18em] text-white/55">NOIRFRAME® / Editorial Fashion Studio</p>
+
+                        <div class="hero-title-wrap">
+                            <h1 class="hero-title font-serif text-[18vw] leading-[.78] text-[#f7efe4] drop-shadow-[0_20px_70px_rgba(0,0,0,.75)] md:text-[11vw] lg:text-[162px]">
+                                <span class="line-mask"><span class="gs-hero-line">noirframe</span></span>
+                            </h1>
+                        </div>
+
+                        <p class="gs-hero-subheading max-w-2xl text-base leading-relaxed tracking-[.02em] text-white/78 md:text-[20px] md:leading-[1.55]">
+                            Cinematic editorial production for modern fashion brands, campaigns, and launch moments.
+                        </p>
+
+                        <div class="gs-hero-actions flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+                            <a href="#pricing" class="gs-hero-cta inline-flex min-h-14 items-center justify-center border border-white bg-[#f7efe4] px-8 text-[12px] font-medium uppercase tracking-[.14em] text-black transition-all duration-300 hover:bg-white">
+                                Start Project
+                            </a>
+                            <a href="#works" class="gs-hero-cta-secondary inline-flex min-h-14 items-center justify-center border border-white/38 bg-black/10 px-8 text-[12px] font-medium uppercase tracking-[.14em] text-white backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white/10">
+                                View Editorials
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-bottom-rail">
+                    <span>Available for work</span>
+                    <span>M · T · W · F</span>
+                    <span>Scroll to view more +</span>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- Selected Works -->
+        <section id="works" class="scroll-wipe-section relative mx-auto max-w-screen-2xl px-4 py-28 md:px-12 md:py-36">
+            <div class="grid gap-14 md:grid-cols-[0.85fr_1.15fr] md:gap-20">
+                <!-- Sticky intro -->
+                <div class="md:sticky md:top-28 md:h-fit">
+                    <div class="fade-up flex flex-col gap-5">
+                        <h2 class="label">[ Recent editorials ]</h2>
+                        <p class="max-w-md text-sm leading-relaxed text-soft">
+                            Campaigns, lookbooks and launch films in one editorial system.<br>
+                            From moodboard to drop.<br>
+                            No flat content. No forgettable feed.
+                        </p>
+                    </div>
+                    <div class="fade-up mt-12 hidden max-w-sm border-t hairline-border pt-6 md:block">
+                        <p class="mono-label mb-4">Scroll index</p>
+                        <div class="space-y-3 text-[10px] uppercase tracking-[.16em] text-neutral-600">
+                            <div class="flex justify-between border-b hairline-border pb-3"><span>01</span><span>Rue No. 07</span></div>
+                            <div class="flex justify-between border-b hairline-border pb-3"><span>02</span><span>Velvet Drop</span></div>
+                            <div class="flex justify-between border-b hairline-border pb-3"><span>03</span><span>Muse Issue</span></div>
+                            <div class="flex justify-between border-b hairline-border pb-3"><span>04</span><span>Atelier Night</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vertical editorial rail -->
+                <div id="works-rail" class="space-y-8 md:space-y-12">
+                    <article class="editorial-card group w-full">
+                        <div class="frame overflow-hidden p-1">
+                            <span class="cross-marker -left-1 -top-1"></span><span class="cross-marker -right-1 -top-1"></span>
+                            <div class="pointer-events-none absolute left-4 right-4 top-4 z-20 flex justify-between text-[10px] font-medium uppercase tracking-[.16em] text-white mix-blend-difference">
+                                <span>NOIRFRAME®</span>
+                                <span class="text-right">RUE NO. 07<br><span class="text-white/60">Campaign / 72h</span></span>
+                            </div>
+                            <div class="editorial-media aspect-[16/10] overflow-hidden bg-neutral-900" style="clip-path: inset(10% 0%);">
+                                <img class="editorial-img img-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f34c6b54-ca42-4edf-ae57-3a2c294f3aaf_3840w.png" alt="Editorial fashion portrait">
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="editorial-card group w-full md:w-[78%]">
+                        <div class="frame overflow-hidden p-1">
+                            <span class="cross-marker -left-1 -top-1"></span><span class="cross-marker -bottom-1 -right-1"></span>
+                            <div class="pointer-events-none absolute left-4 right-4 top-4 z-20 flex justify-between text-[10px] font-medium uppercase tracking-[.16em] text-white mix-blend-difference">
+                                <span>VELVET DROP</span><span>Lookbook</span>
+                            </div>
+                            <div class="editorial-media aspect-[4/5] overflow-hidden bg-neutral-900" style="clip-path: inset(10% 0%);">
+                                <img class="editorial-img img-cover opacity-78 transition duration-700 group-hover:scale-105 group-hover:opacity-100" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/84cdffd5-e6bd-4735-a343-f7a97ee3d516_3840w.png" alt="Fashion retail campaign">
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="editorial-card group w-full md:w-[72%]">
+                        <div class="frame overflow-hidden p-1">
+                            <span class="cross-marker -bottom-1 -left-1"></span>
+                            <div class="pointer-events-none absolute left-4 right-4 top-4 z-20 flex justify-between text-[10px] font-medium uppercase tracking-[.16em] text-white mix-blend-difference">
+                                <span>MUSE ISSUE</span><span>AW26</span>
+                            </div>
+                            <div class="editorial-media aspect-square overflow-hidden bg-neutral-900" style="clip-path: inset(10% 0%);">
+                                <img class="editorial-img img-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c1d0d185-6628-4abc-bf9f-7d5ae94c1365_3840w.png" alt="Fashion editorial styling">
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="editorial-card group w-full md:w-[82%]">
+                        <div class="frame overflow-hidden p-1">
+                            <span class="cross-marker -left-1 -top-1"></span><span class="cross-marker -right-1 -bottom-1"></span>
+                            <div class="pointer-events-none absolute left-4 right-4 top-4 z-20 flex justify-between text-[10px] font-medium uppercase tracking-[.16em] text-white mix-blend-difference">
+                                <span>ATELIER NIGHT</span><span>Drop film</span>
+                            </div>
+                            <div class="editorial-media aspect-[4/3] overflow-hidden bg-neutral-900" style="clip-path: inset(10% 0%);">
+                                <img class="editorial-img img-cover opacity-75 transition duration-700 group-hover:scale-105 group-hover:opacity-100" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/20460941-c7ab-46e4-83c7-bafa5fbeeb58_3840w.png" alt="Fashion runway scene">
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Numbers + Editing Services -->
+        <section id="insights" class="relative border-y hairline-border bg-[#030303] px-4 py-28 md:px-8 md:py-32">
+            <div class="mx-auto grid max-w-screen-2xl gap-16 lg:grid-cols-12">
+                <div class="lg:col-span-6">
+                    <div class="fade-up mb-6 flex items-center gap-3">
+                        <h2 class="text-2xl font-medium tracking-tight text-white">Presence</h2>
+                        <span class="label">/ Current season</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 border border-b-0 border-r-0 hairline-border md:grid-cols-3">
+                        <div class="number-card border-b border-r hairline-border p-6 md:p-8">
+                            <div class="text-4xl font-medium tracking-tight text-white">46</div>
+                            <div class="mt-5 label">Campaigns launched</div>
+                        </div>
+                        <div class="number-card border-b border-r hairline-border p-6 md:p-8">
+                            <div class="text-4xl font-medium tracking-tight text-white">12.8M</div>
+                            <div class="mt-5 label">Impressions shaped</div>
+                        </div>
+                        <div class="number-card border-b border-r hairline-border p-6 md:p-8">
+                            <div class="text-4xl font-medium tracking-tight text-white">4.9x</div>
+                            <div class="mt-5 label">Average lift</div>
+                        </div>
+                        <div class="number-card border-b border-r hairline-border p-6 md:p-8">
+                            <div class="text-4xl font-medium tracking-tight text-white">72h</div>
+                            <div class="mt-5 label">Fastest lookbook</div>
+                        </div>
+                        <div class="number-card border-b border-r hairline-border p-6 md:p-8">
+                            <div class="text-4xl font-medium tracking-tight text-white">91%</div>
+                            <div class="mt-5 label">Creative approval</div>
+                        </div>
+                        <div class="number-card border-b border-r hairline-border p-6 md:p-8">
+                            <div class="text-4xl font-medium tracking-tight text-white">9</div>
+                            <div class="mt-5 label">Season drops</div>
+                        </div>
+                    </div>
+
+                    <div class="fade-up mt-10 grid gap-8 md:grid-cols-3">
+                        <div>
+                            <h3 class="mb-3 text-sm font-medium text-white">What we frame.</h3>
+                            <p class="text-xs leading-relaxed text-soft">Fashion is not just the garment. We turn
+                                styling, mood, image, motion and copy into a campaign people remember.</p>
+                        </div>
+                        <div>
+                            <h3 class="mb-3 text-sm font-medium text-white">Our texture.</h3>
+                            <p class="text-xs leading-relaxed text-soft">Deep blacks, warm skin, sharp crops, restrained
+                                typography and enough tension to make every frame feel expensive.</p>
+                        </div>
+                        <div>
+                            <h3 class="mb-3 text-sm font-medium text-white">What we track.</h3>
+                            <p class="text-xs leading-relaxed text-soft">Scroll depth, save rate, drop heat, campaign
+                                recall and the quiet signals that show a collection has presence.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-up lg:col-span-6 lg:pt-8">
+                    <div class="mb-12 grid gap-8 md:grid-cols-2">
+                        <p class="label leading-relaxed">One editorial world. Mood, styling, image, motion and launch
+                            assets move together.</p>
+                        <p class="text-sm leading-relaxed text-soft">NOIRFRAME is an editorial fashion studio for
+                            labels, creators and beauty brands that need campaign worlds, lookbooks, launch films and
+                            social systems with a luxury point of view.</p>
+                    </div>
+                    <h3 class="mb-6 flex items-end gap-3 text-2xl font-medium tracking-tight text-white">Atelier
+                        <span class="label">/ System</span></h3>
+                    <div class="border-t hairline-border">
+                        <div class="accordion-item border-b hairline-border bg-black/40 transition hover:bg-white/[.03] cursor-pointer">
+                            <div class="flex items-center justify-between px-4 py-5">
+                                <span class="text-sm text-neutral-200">Mood Engine</span><i data-lucide="plus" class="accordion-icon h-4 w-4 transition-transform"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-4 pb-5 text-xs leading-relaxed text-soft">Read trends, references,
+                                    styling tension and audience desire before the first frame is built.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-b hairline-border bg-black/40 transition hover:bg-white/[.03] cursor-pointer">
+                            <div class="flex items-center justify-between px-4 py-5">
+                                <span class="text-sm text-neutral-200">Lookbook Engine</span><i data-lucide="plus" class="accordion-icon h-4 w-4 transition-transform"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-4 pb-5 text-xs leading-relaxed text-soft">Build shot lists, crop systems,
+                                    page rhythm and editorial sequencing for digital lookbooks.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-b hairline-border bg-black/40 transition hover:bg-white/[.03] cursor-pointer">
+                            <div class="flex items-center justify-between px-4 py-5">
+                                <span class="text-sm text-neutral-200">Campaign Engine</span><i data-lucide="plus" class="accordion-icon h-4 w-4 transition-transform"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-4 pb-5 text-xs leading-relaxed text-soft">Create campaign concepts,
+                                    visual language, hero stories and motion-ready compositions for the drop.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-b hairline-border bg-black/40 transition hover:bg-white/[.03] cursor-pointer">
+                            <div class="flex items-center justify-between px-4 py-5">
+                                <span class="text-sm text-neutral-200">Drop Engine</span><i data-lucide="plus" class="accordion-icon h-4 w-4 transition-transform"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="px-4 pb-5 text-xs leading-relaxed text-soft">Produce landing pages, launch
+                                    copy, reels, cutdowns and campaign assets for release day.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section id="about" class="relative mx-auto max-w-5xl px-4 py-28 md:px-8 md:py-32">
+            <div class="fade-up mb-16">
+                <h3 class="mb-8 flex items-center gap-4 text-2xl font-medium tracking-tight text-white">Direction
+                    <span class="label">/ Atelier</span></h3>
+                <div class="border-t hairline-border">
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition-colors hover:bg-neutral-900/50">
+                        <div class="flex items-center justify-between px-4 py-6">
+                            <span class="text-sm font-medium text-neutral-200">Moodboard to Campaign</span><i data-lucide="plus" class="accordion-icon h-4 w-4 text-neutral-500 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-2xl px-4 pb-6 text-sm leading-relaxed text-soft">Turn references, garments
+                                and rough styling ideas into a complete campaign direction with story, crop, copy and
+                                motion.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition-colors hover:bg-neutral-900/50">
+                        <div class="flex items-center justify-between px-4 py-6">
+                            <span class="text-sm font-medium text-neutral-200">Editorial Prototyping</span><i data-lucide="plus" class="accordion-icon h-4 w-4 text-neutral-500 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-2xl px-4 pb-6 text-sm leading-relaxed text-soft">Prototype lookbooks,
+                                landing pages and social frames fast, then refine with human taste.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition-colors hover:bg-neutral-900/50">
+                        <div class="flex items-center justify-between px-4 py-6">
+                            <span class="text-sm font-medium text-neutral-200">Visual Code System</span><i data-lucide="plus" class="accordion-icon h-4 w-4 text-neutral-500 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-2xl px-4 pb-6 text-sm leading-relaxed text-soft">Define typography, crop
+                                ratios, motion rules and campaign details that make the brand feel consistent.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOIRFRAME ISSUE -->
+        <section class="case-section relative overflow-hidden border-t hairline-border bg-[#030403] px-4 py-24 md:px-8 md:py-32">
+            <div class="absolute inset-0 opacity-[.06]">
+                <img class="img-cover gs-bg-parallax" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c0c2e964-ba9c-4527-8ab2-8f70c617d9b9_3840w.png" alt="Background texture">
+            </div>
+            <div class="relative z-10 mx-auto max-w-screen-2xl">
+                <div class="grid gap-8 lg:grid-cols-12 lg:gap-16">
+                    <div class="fade-right flex flex-col justify-center lg:col-span-5">
+                        <p class="label mb-5">[ Editorial Fashion System ]</p>
+                        <h2 class="text-[11vw] font-medium uppercase leading-[.84] tracking-[-.075em] text-white md:text-[72px] lg:text-[86px]">
+                            NOIRFRAME ISSUE</h2>
+                        <p class="mt-2 text-2xl italic text-neutral-500 md:text-4xl">Midnight Atelier</p>
+                    </div>
+                    <div class="fade-left lg:col-span-7">
+                        <div class="frame h-[62vh] min-h-[420px] p-1">
+                            <span class="cross-marker -right-1 -top-1"></span><span class="cross-marker -bottom-1 -left-1"></span>
+                            <div class="pointer-events-none absolute left-4 right-4 top-4 z-20 flex justify-between text-[10px] uppercase tracking-[.14em] text-white/70">
+                                <span>NOIRFRAME_CAMPAIGN_03</span><span>LOOK_03</span>
+                            </div>
+                            <div class="media-reveal h-full overflow-hidden bg-neutral-900" style="clip-path: inset(12% 0%);">
+                                <img class="case-img img-cover scale-110 opacity-80" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/28e05c75-0594-43c7-a510-1ad7f373e54a_3840w.png" alt="Editorial fashion campaign scene">
+                            </div>
+                            <div class="case-overlap frame absolute -bottom-12 -left-8 hidden aspect-video w-[62%] p-1 md:block lg:-left-24">
+                                <span class="cross-marker -left-1 -top-1"></span>
+                                <div class="pointer-events-none absolute left-2 right-2 top-2 z-20 flex justify-between text-[9px] uppercase tracking-[.12em] text-white/60">
+                                    <span>Fabric study</span><span>AW26</span></div>
+                                <img class="img-cover opacity-90" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/440e200d-aae1-4ca9-ae12-c8c7a341f255_800w.webp" alt="Fashion fabric detail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-24 grid gap-14 lg:grid-cols-12">
+                    <div class="fade-up lg:col-span-5">
+                        <p class="text-sm leading-relaxed text-soft">Midnight Atelier is a digital campaign for a
+                            ready-to-wear label. We shaped the mood from fabric studies, close portraits, runway tension
+                            and dark editorial typography. The result feels less like a product page and more like a
+                            fashion issue you can scroll through.</p>
+                    </div>
+                    <div class="fade-up lg:col-span-7">
+                        <div class="mb-10 grid grid-cols-3 border-y hairline-border py-8">
+                            <div>
+                                <div class="text-2xl font-medium text-white">6 looks</div>
+                                <div class="mt-2 label">Hero direction</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-medium text-white">7days</div>
+                                <div class="mt-2 label">Campaign sprint</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-medium text-white">24</div>
+                                <div class="mt-2 label">Assets delivered</div>
+                            </div>
+                        </div>
+                        <div class="grid gap-px bg-neutral-900 md:grid-cols-2">
+                            <div class="bg-black p-6">
+                                <p class="label mb-4">Camille Roux</p>
+                                <p class="text-xs leading-relaxed text-soft">The campaign finally felt like the clothes.
+                                    Quiet, sharp and impossible to mistake for another template.</p>
+                            </div>
+                            <div class="bg-black p-6">
+                                <p class="label mb-4">Nadia Vale</p>
+                                <p class="text-xs leading-relaxed text-soft">They gave the collection a world: image,
+                                    copy, rhythm and motion all moving in the same direction.</p>
+                            </div>
+                            <div class="bg-black p-6">
+                                <p class="label mb-4">Eloise Tan</p>
+                                <p class="text-xs leading-relaxed text-soft">The lookbook moved like a film. Every crop
+                                    had intention.</p>
+                            </div>
+                            <div class="bg-black p-6">
+                                <p class="label mb-4">Marc Bell</p>
+                                <p class="text-xs leading-relaxed text-soft">It felt editorial but still sold the
+                                    pieces. That balance is rare.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing + Process -->
+        <section id="pricing" class="relative overflow-hidden border-t hairline-border bg-black px-4 py-28 md:px-8 md:py-32">
+            <div class="mx-auto max-w-screen-2xl">
+                
+                
+                <div class="price-card mb-28 overflow-hidden border hairline-border bg-neutral-900" style="clip-path: inset(0px 0px 100%);">
+                    <div class="grid gap-px lg:grid-cols-12">
+                        <div class="relative bg-[#f6efe3] p-8 text-black md:p-12 lg:col-span-5">
+                            <span class="corner corner-tl border-black/20"></span>
+                            <span class="corner corner-tr border-black/20"></span>
+                            <span class="corner corner-bl border-black/20"></span>
+                            <span class="corner corner-br border-black/20"></span>
+
+                            <p class="mb-4 text-[10px] font-medium uppercase tracking-[.18em] text-black/45">Projects from</p>
+                            <div class="mb-6 text-6xl font-medium tracking-[-.07em] text-black md:text-7xl">$4900</div>
+                            <p class="max-w-md text-sm leading-relaxed text-black/65">A premium editorial build for fashion brands that want more than a basic page. Direction, structure, motion and rollout are shaped as one coherent launch system.</p>
+
+                            <div class="mt-10 grid gap-3 sm:grid-cols-2">
+                                <a href="#" class="inline-flex items-center justify-center gap-3 bg-black px-5 py-3 text-[10px] font-medium uppercase tracking-[.16em] text-white transition hover:bg-neutral-900">Book the project <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></a>
+                                <a href="#" class="inline-flex items-center justify-center gap-3 border border-black/15 px-5 py-3 text-[10px] font-medium uppercase tracking-[.16em] text-black/70 transition hover:bg-black/[.03]">Request the deck</a>
+                            </div>
+
+                            <div class="mt-10 grid gap-px border border-black/10 bg-black/10 sm:grid-cols-3">
+                                <div class="bg-[#f6efe3] p-4">
+                                    <p class="mb-1 text-2xl font-medium tracking-[-.05em]">72h</p>
+                                    <p class="text-[10px] uppercase tracking-[.14em] text-black/50">First direction</p>
+                                </div>
+                                <div class="bg-[#f6efe3] p-4">
+                                    <p class="mb-1 text-2xl font-medium tracking-[-.05em]">7–21d</p>
+                                    <p class="text-[10px] uppercase tracking-[.14em] text-black/50">Typical window</p>
+                                </div>
+                                <div class="bg-[#f6efe3] p-4">
+                                    <p class="mb-1 text-2xl font-medium tracking-[-.05em]">24h</p>
+                                    <p class="text-[10px] uppercase tracking-[.14em] text-black/50">Response time</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid gap-px bg-neutral-900 lg:col-span-7">
+                            <div class="grid gap-px md:grid-cols-2">
+                                <div class="bg-black p-6 md:p-8">
+                                    <p class="label mb-5">What’s included</p>
+                                    <ul class="space-y-3 text-xs uppercase tracking-[.14em] text-neutral-300">
+                                        <li>Moodboard direction</li>
+                                        <li>Lookbook structure</li>
+                                        <li>Editorial landing page</li>
+                                        <li>Scroll / motion guidance</li>
+                                        <li>Launch asset system</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black p-6 md:p-8">
+                                    <p class="label mb-5">Best for</p>
+                                    <p class="max-w-sm text-sm leading-relaxed text-soft">New collection drops, capsule launches, fashion campaigns and brands that want a premium visual system across web and social.</p>
+                                    <div class="mt-6 flex flex-wrap gap-2">
+                                        <span class="border hairline-border px-3 py-2 text-[10px] uppercase tracking-[.14em] text-neutral-400">Fashion</span>
+                                        <span class="border hairline-border px-3 py-2 text-[10px] uppercase tracking-[.14em] text-neutral-400">Editorial</span>
+                                        <span class="border hairline-border px-3 py-2 text-[10px] uppercase tracking-[.14em] text-neutral-400">Launch</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid gap-px md:grid-cols-3">
+                                <div class="bg-black p-6">
+                                    <p class="label mb-4">01 / Direction</p>
+                                    <p class="mb-2 text-lg font-medium tracking-tight text-white">Find the tone</p>
+                                    <p class="text-xs leading-relaxed text-soft">References, styling, crop logic and the visual tension behind the release.</p>
+                                </div>
+                                <div class="bg-black p-6">
+                                    <p class="label mb-4">02 / Build</p>
+                                    <p class="mb-2 text-lg font-medium tracking-tight text-white">Shape the page</p>
+                                    <p class="text-xs leading-relaxed text-soft">Hero, sections, editorial pacing, motion ideas and a refined page structure.</p>
+                                </div>
+                                <div class="bg-black p-6">
+                                    <p class="label mb-4">03 / Rollout</p>
+                                    <p class="mb-2 text-lg font-medium tracking-tight text-white">Extend the system</p>
+                                    <p class="text-xs leading-relaxed text-soft">Assets for launch, social cutdowns and after-drop continuity.</p>
+                                </div>
+                            </div>
+
+                            <div class="grid gap-px md:grid-cols-[1.15fr_.85fr]">
+                                <div class="bg-black p-6 md:p-8">
+                                    <p class="label mb-5">Optional add-ons</p>
+                                    <div class="grid gap-3 text-xs uppercase tracking-[.14em] text-neutral-300 sm:grid-cols-2">
+                                        <span>Additional landing sections</span>
+                                        <span>Social cutdown pack</span>
+                                        <span>Email hero system</span>
+                                        <span>Extra lookbook pages</span>
+                                    </div>
+                                </div>
+                                <div class="bg-black p-6 md:p-8">
+                                    <p class="label mb-5">Starting scope</p>
+                                    <p class="text-3xl font-medium tracking-[-.06em] text-white">1 hero + core sections</p>
+                                    <p class="mt-3 text-xs leading-relaxed text-soft">Final pricing depends on scope, number of looks, assets and rollout needs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full overflow-hidden pb-20 reveal-heading">
+                    <h2 class="giant-word whitespace-nowrap text-[13vw] font-medium leading-[.76] tracking-tighter text-white">
+                        The issue.<br class="md:hidden"> From the first look.</h2>
+                </div>
+
+                <div class="grid gap-16 md:grid-cols-2 md:gap-28">
+                    <div class="fade-up flex flex-col justify-between">
+                        <div class="mb-12">
+                            <p class="label mb-3">[ Start a project ]</p>
+                            <p class="text-sm uppercase tracking-[.16em] text-soft">One collection. Multiple ways in.
+                            </p>
+                        </div>
+                        <div class="grid gap-4">
+                            <a href="#" class="group frame flex items-center gap-6 p-5 transition hover:bg-white/[.04]">
+                                <span class="relative flex h-9 w-9 items-center justify-center border hairline-border"><span class="corner corner-tl"></span><span class="corner corner-br"></span><i data-lucide="arrow-right" class="h-4 w-4 text-white transition group-hover:translate-x-1"></i></span>
+                                <span><span class="mb-2 block text-sm font-medium text-white">SEND THE MOOD</span><span class="block text-[10px] uppercase leading-relaxed tracking-[.13em] text-faint">Send references, garments, moodboards or product shots. We turn it into a sharp editorial direction.</span></span>
+                            </a>
+                            <a href="#" class="group frame flex items-center gap-6 p-5 transition hover:bg-white/[.04]">
+                                <span class="relative flex h-9 w-9 items-center justify-center border hairline-border"><span class="corner corner-tl"></span><span class="corner corner-br"></span><i data-lucide="arrow-right" class="h-4 w-4 text-white transition group-hover:translate-x-1"></i></span>
+                                <span><span class="mb-2 block text-sm font-medium text-white">CREATE THE DROP</span><span class="block text-[10px] uppercase leading-relaxed tracking-[.13em] text-faint">20-30 minutes to define the collection, launch angle, timeline and editorial path.</span></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div class="process-card relative border-t hairline-border pt-6">
+                            <span class="cross-marker -left-1 -top-1"></span>
+                            <h4 class="mb-4 flex items-center gap-3 text-2xl font-medium tracking-tight text-white">Mood
+                                <span class="label">/ 01</span></h4>
+                            <p class="max-w-sm text-sm leading-relaxed text-soft">Drop the references, silhouettes,
+                                fabric notes, campaign goals or product shots. NOIRFRAME turns them into a clear
+                                editorial direction.</p>
+                        </div>
+                        <div class="process-card relative border-t hairline-border pt-6">
+                            <span class="cross-marker -left-1 -top-1"></span>
+                            <h4 class="mb-4 flex items-center gap-3 text-2xl font-medium tracking-tight text-white">
+                                Style <span class="label">/ 02</span></h4>
+                            <p class="max-w-sm text-sm leading-relaxed text-soft">We shape the story, styling language,
+                                crop system and visual codes before the editorial system is produced.</p>
+                        </div>
+                        <div class="process-card relative border-t hairline-border pt-6">
+                            <span class="cross-marker -left-1 -top-1"></span>
+                            <h4 class="mb-4 flex items-center gap-3 text-2xl font-medium tracking-tight text-white">
+                                Produce <span class="label">/ 03</span></h4>
+                            <p class="max-w-sm text-sm leading-relaxed text-soft">Lookbook, copy, motion and launch
+                                content move together so the collection feels consistent everywhere.</p>
+                        </div>
+                        <div class="process-card relative border-t hairline-border pt-6 opacity-50">
+                            <span class="cross-marker -left-1 -top-1"></span>
+                            <h4 class="mb-4 flex items-center gap-3 text-2xl font-medium tracking-tight text-white">Drop
+                                <span class="label">/ 04</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+<!-- Launch CTA -->
+<section class="relative overflow-hidden border-t hairline-border bg-[#020202] px-4 py-28 md:px-8 md:py-36">
+    <div class="pointer-events-none absolute inset-0 opacity-[.08]">
+        <div class="absolute left-[-12%] top-[-20%] h-[520px] w-[520px] rounded-full border border-white/20 blur-3xl"></div>
+        <div class="absolute bottom-[-25%] right-[-10%] h-[620px] w-[620px] rounded-full border border-white/10 blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-screen-2xl">
+        <div class="grid overflow-hidden border hairline-border bg-black lg:grid-cols-12">
+            <div class="fade-up relative min-h-[420px] border-b hairline-border p-6 md:p-10 lg:col-span-5 lg:border-b-0 lg:border-r">
+                <span class="corner corner-tl"></span>
+                <span class="corner corner-tr"></span>
+                <span class="corner corner-bl"></span>
+                <span class="corner corner-br"></span>
+
+                <div class="flex h-full flex-col justify-between">
+                    <div>
+                        <p class="label mb-8">[ Ready for the next issue ]</p>
+                        <h2 class="max-w-xl text-[14vw] font-medium leading-[.78] tracking-[-.09em] text-white md:text-[86px]">
+                            Build the campaign world.
+                        </h2>
+                    </div>
+
+                    <p class="mt-10 max-w-sm text-sm leading-relaxed text-soft">
+                        Send the collection, references, product shots or rough mood. We turn it into a visual system for launch, social and editorial storytelling.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid bg-neutral-900/60 lg:col-span-7">
+                <div class="grid gap-px bg-neutral-900 md:grid-cols-3">
+                    <div class="fade-up bg-black p-6 md:p-8">
+                        <p class="label mb-8">01 / Mood</p>
+                        <h3 class="mb-4 text-xl font-medium tracking-tight text-white">Define the world</h3>
+                        <p class="text-xs leading-relaxed text-soft">Campaign angle, references, textures, styling codes and the visual tension behind the drop.</p>
+                    </div>
+                    <div class="fade-up bg-black p-6 md:p-8">
+                        <p class="label mb-8">02 / Frames</p>
+                        <h3 class="mb-4 text-xl font-medium tracking-tight text-white">Shape the system</h3>
+                        <p class="text-xs leading-relaxed text-soft">Hero imagery, crop rhythm, motion direction, page structure and social extensions.</p>
+                    </div>
+                    <div class="fade-up bg-black p-6 md:p-8">
+                        <p class="label mb-8">03 / Drop</p>
+                        <h3 class="mb-4 text-xl font-medium tracking-tight text-white">Launch with presence</h3>
+                        <p class="text-xs leading-relaxed text-soft">Landing page, campaign assets, editorial cards and launch copy moving as one system.</p>
+                    </div>
+                </div>
+
+                <div class="grid gap-px bg-neutral-900 md:grid-cols-[1fr_.72fr]">
+                    <a href="#" class="fade-up group relative flex min-h-[220px] flex-col justify-between overflow-hidden bg-white p-6 text-black transition duration-500 hover:bg-[#f7efe4] md:p-8">
+                        <span class="absolute right-6 top-6 flex h-12 w-12 items-center justify-center border border-black/20 transition duration-500 group-hover:rotate-45">
+                            <i data-lucide="arrow-up-right" class="h-5 w-5"></i>
+                        </span>
+                        <p class="text-[10px] font-medium uppercase tracking-[.18em] text-black/55">Start the campaign</p>
+                        <div>
+                            <h3 class="mb-3 text-3xl font-medium tracking-[-.05em] md:text-5xl">Send the mood</h3>
+                            <p class="max-w-md text-sm leading-relaxed text-black/65">Share your collection, references or product shots. We’ll shape the first editorial direction.</p>
+                        </div>
+                    </a>
+
+                    <div class="fade-up flex min-h-[220px] flex-col justify-between bg-black p-6 md:p-8">
+                        <p class="label">Availability</p>
+                        <div>
+                            <p class="mb-4 text-4xl font-medium tracking-[-.06em] text-white">3 slots</p>
+                            <p class="text-xs uppercase leading-relaxed tracking-[.14em] text-faint">Open for capsule drops, fashion campaigns and editorial launch pages.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-col justify-between gap-4 border-b hairline-border pb-6 text-[10px] uppercase tracking-[.16em] text-neutral-500 md:flex-row">
+            <span>NOIRFRAME® / Campaign studio</span>
+            <span>Paris · Montréal · Remote</span>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+        <section class="mx-auto max-w-screen-xl border-t hairline-border px-4 py-28 md:px-8 md:py-32">
+            <div class="grid gap-16 lg:grid-cols-12">
+                <div class="fade-up lg:col-span-5">
+                    <p class="label mb-6 max-w-[260px] border-l hairline-border pl-4 leading-relaxed">[ From fitting
+                        room to front page ]. One mood, every frame connected.</p>
+                    <h2 class="mb-4 text-3xl font-medium tracking-tight text-white">Fashion questions
+                        <span class="label">/ FAQ</span></h2>
+                    <p class="text-sm leading-relaxed text-soft">The questions fashion teams ask before turning a
+                        collection into a campaign world.</p>
+                </div>
+                <div class="fade-up border-t hairline-border lg:col-span-7">
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition hover:bg-neutral-900/30">
+                        <div class="flex items-center justify-between px-2 py-5">
+                            <span class="text-sm text-neutral-300">What should we send</span><i data-lucide="plus" class="accordion-icon h-3.5 w-3.5 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-lg px-2 pb-5 text-xs leading-relaxed text-soft">Send moodboards, campaign
+                                references, product shots, fabric details, brand notes, existing assets or a rough
+                                creative direction.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition hover:bg-neutral-900/30">
+                        <div class="flex items-center justify-between px-2 py-5">
+                            <span class="text-sm text-neutral-300">How fast can a campaign launch</span><i data-lucide="plus" class="accordion-icon h-3.5 w-3.5 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-lg px-2 pb-5 text-xs leading-relaxed text-soft">A first direction can move
+                                in 72 hours. A polished campaign page, lookbook and content system usually takes 7 to 21
+                                days.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition hover:bg-neutral-900/30">
+                        <div class="flex items-center justify-between px-2 py-5">
+                            <span class="text-sm text-neutral-300">Do we need a full shoot</span><i data-lucide="plus" class="accordion-icon h-3.5 w-3.5 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-lg px-2 pb-5 text-xs leading-relaxed text-soft">Not always. We can work
+                                from existing product photography, campaign assets, references and AI-assisted visual
+                                systems when appropriate.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item cursor-pointer border-b hairline-border bg-black transition hover:bg-neutral-900/30">
+                        <div class="flex items-center justify-between px-2 py-5">
+                            <span class="text-sm text-neutral-300">What makes a good brief</span><i data-lucide="plus" class="accordion-icon h-3.5 w-3.5 transition-transform"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="max-w-lg px-2 pb-5 text-xs leading-relaxed text-soft">A clear audience,
+                                collection mood, product priority, references, launch date and the assets you already
+                                have.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative overflow-hidden border-t hairline-border bg-black pb-8 pt-10">
+        <div class="relative z-10 mx-auto max-w-screen-2xl px-4 md:px-8">
+            <div class="footer-strip mb-12 grid gap-2 md:mb-16 md:grid-cols-2">
+                <a href="#" class="group frame relative h-64 overflow-hidden p-1 md:h-[420px]">
+                    <span class="corner corner-tl"></span><span class="corner corner-tr"></span><span class="corner corner-bl"></span><span class="corner corner-br"></span>
+                    <img class="img-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/afba1b68-c100-4f75-a3ad-0930482792d6_3840w.png" alt="Editorial woman in emerald satin">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
+                    <div class="absolute inset-x-1 bottom-1 flex items-center justify-between border-t hairline-border bg-black/85 px-4 py-3 text-[10px] uppercase tracking-[.16em] text-white">
+                        <span>Emerald line</span><span>Campaign archive</span>
+                    </div>
+                </a>
+
+                <a href="#" class="group frame relative h-64 overflow-hidden p-1 md:h-[420px]">
+                    <span class="corner corner-tl"></span><span class="corner corner-tr"></span><span class="corner corner-bl"></span><span class="corner corner-br"></span>
+                    <img class="img-cover opacity-82 transition duration-700 group-hover:scale-105 group-hover:opacity-100" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c45b0bff-61f6-4660-be23-f25e5a0e92c4_3840w.png" alt="Editorial woman in terracotta dress">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
+                    <div class="absolute inset-x-1 bottom-1 flex items-center justify-between border-t hairline-border bg-black/85 px-4 py-3 text-[10px] uppercase tracking-[.16em] text-white">
+                        <span>Amber issue</span><span>Studio notes</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="grid gap-px border hairline-border bg-neutral-900 md:grid-cols-12">
+                <div class="fade-up relative flex min-h-[300px] flex-col justify-between bg-[#f7efe4] p-8 text-black md:col-span-5 md:p-12">
+                    <span class="corner corner-tl border-black/20"></span><span class="corner corner-tr border-black/20"></span>
+                    <span class="corner corner-bl border-black/20"></span><span class="corner corner-br border-black/20"></span>
+                    <div>
+                        <p class="mb-6 text-[10px] font-medium uppercase tracking-[.18em] text-black/50">Noirframe® / Final call</p>
+                        <h2 class="max-w-lg text-[13vw] font-medium leading-[.82] tracking-[-.08em] md:text-[64px]">Let’s build your next issue.</h2>
+                    </div>
+                    <div class="mt-10 space-y-6">
+                        <p class="max-w-md text-sm leading-relaxed text-black/70">Fashion can stay dark, but the world can stay rich. Campaigns, lookbooks and launch pages shaped with image, motion and colour.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="mailto:hello@noirframe.com" class="inline-flex items-center gap-3 bg-black px-5 py-3 text-[10px] font-medium uppercase tracking-[.16em] text-white transition hover:bg-neutral-900">Start a project <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i></a>
+                            <span class="inline-flex items-center gap-2 border border-black/15 px-4 py-3 text-[10px] font-medium uppercase tracking-[.16em] text-black/55">Response within 24h</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 grid gap-px bg-neutral-900">
+                    <div class="grid gap-px md:grid-cols-3">
+                        <div class="fade-up bg-black p-8 md:p-10">
+                            <p class="label mb-6 inline-block border-b hairline-border pb-2">Studio</p>
+                            <ul class="grid gap-3 text-xs uppercase tracking-[.13em] text-neutral-400">
+                                <li>About</li>
+                                <li>Approach</li>
+                                <li>Campaigns</li>
+                                <li>Lookbooks</li>
+                                <li>Contact</li>
+                            </ul>
+                        </div>
+                        <div class="fade-up bg-black p-8 md:p-10">
+                            <p class="label mb-6 inline-block border-b hairline-border pb-2">Journal</p>
+                            <ul class="grid gap-3 text-xs uppercase tracking-[.13em] text-neutral-400">
+                                <li>Issue notes</li>
+                                <li>Archive</li>
+                                <li>Careers</li>
+                                <li>Terms</li>
+                                <li>Privacy</li>
+                            </ul>
+                        </div>
+                        <div class="fade-up bg-black p-8 md:p-10">
+                            <p class="label mb-6 inline-block border-b hairline-border pb-2">Contact</p>
+                            <div class="space-y-5 text-xs uppercase tracking-[.13em] text-neutral-300">
+                                <p>Paris / Montréal<br><span class="text-neutral-500">Remote worldwide</span></p>
+                                <p>hello@noirframe.com</p>
+                                <p>@noirframe.studio</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-px md:grid-cols-[1.1fr_.9fr]">
+                        <div class="fade-up flex min-h-[180px] flex-col justify-between bg-black p-8 md:p-10">
+                            <div class="flex items-center gap-3 text-[10px] uppercase tracking-[.16em] text-neutral-500">
+                                <span class="block h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                                Currently taking 3 new projects
+                            </div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div>
+                                    <p class="mb-2 text-3xl font-medium tracking-[-.05em] text-white">72h</p>
+                                    <p class="text-[10px] uppercase tracking-[.14em] text-faint">First direction</p>
+                                </div>
+                                <div>
+                                    <p class="mb-2 text-3xl font-medium tracking-[-.05em] text-white">7–21d</p>
+                                    <p class="text-[10px] uppercase tracking-[.14em] text-faint">Typical launch window</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 grid-rows-2 gap-px bg-neutral-900">
+                            <a class="fade-up flex items-center justify-center bg-black transition hover:bg-[#12291f]" href="#"><i data-lucide="mail" class="h-4 w-4 text-neutral-300"></i></a>
+                            <a class="fade-up flex items-center justify-center bg-black transition hover:bg-[#311f12]" href="#"><i data-lucide="phone" class="h-4 w-4 text-neutral-300"></i></a>
+                            <a class="fade-up flex items-center justify-center bg-black transition hover:bg-[#12291f]" href="#"><i data-lucide="instagram" class="h-4 w-4 text-neutral-300"></i></a>
+                            <a class="fade-up flex items-center justify-center bg-black transition hover:bg-[#311f12]" href="#"><i data-lucide="arrow-up-right" class="h-4 w-4 text-neutral-300"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex flex-col justify-between gap-4 border-t hairline-border pt-6 text-[10px] uppercase tracking-[.16em] text-neutral-600 md:flex-row">
+                <span>© Noirframe 2026</span>
+                <span>Fashion systems with image, motion and colour</span>
+                <span>All rights reserved</span>
+            </div>
+        </div>
+
+        <div class="footer-word absolute bottom-[-10%] left-0 z-0 w-full select-none text-center text-[21vw] font-medium leading-none tracking-[-.11em] text-white opacity-10 blur-xl mix-blend-overlay">NOIRFRAME</div>
+    </footer>
+
+<script>
+        (() => {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const qs = (selector, scope = document) => scope.querySelector(selector);
+            const qsa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
+
+            function initIcons() {
+                if (window.lucide) {
+                    window.lucide.createIcons({ strokeWidth: 1.4 });
+                }
+            }
+
+            function initAccordions() {
+                qsa(".accordion-item").forEach((item) => {
+                    item.addEventListener("click", () => item.classList.toggle("is-open"));
+                });
+            }
+
+            function initAnimations() {
+                const body = document.body;
+                const hero = qs(".hero-section");
+                const heroFrame = qs(".gs-hero-frame");
+                const heroMedia = qs(".hero-media");
+                const heroImg = qs(".gs-hero-img");
+                const firstWipe = qs(".scroll-wipe-section");
+
+                // No on-load animation: the hero/header are visible immediately.
+                body.classList.remove("is-loading", "scroll-locked");
+                body.classList.add("is-ready");
+
+                if (!window.gsap || !window.ScrollTrigger || prefersReducedMotion || !hero || !heroFrame || !heroMedia || !heroImg) {
+                    qsa(".load-reveal, .fade-up, .fade-left, .fade-right, .editorial-card, .number-card, .process-card, .price-card, .hero-kicker, .hero-top-copy, .hero-bottom-rail, .hero-reg-mark").forEach((el) => {
+                        el.style.opacity = "1";
+                        el.style.visibility = "visible";
+                        el.style.transform = "none";
+                        el.style.clipPath = "none";
+                    });
+                    qsa(".hero-mask-tile").forEach((el) => el.style.display = "none");
+                    return;
+                }
+
+                gsap.registerPlugin(ScrollTrigger);
+                ScrollTrigger.config({ ignoreMobileResize: true });
+
+                gsap.set(".hero-mask-tile", { autoAlpha: 0, display: "none" });
+                gsap.set(".hero-bg-wash", { autoAlpha: 1 });
+                gsap.set(heroFrame, { autoAlpha: 1, clipPath: "inset(0% 0% 0% 0%)", scale: 1, y: 0 });
+                gsap.set(heroMedia, { autoAlpha: 1, clipPath: "inset(0% 0% 0% 0%)", scale: 1 });
+                gsap.set(heroImg, { autoAlpha: 0.82, scale: 1.08, yPercent: 0, filter: "blur(0px)" });
+                gsap.set(".site-header, .gs-hero-copy, .hero-kicker, .gs-hero-subheading, .gs-hero-cta, .gs-hero-cta-secondary, .hero-top-copy, .hero-reg-mark, .hero-bottom-rail, .gs-hero-line", {
+                    autoAlpha: 1,
+                    y: 0,
+                    yPercent: 0,
+                    rotateX: 0
+                });
+
+                if (firstWipe) {
+                    gsap.set(firstWipe, { yPercent: 8, zIndex: 30 });
+                    gsap.set(qsa(".fade-up, .editorial-card", firstWipe), { autoAlpha: 0, y: 48 });
+                }
+
+                // Pinned hero transition: the hero stays fixed while the next section slides over it.
+                const firstRevealItems = firstWipe ? qsa(".fade-up, .editorial-card", firstWipe) : [];
+                const heroScrollTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: hero,
+                        start: "top top",
+                        end: () => "+=" + Math.round(window.innerHeight * 1.28),
+                        scrub: 0.85,
+                        pin: true,
+                        pinSpacing: false,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                heroScrollTl
+                    .to(heroImg, { scale: 1, yPercent: 10, ease: "none" }, 0)
+                    .to(heroMedia, { scale: 0.985, ease: "none" }, 0)
+                    .to(".gs-hero-copy", { y: -150, autoAlpha: 0.08, ease: "none" }, 0)
+                    .to(".hero-top-copy", { y: -70, autoAlpha: 0, ease: "none" }, 0)
+                    .to(".hero-reg-mark", { y: -80, autoAlpha: 0, ease: "none" }, 0)
+                    .to(".hero-bottom-rail", { y: 58, autoAlpha: 0, ease: "none" }, 0)
+                    .to(".site-header", { y: 0, autoAlpha: 1, ease: "none" }, 0)
+                    .to(heroFrame, {
+                        y: -46,
+                        scale: 0.965,
+                        clipPath: "inset(0% 0% 16% 0%)",
+                        ease: "none"
+                    }, 0);
+
+                if (firstWipe) {
+                    heroScrollTl
+                        .to(firstWipe, { yPercent: 0, ease: "none" }, 0)
+                        .to(firstRevealItems, {
+                            autoAlpha: 1,
+                            y: 0,
+                            stagger: 0.035,
+                            ease: "none"
+                        }, 0.48);
+                }
+
+                gsap.to(".hero-bg-wash", {
+                    yPercent: 14,
+                    autoAlpha: 0.16,
+                    ease: "none",
+                    scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true }
+                });
+
+                // Recent editorials: keep image parallax, but let the pinned hero reveal control the first section entrance.
+                qsa(".editorial-card").forEach((card) => {
+                    if (!(firstWipe && firstWipe.contains(card))) {
+                        gsap.fromTo(card,
+                            { autoAlpha: 0, y: 72 },
+                            {
+                                autoAlpha: 1,
+                                y: 0,
+                                duration: 1,
+                                ease: "power3.out",
+                                scrollTrigger: {
+                                    trigger: card,
+                                    start: "top 84%",
+                                    toggleActions: "play none none reverse"
+                                }
+                            }
+                        );
+                    }
+
+                    const img = qs(".editorial-img", card);
+                    if (img) {
+                        gsap.fromTo(img,
+                            { scale: 1.1, yPercent: -3 },
+                            {
+                                scale: 1.02,
+                                yPercent: 5,
+                                ease: "none",
+                                scrollTrigger: {
+                                    trigger: card,
+                                    start: "top bottom",
+                                    end: "bottom top",
+                                    scrub: true
+                                }
+                            }
+                        );
+                    }
+
+                    const media = qs(".editorial-media", card);
+                    if (media) {
+                        gsap.fromTo(media,
+                            { clipPath: "inset(10% 0% 10% 0%)" },
+                            {
+                                clipPath: "inset(0% 0% 0% 0%)",
+                                duration: 1.1,
+                                ease: "expo.out",
+                                scrollTrigger: {
+                                    trigger: media,
+                                    start: "top 86%"
+                                }
+                            }
+                        );
+                    }
+                });
+
+                qsa(".work-media, .media-reveal").forEach((media) => {
+                    gsap.fromTo(media,
+                        { clipPath: "inset(12% 0% 12% 0%)" },
+                        {
+                            clipPath: "inset(0% 0% 0% 0%)",
+                            duration: 1.15,
+                            ease: "expo.out",
+                            scrollTrigger: { trigger: media, start: "top 84%" }
+                        }
+                    );
+                });
+
+                qsa(".fade-up").forEach((el) => {
+                    if (firstWipe && firstWipe.contains(el)) return;
+                    gsap.fromTo(el,
+                        { autoAlpha: 0, y: 40 },
+                        {
+                            autoAlpha: 1,
+                            y: 0,
+                            duration: 0.95,
+                            ease: "power3.out",
+                            scrollTrigger: { trigger: el, start: "top 86%", toggleActions: "play none none reverse" }
+                        }
+                    );
+                });
+
+                qsa(".fade-right").forEach((el) => {
+                    gsap.fromTo(el,
+                        { autoAlpha: 0, x: -40 },
+                        { autoAlpha: 1, x: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 84%" } }
+                    );
+                });
+
+                qsa(".fade-left").forEach((el) => {
+                    gsap.fromTo(el,
+                        { autoAlpha: 0, x: 40 },
+                        { autoAlpha: 1, x: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 84%" } }
+                    );
+                });
+
+                gsap.fromTo(".number-card",
+                    { autoAlpha: 0, y: 26 },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.85,
+                        stagger: 0.08,
+                        ease: "power3.out",
+                        scrollTrigger: { trigger: ".number-card", start: "top 84%" }
+                    }
+                );
+
+                gsap.to(".case-img", {
+                    yPercent: 10,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".case-section",
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+
+                gsap.to(".case-overlap", {
+                    y: -80,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".case-section",
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+
+                gsap.fromTo(".reveal-heading h2",
+                    { yPercent: 105 },
+                    {
+                        yPercent: 0,
+                        duration: 1.1,
+                        ease: "power4.out",
+                        scrollTrigger: { trigger: ".reveal-heading", start: "top 86%" }
+                    }
+                );
+
+                gsap.fromTo(".process-card",
+                    { autoAlpha: 0, y: 30 },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.9,
+                        stagger: 0.14,
+                        ease: "power3.out",
+                        scrollTrigger: { trigger: ".process-card", start: "top 86%" }
+                    }
+                );
+
+                gsap.fromTo(".price-card",
+                    { autoAlpha: 0, clipPath: "inset(0 0 100% 0)" },
+                    {
+                        autoAlpha: 1,
+                        clipPath: "inset(0 0 0% 0)",
+                        duration: 1.1,
+                        ease: "power4.out",
+                        scrollTrigger: { trigger: ".price-card", start: "top 82%" }
+                    }
+                );
+
+                gsap.fromTo(".footer-strip .frame",
+                    { autoAlpha: 0, y: 42 },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 1,
+                        stagger: 0.12,
+                        ease: "power3.out",
+                        scrollTrigger: { trigger: ".footer-strip", start: "top 86%" }
+                    }
+                );
+
+                gsap.to(".footer-word", {
+                    yPercent: -12,
+                    scale: 1.04,
+                    ease: "none",
+                    scrollTrigger: { trigger: "footer", start: "top bottom", end: "bottom bottom", scrub: true }
+                });
+
+                qsa("img, video").forEach((media) => {
+                    if (media.tagName === "IMG" && !media.complete) media.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+                    if (media.tagName === "VIDEO") media.addEventListener("loadedmetadata", () => ScrollTrigger.refresh(), { once: true });
+                });
+
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(() => ScrollTrigger.refresh());
+                }
+
+                window.addEventListener("load", () => ScrollTrigger.refresh(true));
+                window.addEventListener("resize", () => ScrollTrigger.refresh());
+            }
+
+            function boot() {
+                initIcons();
+                initAccordions();
+                initAnimations();
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", boot, { once: true });
+            } else {
+                boot();
+            }
+        })();
+    </script>
+
+
+<script data-aura-video-controller="true">
+(function () {
+  function playVideo(video) {
+    var promise = video.play();
+    if (promise && typeof promise.catch === "function") {
+      promise.catch(function () {});
+    }
+  }
+
+  function setupVideo(video) {
+    if (video.__auraVideoReady === true) return;
+    video.__auraVideoReady = true;
+    video.removeAttribute("data-aura-video-ready");
+    video.removeAttribute("data-aura-video-played");
+    video.muted = true;
+    video.playsInline = true;
+
+    var preset = video.dataset.auraVideoPreset || "loop-in-view";
+    if (preset === "hover") {
+      video.addEventListener("mouseenter", function () {
+        playVideo(video);
+      });
+      video.addEventListener("mouseleave", function () {
+        video.pause();
+        video.currentTime = 0;
+      });
+      return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      playVideo(video);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          if (preset === "play-once" && video.__auraVideoPlayed === true) {
+            return;
+          }
+          playVideo(video);
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+
+    if (preset === "play-once") {
+      video.addEventListener("ended", function () {
+        video.__auraVideoPlayed = true;
+      }, { once: true });
+    }
+
+    observer.observe(video);
+  }
+
+  function setupVideos() {
+    document
+      .querySelectorAll("video[data-aura-video-preset]")
+      .forEach(setupVideo);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupVideos);
+  } else {
+    setupVideos();
+  }
+})();</script></body></html>

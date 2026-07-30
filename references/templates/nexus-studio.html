@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus - Digital Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet"><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="bg-gray-50 text-gray-950 overflow-x-hidden antialiased selection:bg-black selection:text-white" style="font-family: 'Inter', sans-serif;">
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component top-0 w-full h-screen z-20 mix-blend-screen absolute" data-alpha-mask="80" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div class="relative w-full h-[900px] -z-10 bg-gradient-to-b from-purple-900/20 via-blue-900/30 to-black/40 brightness-50 saturate-50" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 62%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 62%, transparent)" data-alpha-mask="62">
+  <div data-us-project="MSvSkmJb9Ax55PeV6eku" class="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.33/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+
+    <!-- WebGL Container -->
+    <div id="canvas-container" class="absolute top-0 left-0 w-full h-screen z-0 pointer-events-none opacity-80"></div>
+
+    <!-- Page Wrapper -->
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto bg-white shadow-2xl">
+
+        <!-- Hero Section -->
+        <section class="relative h-[80vh] min-h-[600px] w-full bg-zinc-300 overflow-hidden flex flex-col justify-between p-6 md:p-12">
+            
+            <!-- Background Image -->
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b3738db4-e122-4f81-a199-9ae2536b9357_3840w.jpg" alt="Abstract Portrait" class="absolute inset-0 w-full h-full object-cover object-center mix-blend-multiply opacity-90 z-0">
+
+            <!-- Nav -->
+            <nav class="relative z-10 flex justify-between items-center w-full">
+                <!-- Contrasting Logo -->
+                <a href="#" class="bg-gray-950 text-white px-3 py-1.5 rounded-sm text-sm font-medium tracking-tighter flex items-center justify-center shadow-sm">
+                    NEXUS
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-1 bg-black/90 backdrop-blur-md text-white rounded-full p-1 text-xs font-medium ring-1 ring-white/10">
+                    <a href="#" class="px-4 py-1.5 rounded-full bg-white/20">INDEX</a>
+                    <a href="#" class="px-4 py-1.5 rounded-full hover:bg-white/10 transition-colors">WORK</a>
+                    <a href="#" class="px-4 py-1.5 rounded-full hover:bg-white/10 transition-colors">AGENCY</a>
+                    <a href="#" class="px-4 py-1.5 rounded-full hover:bg-white/10 transition-colors">INSIGHTS</a>
+                    <a href="#" class="px-4 py-1.5 rounded-full bg-white text-black ml-1">START A PROJECT</a>
+                </div>
+                <button class="md:hidden text-white bg-black p-2 rounded-full ring-1 ring-white/10">
+                    <iconify-icon icon="solar:hamburger-menu-linear" class="text-xl flex"></iconify-icon>
+                </button>
+            </nav>
+
+            <!-- Hero Text -->
+            <div class="relative z-10 max-w-2xl text-white mix-blend-difference mb-8">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.1] text-balance js-reveal-text">We design identities, platforms, and interactive journeys</h1>
+            </div>
+        </section>
+
+        <!-- Who We Are Section -->
+        <section class="py-24 px-6 md:px-12 bg-white">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-12 lg:gap-24">
+                
+                <!-- Label -->
+                <div class="text-xs font-medium text-gray-400 uppercase tracking-widest">
+                    [ OUR MISSION ]
+                </div>
+
+                <!-- Content -->
+                <div class="space-y-16">
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-[1.3] text-balance js-reveal-text text-gray-900">We are a digital studio partnering with forward-thinking companies to scale from 'emerging' to iconic. Our approach fuses data, aesthetics, and code to produce measurable impact.</h2>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8 border-t border-gray-100">
+                        <div>
+                            <div class="text-4xl md:text-5xl font-medium tracking-tight mb-2">$10M+</div>
+                            <div class="text-xs text-gray-500 font-medium">Value Created for Partners</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl md:text-5xl font-medium tracking-tight mb-2">30+</div>
+                            <div class="text-xs text-gray-500 font-medium">Global Markets</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl md:text-5xl font-medium tracking-tight mb-2">150+</div>
+                            <div class="text-xs text-gray-500 font-medium">Digital Products Launched</div>
+                        </div>
+                    </div>
+
+                    <!-- Logos -->
+                    <div class="flex flex-wrap items-center justify-between gap-8 pt-12 opacity-50 grayscale">
+                        <div class="font-medium text-lg tracking-tighter">A C M E</div>
+                        <div class="font-medium text-lg tracking-tighter">S T E L L A R</div>
+                        <div class="font-medium text-lg tracking-tighter">V E R T E X</div>
+                        <div class="font-medium text-lg tracking-tighter hidden sm:block">O R I O N</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-24 px-6 md:px-12 bg-[#FAFAF9] border-t border-gray-100">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="flex flex-col items-center text-center mb-16 md:mb-24">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)] mb-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+                        <span class="text-xs font-medium text-gray-600 tracking-wide">Our Core Capabilities</span>
+                    </div>
+                    
+                    <h2 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gray-900 mb-6 max-w-4xl text-balance leading-[1.1]">
+                        Solutions designed to accelerate your growth
+                    </h2>
+                    
+                    <p class="text-base md:text-lg text-gray-500 max-w-2xl leading-relaxed">
+                        We go beyond mere deliverables. We architect comprehensive systems engineered to scale your enterprise and dominate your market.
+                    </p>
+                </div>
+
+                <!-- Services Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-gray-200 bg-white border border-gray-200 rounded-2xl md:rounded-3xl shadow-sm overflow-hidden">
+                    
+                    <!-- Card 1: Experience Design -->
+                    <div class="group flex flex-col">
+                        <div class="h-64 sm:h-72 lg:h-80 bg-[#F5F5F4] border-b border-gray-200 relative overflow-hidden flex items-center justify-center p-6 md:p-8">
+                            <!-- Abstract UI Comp -->
+                            <div class="w-full h-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden transform transition-transform duration-700 ease-out group-hover:-translate-y-2 group-hover:shadow-md relative z-10">
+                                <div class="h-10 border-b border-gray-100 flex items-center px-4 gap-1.5 bg-gray-50/80">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                                    <div class="ml-4 h-4 w-32 bg-white rounded-sm border border-gray-100 shadow-sm"></div>
+                                </div>
+                                <div class="p-5 flex-1 bg-white flex flex-col gap-4">
+                                    <div class="flex gap-4">
+                                        <div class="w-14 h-14 rounded-lg bg-gray-100 flex-shrink-0"></div>
+                                        <div class="space-y-2.5 flex-1 pt-1.5">
+                                            <div class="h-3 w-2/5 bg-gray-200 rounded-full"></div>
+                                            <div class="h-2 w-full bg-gray-100 rounded-full"></div>
+                                            <div class="h-2 w-4/5 bg-gray-100 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 w-full bg-gray-50 rounded-lg border border-gray-100"></div>
+                                </div>
+                            </div>
+                            <!-- Floating Badge -->
+                            <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 bg-white border border-gray-200 shadow-sm rounded-md py-2 px-3 flex items-center gap-2 z-20 animate-[bounce_4s_infinite_ease-in-out]">
+                                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                                <span class="text-xs font-medium text-gray-600 uppercase tracking-wider">Research Driven</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-8 md:p-10 flex-1 bg-white flex flex-col">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center mb-6 text-gray-900 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line x1="3" x2="21" y1="9" y2="9"></line><line x1="9" x2="9" y1="21" y2="9"></line></svg>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-medium tracking-tight text-gray-900 mb-4">Experience Design</h3>
+                            <p class="text-base text-gray-500 leading-relaxed">Immersive interfaces and strategic identities that captivate audiences and establish undisputed market dominance.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Growth Strategy -->
+                    <div class="group flex flex-col">
+                        <div class="h-64 sm:h-72 lg:h-80 bg-[#F5F5F4] border-b border-gray-200 relative overflow-hidden flex items-center justify-center p-6 md:p-8">
+                            <!-- Collage Concept -->
+                            <div class="relative w-full h-full max-w-sm flex items-center justify-center">
+                                <!-- Polaroid Left -->
+                                <div class="absolute -translate-x-14 -translate-y-6 rotate-[-10deg] w-28 h-32 bg-white p-2.5 shadow-sm border border-gray-200 rounded-sm transform transition-transform duration-700 ease-out group-hover:-rotate-[-14deg] group-hover:scale-105 group-hover:-translate-x-16 z-10">
+                                    <div class="w-full h-[68px] bg-blue-100/50 mb-3 border border-blue-100"></div>
+                                    <div class="h-1.5 w-1/2 bg-gray-200 mb-1.5 rounded-full"></div>
+                                    <div class="h-1 w-3/4 bg-gray-100 rounded-full"></div>
+                                </div>
+                                <!-- Polaroid Right -->
+                                <div class="absolute translate-x-14 translate-y-4 rotate-[12deg] w-32 h-36 bg-white p-2.5 shadow-md border border-gray-200 rounded-sm transform transition-transform duration-700 ease-out group-hover:rotate-[16deg] group-hover:scale-105 group-hover:translate-x-16 z-20">
+                                    <div class="w-full h-20 bg-orange-100/50 mb-3 border border-orange-100"></div>
+                                    <div class="h-1.5 w-2/3 bg-gray-200 mb-1.5 rounded-full"></div>
+                                    <div class="h-1 w-1/2 bg-gray-100 rounded-full"></div>
+                                </div>
+                                <!-- Sticky Note -->
+                                <div class="absolute -translate-x-8 translate-y-16 rotate-[4deg] w-24 h-24 bg-yellow-50 p-3.5 shadow-sm border border-yellow-100/80 transform transition-transform duration-700 ease-out group-hover:rotate-[1deg] group-hover:translate-y-14 z-30">
+                                    <div class="h-1.5 w-full bg-yellow-200/60 mb-2 rounded-full"></div>
+                                    <div class="h-1.5 w-4/5 bg-yellow-200/60 mb-2 rounded-full"></div>
+                                    <div class="h-1.5 w-full bg-yellow-200/60 mb-2 rounded-full"></div>
+                                </div>
+                                <!-- Center Badge -->
+                                <div class="absolute z-40 bg-gray-900 text-white px-5 py-2.5 rounded-full font-medium tracking-tight text-sm shadow-[0_10px_20px_rgba(0,0,0,0.1)] transform transition-transform duration-500 group-hover:scale-110 border border-gray-700/50">
+                                    Marketing
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-8 md:p-10 flex-1 bg-white flex flex-col">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center mb-6 text-gray-900 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-medium tracking-tight text-gray-900 mb-4">Growth Strategy</h3>
+                            <p class="text-base text-gray-500 leading-relaxed">Data-driven acquisition funnels, targeted campaigns, and relentless conversion optimization to multiply your revenue.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Digital Engineering -->
+                    <div class="group flex flex-col">
+                        <div class="h-64 sm:h-72 lg:h-80 bg-zinc-950 border-b border-zinc-900 relative overflow-hidden flex items-center justify-center p-6 md:p-8">
+                            <!-- Grid Lines Background -->
+                            <div class="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+                            
+                            <!-- Ambient Glow -->
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-500/20 rounded-full blur-[40px] group-hover:bg-indigo-500/30 transition-colors duration-700 ease-out"></div>
+
+                            <!-- Code Block Element -->
+                            <div class="relative z-10 w-28 h-28 bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_15px_35px_rgba(0,0,0,0.6)] flex items-center justify-center transform transition-all duration-700 ease-out group-hover:-translate-y-2 group-hover:rotate-2 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_25px_50px_rgba(0,0,0,0.8)]">
+                                <div class="absolute inset-0 rounded-2xl border border-white/5 bg-gradient-to-br from-white/10 to-transparent"></div>
+                                <div class="font-mono text-2xl font-medium text-indigo-400 tracking-tighter">
+                                    &lt;/&gt;
+                                </div>
+                            </div>
+                            
+                            <!-- Decor Elements -->
+                            <svg class="absolute top-10 left-10 text-white/30 w-5 h-5 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+                            <svg class="absolute bottom-14 right-12 text-white/20 w-4 h-4 animate-[pulse_3s_infinite]" style="animation-delay: 1.5s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+                        </div>
+                        
+                        <div class="p-8 md:p-10 flex-1 bg-white flex flex-col">
+                            <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center mb-6 text-gray-900 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-medium tracking-tight text-gray-900 mb-4">Digital Engineering</h3>
+                            <p class="text-base text-gray-500 leading-relaxed">Robust, high-performance platforms built with modern edge-computing stacks to ensure flawless scalability globally.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section (Dark) -->
+        <section class="py-24 px-6 md:px-12 bg-zinc-950 text-white relative">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-12 lg:gap-24">
+                
+                <!-- Left Column -->
+                <div class="flex flex-col justify-between h-full space-y-12">
+                    <div class="text-xs font-medium text-zinc-500 uppercase tracking-widest">
+                        [ CAPABILITIES ]
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="w-48 h-48 bg-zinc-900 overflow-hidden ring-1 ring-white/10">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5180d964-2425-4134-8220-c1528af09124_3840w.jpg" alt="Service Detail" class="w-full h-full object-cover grayscale opacity-80">
+                        </div>
+                        <p class="text-xs text-zinc-400 leading-relaxed max-w-[200px]">
+                            We establish the core pillars of your positioning and design language, building a scalable framework for your future.
+                        </p>
+                        <button class="flex items-center gap-2 text-xs font-medium bg-white text-black px-4 py-2 hover:bg-zinc-200 transition-colors rounded-sm w-fit">
+                            View Case Studies <iconify-icon icon="solar:arrow-right-up-linear" class="text-base flex"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column (Service List) -->
+                <div class="flex flex-col justify-center space-y-0 pb-12 md:pb-0">
+                    <div class="group cursor-pointer flex items-end justify-between border-b border-zinc-800 pb-6 pt-6 first:pt-0">
+                        <h3 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-white group-hover:text-white transition-colors">Brand Identity</h3>
+                        <span class="text-xs font-medium text-zinc-500 mb-2 transition-opacity">[001]</span>
+                    </div>
+                    <div class="group cursor-pointer flex items-end justify-between border-b border-zinc-800 pb-6 pt-6">
+                        <h3 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-zinc-600 group-hover:text-white transition-colors">Web Development</h3>
+                        <span class="text-xs font-medium text-zinc-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">[002]</span>
+                    </div>
+                    <div class="group cursor-pointer flex items-end justify-between border-b border-zinc-800 pb-6 pt-6">
+                        <h3 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-zinc-600 group-hover:text-white transition-colors">UI/UX Design</h3>
+                        <span class="text-xs font-medium text-zinc-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">[003]</span>
+                    </div>
+                    <div class="group cursor-pointer flex items-end justify-between border-b border-zinc-800 pb-6 pt-6">
+                        <h3 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-zinc-600 group-hover:text-white transition-colors">Copywriting</h3>
+                        <span class="text-xs font-medium text-zinc-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">[004]</span>
+                    </div>
+                    <div class="group cursor-pointer flex items-end justify-between border-b border-zinc-800 pb-6 pt-6">
+                        <h3 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-zinc-600 group-hover:text-white transition-colors">Spatial Computing</h3>
+                        <span class="text-xs font-medium text-zinc-600 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">[005]</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process Grid -->
+            <div class="mt-32">
+                <div class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-12">
+                    [ METHODOLOGY ]
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border border-white/10">
+                    <div class="bg-zinc-950 p-6 h-48 flex flex-col justify-between hover:bg-zinc-900/50 transition-colors">
+                        <div class="flex justify-between items-start text-xs font-medium text-zinc-500">
+                            <span>[ 01</span>
+                            <span>+</span>
+                        </div>
+                        <h4 class="text-lg font-medium tracking-tight text-zinc-100">Research &amp;<br>Audit</h4>
+                    </div>
+                    <div class="bg-zinc-950 p-6 h-48 flex flex-col justify-between hover:bg-zinc-900/50 transition-colors">
+                        <div class="flex justify-between items-start text-xs font-medium text-zinc-500">
+                            <span>[ 02</span>
+                            <span>+</span>
+                        </div>
+                        <h4 class="text-lg font-medium tracking-tight text-zinc-100">Concept &amp;<br>Wireframes</h4>
+                    </div>
+                    <div class="bg-zinc-950 p-6 h-48 flex flex-col justify-between hover:bg-zinc-900/50 transition-colors">
+                        <div class="flex justify-between items-start text-xs font-medium text-zinc-500">
+                            <span>[ 03</span>
+                            <span>+</span>
+                        </div>
+                        <h4 class="text-lg font-medium tracking-tight text-zinc-100">Code &amp;<br>Animation</h4>
+                    </div>
+                    <div class="bg-zinc-950 p-6 h-48 flex flex-col justify-between hover:bg-zinc-900/50 transition-colors">
+                        <div class="flex justify-between items-start text-xs font-medium text-zinc-500">
+                            <span>[ 04</span>
+                            <span>+</span>
+                        </div>
+                        <h4 class="text-lg font-medium tracking-tight text-zinc-100">QA &amp;<br>Deployment</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us / Banners -->
+        <section class="md:px-12 bg-white pt-24 pr-6 pb-24 pl-6">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-12 lg:gap-24 mb-16">
+                <div class="text-xs font-medium text-gray-400 uppercase tracking-widest">
+                    [ THE ADVANTAGE ]
+                </div>
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-medium tracking-tight text-balance js-reveal-text max-w-xl text-gray-900">An independent studio for visionaries who refuse to blend in.</h2>
+                </div>
+            </div>
+
+            <!-- Bento Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                
+                <!-- Large Image Card -->
+                <div class="md:col-span-5 relative h-80 bg-white ring-1 ring-gray-200 overflow-hidden group">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/005600e5-f6ab-4e59-bc86-eaeb02797dfa_1600w.jpg" alt="Studio" class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/10"></div>
+                    <div class="absolute top-4 left-4 text-white text-xs font-medium tracking-widest">NEXUS HQ</div>
+                    <div class="absolute bottom-4 right-4 text-white text-xs font-medium">Est. 2015</div>
+                </div>
+
+                <!-- Testimonial & Graph -->
+                <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- Testimonial -->
+                    <div class="p-6 h-80 flex flex-col justify-between bg-white ring-1 ring-gray-200 shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="flex -space-x-2">
+                                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/eca707cc-a5b7-439a-b4fd-247f6106c2e1_1600w.jpg" class="w-8 h-8 rounded-full ring-2 ring-white object-cover">
+                                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/77415a2e-dcbc-4748-a29d-fced4821881a_1600w.jpg" class="w-8 h-8 rounded-full ring-2 ring-white object-cover">
+                            </div>
+                            <div class="flex text-xs text-gray-500 font-medium items-center">
+                                <iconify-icon icon="solar:star-bold" class="text-zinc-800 text-sm flex"></iconify-icon>
+                                <iconify-icon icon="solar:star-bold" class="text-zinc-800 text-sm flex"></iconify-icon>
+                                <iconify-icon icon="solar:star-bold" class="text-zinc-800 text-sm flex"></iconify-icon>
+                                <iconify-icon icon="solar:star-bold" class="text-zinc-800 text-sm flex"></iconify-icon>
+                                <iconify-icon icon="solar:star-bold" class="text-zinc-800 text-sm flex"></iconify-icon>
+                                <span class="ml-2">Loved by leaders</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed mt-4 font-normal">
+                            "Partnering with Nexus transformed our digital presence. Our conversion rate doubled in weeks, and the aesthetic finally matches our ambition. They truly understand modern commerce."
+                        </p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-rows-2 gap-4 h-80">
+                        <div class="p-6 bg-gray-50 flex flex-col justify-between ring-1 ring-gray-200 shadow-sm relative overflow-hidden">
+                            <div>
+                                <div class="text-3xl font-medium tracking-tight mb-1 text-gray-900">$50M+</div>
+                                <div class="text-xs text-gray-500 font-medium">E-commerce revenue tracked</div>
+                            </div>
+                            <div class="flex items-end gap-[2px] h-12 mt-4 opacity-40">
+                                <div class="w-full bg-zinc-800 h-[20%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[30%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[40%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[60%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[50%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[70%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[90%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[80%] rounded-t-sm"></div>
+                                <div class="w-full bg-zinc-800 h-[100%] rounded-t-sm"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-white flex flex-col justify-between ring-1 ring-gray-200 shadow-sm relative overflow-hidden">
+                            <div class="relative z-10">
+                                <div class="text-3xl font-medium tracking-tight mb-1 text-gray-900">300+</div>
+                                <div class="text-xs text-gray-500 font-medium leading-tight max-w-[150px]">From London to Tokyo, our output transcends borders.</div>
+                            </div>
+                            <iconify-icon icon="solar:earth-linear" class="absolute -bottom-6 -right-6 text-8xl text-gray-100 flex"></iconify-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-12 px-6 md:px-12 bg-white">
+            <div class="max-w-7xl mx-auto bg-zinc-950 rounded-[2.5rem] relative overflow-hidden flex flex-col items-center text-center py-24 lg:py-32 px-6 sm:px-12 shadow-2xl">
+                
+                <!-- Soft top glow -->
+                <div class="absolute -top-[200px] left-1/2 -translate-x-1/2 w-full max-w-[800px] aspect-square bg-white/20 blur-[120px] rounded-full pointer-events-none"></div>
+                
+                <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-white mb-6">
+                        Ready to elevate your digital presence?
+                    </h2>
+                    <p class="text-lg text-zinc-400 mb-10 max-w-lg">
+                        Partner with Nexus to build scalable platforms and unforgettable brand experiences.
+                    </p>
+                    <a href="#" class="inline-flex items-center justify-center bg-white text-zinc-950 px-8 py-3.5 rounded-xl font-medium text-base hover:bg-gray-100 transition-colors shadow-sm">
+                        Start a Project
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="px-6 md:px-12 pb-12 pt-6 bg-gray-50 relative overflow-hidden border-t border-gray-100">
+            <div class="max-w-7xl mx-auto bg-white rounded-[2rem] p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-sm ring-1 ring-gray-200">
+                
+                <!-- Large background text -->
+                <div class="absolute -bottom-[8%] left-1/2 -translate-x-1/2 text-[16vw] font-medium tracking-tighter text-gray-50 pointer-events-none select-none leading-none z-0 whitespace-nowrap">
+                    NEXUS
+                </div>
+
+                <div class="relative z-10 flex flex-col gap-16 md:gap-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+                        
+                        <!-- Left Column -->
+                        <div class="lg:col-span-5 flex flex-col gap-6">
+                            <div class="text-xl font-medium tracking-tight text-gray-900 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-900"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                                Nexus Studio
+                            </div>
+                            <p class="text-base text-gray-500 leading-relaxed max-w-sm">
+                                Nexus empowers visionary brands to transform complex challenges into clear, compelling digital experiences.
+                            </p>
+                            <div class="flex items-center gap-5 text-gray-900 mt-2">
+                                <a href="#" class="hover:text-gray-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                                </a>
+                                <a href="#" class="hover:text-gray-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                                </a>
+                                <a href="#" class="hover:text-gray-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                                </a>
+                                <a href="#" class="hover:text-gray-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Right Columns -->
+                        <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+                            <div class="flex flex-col gap-4 text-base">
+                                <h4 class="font-medium text-gray-900 mb-2">Services</h4>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Brand Identity</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Web Design</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Development</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Strategy</a>
+                            </div>
+                            <div class="flex flex-col gap-4 text-base">
+                                <h4 class="font-medium text-gray-900 mb-2">Agency</h4>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">About</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Careers</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Journal</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
+                            </div>
+                            <div class="flex flex-col gap-4 text-base">
+                                <h4 class="font-medium text-gray-900 mb-2">Social</h4>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Twitter</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">LinkedIn</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Instagram</a>
+                                <a href="#" class="text-gray-500 hover:text-gray-900 transition-colors">Dribbble</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Row -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-gray-100 text-sm text-gray-500 font-medium">
+                        <div>
+                            © 2024 Nexus Studio. All rights reserved.
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <a href="#" class="hover:text-gray-900 transition-colors">Privacy Policy</a>
+                            <a href="#" class="hover:text-gray-900 transition-colors">Terms of Service</a>
+                            <a href="#" class="hover:text-gray-900 transition-colors">Cookies Settings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        function setupTextReveal() {
+            const textElements = document.querySelectorAll('.js-reveal-text');
+            
+            textElements.forEach(el => {
+                const text = el.innerText;
+                const words = text.split(' ');
+                el.innerHTML = ''; 
+                
+                words.forEach((word, i) => {
+                    const wordDiv = document.createElement('div');
+                    wordDiv.style.cssText = "display: inline-block; overflow: hidden; vertical-align: top;";
+                    
+                    wordDiv.innerHTML = `<span style="display: inline-block; transform: translateY(100%);">${word}</span>`;
+                    el.appendChild(wordDiv);
+                    
+                    // Add real space to allow native text wrapping
+                    if (i < words.length - 1) {
+                        el.appendChild(document.createTextNode(' '));
+                    }
+                });
+
+                gsap.to(el.querySelectorAll('span'), {
+                    y: '0%',
+                    ease: 'power3.out',
+                    duration: 0.8,
+                    stagger: 0.02,
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 85%',
+                    }
+                });
+            });
+        }
+
+        function initWebGL() {
+            const container = document.getElementById('canvas-container');
+            if(!container) return;
+            const scene = new THREE.Scene();
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 50;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 800;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 150;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.18,
+                color: '#52525b', 
+                transparent: true,
+                opacity: 0.4
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, material);
+            scene.add(particlesMesh);
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            });
+
+            const clock = new THREE.Clock();
+
+            const tick = () => {
+                const elapsedTime = clock.getElapsedTime();
+
+                particlesMesh.rotation.y = elapsedTime * 0.05;
+                particlesMesh.rotation.x = elapsedTime * 0.02;
+
+                targetX = mouseX * 0.001;
+                targetY = mouseY * 0.001;
+                
+                particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+                particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+                renderer.render(scene, camera);
+                window.requestAnimationFrame(tick);
+            };
+
+            tick();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupTextReveal();
+            if(window.innerWidth > 768) {
+                initWebGL();
+            }
+        });
+    </script>
+</body>
+</html>

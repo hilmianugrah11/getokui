@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased selection:bg-[var(--accent)]/30 selection:text-[var(--fg)]"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATLAS / Spatial Computation</title>
+<!-- External Dependencies -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&family=Sarpanch:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg: #030303;
+--fg: #fafafa;
+--muted: #a3a3a3;
+--border: #1e1e1e;
+--accent: #3b82f6; /* Electric Blue Base */
+--panel: rgba(20, 20, 20, 0.4);
+}
+body {
+font-family: "Sarpanch", ui-sans-serif, system-ui, -apple-system, sans-serif;
+background-color: var(--bg);
+color: var(--fg);
+overflow-x: hidden;
+margin: 0;
+padding: 0;
+overscroll-behavior: none;
+line-height: 1.6;
+transition: background-color 0.8s ease, color 0.8s ease;
+}
+/* Hero ONLY Font */
+.font-display {
+font-family: "Orbitron", sans-serif;
+letter-spacing: -0.02em;
+}
+/* Core Resets */
+::-webkit-scrollbar { display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+/* Typography Mask Reveal Utility */
+.line-wrapper {
+display: block;
+overflow: hidden;
+line-height: 1.06;
+height: 1.32em;
+clip-path: inset(0 0 0 0);
+padding: 0;
+margin: 0;
+}
+.line-content {
+display: block;
+will-change: transform;
+}
+.will-change-transform {
+will-change: transform, opacity, filter;
+}
+.bg-noise {
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+opacity: 0.015;
+pointer-events: none;
+}
+/* Nav active state */
+.nav-link.is-active {
+color: var(--accent);
+}
+.nav-link::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 1px;
+background-color: var(--accent);
+transform: scaleX(0);
+transition: transform 0.3s ease;
+transform-origin: right;
+}
+.nav-link:hover::after,
+.nav-link.is-active::after {
+transform: scaleX(1);
+transform-origin: left;
+}
+/*
+* ==========================================
+* CLEARER GLASS SLAB
+* ==========================================
+*/
+.section-slab {
+max-width: 1320px;
+margin: 0 auto;
+position: relative;
+}
+.section-slab::before {
+content: "";
+position: absolute;
+inset: -18px;
+background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.00) 46%), rgba(8, 10, 14, 0.16);
+border: 1px solid rgba(255, 255, 255, 0.08);
+backdrop-filter: blur(14px);
+-webkit-backdrop-filter: blur(14px);
+box-shadow: 0 18px 70px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+border-radius: 10px;
+pointer-events: none;
+z-index: 0;
+transition: background 0.8s ease;
+}
+.section-slab::after {
+content: "";
+position: absolute;
+inset: -18px;
+background: radial-gradient(900px 320px at 50% 0%, rgba(59, 130, 246, 0.08) 0%, rgba(0, 0, 0, 0.00) 62%), linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.12) 100%);
+opacity: 0.16;
+border-radius: 10px;
+pointer-events: none;
+z-index: 0;
+}
+@media (max-width: 768px) {
+.section-slab::before, .section-slab::after {
+inset: 0;
+}
+}
+.section-inner {
+position: relative;
+z-index: 1;
+padding: 88px 28px;
+}
+@media (min-width: 768px) {
+.section-inner {
+padding: 120px 52px;
+}
+}
+/*
+* ==========================================
+* PHASE 2 GRID & SCANLINE
+* ==========================================
+*/
+#phase-2-grid {
+opacity: 0.035;
+background:
+repeating-linear-gradient(
+to right,
+rgba(255,255,255,0.18) 0px,
+rgba(255,255,255,0.18) 1px,
+rgba(255,255,255,0.00) 1px,
+rgba(255,255,255,0.00) calc(100%/12)
+),
+repeating-linear-gradient(
+to bottom,
+rgba(255,255,255,0.10) 0px,
+rgba(255,255,255,0.10) 1px,
+rgba(255,255,255,0.00) 1px,
+rgba(255,255,255,0.00) 56px
+);
+mix-blend-mode: screen;
+}
+#phase-2-scanline {
+top: -10%;
+background: rgba(59,130,246,0.55);
+opacity: 0.0;
+filter: blur(0.2px);
+}
+</style>
+<style>
+/* 3D Transform utilities */
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="m-0 p-0 overflow-x-hidden">
+
+    <!-- Global Header / Nav -->
+    <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-[var(--bg)]/60 border-b border-[var(--border)] transition-colors duration-700 pointer-events-none">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+            <div class="flex-1 pointer-events-auto">
+                <div class="font-display text-lg tracking-tight text-[var(--fg)] cursor-pointer inline-block" onclick="lenis.scrollTo('#pinned-stage')">
+                    ATLAS
+                </div>
+            </div>
+            <div class="flex-none hidden lg:flex gap-8 items-center pointer-events-auto">
+                <a href="#manifesto" class="nav-link text-xs uppercase tracking-widest text-[var(--muted)] hover:text-[var(--accent)] transition-colors relative pb-1">Thesis</a>
+                <a href="#overview" class="nav-link text-xs uppercase tracking-widest text-[var(--muted)] hover:text-[var(--accent)] transition-colors relative pb-1">Overview</a>
+                <a href="#interface" class="nav-link text-xs uppercase tracking-widest text-[var(--muted)] hover:text-[var(--accent)] transition-colors relative pb-1">Engine</a>
+                <a href="#modules" class="nav-link text-xs uppercase tracking-widest text-[var(--muted)] hover:text-[var(--accent)] transition-colors relative pb-1">Modules</a>
+                <a href="#pricing" class="nav-link text-xs uppercase tracking-widest text-[var(--muted)] hover:text-[var(--accent)] transition-colors relative pb-1">Access</a>
+            </div>
+            <div class="flex-1 flex justify-end items-center gap-6 pointer-events-auto">
+                <div class="hidden xl:flex flex-col items-end text-[10px] tracking-widest uppercase text-[var(--muted)]">
+                    <span class="text-[var(--accent)] flex items-center gap-2">
+                        <span class="w-1 h-1 bg-[var(--accent)] block rounded-none animate-pulse"></span>
+                        System.Online
+                    </span>
+                    <span>Latency: 12ms</span>
+                </div>
+                <button class="text-xs uppercase tracking-widest border border-[var(--border)] bg-transparent px-6 py-2.5 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors font-medium rounded-none focus:outline-none text-[var(--fg)]" onclick="lenis.scrollTo('#access')">
+                    Request Key
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- LAYER 1: WebGL Canvas Background -->
+    <div id="webgl-container" class="fixed inset-0 z-0 pointer-events-none w-full h-full">
+        <div class="absolute inset-0 bg-noise z-10"></div>
+    </div>
+
+    <!-- LAYER 2: DOM Content -->
+    <main id="app-wrapper" class="relative z-10 w-full pb-24">
+        
+        <!-- SECTION 1: THE PINNED STAGE -->
+        <section id="pinned-stage" class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
+            
+            <div class="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-6 md:px-12 md:py-8 mt-16">
+                <div class="flex justify-between items-center opacity-0 translate-y-[-10px]" id="ui-top">
+                    <div class="text-[10px] font-medium tracking-widest uppercase flex items-center gap-3">
+                        <span class="text-[var(--muted)]">SYS.01</span>
+                    </div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium">
+                        Index / 00
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-end opacity-0 translate-y-[10px]" id="ui-bottom">
+                    <div class="flex flex-col gap-1 text-[10px] text-[var(--muted)] font-medium tracking-widest uppercase">
+                        <span>Status: Nominal</span>
+                        <span>Render: Native</span>
+                    </div>
+                    <div class="flex flex-col items-end gap-3 text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium">
+                        <span>Depth Mapping</span>
+                        <div class="w-[1px] h-12 bg-[var(--border)] relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-full bg-[var(--accent)] transform origin-top scale-y-0 will-change-transform" id="scroll-progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE 0: Intentional Idle HUD -->
+            <div id="idle-overlay" class="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
+                <div class="text-center">
+                    <div class="text-[10px] uppercase tracking-[0.3em] text-[var(--muted)] mb-3">ATLAS / IDLE</div>
+                    <div class="text-sm md:text-base text-[var(--fg)]/80 tracking-tight">Signal / Structure / Output</div>
+                    <div class="mt-6 text-[10px] uppercase tracking-[0.35em] text-[var(--accent)] animate-pulse">Scroll to initiate</div>
+                </div>
+            </div>
+
+            <div class="flex w-full z-20 px-6 absolute inset-0 items-center justify-center perspective-[1000px]">
+                
+                <!-- Phase 1: Arrival -->
+                <div id="phase-1-content" class="absolute flex flex-col items-center justify-center text-center w-full pointer-events-auto px-4">
+                    <div class="w-full max-w-[980px] mx-auto flex flex-col items-center">
+                        <h2 class="text-3xl md:text-5xl lg:text-7xl tracking-tight font-medium flex flex-col items-center mb-6 drop-shadow-2xl">
+                            <span class="line-wrapper">
+                                <span class="line-content whitespace-nowrap text-[var(--fg)] font-display">
+                                    Neural Architecture.
+                                </span>
+                            </span>
+                            <span class="line-wrapper">
+                                <span class="line-content whitespace-nowrap text-[var(--muted)] font-display">
+                                    Silent Execution.
+                                </span>
+                            </span>
+                        </h2>
+                        <p class="text-sm md:text-base text-[var(--muted)] mt-2 font-normal max-w-lg opacity-0 translate-y-4" id="hero-descriptor">
+                            Spatial intelligence for interface design.
+                        </p>
+                        <div class="flex gap-4 mt-10 opacity-0 translate-y-4" id="hero-ctas">
+                            <button class="px-8 py-4 text-xs tracking-widest uppercase font-medium bg-[var(--accent)] text-black hover:bg-white transition-colors duration-300 rounded-none focus:outline-none" onclick="lenis.scrollTo('#access')">
+                                Request Access
+                            </button>
+                            <button class="px-8 py-4 text-xs tracking-widest uppercase font-medium border border-[var(--border)] bg-black/50 backdrop-blur-md text-[var(--fg)] hover:bg-[var(--fg)] hover:text-black transition-colors duration-300 rounded-none focus:outline-none hidden sm:block" onclick="lenis.scrollTo('#overview')">
+                                View System
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2: Forward Push (Now With Grid & Scanline) -->
+                <div id="phase-2-content" class="absolute inset-0 w-full flex flex-col items-center justify-center text-center opacity-0 pointer-events-none blur-[6px] scale-[0.98] px-4 overflow-hidden">
+                    <div id="phase-2-grid" class="absolute inset-0 pointer-events-none"></div>
+                    <div id="phase-2-scanline" class="absolute left-0 right-0 h-px pointer-events-none"></div>
+                    <div class="w-full max-w-[980px] mx-auto flex flex-col items-center py-12 md:py-16 relative z-10">
+                        <h3 class="text-2xl md:text-4xl tracking-tight font-normal leading-relaxed text-[var(--fg)] drop-shadow-2xl">
+                            Structure precedes style.
+                            <br>
+                            <span class="text-[var(--muted)]">Systems precede screens.</span>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- UPGRADED Phase 3: Content Emergence with Context -->
+                <div id="phase-3-content" class="absolute w-full flex flex-col items-center justify-center opacity-0 pointer-events-none px-4">
+                    
+                    <!-- New Phase 3 Context Block -->
+                    <div id="phase-3-intro" class="w-full max-w-[980px] mx-auto text-center mb-6 px-6 opacity-0 translate-y-[20px]">
+                        <div class="text-[10px] text-[var(--muted)] font-medium tracking-widest mb-3 uppercase">SYS.02 / CAPABILITIES</div>
+                        <h3 class="text-2xl md:text-3xl tracking-tight text-[var(--fg)] font-medium mb-2">The system measures space before it draws.</h3>
+                        <p class="text-sm md:text-base text-[var(--muted)] font-normal max-w-xl mx-auto">Atlas establishes constraint geometry—then allows style to emerge safely.</p>
+                    </div>
+
+                    <!-- Grid Cards -->
+                    <div class="w-full max-w-[980px] mx-auto flex flex-col md:flex-row gap-6 p-6">
+                        <div class="feature-card w-full md:w-1/3 aspect-[3/4] bg-[rgba(15,15,15,0.4)] backdrop-blur-xl border border-[var(--border)] flex flex-col rounded-none group relative overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-[var(--muted)]">
+                            <div class="aspect-video w-full border-b border-[var(--border)] bg-[var(--panel)] flex flex-col relative z-20 group-hover:bg-[rgba(25,25,25,0.5)] transition-colors duration-500">
+                                <div class="h-5 border-b border-[var(--border)] flex items-center px-2 gap-1.5 bg-black/40">
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                </div>
+                                <div class="flex-1 flex p-2.5 gap-2.5 w-full h-full">
+                                    <div class="w-1/4 h-full border border-[var(--border)]/50 border-dashed p-1 flex flex-col gap-1.5">
+                                        <div class="w-full h-1 bg-[var(--border)]/30"></div>
+                                        <div class="w-2/3 h-1 bg-[var(--border)]/30"></div>
+                                        <div class="w-5/6 h-1 bg-[var(--border)]/30"></div>
+                                    </div>
+                                    <div class="flex-1 h-full flex flex-col gap-2.5">
+                                        <div class="w-full h-1/3 border border-[var(--accent)]/30 bg-[var(--accent)]/10"></div>
+                                        <div class="w-full flex-1 flex gap-2.5">
+                                            <div class="flex-1 h-full bg-[var(--border)]/10 border border-[var(--border)]/30"></div>
+                                            <div class="flex-1 h-full bg-[var(--border)]/10 border border-[var(--border)]/30 relative">
+                                                <div class="absolute bottom-1 right-1 w-1.5 h-1.5 bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col justify-end z-20">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="text-[10px] tracking-widest text-[var(--muted)] uppercase font-medium">01</span>
+                                    <iconify-icon icon="solar:scanner-linear" width="20" class="text-[var(--accent)]" stroke-width="1.5"></iconify-icon>
+                                </div>
+                                <h4 class="text-lg tracking-tight font-medium text-[var(--fg)] mb-2 group-hover:text-white transition-colors">Spatial Mapping</h4>
+                                <p class="text-[11px] text-[var(--muted)] leading-relaxed font-normal">Define boundaries, density, and grid intent before decoration.</p>
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-full h-[1px] bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                        </div>
+
+                        <div class="feature-card w-full md:w-1/3 aspect-[3/4] bg-[rgba(15,15,15,0.4)] backdrop-blur-xl border border-[var(--border)] flex flex-col rounded-none group relative overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-[var(--muted)]">
+                            <div class="aspect-video w-full border-b border-[var(--border)] bg-[var(--panel)] flex flex-col relative z-20 group-hover:bg-[rgba(25,25,25,0.5)] transition-colors duration-500">
+                                <div class="h-5 border-b border-[var(--border)] flex items-center px-2 gap-1.5 bg-black/40">
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                </div>
+                                <div class="flex-1 flex items-center justify-center p-4 relative">
+                                    <div class="absolute w-3/5 h-2/5 bg-[var(--border)]/10 border border-[var(--border)]/50 -translate-x-2 -translate-y-2"></div>
+                                    <div class="absolute w-3/5 h-2/5 bg-[var(--border)]/20 border border-[var(--border)]/50"></div>
+                                    <div class="absolute w-3/5 h-2/5 bg-[var(--accent)]/10 border border-[var(--accent)]/50 translate-x-2 translate-y-2 shadow-2xl backdrop-blur-sm"></div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col justify-end z-20">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="text-[10px] tracking-widest text-[var(--muted)] uppercase font-medium">02</span>
+                                    <iconify-icon icon="solar:sort-from-bottom-to-top-linear" width="20" class="text-[var(--accent)]" stroke-width="1.5"></iconify-icon>
+                                </div>
+                                <h4 class="text-lg tracking-tight font-medium text-[var(--fg)] mb-2 group-hover:text-white transition-colors">Depth Control</h4>
+                                <p class="text-[11px] text-[var(--muted)] leading-relaxed font-normal">Enforce hierarchy through Z-logic and relational layer weight.</p>
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-full h-[1px] bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                        </div>
+
+                        <div class="feature-card w-full md:w-1/3 aspect-[3/4] bg-[rgba(15,15,15,0.4)] backdrop-blur-xl border border-[var(--border)] flex flex-col rounded-none group relative overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-[var(--muted)]">
+                            <div class="aspect-video w-full border-b border-[var(--border)] bg-[var(--panel)] flex flex-col relative z-20 group-hover:bg-[rgba(25,25,25,0.5)] transition-colors duration-500">
+                                <div class="h-5 border-b border-[var(--border)] flex items-center px-2 gap-1.5 bg-black/40">
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                    <div class="w-1 h-1 bg-[var(--border)]"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col items-center justify-center p-3 gap-3">
+                                    <div class="w-full flex justify-between px-2">
+                                        <div class="text-[8px] text-[var(--muted)]">00:00</div>
+                                        <div class="text-[8px] text-[var(--accent)]">01:42</div>
+                                        <div class="text-[8px] text-[var(--muted)]">03:00</div>
+                                    </div>
+                                    <div class="w-full h-1 bg-[var(--border)]/30 relative flex items-center">
+                                        <div class="absolute left-0 h-full w-1/2 bg-[var(--accent)]/50"></div>
+                                        <div class="absolute left-1/2 w-1.5 h-3 bg-[var(--accent)] -translate-x-1/2"></div>
+                                    </div>
+                                    <div class="w-full flex gap-1 mt-1">
+                                        <div class="h-2 flex-1 bg-[var(--border)]/20"></div>
+                                        <div class="h-2 flex-1 bg-[var(--accent)]/20"></div>
+                                        <div class="h-2 flex-1 bg-[var(--border)]/20"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col justify-end z-20">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="text-[10px] tracking-widest text-[var(--muted)] uppercase font-medium">03</span>
+                                    <iconify-icon icon="solar:history-linear" width="20" class="text-[var(--accent)]" stroke-width="1.5"></iconify-icon>
+                                </div>
+                                <h4 class="text-lg tracking-tight font-medium text-[var(--fg)] mb-2 group-hover:text-white transition-colors">Temporal Sync</h4>
+                                <p class="text-[11px] text-[var(--muted)] leading-relaxed font-normal">Scrub functional states and sequence like a controlled timeline.</p>
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-full h-[1px] bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UPGRADED Phase 4: Bridge Moment -->
+                <div id="bridge-content" class="absolute flex flex-col items-center justify-center text-center w-full opacity-0 pointer-events-none blur-[10px] translate-y-[20px] px-4">
+                    <div class="w-full max-w-[980px] mx-auto flex flex-col items-center py-12 md:py-16">
+                        <div class="bridge-stagger text-[10px] text-[var(--accent)] font-medium tracking-widest mb-6 uppercase flex items-center gap-3 drop-shadow-xl opacity-0 translate-y-[12px]">
+                            <div class="w-1.5 h-1.5 bg-[var(--accent)] rounded-none"></div>
+                            [ SYSTEM_LINK_ESTABLISHED ]
+                        </div>
+                        <h2 class="bridge-stagger text-4xl md:text-5xl lg:text-6xl tracking-tight text-[var(--fg)] font-medium drop-shadow-2xl mb-4 opacity-0 translate-y-[12px]">
+                            Design is not a surface.
+                        </h2>
+                        <p class="bridge-stagger text-sm md:text-base text-[var(--muted)] font-normal max-w-[680px] mx-auto mb-2 opacity-0 translate-y-[12px]">
+                            It’s constraints, relationships, and rules that survive every viewport.
+                        </p>
+                        <p class="bridge-stagger text-sm md:text-base text-[var(--fg)] font-medium max-w-[680px] mx-auto opacity-0 translate-y-[12px]">
+                            Atlas builds the system—<span class="text-[var(--accent)]">so the interface becomes inevitable.</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SEC: Manifesto -->
+        <section id="manifesto" class="relative pt-32 pb-16 px-4 md:px-8 z-10 w-full">
+            <div class="section-slab">
+                <div class="section-inner flex flex-col items-center text-center max-w-3xl mx-auto">
+                    <div class="text-[10px] text-[var(--accent)] font-medium tracking-widest mb-8 uppercase flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 bg-[var(--accent)] animate-pulse"></div>
+                        [ INITIATING_CONTACT ]
+                    </div>
+                    <h2 class="text-2xl md:text-4xl font-medium tracking-tight text-[var(--fg)] mb-6 reveal-item">
+                        Interface is spatial logic.
+                    </h2>
+                    <p class="text-sm md:text-lg text-[var(--muted)] leading-relaxed font-normal reveal-item">
+                        Atlas converts intent into constraints—grid, hierarchy, rhythm, and tokens—so visual style becomes an inevitable consequence of structure, not a guess.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC: Overview -->
+        <section id="overview" class="relative py-16 px-4 md:px-8 z-10 w-full reveal-block">
+            <div class="section-slab">
+                <div class="section-inner max-w-4xl mx-auto text-center flex flex-col items-center">
+                    <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-[var(--fg)] mb-8 flex flex-col items-center">
+                        <span class="overflow-hidden pb-2 block">
+                            <span class="block reveal-text">Spatial Intelligence</span>
+                        </span>
+                        <span class="overflow-hidden pb-2 block text-[var(--muted)]">
+                            <span class="block reveal-text">for Interface Design.</span>
+                        </span>
+                    </h2>
+                    
+                    <p class="text-sm text-[var(--muted)] mb-10 max-w-2xl leading-relaxed reveal-item">
+                        Atlas interprets intent as layout constraints. It resolves hierarchy, spacing, and component rhythm before applying any visual treatment. The output isn’t a mockup—it’s a robust system you can ship to production.
+                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-center items-center text-xs text-[var(--muted)] mb-12 font-mono uppercase tracking-widest reveal-item">
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]"></iconify-icon>
+                            Constraint-first layout
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]"></iconify-icon>
+                            Token-accurate outputs
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]"></iconify-icon>
+                            Exportable structures
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full reveal-item">
+                        <button class="w-full sm:w-auto px-8 py-4 text-xs tracking-widest uppercase font-medium bg-[var(--accent)] text-black hover:bg-white transition-colors duration-300 focus:outline-none" onclick="lenis.scrollTo('#access')">
+                            Request Key
+                        </button>
+                        <button class="w-full sm:w-auto px-8 py-4 text-xs tracking-widest uppercase font-medium border border-[var(--border)] text-[var(--fg)] hover:bg-[var(--fg)] hover:text-black transition-colors duration-300 focus:outline-none" onclick="lenis.scrollTo('#interface')">
+                            View Pipeline
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC: Interface -->
+        <section id="interface" class="relative py-16 px-4 md:px-8 z-10 w-full reveal-block">
+            <div class="section-slab">
+                <div class="section-inner max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                    
+                    <div class="reveal-item">
+                        <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-8 bg-[var(--bg)] p-3 border border-[var(--border)] w-max">
+                            <span class="text-[var(--accent)]">Prompt</span>
+                            <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                            <span>Constraints</span>
+                            <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                            <span>Components</span>
+                            <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                            <span class="text-[var(--fg)]">Code</span>
+                        </div>
+
+                        <h2 class="text-3xl md:text-4xl font-medium tracking-tight text-[var(--fg)] mb-6 flex flex-col">
+                            <span class="overflow-hidden pb-1 block">
+                                <span class="block reveal-text">Command the Canvas.</span>
+                            </span>
+                        </h2>
+                        <p class="text-sm text-[var(--muted)] mb-10 leading-relaxed font-normal reveal-item">
+                            Write explicit intent. Atlas returns absolute structure: relational grid math, modular type scales, spatial rhythms, and locked token maps—aligned precisely to production environments.
+                        </p>
+                        <ul class="space-y-6 text-xs text-[var(--fg)] font-normal reveal-item">
+                            <li class="flex items-start gap-4">
+                                <iconify-icon icon="solar:alt-arrow-right-linear" width="16" class="text-[var(--accent)] mt-0.5"></iconify-icon>
+                                <span class="leading-relaxed">Translate human language into layout mathematics with hierarchy preserved.</span>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <iconify-icon icon="solar:alt-arrow-right-linear" width="16" class="text-[var(--accent)] mt-0.5"></iconify-icon>
+                                <span class="leading-relaxed">Component variants mathematically generated from core grid constraints.</span>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <iconify-icon icon="solar:alt-arrow-right-linear" width="16" class="text-[var(--accent)] mt-0.5"></iconify-icon>
+                                <span class="leading-relaxed">Export immediately to semantic HTML/CSS or structured React component maps.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="aspect-square md:aspect-[4/3] w-full bg-[var(--bg)] flex flex-col border border-[var(--border)] overflow-hidden relative shadow-2xl rounded-none reveal-item">
+                        <div class="h-8 border-b border-[var(--border)] flex items-center justify-between px-4 bg-[var(--panel)]">
+                            <div class="flex gap-2">
+                                <div class="w-2 h-2 bg-[var(--border)] rounded-none"></div>
+                                <div class="w-2 h-2 bg-[var(--border)] rounded-none"></div>
+                                <div class="w-2 h-2 bg-[var(--border)] rounded-none"></div>
+                            </div>
+                            <div class="text-[10px] text-[var(--muted)] font-mono uppercase tracking-widest">Workspace / Alpha</div>
+                        </div>
+                        <div class="flex-1 p-4 md:p-6 flex gap-4 md:gap-6 bg-[var(--bg)]">
+                            <div class="w-1/3 h-full border border-[var(--border)] border-dashed p-3 md:p-4 hidden sm:flex flex-col gap-3">
+                                <div class="text-[10px] text-[var(--muted)] font-mono uppercase mb-2 border-b border-[var(--border)] pb-2">DOM Tree</div>
+                                <div class="w-full h-2 bg-[var(--panel)]"></div>
+                                <div class="w-2/3 h-2 bg-[var(--panel)]"></div>
+                                <div class="w-4/5 h-2 bg-[var(--panel)] pl-4 border-l border-[var(--accent)]"></div>
+                                <div class="w-1/2 h-2 bg-[var(--panel)]"></div>
+                            </div>
+                            <div class="flex-1 h-full flex flex-col gap-4 md:gap-6">
+                                <div class="w-full h-1/3 border border-[var(--accent)]/50 bg-[var(--accent)]/5 p-4 flex flex-col justify-end relative group cursor-crosshair transition-colors hover:bg-[var(--accent)]/10 rounded-none">
+                                   <div class="absolute top-2 right-2 text-[10px] text-[var(--accent)] font-mono uppercase">Node: Hero</div>
+                                   <div class="w-1/3 h-4 bg-[var(--accent)] opacity-40 mb-3 rounded-none"></div>
+                                   <div class="w-full h-2 bg-[var(--panel)] border border-[var(--border)] mb-1.5 rounded-none"></div>
+                                   <div class="w-5/6 h-2 bg-[var(--panel)] border border-[var(--border)] rounded-none"></div>
+                                </div>
+                                <div class="w-full flex-1 flex flex-col sm:flex-row gap-4 md:gap-6">
+                                    <div class="flex-1 border border-[var(--border)] bg-[var(--panel)] p-3 relative hover:border-[var(--muted)] transition-colors rounded-none">
+                                        <div class="absolute top-2 right-2 text-[10px] text-[var(--muted)] font-mono uppercase">Col.1</div>
+                                    </div>
+                                    <div class="flex-1 border border-[var(--border)] bg-[var(--panel)] p-3 relative hover:border-[var(--muted)] transition-colors rounded-none">
+                                        <div class="absolute top-2 right-2 text-[10px] text-[var(--muted)] font-mono uppercase">Col.2</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UPGRADED SEC: Modules -->
+        <section id="modules" class="relative py-16 px-4 md:px-8 z-10 w-full reveal-block">
+            <div class="section-slab">
+                <div class="section-inner max-w-7xl mx-auto">
+                    
+                    <div class="mb-12 text-center reveal-item">
+                        <div class="text-[10px] text-[var(--muted)] font-medium tracking-widest mb-4 uppercase">SYS.03 / ARCHITECTURE</div>
+                        <h2 class="text-3xl font-medium tracking-tight text-[var(--fg)] mb-4">System Architecture</h2>
+                        <p class="text-sm text-[var(--muted)] max-w-2xl mx-auto leading-relaxed">
+                            Atlas is a pipeline: intent → constraints → tokens → export. Each module is isolated, testable, and composable.
+                        </p>
+                    </div>
+
+                    <!-- Mini Pipeline Row -->
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-16 text-[10px] md:text-xs uppercase tracking-widest text-[var(--muted)] font-medium reveal-item">
+                        <span class="text-[var(--fg)]">Prompt Engine</span>
+                        <iconify-icon icon="solar:arrow-right-linear" class="hidden md:block text-[var(--accent)]" width="16"></iconify-icon>
+                        <iconify-icon icon="solar:arrow-down-linear" class="md:hidden text-[var(--accent)]" width="16"></iconify-icon>
+                        <span class="text-[var(--fg)]">Layout Matrix</span>
+                        <iconify-icon icon="solar:arrow-right-linear" class="hidden md:block text-[var(--accent)]" width="16"></iconify-icon>
+                        <iconify-icon icon="solar:arrow-down-linear" class="md:hidden text-[var(--accent)]" width="16"></iconify-icon>
+                        <span class="text-[var(--fg)]">Token Resolver</span>
+                        <iconify-icon icon="solar:arrow-right-linear" class="hidden md:block text-[var(--accent)]" width="16"></iconify-icon>
+                        <iconify-icon icon="solar:arrow-down-linear" class="md:hidden text-[var(--accent)]" width="16"></iconify-icon>
+                        <span class="text-[var(--accent)]">Export Layer</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 reveal-item">
+                        <div class="border border-[var(--border)] bg-[var(--panel)] backdrop-blur-md p-6 flex flex-col hover:border-[var(--accent)] transition-colors duration-500 rounded-none group relative overflow-hidden">
+                            <iconify-icon icon="solar:terminal-outline" width="24" class="text-[var(--accent)] mb-6"></iconify-icon>
+                            <h3 class="text-base text-[var(--fg)] font-medium mb-2 group-hover:text-white transition-colors">Prompt Engine</h3>
+                            <p class="text-xs text-[var(--muted)] leading-relaxed flex-1 mb-2">Translates semantic instructions into spatial math.</p>
+                            <p class="text-[10px] text-[var(--muted)] opacity-60 flex-1 leading-relaxed">Analyzes intent to establish strict baseline grid variables.</p>
+                            <div class="mt-8 pt-4 border-t border-[var(--border)] text-[10px] uppercase tracking-widest text-[var(--muted)] flex justify-between">
+                                <span>Status</span>
+                                <span class="text-[var(--accent)]">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="border border-[var(--border)] bg-[var(--panel)] backdrop-blur-md p-6 flex flex-col hover:border-[var(--accent)] transition-colors duration-500 rounded-none group relative overflow-hidden">
+                            <iconify-icon icon="solar:black-hole-linear" width="24" class="text-[var(--accent)] mb-6"></iconify-icon>
+                            <h3 class="text-base text-[var(--fg)] font-medium mb-2 group-hover:text-white transition-colors">Layout Matrix</h3>
+                            <p class="text-xs text-[var(--muted)] leading-relaxed flex-1 mb-2">Enforces relational proportions across all viewports.</p>
+                            <p class="text-[10px] text-[var(--muted)] opacity-60 flex-1 leading-relaxed">Computes dynamic constraints to guarantee zero DOM reflow.</p>
+                            <div class="mt-8 pt-4 border-t border-[var(--border)] text-[10px] uppercase tracking-widest text-[var(--muted)] flex justify-between">
+                                <span>Constraints</span>
+                                <span class="text-[var(--accent)]">Locked</span>
+                            </div>
+                        </div>
+
+                        <div class="border border-[var(--border)] bg-[var(--panel)] backdrop-blur-md p-6 flex flex-col hover:border-[var(--accent)] transition-colors duration-500 rounded-none group relative overflow-hidden">
+                            <iconify-icon icon="solar:layers-linear" width="24" class="text-[var(--accent)] mb-6"></iconify-icon>
+                            <h3 class="text-base text-[var(--fg)] font-medium mb-2 group-hover:text-white transition-colors">Token Resolver</h3>
+                            <p class="text-xs text-[var(--muted)] leading-relaxed flex-1 mb-2">Compiles color, type, and space into actionable primitives.</p>
+                            <p class="text-[10px] text-[var(--muted)] opacity-60 flex-1 leading-relaxed">Maps design tokens directly to mathematical values.</p>
+                            <div class="mt-8 pt-4 border-t border-[var(--border)] text-[10px] uppercase tracking-widest text-[var(--muted)] flex justify-between">
+                                <span>Variables</span>
+                                <span class="text-[var(--accent)]">Synced</span>
+                            </div>
+                        </div>
+
+                        <div class="border border-[var(--border)] bg-[var(--panel)] backdrop-blur-md p-6 flex flex-col hover:border-[var(--accent)] transition-colors duration-500 rounded-none group relative overflow-hidden">
+                            <iconify-icon icon="solar:box-linear" width="24" class="text-[var(--accent)] mb-6"></iconify-icon>
+                            <h3 class="text-base text-[var(--fg)] font-medium mb-2 group-hover:text-white transition-colors">Export Layer</h3>
+                            <p class="text-xs text-[var(--muted)] leading-relaxed flex-1 mb-2">Packages abstract structure into production-ready syntax.</p>
+                            <p class="text-[10px] text-[var(--muted)] opacity-60 flex-1 leading-relaxed">Generates component maps instantly for modern stacks.</p>
+                            <div class="mt-8 pt-4 border-t border-[var(--border)] text-[10px] uppercase tracking-widest text-[var(--muted)] flex justify-between">
+                                <span>Output</span>
+                                <span class="text-[var(--accent)]">Ready</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Guarantees -->
+                    <div class="pt-8 border-t border-[var(--border)] flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 text-[10px] text-[var(--muted)] uppercase tracking-widest reveal-item font-medium">
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="solar:verified-check-linear" class="text-[var(--accent)]" width="16"></iconify-icon>
+                            Viewport-Safe Hierarchy
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="solar:verified-check-linear" class="text-[var(--accent)]" width="16"></iconify-icon>
+                            Token Parity
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="solar:verified-check-linear" class="text-[var(--accent)]" width="16"></iconify-icon>
+                            Deterministic Output
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC: Pricing -->
+        <section id="pricing" class="relative py-16 px-4 md:px-8 z-10 w-full reveal-block">
+            <div class="section-slab">
+                <div class="section-inner max-w-6xl mx-auto">
+                    
+                    <div class="mb-12 text-center reveal-item">
+                        <h2 class="text-3xl font-medium tracking-tight text-[var(--fg)] mb-4">Access Credentials</h2>
+                        <p class="text-sm text-[var(--muted)]">Atlas is released as a curated system—membership is highly intentional.</p>
+                    </div>
+
+                    <!-- Credential Strip -->
+                    <div class="mb-10 border-b border-[var(--border)] pb-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium reveal-item">
+                        <span>System Provisioning</span>
+                        <span>Auth / Token Matrix</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal-item relative z-10">
+                        
+                        <!-- Observer Plan -->
+                        <div class="border border-[var(--border)] bg-[var(--bg)] p-8 flex flex-col hover:border-[var(--muted)] transition-colors duration-500 rounded-none shadow-xl">
+                            <div class="text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium mb-3">Observer</div>
+                            <div class="text-3xl font-medium text-[var(--fg)] mb-8">Free</div>
+                            
+                            <div class="flex-1">
+                                <div class="text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium mb-3 pb-2 border-b border-[var(--border)]">Core Capabilities</div>
+                                <ul class="text-xs text-[var(--muted)] space-y-4 font-normal">
+                                    <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--border)]" width="16"></iconify-icon>Read-only layout previews</li>
+                                    <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--border)]" width="16"></iconify-icon>Limited grid generations</li>
+                                    <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--border)]" width="16"></iconify-icon>Public system documentation</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Architect Plan (Wow/Focus) -->
+                        <div class="border border-[var(--accent)]/50 bg-[var(--accent)]/5 p-8 flex flex-col relative rounded-none shadow-[0_0_40px_rgba(59,130,246,0.1)] hover:shadow-[0_0_60px_rgba(59,130,246,0.15)] transition-shadow duration-700 overflow-hidden scale-[1.02] lg:z-10 bg-[var(--bg)]">
+                            <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-[var(--accent)] shadow-[0_0_15px_var(--accent)]"></div>
+                            <div class="absolute top-0 right-0 bg-[var(--accent)] text-black text-[10px] px-3 py-1.5 uppercase tracking-widest font-medium">Invite Only</div>
+                            
+                            <div class="text-[10px] uppercase tracking-widest text-[var(--accent)] font-medium mb-3">Architect</div>
+                            <div class="text-3xl font-medium text-[var(--fg)] mb-8">$49 <span class="text-xs text-[var(--muted)] font-normal">/mo</span></div>
+                            
+                            <div class="flex-1 space-y-6">
+                                <div>
+                                    <div class="text-[10px] uppercase tracking-widest text-[var(--accent)] font-medium mb-3 pb-2 border-b border-[var(--accent)]/30">Core Engine</div>
+                                    <ul class="text-xs text-[var(--muted)] space-y-3 font-normal">
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]" width="16"></iconify-icon>Full layout computation matrix</li>
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]" width="16"></iconify-icon>Deep token resolution</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase tracking-widest text-[var(--accent)] font-medium mb-3 pb-2 border-b border-[var(--accent)]/30">Exports</div>
+                                    <ul class="text-xs text-[var(--muted)] space-y-3 font-normal">
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]" width="16"></iconify-icon>Production-ready components</li>
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--accent)]" width="16"></iconify-icon>Semantic HTML / CSS outputs</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Council Plan -->
+                        <div class="border border-[var(--border)] bg-[var(--bg)] p-8 flex flex-col hover:border-[var(--muted)] transition-colors duration-500 rounded-none shadow-xl">
+                            <div class="text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium mb-3 flex justify-between items-center">
+                                <span>Council</span>
+                                <span class="text-[var(--border)] border border-[var(--border)] px-2 py-0.5 text-[8px]">14 / 50 Remaining</span>
+                            </div>
+                            <div class="text-3xl font-medium text-[var(--fg)] mb-8">$199 <span class="text-xs text-[var(--muted)] font-normal">/mo</span></div>
+                            
+                            <div class="flex-1 space-y-6">
+                                <div>
+                                    <div class="text-[10px] uppercase tracking-widest text-[var(--muted)] font-medium mb-3 pb-2 border-b border-[var(--border)]">Governance</div>
+                                    <ul class="text-xs text-[var(--muted)] space-y-3 font-normal">
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--border)]" width="16"></iconify-icon>Priority system releases</li>
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--border)]" width="16"></iconify-icon>Private architectural workshop</li>
+                                        <li class="flex items-center gap-3"><iconify-icon icon="solar:check-circle-linear" class="text-[var(--border)]" width="16"></iconify-icon>Custom baseline presets</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC: Access (Final CTA) & FOOTER -->
+        <section id="access" class="relative py-16 px-4 md:px-8 z-10 w-full reveal-block">
+            <div class="section-slab">
+                <div class="section-inner w-full flex flex-col items-center text-center">
+                    
+                    <div class="text-[10px] text-[var(--accent)] font-medium tracking-widest mb-6 uppercase reveal-item">
+                        Release Window / Controlled
+                    </div>
+                    <h2 class="text-4xl md:text-6xl font-medium tracking-tight text-[var(--fg)] mb-6 flex flex-col reveal-item">
+                        <span class="overflow-hidden pb-1 block">
+                            <span class="block reveal-text">Enter the Atlas Index.</span>
+                        </span>
+                    </h2>
+                    <p class="text-sm text-[var(--muted)] mb-12 max-w-md leading-relaxed font-normal reveal-item">
+                        Request access. Receive a system key. Build with absolute constraints intact.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center gap-6 reveal-item">
+                        <button class="group inline-flex items-center justify-center px-8 py-4 text-xs tracking-widest font-medium text-black uppercase bg-white hover:bg-[var(--accent)] hover:text-white transition-all duration-300 rounded-none focus:outline-none">
+                            <span>Request System Key</span>
+                            <iconify-icon icon="solar:arrow-right-linear" class="ml-3 group-hover:translate-x-1 transition-transform" width="16"></iconify-icon>
+                        </button>
+                        <a href="#" class="text-xs text-[var(--muted)] hover:text-[var(--fg)] uppercase tracking-widest transition-colors font-medium border-b border-[var(--border)] pb-1 hover:border-[var(--fg)]">
+                            View a Sample Output
+                        </a>
+                    </div>
+
+                    <footer class="mt-32 pt-8 w-full border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center text-[10px] text-[var(--muted)] uppercase tracking-widest font-medium gap-4 reveal-item">
+                        <span>System Index: 01</span>
+                        <span class="hidden md:inline text-[var(--border)]">•</span>
+                        <span>All Structure Preserved</span>
+                    </footer>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Application Logic -->
+    <script type="module">
+        import * as THREE from 'https://esm.sh/three@0.160.0';
+
+        /*
+         * ==========================================
+         * 1. THEME / CONSTANTS CONFIGURATION
+         * ==========================================
+         */
+        const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const CONFIG = {
+            scrollDistance: "+=3800", // Slightly extended for breathing room
+            scrubSmoothing: 1,        
+            particleCount: 12000,     
+            particleSize: 1.5,
+            spread: 2500,             
+            orbRadius: 280,           
+            cameraZStart: 600,
+            cameraZEnd: 150,
+            idleRotationSpeed: isReducedMotion ? 0.0001 : 0.0008,
+            scrollRotationFactor: isReducedMotion ? 0 : 0.5
+        };
+
+        const state = {
+            scrollProgress: 0,
+            targetProgress: 0
+        };
+
+        // Electric Blue Accent Standardized
+        const THEMES = [
+            { id: '#pinned-stage', bg: '#030303', accent: '#3b82f6', border: '#1e1e1e', panel: 'rgba(20, 20, 20, 0.4)' },
+            { id: '#manifesto',    bg: '#050508', accent: '#0ea5e9', border: '#1a1c23', panel: 'rgba(15, 20, 30, 0.4)' },
+            { id: '#overview',     bg: '#02040a', accent: '#3b82f6', border: '#161b22', panel: 'rgba(10, 15, 25, 0.4)' },
+            { id: '#interface',    bg: '#000000', accent: '#2563eb', border: '#171717', panel: 'rgba(15, 15, 15, 0.4)' },
+            { id: '#modules',      bg: '#05030a', accent: '#3b82f6', border: '#201633', panel: 'rgba(20, 15, 35, 0.4)' },
+            { id: '#pricing',      bg: '#020202', accent: '#3b82f6', border: '#111111', panel: 'rgba(10, 10, 10, 0.4)' },
+            { id: '#access',       bg: '#000000', accent: '#3b82f6', border: '#1a1a1a', panel: 'rgba(15, 15, 15, 0.4)' }
+        ];
+
+        /*
+         * ==========================================
+         * 2. WEBGL SUBSYSTEM (Three.js)
+         * ==========================================
+         */
+        let scene, camera, renderer, particles;
+        const webglState = {
+            fieldPositions: null,
+            orbPositions: null
+        };
+
+        const themeProxy = {
+            bg: new THREE.Color(THEMES[0].bg),
+            accent: new THREE.Color(THEMES[0].accent)
+        };
+
+        function initWebGL() {
+            const container = document.getElementById('webgl-container');
+
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(themeProxy.bg.getHex(), 0.0015);
+            scene.background = themeProxy.bg;
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+            camera.position.z = CONFIG.cameraZStart;
+
+            renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            initParticles();
+            window.addEventListener('resize', resizeWebGL);
+            renderWebGL();
+        }
+
+        function initParticles() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = new Float32Array(CONFIG.particleCount * 3);
+            
+            webglState.fieldPositions = new Float32Array(CONFIG.particleCount * 3);
+            webglState.orbPositions = new Float32Array(CONFIG.particleCount * 3);
+
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                webglState.fieldPositions[i*3] = (Math.random() - 0.5) * CONFIG.spread;
+                webglState.fieldPositions[i*3+1] = (Math.random() - 0.5) * CONFIG.spread;
+                webglState.fieldPositions[i*3+2] = (Math.random() - 0.5) * CONFIG.spread;
+
+                const u = Math.random();
+                const v = Math.random();
+                const theta = 2 * Math.PI * u;
+                const phi = Math.acos(2 * v - 1);
+                const r = CONFIG.orbRadius * Math.cbrt(Math.random()); 
+                
+                webglState.orbPositions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+                webglState.orbPositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+                webglState.orbPositions[i*3+2] = r * Math.cos(phi);
+
+                vertices[i*3] = webglState.orbPositions[i*3];
+                vertices[i*3+1] = webglState.orbPositions[i*3+1];
+                vertices[i*3+2] = webglState.orbPositions[i*3+2];
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+            const material = new THREE.PointsMaterial({
+                color: themeProxy.accent,
+                size: CONFIG.particleSize,
+                sizeAttenuation: true,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+
+        function resizeWebGL() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function renderWebGL() {
+            requestAnimationFrame(renderWebGL);
+
+            state.scrollProgress += (state.targetProgress - state.scrollProgress) * 0.05;
+
+            const p = state.scrollProgress;
+            const t = Math.max(0, Math.min(1, (p - 0.15) / (0.75 - 0.15)));
+            const smooth = t * t * (3 - 2 * t);
+            
+            let orbMix = 0.8 * (1 - smooth);
+            orbMix = Math.max(orbMix, 0.12); 
+
+            const positions = particles.geometry.attributes.position.array;
+            const field = webglState.fieldPositions;
+            const orb = webglState.orbPositions;
+
+            for (let i = 0; i < positions.length; i++) {
+                positions[i] = field[i] + (orb[i] - field[i]) * orbMix;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            if (!isReducedMotion) {
+                camera.position.z = CONFIG.cameraZStart - ((CONFIG.cameraZStart - CONFIG.cameraZEnd) * state.scrollProgress);
+                scene.fog.density = 0.0015 + (state.scrollProgress * 0.0005);
+                
+                const dynamicRotation = CONFIG.idleRotationSpeed + (p * 0.001);
+                particles.rotation.y += dynamicRotation;
+                particles.rotation.x = state.scrollProgress * CONFIG.scrollRotationFactor;
+            } else {
+                particles.rotation.y += CONFIG.idleRotationSpeed;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        /*
+         * ==========================================
+         * 3. SCROLL, NAVIGATION & THEME CONTROLLER
+         * ==========================================
+         */
+        let lenis;
+
+        function initScroll() {
+            lenis = new Lenis({
+                duration: 2.1,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: !isReducedMotion,
+                smoothTouch: false,
+                touchMultiplier: 1.05,
+                wheelMultiplier: 0.75
+            });
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+            gsap.ticker.lagSmoothing(0);
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    lenis.scrollTo(this.getAttribute('href'), { offset: 0, duration: 1.8 });
+                });
+            });
+        }
+
+        function applyTheme(theme) {
+            gsap.to(document.documentElement, {
+                '--bg': theme.bg,
+                '--accent': theme.accent,
+                '--border': theme.border,
+                '--panel': theme.panel,
+                duration: 1.2,
+                ease: "power2.out"
+            });
+
+            const targetBg = new THREE.Color(theme.bg);
+            const targetAccent = new THREE.Color(theme.accent);
+
+            gsap.to(themeProxy.bg, {
+                r: targetBg.r, g: targetBg.g, b: targetBg.b,
+                duration: 1.2,
+                onUpdate: () => {
+                    scene.background.copy(themeProxy.bg);
+                    scene.fog.color.copy(themeProxy.bg);
+                }
+            });
+
+            gsap.to(themeProxy.accent, {
+                r: targetAccent.r, g: targetAccent.g, b: targetAccent.b,
+                duration: 1.2,
+                onUpdate: () => {
+                    particles.material.color.copy(themeProxy.accent);
+                }
+            });
+        }
+
+        function initThemesAndNav() {
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            THEMES.forEach((theme, index) => {
+                ScrollTrigger.create({
+                    trigger: theme.id,
+                    start: "top 50%",
+                    end: "bottom 50%",
+                    onEnter: () => applyTheme(theme),
+                    onEnterBack: () => applyTheme(theme),
+                });
+
+                if(index > 0) {
+                    ScrollTrigger.create({
+                        trigger: theme.id,
+                        start: "top center",
+                        end: "bottom center",
+                        onToggle: (self) => {
+                            if (self.isActive && navLinks[index - 1]) {
+                                navLinks.forEach(l => l.classList.remove('is-active'));
+                                navLinks[index - 1].classList.add('is-active');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function initScrollTimeline() {
+            gsap.set('#phase-1-content .line-content', { yPercent: 125, force3D: true, opacity: 1 });
+            gsap.set('.feature-card', { opacity: 0 });
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#pinned-stage",
+                    start: "top top",
+                    end: CONFIG.scrollDistance,
+                    pin: true,
+                    scrub: isReducedMotion ? true : CONFIG.scrubSmoothing,
+                    onUpdate: (self) => {
+                        state.targetProgress = self.progress;
+                        gsap.set('#scroll-progress', { scaleY: self.progress });
+                    }
+                }
+            });
+
+            // PHASE 0: Fade out idle overlay on initiate
+            tl.to('#idle-overlay', { opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.1);
+
+            // PHASE 1: Arrival
+            tl.to('#phase-1-content .line-content', { yPercent: 0, duration: 1.1, stagger: 0.15, ease: 'power3.out' }, 0.2)
+              .to('#ui-top, #ui-bottom', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, 0.5)
+              .to('#hero-descriptor, #hero-ctas', { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: 'power2.out' }, 0.8);
+
+            // PHASE 2: Forward Push + Grid & Scanline execution
+            tl.to('#phase-1-content', { opacity: 0, y: -40, filter: 'blur(8px)', duration: 1, ease: 'power2.inOut', pointerEvents: 'none' }, 1.8)
+              .to('#phase-2-content', { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power2.out', pointerEvents: 'auto' }, 2.1)
+              .to('#phase-2-scanline', { opacity: 0.35, duration: 0.2, ease: 'power1.inOut' }, 2.2)
+              .to('#phase-2-scanline', { top: '110%', duration: 1.2, ease: 'linear' }, 2.2)
+              .to('#phase-2-scanline', { opacity: 0, duration: 0.2, ease: 'power1.inOut' }, 3.2);
+
+            // PHASE 3: Content Emergence (Upgraded with Context)
+            tl.to('#phase-2-content', { opacity: 0, y: -40, filter: 'blur(8px)', duration: 1, ease: 'power2.inOut', pointerEvents: 'none' }, 3.3)
+              .to('#phase-3-content', { opacity: 1, duration: 0.8, ease: 'power2.out', pointerEvents: 'auto' }, 3.4)
+              .to('#phase-3-intro', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 3.5)
+              .fromTo('.feature-card', 
+                  { opacity: 0, y: 30, scale: 0.94, filter: 'blur(12px)', rotateX: 6 },
+                  { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', rotateX: 0, stagger: 0.18, duration: 1.2, ease: 'power3.out' }, 
+                  3.7
+              );
+
+            // Hold Cards & Create Breathing Room
+            tl.to('.feature-card', { y: -15, duration: 1.8, ease: 'none' }, 4.9);
+            
+            // Extra Hold Op
+            tl.to({}, { duration: 0.4 }, 6.7);
+
+            // PHASE 4: Bridge Moment (Upgraded with staggered elements)
+            tl.to('#phase-3-content', { opacity: 0, y: -40, filter: 'blur(8px)', duration: 1, ease: 'power2.inOut', pointerEvents: 'none' }, 7.1)
+              .to('#bridge-content', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out', pointerEvents: 'auto' }, 7.4)
+              .to('.bridge-stagger', { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power3.out' }, 7.5);
+
+            // PHASE 5: Exit to Static View Smoothly
+            tl.to('#bridge-content, #ui-top, #ui-bottom', {
+                opacity: 0,
+                y: -20,
+                filter: 'blur(4px)',
+                duration: 1,
+                ease: 'power2.inOut'
+            }, 9.2);
+        }
+
+        function initTypographyReveals() {
+            // Handle specialized headline text blocks
+            document.querySelectorAll('.reveal-text').forEach(text => {
+                gsap.fromTo(text,
+                    { yPercent: 120, opacity: 0 },
+                    {
+                        yPercent: 0,
+                        opacity: 1,
+                        duration: 0.9,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: text.closest('.reveal-block'),
+                            start: 'top 85%'
+                        }
+                    }
+                );
+            });
+
+            // Handle block elements and paragraphs
+            document.querySelectorAll('.reveal-block').forEach(block => {
+                gsap.fromTo(block.querySelectorAll('.reveal-item'),
+                    { y: 30, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.9,
+                        stagger: 0.15,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: block,
+                            start: 'top 80%'
+                        }
+                    }
+                );
+            });
+        }
+
+        /*
+         * ==========================================
+         * 4. BOOTSTRAP
+         * ==========================================
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            initWebGL();
+            initScroll();
+            initThemesAndNav();
+            initScrollTimeline();
+            initTypographyReveals();
+        });
+    </script>
+
+
+</body></html>

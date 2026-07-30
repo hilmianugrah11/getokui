@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haven - Interior Design Studio</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Essential base styles and utilities not easily handled by inline tailwind classes */
+body { font-family: 'Inter', sans-serif; background-color: #fcfbf9; }
+.font-serif { font-family: 'Playfair Display', serif; }
+/* Hide scrollbar for clean look in some overflow areas */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.masked-word { display: inline-block; transform: translateY(110%); }
+.word-wrapper { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.circular-text-svg { animation: spin 20s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="text-stone-800 antialiased selection:bg-stone-800 selection:text-white">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-6 lg:px-12 flex justify-between items-center text-white transition-all duration-500" id="main-nav">
+      <a href="#" class="text-xl tracking-[0.2em] font-medium">H A V E N</a>
+
+      <div class="hidden md:flex space-x-10 text-xs tracking-widest uppercase opacity-80">
+        <a href="#" class="relative hover:opacity-100 transition-opacity after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+          Home
+        </a>
+        <a href="#" class="relative hover:opacity-100 transition-opacity after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+          Services
+        </a>
+        <a href="#" class="relative hover:opacity-100 transition-opacity after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+          Projects
+        </a>
+        <a href="#" class="relative hover:opacity-100 transition-opacity after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+          About
+        </a>
+        <a href="#" class="relative hover:opacity-100 transition-opacity after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+          Blog
+        </a>
+        <a href="#" class="relative hover:opacity-100 transition-opacity after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+          Contact
+        </a>
+      </div>
+
+      <a href="#" class="hidden sm:flex items-center space-x-2 border border-white/30 px-5 py-2.5 text-xs tracking-widest uppercase hover:bg-white hover:text-black transition-colors duration-300">
+        <span>Get a quote</span>
+        <iconify-icon icon="solar:arrow-right-linear" width="16" stroke-width="1.5"></iconify-icon>
+      </a>
+
+      <button class="md:hidden text-2xl">
+        <iconify-icon icon="solar:hamburger-menu-linear"></iconify-icon>
+      </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen min-h-[600px] w-full overflow-hidden flex items-center bg-stone-900">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/888df594-f216-4947-87d8-f376282c3108_3840w.png" alt="Interior Design" class="absolute -top-[10%] left-0 w-full h-[120%] object-cover opacity-60 scale-105" id="hero-bg">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 mt-20" id="hero-content">
+        <div class="max-w-2xl">
+          <span class="block text-white/70 text-xs tracking-[0.15em] uppercase mb-6 fade-in-up opacity-0">
+            Interior Design Studio
+          </span>
+
+          <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] tracking-tight mb-8" id="hero-title">
+            <span class="word-wrapper">
+              <span class="masked-word">We</span>
+            </span>
+            <span class="word-wrapper">
+              <span class="masked-word">Design</span>
+            </span>
+            <br>
+            <span class="word-wrapper">
+              <span class="masked-word">Spaces</span>
+            </span>
+            <span class="word-wrapper">
+              <span class="masked-word">You</span>
+            </span>
+            <br>
+            <span class="word-wrapper">
+              <span class="masked-word">Love</span>
+            </span>
+            <span class="word-wrapper">
+              <span class="masked-word">to</span>
+            </span>
+            <span class="word-wrapper">
+              <span class="masked-word">Live</span>
+            </span>
+            <span class="word-wrapper">
+              <span class="masked-word">In</span>
+            </span>
+          </h1>
+
+          <p class="text-white/80 text-base md:text-lg max-w-md mb-10 font-light fade-in-up opacity-0">
+            A perfect blend of aesthetics, function and comfort tailored to you.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 fade-in-up opacity-0">
+            <a href="#" class="bg-white text-stone-900 px-6 py-3.5 text-xs font-medium tracking-widest uppercase flex items-center gap-3 hover:bg-stone-200 transition-colors">
+              Explore Projects
+              <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
+            </a>
+            <a href="#" class="text-white px-6 py-3.5 text-xs font-medium tracking-widest uppercase flex items-center gap-3 hover:text-stone-300 transition-colors group">
+              Play Showreel
+              <span class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center group-hover:border-white transition-colors">
+                <iconify-icon icon="solar:play-linear" width="16"></iconify-icon>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="absolute bottom-10 right-10 z-10 hidden md:block fade-in-up opacity-0">
+        <div class="relative w-32 h-32 flex items-center justify-center">
+          <svg class="circular-text-svg absolute inset-0 w-full h-full text-white/50" viewBox="0 0 100 100">
+            <path d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" id="circle" fill="none"></path>
+            <text class="text-[9px] uppercase tracking-[0.3em] fill-current">
+              <textPath href="#circle">
+                Scroll down to explore • Scroll down to explore •
+              </textPath>
+            </text>
+          </svg>
+          <iconify-icon icon="solar:arrow-down-linear" class="text-white text-2xl"></iconify-icon>
+        </div>
+      </div>
+    </header>
+
+    <!-- Philosophy Section -->
+    <section class="py-24 lg:py-32 px-6 lg:px-12 max-w-7xl mx-auto bg-[#fcfbf9]">
+      <div class="flex flex-col md:flex-row justify-between items-start mb-16 lg:mb-20 gap-10 section-fade-up">
+        <div class="max-w-xl">
+          <span class="inline-flex items-center gap-3 text-stone-500 text-xs tracking-widest uppercase mb-4">
+            <span class="w-8 h-px bg-[#c86b46]"></span>
+            Our Design Philosophy
+          </span>
+          <h2 class="font-serif text-3xl md:text-5xl text-stone-900 tracking-tight leading-tight">
+            Beautiful Spaces,
+            <br>
+            <span class="italic text-[#c86b46]">Thoughtfully</span> Crafted
+          </h2>
+        </div>
+        <div class="max-w-md pt-2 md:pt-8 text-stone-600 text-sm leading-relaxed">
+          <p class="mb-6">
+            At Haven, we believe that great design is more than just looks —
+            it's about creating spaces that enhance how you live, work and feel
+            every day.
+          </p>
+          <a href="#" class="group inline-flex items-center gap-3 text-xs font-medium tracking-widest uppercase text-stone-900 hover:text-[#c86b46] transition-colors duration-300">
+            About our studio
+            <span class="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+              <iconify-icon icon="solar:arrow-right-linear" width="14"></iconify-icon>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-stone-200/70 border border-stone-200/70">
+        <!-- Feature 1 -->
+        <div class="feature-item opacity-0 group relative bg-[#fcfbf9] p-8 lg:p-10 transition-colors duration-500 hover:bg-white">
+          <span class="absolute top-8 right-8 text-xs text-stone-300 tracking-widest">01</span>
+          <div class="w-14 h-14 rounded-full bg-[#d5cec4] mb-8 flex items-center justify-center text-stone-800 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+            <iconify-icon icon="solar:users-group-rounded-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-sm font-medium text-stone-900 mb-3 tracking-tight">
+            Client-Centered
+          </h3>
+          <p class="text-xs text-stone-500 leading-relaxed">
+            We listen, collaborate and bring your vision to life through every conversation.
+          </p>
+          <span class="block mt-6 h-px w-8 bg-[#d5cec4] transition-all duration-500 group-hover:w-16"></span>
+        </div>
+        <!-- Feature 2 -->
+        <div class="feature-item opacity-0 group relative bg-[#fcfbf9] p-8 lg:p-10 transition-colors duration-500 hover:bg-white">
+          <span class="absolute top-8 right-8 text-xs text-stone-300 tracking-widest">02</span>
+          <div class="w-14 h-14 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] bg-[#c86b46] mb-8 flex items-center justify-center text-white transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+            <iconify-icon icon="solar:pen-new-square-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-sm font-medium text-stone-900 mb-3 tracking-tight">
+            Timeless Design
+          </h3>
+          <p class="text-xs text-stone-500 leading-relaxed">
+            We create elegant spaces that stand the test of time and trends.
+          </p>
+          <span class="block mt-6 h-px w-8 bg-[#c86b46] transition-all duration-500 group-hover:w-16"></span>
+        </div>
+        <!-- Feature 3 -->
+        <div class="feature-item opacity-0 group relative bg-[#fcfbf9] p-8 lg:p-10 transition-colors duration-500 hover:bg-white">
+          <span class="absolute top-8 right-8 text-xs text-stone-300 tracking-widest">03</span>
+          <div class="w-14 h-14 rounded-[50%_50%_30%_70%/60%_40%_70%_40%] bg-[#4a5742] mb-8 flex items-center justify-center text-white transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+            <iconify-icon icon="solar:magic-stick-3-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-sm font-medium text-stone-900 mb-3 tracking-tight">
+            Quality &amp; Detail
+          </h3>
+          <p class="text-xs text-stone-500 leading-relaxed">
+            Every detail matters. Uncompromising quality is our promise.
+          </p>
+          <span class="block mt-6 h-px w-8 bg-[#4a5742] transition-all duration-500 group-hover:w-16"></span>
+        </div>
+        <!-- Feature 4 -->
+        <div class="feature-item opacity-0 group relative bg-[#fcfbf9] p-8 lg:p-10 transition-colors duration-500 hover:bg-white">
+          <span class="absolute top-8 right-8 text-xs text-stone-300 tracking-widest">04</span>
+          <div class="w-14 h-14 rounded-[60%_40%_50%_50%/40%_60%_50%_60%] bg-[#dcb66f] mb-8 flex items-center justify-center text-stone-900 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+            <iconify-icon icon="solar:leaf-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-sm font-medium text-stone-900 mb-3 tracking-tight">
+            Sustainable Approach
+          </h3>
+          <p class="text-xs text-stone-500 leading-relaxed">
+            We design responsibly, with people and planet in mind.
+          </p>
+          <span class="block mt-6 h-px w-8 bg-[#dcb66f] transition-all duration-500 group-hover:w-16"></span>
+        </div>
+      </div>
+    </section>
+    <section id="marquee-section" class="py-12 bg-[#fcfbf9] border-y border-stone-200/70 overflow-hidden">
+      <div class="marquee-track flex items-center gap-16 whitespace-nowrap will-change-transform">
+        <div class="flex items-center gap-16 shrink-0">
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight">
+            Residential
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#c86b46] shrink-0"></span>
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight italic">
+            Commercial
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#4a5742] shrink-0"></span>
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight">
+            Hospitality
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#dcb66f] shrink-0"></span>
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight italic">
+            Renovation
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#c86b46] shrink-0"></span>
+        </div>
+        <div class="flex items-center gap-16 shrink-0" aria-hidden="true">
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight">
+            Residential
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#c86b46] shrink-0"></span>
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight italic">
+            Commercial
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#4a5742] shrink-0"></span>
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight">
+            Hospitality
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#dcb66f] shrink-0"></span>
+          <span class="font-serif text-4xl md:text-6xl text-stone-300 tracking-tight italic">
+            Renovation
+          </span>
+          <span class="w-3 h-3 rounded-full bg-[#c86b46] shrink-0"></span>
+        </div>
+      </div>
+    </section>
+    <section id="services-list" class="py-24 lg:py-32 px-6 lg:px-12 bg-[#fcfbf9]">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 section-fade-up">
+          <div>
+            <span class="block text-stone-500 text-xs tracking-widest uppercase mb-4">
+              What We Do
+            </span>
+            <h2 class="font-serif text-3xl md:text-5xl text-stone-900 tracking-tight">
+              Our Services
+            </h2>
+          </div>
+          <p class="max-w-xs text-stone-500 text-sm leading-relaxed">
+            Hover each service to glimpse how we shape every layer of your
+            space.
+          </p>
+        </div>
+        <div>
+          <a href="#" class="service-row group relative flex items-center justify-between py-8 border-t border-stone-200 opacity-0" style=" clip-path: inset(0px 100% 0px 0px);">
+            <div class="flex items-baseline gap-6 md:gap-10">
+              <span class="text-xs text-stone-400">01</span>
+              <h3 class="font-serif text-2xl md:text-4xl text-stone-900 tracking-tight group-hover:translate-x-3 transition-transform duration-500">
+                Interior Design
+              </h3>
+            </div>
+            <div class="flex items-center gap-6">
+              <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=400&auto=format&fit=crop" alt="Interior Design" class="hidden md:block w-28 h-16 object-cover opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500">
+              <span class="w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+                <iconify-icon icon="solar:arrow-right-up-linear" width="18"></iconify-icon>
+              </span>
+            </div>
+          </a>
+          <a href="#" class="service-row group relative flex items-center justify-between py-8 border-t border-stone-200 opacity-0" style=" clip-path: inset(0px 100% 0px 0px);">
+            <div class="flex items-baseline gap-6 md:gap-10">
+              <span class="text-xs text-stone-400">02</span>
+              <h3 class="font-serif text-2xl md:text-4xl text-stone-900 tracking-tight group-hover:translate-x-3 transition-transform duration-500">
+                Space Planning
+              </h3>
+            </div>
+            <div class="flex items-center gap-6">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/e135dff4-94a3-482d-9aaf-aef6acd55531/800w.png" alt="Space Planning" class="hidden md:block w-28 h-16 object-cover opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500">
+              <span class="w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+                <iconify-icon icon="solar:arrow-right-up-linear" width="18"></iconify-icon>
+              </span>
+            </div>
+          </a>
+          <a href="#" class="service-row group relative flex items-center justify-between py-8 border-t border-stone-200 opacity-0" style=" clip-path: inset(0px 100% 0px 0px);">
+            <div class="flex items-baseline gap-6 md:gap-10">
+              <span class="text-xs text-stone-400">03</span>
+              <h3 class="font-serif text-2xl md:text-4xl text-stone-900 tracking-tight group-hover:translate-x-3 transition-transform duration-500">
+                Furniture &amp; Styling
+              </h3>
+            </div>
+            <div class="flex items-center gap-6">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8bfb2f0c-82ab-4f18-9f71-37c9cbf20a50_320w.webp" alt="Furniture and Styling" class="hidden md:block w-28 h-16 object-cover opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500">
+              <span class="w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+                <iconify-icon icon="solar:arrow-right-up-linear" width="18"></iconify-icon>
+              </span>
+            </div>
+          </a>
+          <a href="#" class="service-row group relative flex items-center justify-between py-8 border-t border-b border-stone-200 opacity-0" style=" clip-path: inset(0px 100% 0px 0px);">
+            <div class="flex items-baseline gap-6 md:gap-10">
+              <span class="text-xs text-stone-400">04</span>
+              <h3 class="font-serif text-2xl md:text-4xl text-stone-900 tracking-tight group-hover:translate-x-3 transition-transform duration-500">
+                Renovation
+              </h3>
+            </div>
+            <div class="flex items-center gap-6">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7d78ddbe-fdfc-4a1c-aaf7-e6f696fadbcc_800w.webp" alt="Renovation" class="hidden md:block w-28 h-16 object-cover opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500">
+              <span class="w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+                <iconify-icon icon="solar:arrow-right-up-linear" width="18"></iconify-icon>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+    <section id="stats-section" class="py-24 lg:py-28 px-6 lg:px-12 bg-[#fcfbf9]">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div class="stat-item opacity-0 border-l border-stone-200 pl-6">
+          <div class="font-serif text-5xl md:text-7xl text-stone-900 tracking-tight mb-3">
+            <span class="stat-num" data-count="12">0</span>
+            <span class="text-[#c86b46]">+</span>
+          </div>
+          <p class="text-[10px] tracking-widest uppercase text-stone-500">
+            Years of Experience
+          </p>
+        </div>
+        <div class="stat-item opacity-0 border-l border-stone-200 pl-6">
+          <div class="font-serif text-5xl md:text-7xl text-stone-900 tracking-tight mb-3">
+            <span class="stat-num" data-count="140">0</span>
+            <span class="text-[#4a5742]">+</span>
+          </div>
+          <p class="text-[10px] tracking-widest uppercase text-stone-500">
+            Projects Completed
+          </p>
+        </div>
+        <div class="stat-item opacity-0 border-l border-stone-200 pl-6">
+          <div class="font-serif text-5xl md:text-7xl text-stone-900 tracking-tight mb-3">
+            <span class="stat-num" data-count="18">0</span>
+          </div>
+          <p class="text-[10px] tracking-widest uppercase text-stone-500">
+            Design Awards
+          </p>
+        </div>
+        <div class="stat-item opacity-0 border-l border-stone-200 pl-6">
+          <div class="font-serif text-5xl md:text-7xl text-stone-900 tracking-tight mb-3">
+            <span class="stat-num" data-count="98">0</span>
+            <span class="text-[#dcb66f]">%</span>
+          </div>
+          <p class="text-[10px] tracking-widest uppercase text-stone-500">
+            Happy Clients
+          </p>
+        </div>
+      </div>
+    </section>
+    <section id="parallax-section" class="parallax-section relative h-[80vh] min-h-[500px] overflow-hidden flex items-center justify-center">
+      <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2832&auto=format&fit=crop" alt="Crafted Interior" class="parallax-img absolute -top-[10%] left-0 w-full h-[120%] object-cover">
+      <div class="absolute inset-0 bg-black/45"></div>
+      <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        <span class="block text-white/70 text-xs tracking-widest uppercase mb-6 section-fade-up">
+          Crafted with Intention
+        </span>
+        <h2 class="font-serif text-4xl md:text-6xl text-white tracking-tight leading-tight mb-10 section-fade-up">
+          Every Room Tells a Story Worth Living
+        </h2>
+        <a href="#" class="section-fade-up inline-flex bg-white text-stone-900 px-8 py-4 text-xs font-medium tracking-widest uppercase items-center gap-3 hover:bg-stone-200 transition-colors">
+          Start Your Project
+          <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
+        </a>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="py-24 px-6 lg:px-12 max-w-[100rem] mx-auto bg-[#fcfbf9]">
+      <div class="flex justify-between items-end mb-12 section-fade-up">
+        <span class="block text-stone-500 text-xs tracking-widest uppercase">
+          Featured Projects
+        </span>
+        <a href="#" class="text-xs tracking-widest uppercase font-medium flex items-center gap-2 hover:text-stone-500 transition-colors">
+          View all projects
+          <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <!-- Project 1 -->
+        <div class="group cursor-pointer project-card opacity-0">
+          <div class="overflow-hidden aspect-[4/3] mb-4 bg-stone-200">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a832ad90-a899-4ad3-a89f-383330411174_800w.png" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          </div>
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-serif text-lg text-stone-900 mb-1 tracking-tight">
+                Serene Minimalism
+              </h3>
+              <p class="text-[11px] text-stone-500">Residential • New York</p>
+            </div>
+            <div class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="group cursor-pointer project-card opacity-0">
+          <div class="overflow-hidden aspect-[4/3] mb-4 bg-stone-200">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/08f0e618-c8f0-4948-b2e8-28376317b11c/800w.jpg" alt="Project 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          </div>
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-serif text-lg text-stone-900 mb-1 tracking-tight">
+                Urban Sophistication
+              </h3>
+              <p class="text-[11px] text-stone-500">Residential • Chicago</p>
+            </div>
+            <div class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="group cursor-pointer project-card opacity-0">
+          <div class="overflow-hidden aspect-[4/3] mb-4 bg-stone-200">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7d78ddbe-fdfc-4a1c-aaf7-e6f696fadbcc_800w.webp" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          </div>
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-serif text-lg text-stone-900 mb-1 tracking-tight">
+                Earthy Harmony
+              </h3>
+              <p class="text-[11px] text-stone-500">Residential • Austin</p>
+            </div>
+            <div class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="group cursor-pointer project-card opacity-0">
+          <div class="overflow-hidden aspect-[4/3] mb-4 bg-stone-200">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f92dd6fc-3b2d-4bcf-bb45-675be4292206_800w.png" alt="Project 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          </div>
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-serif text-lg text-stone-900 mb-1 tracking-tight">
+                Workplace Reimagined
+              </h3>
+              <p class="text-[11px] text-stone-500">
+                Commercial • San Francisco
+              </p>
+            </div>
+            <div class="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: auto; float: none; flex-shrink: 1; display: block; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1506px; height: 2275px; padding: 0px 0px 1457px;"><div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: auto; float: none; flex-shrink: 1; display: block; margin: 0px; inset: 0px; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1506px; height: 2275px; padding: 0px 0px 1457px;"><section id="horizontal-section" class="relative bg-[#161613] text-white overflow-hidden" style="inset: 0px auto auto 0px; margin: 0px; max-width: 1506px; width: 1506px; max-height: 818px; height: 818px; padding: 0px;">
+      <div class="h-screen flex flex-col justify-center relative">
+        <div id="horizontal-track" class="flex items-center gap-10 md:gap-16 pl-6 lg:pl-12 pr-[12vw] will-change-transform">
+          <div class="shrink-0 w-[80vw] md:w-[34vw]">
+            <span class="block text-white/50 text-xs tracking-widest uppercase mb-6">
+              Material Stories
+            </span>
+            <h2 class="font-serif text-4xl md:text-6xl tracking-tight leading-[1.1] mb-8">
+              Textures We
+              <br>
+              <span class="italic text-[#dcb66f]">Obsess</span>
+              Over
+            </h2>
+            <p class="text-sm text-white/60 leading-relaxed max-w-xs mb-10">
+              Keep scrolling — the page moves sideways. Four palettes that
+              define the way our spaces feel.
+            </p>
+            <span class="inline-flex items-center gap-3 text-[10px] tracking-widest uppercase text-white/50">
+              Scroll
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </span>
+          </div>
+          <div class="h-panel shrink-0 w-[70vw] md:w-[28vw] md:-mt-16">
+            <div class="overflow-hidden h-[42vh] md:h-[50vh]">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f071c892-bb55-40d8-bbad-033b8954ea3e_1600w.webp" alt="Warm Oak and Linen" class="h-panel-img w-[120%] max-w-none h-full object-cover">
+            </div>
+            <div class="flex justify-between items-baseline mt-5">
+              <h3 class="font-serif text-2xl tracking-tight">
+                Warm Oak &amp; Linen
+              </h3>
+              <span class="text-xs text-white/40">01</span>
+            </div>
+            <p class="text-xs text-white/50 mt-2">
+              Soft grains and natural weaves for calm, grounded rooms.
+            </p>
+          </div>
+          <div class="h-panel shrink-0 w-[70vw] md:w-[28vw] md:mt-20">
+            <div class="overflow-hidden h-[42vh] md:h-[50vh]">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/09f5f0d6-3a00-47d3-aff9-0d370945c952_1600w.png" alt="Stone and Plaster" class="h-panel-img w-[120%] max-w-none h-full object-cover">
+            </div>
+            <div class="flex justify-between items-baseline mt-5">
+              <h3 class="font-serif text-2xl tracking-tight">
+                Stone &amp; Plaster
+              </h3>
+              <span class="text-xs text-white/40">02</span>
+            </div>
+            <p class="text-xs text-white/50 mt-2">
+              Raw mineral surfaces that age gracefully with light.
+            </p>
+          </div>
+          <div class="h-panel shrink-0 w-[70vw] md:w-[28vw] md:-mt-10">
+            <div class="overflow-hidden h-[42vh] md:h-[50vh]">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a832ad90-a899-4ad3-a89f-383330411174_1600w.png" alt="Brass and Velvet" class="h-panel-img w-[120%] max-w-none h-full object-cover">
+            </div>
+            <div class="flex justify-between items-baseline mt-5">
+              <h3 class="font-serif text-2xl tracking-tight">
+                Brass &amp; Velvet
+              </h3>
+              <span class="text-xs text-white/40">03</span>
+            </div>
+            <p class="text-xs text-white/50 mt-2">
+              A quiet glamour layered into intimate corners.
+            </p>
+          </div>
+          <div class="h-panel shrink-0 w-[70vw] md:w-[28vw] md:mt-14">
+            <div class="overflow-hidden h-[42vh] md:h-[50vh]">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1212a7ac-a683-437c-acbd-8408d2e396b7_1600w.webp" alt="Concrete and Greenery" class="h-panel-img w-[120%] max-w-none h-full object-cover">
+            </div>
+            <div class="flex justify-between items-baseline mt-5">
+              <h3 class="font-serif text-2xl tracking-tight">
+                Concrete &amp; Greenery
+              </h3>
+              <span class="text-xs text-white/40">04</span>
+            </div>
+            <p class="text-xs text-white/50 mt-2">
+              Crisp structure softened by living, breathing texture.
+            </p>
+          </div>
+          <div class="shrink-0 w-[70vw] md:w-[26vw] flex flex-col items-start justify-center">
+            <h3 class="font-serif text-3xl md:text-5xl tracking-tight leading-tight mb-8">
+              Your palette
+              <br>
+              starts here.
+            </h3>
+            <a href="#" class="inline-flex bg-white text-stone-900 px-6 py-3.5 text-xs font-medium tracking-widest uppercase items-center gap-3 hover:bg-stone-200 transition-colors">
+              Book a Consultation
+              <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
+            </a>
+          </div>
+        </div>
+        <div class="absolute bottom-8 left-6 lg:left-12 right-6 lg:right-12 h-px bg-white/10">
+          <div id="h-progress" class="h-full bg-[#dcb66f] origin-left scale-x-0"></div>
+        </div>
+      </div>
+    </section></div></div>
+    <section id="manifesto-section" class="py-28 lg:py-40 px-6 lg:px-12 bg-[#fcfbf9] overflow-hidden">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-4 mb-12">
+          <span class="w-2 h-2 rounded-full bg-[#c86b46]"></span>
+          <span class="text-stone-500 text-xs tracking-widest uppercase">
+            The Haven Manifesto
+          </span>
+        </div>
+        <p class="font-serif text-3xl md:text-5xl lg:text-[3.5rem] leading-[1.35] tracking-tight text-stone-900">
+          <span class="manifesto-word">We</span>
+          <span class="manifesto-word">believe</span>
+          <span class="manifesto-word">a</span>
+          <span class="manifesto-word">home</span>
+          <span class="manifesto-pic inline-flex w-20 h-10 md:w-28 md:h-14 mx-1 overflow-hidden rounded-full align-middle">
+            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=400&auto=format&fit=crop" alt="Living room" class="w-full h-full object-cover">
+          </span>
+          <span class="manifesto-word">should</span>
+          <span class="manifesto-word">hold</span>
+          <span class="manifesto-word">your</span>
+          <span class="manifesto-word italic">story</span>
+          <span class="manifesto-word">—</span>
+          <span class="manifesto-word">every</span>
+          <span class="manifesto-word">line,</span>
+          <span class="manifesto-word">light</span>
+          <span class="manifesto-word">and</span>
+          <span class="manifesto-pic inline-flex w-20 h-10 md:w-28 md:h-14 mx-1 overflow-hidden rounded-full align-middle">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=400&auto=format&fit=crop" alt="Material detail" class="w-full h-full object-cover">
+          </span>
+          <span class="manifesto-word">material</span>
+          <span class="manifesto-word">chosen</span>
+          <span class="manifesto-word">with</span>
+          <span class="manifesto-word italic">intention,</span>
+          <span class="manifesto-word">so</span>
+          <span class="manifesto-word">beauty</span>
+          <span class="manifesto-word">becomes</span>
+          <span class="manifesto-pic inline-flex w-20 h-10 md:w-28 md:h-14 mx-1 overflow-hidden rounded-full align-middle">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=400&auto=format&fit=crop" alt="Styled space" class="w-full h-full object-cover">
+          </span>
+          <span class="manifesto-word">something</span>
+          <span class="manifesto-word">you</span>
+          <span class="manifesto-word">live</span>
+          <span class="manifesto-word">in.</span>
+        </p>
+        <div class="mt-14 flex items-center gap-6">
+          <span class="h-px flex-1 bg-stone-200"></span>
+          <span class="text-[10px] tracking-widest uppercase text-stone-400">
+            Est. 2012 — New York
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="bg-[#3b4334] text-white py-24 lg:py-32 px-6 lg:px-12 overflow-hidden">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center">
+        <div class="lg:col-span-4 section-fade-up">
+          <h2 class="font-serif text-4xl md:text-5xl tracking-tight leading-tight mb-8">
+            From Concept
+            <br>
+            to Completion
+          </h2>
+          <a href="#" class="inline-flex bg-white text-[#3b4334] px-6 py-3.5 text-[10px] font-medium tracking-widest uppercase items-center gap-3 hover:bg-stone-200 transition-colors">
+            Our Process
+            <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+          </a>
+        </div>
+
+        <div class="lg:col-span-8">
+          <div class="flex flex-col md:flex-row gap-8 md:gap-0 relative">
+            <!-- Step 1 -->
+            <div class="flex-1 relative process-step opacity-0">
+              <!-- Line -->
+              <div class="hidden md:block absolute top-6 left-12 w-[calc(100%-3rem)] h-px bg-white/10">
+                <div class="h-full bg-white/60 w-0 process-line origin-left" style="width: 0%;"></div>
+              </div>
+
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 relative z-10 bg-[#3b4334]">
+                <iconify-icon icon="solar:lightbulb-linear" width="20" stroke-width="1.5"></iconify-icon>
+              </div>
+              <span class="block text-xs text-white/50 mb-1">01</span>
+              <h3 class="font-serif text-xl mb-3 tracking-tight">Discover</h3>
+              <p class="text-xs text-white/70 leading-relaxed pr-6">
+                We get to know you, your needs and your space.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex-1 relative process-step opacity-0">
+              <!-- Line -->
+              <div class="hidden md:block absolute top-6 left-12 w-[calc(100%-3rem)] h-px bg-white/10">
+                <div class="h-full bg-white/60 w-0 process-line origin-left" style="width: 0%;"></div>
+              </div>
+
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 relative z-10 bg-[#3b4334]">
+                <iconify-icon icon="solar:pen-new-square-linear" width="20" stroke-width="1.5"></iconify-icon>
+              </div>
+              <span class="block text-xs text-white/50 mb-1">02</span>
+              <h3 class="font-serif text-xl mb-3 tracking-tight">Design</h3>
+              <p class="text-xs text-white/70 leading-relaxed pr-6">
+                We create a tailored design that reflects you.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex-1 relative process-step opacity-0">
+              <!-- Line -->
+              <div class="hidden md:block absolute top-6 left-12 w-[calc(100%-3rem)] h-px bg-white/10">
+                <div class="h-full bg-white/60 w-0 process-line origin-left" style="width: 0%;"></div>
+              </div>
+
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 relative z-10 bg-[#3b4334]">
+                <iconify-icon icon="solar:settings-linear" width="20" stroke-width="1.5"></iconify-icon>
+              </div>
+              <span class="block text-xs text-white/50 mb-1">03</span>
+              <h3 class="font-serif text-xl mb-3 tracking-tight">Develop</h3>
+              <p class="text-xs text-white/70 leading-relaxed pr-6">
+                We refine every detail and bring it to life.
+              </p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="flex-1 relative process-step opacity-0">
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 relative z-10 bg-[#3b4334]">
+                <iconify-icon icon="solar:box-linear" width="20" stroke-width="1.5"></iconify-icon>
+              </div>
+              <span class="block text-xs text-white/50 mb-1">04</span>
+              <h3 class="font-serif text-xl mb-3 tracking-tight">Deliver</h3>
+              <p class="text-xs text-white/70 leading-relaxed pr-6">
+                We complete the project with care and precision.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Split Section: Why Choose & Testimonial -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 bg-[#111111]">
+      <!-- Image Col -->
+      <div class="h-[60vh] lg:h-auto overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1000&auto=format&fit=crop" alt="Dining Room" class="w-full h-full object-cover">
+      </div>
+
+      <!-- Why Choose Col - Premium Surface with Gradient Border -->
+      <div class="bg-gradient-to-br from-stone-200 via-white to-stone-300 p-[1px] relative z-10 lg:-ml-4 lg:mt-12 lg:mb-12 shadow-2xl">
+        <div class="bg-[#fcfbf9] w-full h-full p-12 md:p-16 flex flex-col justify-center">
+          <h2 class="font-serif text-3xl md:text-4xl text-stone-900 tracking-tight mb-6">
+            Why Choose
+            <br>
+            Haven?
+          </h2>
+          <p class="text-sm text-stone-600 leading-relaxed mb-8">
+            With a passion for design and a commitment to excellence, we
+            transform ordinary spaces into extraordinary experiences.
+          </p>
+
+          <ul class="space-y-4 mb-10">
+            <li class="flex items-center gap-3 text-xs text-stone-700">
+              <iconify-icon icon="solar:check-read-linear" width="18" class="text-stone-900"></iconify-icon>
+              10+ Years of Experience
+            </li>
+            <li class="flex items-center gap-3 text-xs text-stone-700">
+              <iconify-icon icon="solar:check-read-linear" width="18" class="text-stone-900"></iconify-icon>
+              100+ Projects Completed
+            </li>
+            <li class="flex items-center gap-3 text-xs text-stone-700">
+              <iconify-icon icon="solar:check-read-linear" width="18" class="text-stone-900"></iconify-icon>
+              Award-Winning Designs
+            </li>
+            <li class="flex items-center gap-3 text-xs text-stone-700">
+              <iconify-icon icon="solar:check-read-linear" width="18" class="text-stone-900"></iconify-icon>
+              Dedicated Design Team
+            </li>
+          </ul>
+
+          <div>
+            <a href="#" class="inline-flex bg-stone-900 text-white px-6 py-3.5 text-[10px] font-medium tracking-widest uppercase items-center gap-3 hover:bg-stone-800 transition-colors">
+              About Us
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial Col -->
+      <div class="bg-[#111111] text-white p-12 md:p-16 flex flex-col justify-center">
+        <span class="block text-[10px] tracking-widest uppercase text-white/50 mb-8">
+          Testimonial
+        </span>
+
+        <iconify-icon icon="solar:quote-left-linear" class="text-[#dcb66f] text-4xl mb-6"></iconify-icon>
+
+        <p class="font-serif text-xl md:text-2xl leading-snug tracking-tight text-white/90 mb-10">
+          Haven transformed our space beyond what we imagined. The team was
+          professional, creative and a joy to work with.
+        </p>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/72adc0f8-ad1f-4732-a5bf-c000b45152a2_320w.webp" alt="Emily R." class="w-10 h-10 rounded-full object-cover grayscale opacity-80">
+            <div>
+              <h4 class="text-sm font-medium">Emily R.</h4>
+              <p class="text-[10px] text-white/50">Homeowner</p>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+              <iconify-icon icon="solar:arrow-left-linear" width="16"></iconify-icon>
+            </button>
+            <button class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-24 bg-[#f4f4f4] px-6">
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20 section-fade-up">
+        <div class="flex items-center gap-8 flex-1">
+          <div class="w-24 h-24 shrink-0 rounded-full bg-[#4a5742] text-white flex items-center justify-center">
+            <iconify-icon icon="solar:letter-linear" text-3xl="" width="32"></iconify-icon>
+          </div>
+          <div>
+            <span class="block text-[10px] tracking-widest uppercase text-stone-500 mb-2">
+              Stay Inspired
+            </span>
+            <h2 class="font-serif text-2xl md:text-3xl tracking-tight text-stone-900 mb-2">
+              Subscribe to Our Newsletter
+            </h2>
+            <p class="text-xs text-stone-500">
+              Get the latest trends, design tips and exclusive updates straight
+              to your inbox.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex-1 w-full md:w-auto">
+          <!-- Premium Input Surface -->
+          <div class="bg-gradient-to-b from-stone-200 to-transparent p-[1px] shadow-sm flex">
+            <input type="email" placeholder="Enter your email address" class="w-full bg-white px-6 py-4 text-xs text-stone-800 placeholder:text-stone-400 focus:outline-none">
+            <button class="bg-[#111111] text-white px-8 py-4 text-[10px] tracking-widest uppercase font-medium hover:bg-stone-800 transition-colors shrink-0">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#111111] text-white pt-20 pb-8 px-6 lg:px-12">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-8 mb-16">
+        <div class="lg:col-span-2 pr-8">
+          <a href="#" class="text-xl tracking-[0.2em] font-medium inline-block mb-6">
+            H A V E N
+          </a>
+          <p class="text-xs text-white/50 leading-relaxed mb-8 max-w-xs">
+            We design beautiful, functional spaces that inspire and elevate
+            everyday living.
+          </p>
+          <div class="flex space-x-4 text-white/50">
+            <a href="#" class="hover:text-white transition-colors">
+              <iconify-icon icon="solar:camera-linear" width="20"></iconify-icon>
+            </a>
+            <a href="#" class="hover:text-white transition-colors">
+              <iconify-icon icon="solar:pen-linear" width="20"></iconify-icon>
+            </a>
+            <a href="#" class="hover:text-white transition-colors">
+              <iconify-icon icon="solar:link-linear" width="20"></iconify-icon>
+            </a>
+            <a href="#" class="hover:text-white transition-colors">
+              <iconify-icon icon="solar:letter-linear" width="20"></iconify-icon>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-[10px] tracking-widest uppercase text-white mb-6">
+            Services
+          </h4>
+          <ul class="space-y-3 text-xs text-white/50">
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Interior Design
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Space Planning
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Furniture Selection
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Renovation
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">Styling</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-[10px] tracking-widest uppercase text-white mb-6">
+            Company
+          </h4>
+          <ul class="space-y-3 text-xs text-white/50">
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Our Process
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">Careers</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">Press</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">Contact</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-[10px] tracking-widest uppercase text-white mb-6">
+            Resources
+          </h4>
+          <ul class="space-y-3 text-xs text-white/50">
+            <li>
+              <a href="#" class="hover:text-white transition-colors">Blog</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Design Guide
+              </a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">FAQs</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition-colors">
+                Sustainability
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-[10px] tracking-widest uppercase text-white mb-6">
+            Contact
+          </h4>
+          <ul class="space-y-3 text-xs text-white/50">
+            <li>hello@haven.studio</li>
+            <li>+1 (212) 555-0198</li>
+            <li class="leading-relaxed mt-2">
+              123 Design Street,
+              <br>
+              New York, NY 10001
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-[10px] text-white/40">
+          © 2024 Haven Studio. All rights reserved.
+        </p>
+        <div class="flex space-x-6 text-[10px] text-white/40">
+          <a href="#" class="hover:text-white transition-colors">
+            Privacy Policy
+          </a>
+          <a href="#" class="hover:text-white transition-colors">
+            Terms &amp; Conditions
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- GSAP Animations Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Subtle Hero Image Zoom
+          gsap.to("#hero-bg", {
+              scale: 1,
+              duration: 2,
+              ease: "power2.out"
+          });
+
+          // Masked Word Reveal on Hero Title
+          gsap.to('.masked-word', {
+              y: '0%',
+              duration: 1.2,
+              stagger: 0.08,
+              ease: 'power4.out',
+              delay: 0.2
+          });
+
+          // Fade in Hero elements
+          gsap.to('.fade-in-up', {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              stagger: 0.15,
+              ease: 'power3.out',
+              delay: 0.8
+          });
+
+          // General Section Fade Ups
+          gsap.utils.toArray('.section-fade-up').forEach(section => {
+              gsap.fromTo(section,
+                  { y: 40, opacity: 0 },
+                  {
+                      y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+                      scrollTrigger: { trigger: section, start: "top 85%" }
+                  }
+              );
+          });
+
+          // Philosophy Features Stagger
+          gsap.fromTo('.feature-item',
+              { y: 30, opacity: 0 },
+              {
+                  y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power2.out',
+                  scrollTrigger: { trigger: ".feature-item", start: "top 80%" }
+              }
+          );
+
+          // Project Cards Stagger
+          gsap.fromTo('.project-card',
+              { y: 40, opacity: 0 },
+              {
+                  y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power2.out',
+                  scrollTrigger: { trigger: ".project-card", start: "top 85%" }
+              }
+          );
+
+          // Process Timeline Animation
+          let tl = gsap.timeline({
+              scrollTrigger: { trigger: ".process-step", start: "top 75%" }
+          });
+
+          // Animate steps appearing
+          tl.fromTo('.process-step',
+              { y: 20, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.6, stagger: 0.2, ease: 'power2.out' }
+          );
+
+          // Animate connecting lines drawing
+          gsap.utils.toArray('.process-line').forEach((line, i) => {
+              gsap.to(line, {
+                  width: '100%',
+                  duration: 1,
+                  ease: 'power1.inOut',
+                  delay: i * 0.2,
+                  scrollTrigger: { trigger: ".process-step", start: "top 75%" }
+              });
+          });
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Infinite Marquee
+          gsap.to('.marquee-track', { xPercent: -50, repeat: -1, duration: 35, ease: 'none' });
+
+          // Services rows: staggered slide + clip reveal
+          gsap.utils.toArray('.service-row').forEach((row, i) => {
+              gsap.fromTo(row,
+                  { x: -50, opacity: 0, clipPath: 'inset(0 100% 0 0)' },
+                  {
+                      x: 0, opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.out', delay: i * 0.12,
+                      scrollTrigger: { trigger: '#services-list', start: 'top 75%' }
+                  }
+              );
+          });
+
+          // Stats: fade up + count numbers
+          gsap.utils.toArray('.stat-item').forEach((item, i) => {
+              gsap.fromTo(item,
+                  { y: 30, opacity: 0 },
+                  {
+                      y: 0, opacity: 1, duration: 0.8, ease: 'power2.out', delay: i * 0.15,
+                      scrollTrigger: { trigger: '#stats-section', start: 'top 80%' }
+                  }
+              );
+          });
+          gsap.utils.toArray('.stat-num').forEach(el => {
+              const target = parseInt(el.dataset.count, 10);
+              gsap.fromTo(el, { innerText: 0 }, {
+                  innerText: target, duration: 2, snap: { innerText: 1 }, ease: 'power1.out',
+                  scrollTrigger: { trigger: '#stats-section', start: 'top 80%' }
+              });
+          });
+
+          // Parallax editorial image
+          gsap.to('.parallax-img', {
+              yPercent: 15, ease: 'none',
+              scrollTrigger: { trigger: '.parallax-section', start: 'top bottom', end: 'bottom top', scrub: true }
+          });
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Manifesto: words ink-in as you scroll
+          gsap.fromTo('.manifesto-word', { opacity: 0.12 }, {
+              opacity: 1, stagger: 0.5, ease: 'none',
+              scrollTrigger: { trigger: '#manifesto-section', start: 'top 75%', end: 'bottom 85%', scrub: true }
+          });
+          gsap.utils.toArray('.manifesto-pic').forEach((pic, i) => {
+              gsap.fromTo(pic, { scale: 0.5, rotate: i % 2 ? 10 : -10 }, {
+                  scale: 1, rotate: 0, ease: 'none',
+                  scrollTrigger: { trigger: '#manifesto-section', start: 'top 75%', end: 'bottom 85%', scrub: true }
+              });
+          });
+
+          // Horizontal pinned gallery
+          const track = document.getElementById('horizontal-track');
+          if (track) {
+              const getScroll = () => track.scrollWidth - window.innerWidth;
+              const ht = gsap.to(track, {
+                  x: () => -getScroll(), ease: 'none',
+                  scrollTrigger: {
+                      trigger: '#horizontal-section', start: 'top top',
+                      end: () => '+=' + getScroll(), scrub: 1, pin: true,
+                      anticipatePin: 1, invalidateOnRefresh: true
+                  }
+              });
+              gsap.utils.toArray('.h-panel-img').forEach(img => {
+                  gsap.fromTo(img, { xPercent: -10 }, {
+                      xPercent: 0, ease: 'none',
+                      scrollTrigger: { trigger: img, containerAnimation: ht, start: 'left right', end: 'right left', scrub: true }
+                  });
+              });
+              gsap.to('#h-progress', {
+                  scaleX: 1, ease: 'none',
+                  scrollTrigger: { trigger: '#horizontal-section', start: 'top top', end: () => '+=' + getScroll(), scrub: true }
+              });
+          }
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Hero parallax on scroll
+          gsap.to('#hero-bg', {
+              yPercent: 8, ease: 'none',
+              scrollTrigger: { trigger: 'header', start: 'top top', end: 'bottom top', scrub: true }
+          });
+          gsap.to('#hero-content', {
+              yPercent: -15, opacity: 0.25, ease: 'none',
+              scrollTrigger: { trigger: 'header', start: 'top top', end: 'bottom top', scrub: true }
+          });
+
+          // Navbar scrolled state
+          const nav = document.getElementById('main-nav');
+          const onScroll = () => {
+              if (window.scrollY > 60) {
+                  nav.classList.add('bg-stone-900/80', 'backdrop-blur-md', 'py-4', 'shadow-lg');
+                  nav.classList.remove('mix-blend-difference', 'py-6');
+              } else {
+                  nav.classList.remove('bg-stone-900/80', 'backdrop-blur-md', 'py-4', 'shadow-lg');
+                  nav.classList.add('mix-blend-difference', 'py-6');
+              }
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          onScroll();
+      });
+    </script>
+  
+</body></html>

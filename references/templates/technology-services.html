@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script>try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}if(window.top&&window.top!==window){window.top.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24"}}catch(e){}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus / Vision &amp; Logic</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<!-- Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #050505;
+color: #ffffff;
+-webkit-font-smoothing: antialiased;
+}
+.reveal-wrapper {
+display: inline-block;
+overflow: hidden;
+vertical-align: top;
+margin-right: 0.25em;
+}
+.reveal-inner {
+display: inline-block;
+transform: translateY(100%);
+}
+details > summary {
+list-style: none;
+}
+details > summary::-webkit-details-marker {
+display: none;
+}
+@keyframes marquee {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+animation: marquee 40s linear infinite;
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="selection:bg-[#eab308] selection:text-white font-light">
+
+    <!-- Hero Section (Dark) -->
+    <section class="relative min-h-screen w-full flex flex-col overflow-hidden bg-[#0a0a0a]">
+        
+        <div id="webgl-container" class="absolute inset-0 z-0 pointer-events-none opacity-80" style="mask-image: linear-gradient(to bottom, transparent 20%, black 50%, black 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 20%, black 50%, black 100%);"></div>
+
+        <div class="relative z-10 w-full max-w-7xl mx-auto border-x border-white/5 flex-grow flex flex-col h-full min-h-screen">
+            
+            <header class="w-full flex justify-between items-center px-6 py-5 border-b border-white/5 bg-gradient-to-b from-[#1a1a1a]/90 to-[#0a0a0a]/50 backdrop-blur-md">
+                <div class="font-light tracking-tight text-lg text-white/90">
+                    NEXUS
+                </div>
+                
+                <nav class="hidden md:flex items-center space-x-12 text-sm font-light text-white/50 tracking-wide uppercase">
+                    <a href="#" class="hover:text-white transition-colors duration-300">Methodology +</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300">Capabilities +</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300">Initiatives +</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300">Engage +</a>
+                </nav>
+
+                <button class="px-5 py-2 text-sm font-light text-white/70 bg-white/5 hover:bg-white/10 border border-white/10 rounded-sm transition-all duration-300">
+                    Collaborate
+                </button>
+            </header>
+
+            <main class="flex-grow flex flex-col items-center justify-center text-center px-4 pt-10 pb-32 md:pb-48">
+                
+                <div class="mb-10 flex items-center justify-center w-full max-w-sm gap-4 opacity-70">
+                    <div class="h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-white/30"></div>
+                    <span class="font-mono text-sm tracking-[0.4em] uppercase text-white">N/01</span>
+                    <div class="h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-white/30"></div>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight max-w-[900px] leading-[1.1] mb-16 text-white/95">
+                    Translating today's objectives into tomorrow's infrastructure through logic, design, and computation.
+                </h1>
+
+                <div class="flex items-center justify-center w-full max-w-4xl mx-auto gap-6 md:gap-12 mt-4">
+                    <div class="h-px flex-grow bg-gradient-to-r from-transparent to-white/10 hidden md:block"></div>
+                    
+                    <div class="flex flex-col sm:flex-row items-center gap-5 shrink-0">
+                        <div class="relative group rounded-md p-[1px] bg-gradient-to-b from-white/20 via-white/5 to-transparent overflow-hidden">
+                            <button class="relative w-full h-full px-8 py-3.5 rounded-md bg-[#111] text-lg font-light text-white/80 hover:text-white transition-colors group-hover:bg-[#181818]">
+                                Schedule Intro
+                            </button>
+                        </div>
+
+                        <button class="px-8 py-3.5 rounded-md bg-[#eab308] text-white text-lg font-light hover:bg-[#ca8a04] transition-colors flex items-center gap-2">
+                            Explore Vectors
+                            <i data-lucide="arrow-right" class="w-4 h-4 mt-[1px]" stroke-width="1.5"></i>
+                        </button>
+                    </div>
+
+                    <div class="h-px flex-grow bg-gradient-to-l from-transparent to-white/10 hidden md:block"></div>
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <!-- The Problem Section (Light) -->
+    <section class="bg-white text-[#111] relative w-full border-t border-black/5 overflow-hidden py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
+            
+            <div class="mb-8">
+                <span class="inline-block text-sm font-mono uppercase tracking-widest" style="background-image: radial-gradient(circle, currentColor 1px, transparent 1px); background-size: 4px 4px; padding: 0.5rem 1rem; color: rgba(0,0,0,0.6)">The problem</span>
+            </div>
+            
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight text-center text-[#111] mb-24 leading-[1.1]">
+                Struggling with slow,<br>expensive onboarding?
+            </h2>
+
+            <div class="relative w-full flex justify-center opacity-90" style="-webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 50%, black 40%, transparent 100%); mask-image: radial-gradient(ellipse 80% 50% at 50% 50%, black 40%, transparent 100%);">
+                
+                <div class="flex w-max animate-marquee hover:[animation-play-state:paused] pr-6">
+                    
+                    <!-- Group 1 -->
+                    <div class="flex gap-4 md:gap-6 flex-shrink-0 scale-90 md:scale-100 items-center px-3">
+                        <!-- Col 1 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 -translate-y-8">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"New customers need to be onboarded in less than a day, not weeks."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 2 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 translate-y-8">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"We need to increase our Professional Services' margin by 40%."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 3 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-72 flex-shrink-0 -translate-y-4">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-8 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"Prospects' custom instances and demo should be created within minutes."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 4 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 translate-y-12">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"We need to decrease our implementation time by 70%."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 5 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 -translate-y-2">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"We are losing momentum during the technical handoff phase."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="flex gap-4 md:gap-6 flex-shrink-0 scale-90 md:scale-100 items-center px-3" aria-hidden="true">
+                        <!-- Col 1 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 -translate-y-8">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"New customers need to be onboarded in less than a day, not weeks."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 2 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 translate-y-8">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"We need to increase our Professional Services' margin by 40%."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 3 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-72 flex-shrink-0 -translate-y-4">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-8 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"Prospects' custom instances and demo should be created within minutes."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 4 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 translate-y-12">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"We need to decrease our implementation time by 70%."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                        <!-- Col 5 -->
+                        <div class="flex flex-col gap-4 md:gap-6 w-56 md:w-64 flex-shrink-0 -translate-y-2">
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="min-h-32 bg-white border border-black/[0.04] shadow-[0_8px_24px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex items-center justify-center text-center">
+                                <p class="text-lg text-black/80 font-light leading-relaxed">"We are losing momentum during the technical handoff phase."</p>
+                            </div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                            <div class="h-32 bg-[#fafafa]/80 border border-black/[0.03] rounded-2xl flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-black/[0.04]" stroke-width="1.5"></i></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Bento Section (Light) -->
+    <section class="md:py-32 text-[#111] font-sans bg-[#f5f5f7] w-full border-black/5 border-t pt-24 pb-24">
+        <div class="max-w-[1500px] mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+            
+            <!-- Left Main Image Component -->
+            <div class="lg:col-span-6 xl:col-span-5 relative w-full h-[600px] md:h-[800px] rounded-[2rem] overflow-hidden group border border-black/[0.04] shadow-[0_8px_40px_rgba(0,0,0,0.04)] bg-white">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6f65acfa-d747-4a1f-9d86-d66a528b1240_1600w.jpg" alt="Nexus Architecture Overview" class="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000 group-hover:scale-100">
+                <div class="absolute inset-0 bg-black/5 mix-blend-multiply"></div>
+                
+                <!-- Floating Navigation -->
+                <div class="absolute top-6 left-6 right-6 md:right-auto bg-white/95 backdrop-blur-md text-[#111] rounded-full px-6 py-3.5 flex items-center justify-between md:justify-start gap-8 text-sm font-light z-20 shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-black/5">
+                    <div class="flex items-center gap-2 font-medium tracking-tight">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="16" height="16" x="4" y="4" rx="2" ry="2"></rect><rect width="6" height="6" x="9" y="9" rx="1" ry="1"></rect><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M2 12h2"></path><path d="M20 12h2"></path></svg>
+                        nexus-core
+                    </div>
+                    <div class="hidden md:flex items-center gap-6 text-black/60">
+                        <a href="#" class="hover:text-black transition-colors">Topology</a>
+                        <a href="#" class="hover:text-black transition-colors">Logic</a>
+                        <a href="#" class="hover:text-black transition-colors">State</a>
+                        <a href="#" class="hover:text-black transition-colors">Deploy</a>
+                    </div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 md:ml-2 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <div class="absolute inset-y-0 left-6 flex items-center z-10">
+                    <button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-black/5 flex items-center justify-center text-black/70 hover:text-black hover:bg-white transition-all shadow-sm hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m15 18-6-6 6-6"></path></svg>
+                    </button>
+                </div>
+                <div class="absolute inset-y-0 right-6 flex items-center z-10">
+                    <button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-black/5 flex items-center justify-center text-black/70 hover:text-black hover:bg-white transition-all shadow-sm hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Bento Grid Container -->
+            <div class="lg:col-span-6 xl:col-span-7 flex flex-col gap-6 md:gap-8 h-full">
+                
+                <!-- Top Data Row -->
+                <div class="flex flex-col md:flex-row gap-6 md:gap-8">
+                    
+                    <!-- Profile Card -->
+                    <div class="flex-1 bg-white rounded-[2rem] p-8 md:p-10 flex flex-col justify-between border border-black/[0.04] shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
+                        <div class="flex items-center gap-5 mb-8">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d4340f08-d355-4926-afca-701af404821c_320w.webp" alt="Abstract Core Matrix" class="w-16 h-16 rounded-full object-cover border border-black/5 shadow-sm">
+                            <div class="">
+                                <div class="text-xl font-medium text-black tracking-tight mb-0.5">NEXUS Core Engine</div>
+                                <div class="text-sm font-light text-black/50 tracking-wide">v2.4.1 — Production</div>
+                            </div>
+                        </div>
+                        <p class="text-lg font-light text-black/70 leading-relaxed max-w-[95%]">
+                            Engineered for deterministic execution. The core processes high-throughput topological data, resolving complex infrastructural variables with absolute precision and sub-millisecond latency.
+                        </p>
+                    </div>
+
+                    <!-- Modules Links Column -->
+                    <div class="w-full md:w-64 flex flex-col gap-3 shrink-0">
+                        <a href="#" class="w-full bg-white border border-black/[0.04] hover:border-black/10 hover:bg-gray-50 rounded-[1.25rem] px-5 py-4 flex justify-between items-center text-sm font-light text-black/80 transition-all shadow-[0_2px_10px_rgba(0,0,0,0.01)] group">
+                            Global Edge
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-black/40 group-hover:text-black/70 transition-colors"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </a>
+                        <a href="#" class="w-full bg-white border border-black/[0.04] hover:border-black/10 hover:bg-gray-50 rounded-[1.25rem] px-5 py-4 flex justify-between items-center text-sm font-light text-black/80 transition-all shadow-[0_2px_10px_rgba(0,0,0,0.01)] group">
+                            Data Matrix
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-black/40 group-hover:text-black/70 transition-colors"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>
+                        </a>
+                        <a href="#" class="w-full bg-white border border-black/[0.04] hover:border-black/10 hover:bg-gray-50 rounded-[1.25rem] px-5 py-4 flex justify-between items-center text-sm font-light text-black/80 transition-all shadow-[0_2px_10px_rgba(0,0,0,0.01)] group">
+                            Auth Gateway
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-black/40 group-hover:text-black/70 transition-colors"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </a>
+                        <a href="#" class="w-full bg-white border border-black/[0.04] hover:border-black/10 hover:bg-gray-50 rounded-[1.25rem] px-5 py-4 flex justify-between items-center text-sm font-light text-black/80 transition-all shadow-[0_2px_10px_rgba(0,0,0,0.01)] group">
+                            Event Stream
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-black/40 group-hover:text-black/70 transition-colors"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                        </a>
+                        <button class="w-full mt-auto bg-[#111] hover:bg-black rounded-[1.25rem] px-5 py-4 flex justify-between items-center text-sm font-medium tracking-wide text-white transition-all shadow-[0_4px_14px_rgba(0,0,0,0.2)]">
+                            Initialize
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-white/70"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mid-section Header -->
+                <div class="flex justify-between items-center px-3 py-1 mt-2">
+                    <div class="text-sm font-light text-black/60 flex items-center gap-2 tracking-wide uppercase">
+                        Active Vectors <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 opacity-70"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+                    </div>
+                    <a href="#" class="text-sm font-light text-black/80 underline decoration-black/20 underline-offset-4 hover:decoration-black/60 transition-colors">
+                        View Metrics
+                    </a>
+                </div>
+
+                <!-- Bottom Image Cards Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 flex-1 min-h-[350px] md:min-h-0">
+                    
+                    <!-- Card: Compute -->
+                    <div class="relative w-full h-[320px] md:h-full bg-white rounded-[2rem] overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.03)] border border-black/[0.04]">
+                        <!-- Cutout Tab Illusion -->
+                        <div class="absolute top-0 left-0 bg-[#f5f5f7] px-5 py-2.5 rounded-br-2xl z-10 text-xs font-medium tracking-widest uppercase text-black/70">
+                            Compute
+                        </div>
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/83b7d567-0b08-4ab3-b1b0-a4f5ceecc3e2_1600w.jpg" alt="Compute Allocation" class="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000 group-hover:scale-100">
+                    </div>
+
+                    <!-- Card: Topology -->
+                    <div class="relative w-full h-[320px] md:h-full bg-white rounded-[2rem] overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.03)] border border-black/[0.04]">
+                        <!-- Cutout Tab Illusion -->
+                        <div class="absolute top-0 left-0 bg-[#f5f5f7] px-5 py-2.5 rounded-br-2xl z-10 text-xs font-medium tracking-widest uppercase text-black/70">
+                            Topology
+                        </div>
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c9104c6d-9521-4057-b664-ed476bf3039e_1600w.webp" alt="System Topology" class="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000 group-hover:scale-100">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section (Dark) -->
+    <section class="bg-[#050505] text-white relative w-full border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 border-x border-white/5">
+            
+            <div class="text-center mb-20 flex flex-col items-center">
+                <div class="mb-6">
+                    <span class="inline-block text-white/60 text-sm font-mono uppercase tracking-[0.2em]" style="background-image: radial-gradient(circle, currentColor 1px, transparent 1px); background-size: 4px 4px; padding: 0.5rem 1rem;">Investment Vectors</span>
+                </div>
+                <h3 class="text-4xl md:text-6xl font-light tracking-tight text-white/95 mb-10 js-reveal-text"><span class="reveal-wrapper"><span class="reveal-inner">Architectural&nbsp;Allocation</span></span></h3>
+                
+                <!-- Custom Toggle -->
+                <div class="inline-flex bg-[#111] border border-white/10 rounded-full p-1 relative">
+                    <div class="absolute inset-y-1 left-1 w-[calc(50%-4px)] bg-white/10 rounded-full shadow-sm transition-transform duration-300"></div>
+                    <button class="relative z-10 px-8 py-2 rounded-full text-sm text-white font-light w-36">Monthly</button>
+                    <button class="relative z-10 px-8 py-2 rounded-full text-sm text-white/50 hover:text-white transition-colors w-36">Annually</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+                
+                <!-- Tier 1 -->
+                <div class="border border-white/10 bg-[#0a0a0a] rounded-xl p-8 flex flex-col transition-colors hover:border-white/20">
+                    <div class="text-sm font-light text-white/50 mb-4 uppercase tracking-wider">Foundation</div>
+                    <div class="text-5xl font-light tracking-tight mb-4">$4,500 <span class="text-lg text-white/30 tracking-normal">/mo</span></div>
+                    <p class="text-lg text-white/50 mb-10 font-light leading-relaxed">Initial architecture and strategic alignment for emerging entities.</p>
+                    
+                    <ul class="space-y-5 flex-grow mb-10">
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Vector Analysis Mapping
+                        </li>
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Core Logic Implementation
+                        </li>
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Asynchronous Support
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3.5 rounded-md bg-white/5 border border-white/10 text-sm text-white/80 hover:bg-white/10 transition-colors font-light">Initiate Protocol</button>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="border border-white/20 bg-[#111] rounded-xl p-8 flex flex-col relative overflow-hidden transform md:-translate-y-4 shadow-[0_0_40px_rgba(234,179,8,0.05)]">
+                    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#eab308] to-transparent opacity-70"></div>
+                    
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-sm font-light text-[#eab308] uppercase tracking-wider">Velocity</div>
+                        <div class="text-xs px-2.5 py-1 rounded-full bg-[#eab308]/10 border border-[#eab308]/20 text-[#eab308] tracking-wide">OPTIMAL</div>
+                    </div>
+                    
+                    <div class="text-5xl font-light tracking-tight mb-4">$9,200 <span class="text-lg text-white/30 tracking-normal">/mo</span></div>
+                    <p class="text-lg text-white/50 mb-10 font-light leading-relaxed">Accelerated deployment and sustained momentum for scaling systems.</p>
+                    
+                    <ul class="space-y-5 flex-grow mb-10">
+                        <li class="flex items-start gap-3 text-lg text-white/90 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5" stroke-width="1.5"></i>
+                            Everything in Foundation
+                        </li>
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Continuous Integration Matrix
+                        </li>
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Synchronous Strategy Sessions
+                        </li>
+                        
+                    </ul>
+                    
+                    <button class="w-full py-3.5 rounded-md bg-[#eab308] text-sm text-white hover:bg-[#ca8a04] transition-colors font-light">Accelerate Now</button>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="border border-white/10 bg-[#0a0a0a] rounded-xl p-8 flex flex-col transition-colors hover:border-white/20">
+                    <div class="text-sm font-light text-white/50 mb-4 uppercase tracking-wider">Omni</div>
+                    <div class="text-5xl font-light tracking-tight mb-4">Custom</div>
+                    <p class="text-lg text-white/50 mb-10 font-light leading-relaxed">Bespoke infrastructure and unlimited bandwidth for enterprise resilience.</p>
+                    
+                    <ul class="space-y-5 flex-grow mb-10">
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Unrestricted Scope
+                        </li>
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Dedicated Pod Integration
+                        </li>
+                        <li class="flex items-start gap-3 text-lg text-white/70 font-light">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-[#eab308] mt-0.5 opacity-80" stroke-width="1.5"></i>
+                            Quarterly On-Site Summits
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3.5 rounded-md bg-white/5 border border-white/10 text-sm text-white/80 hover:bg-white/10 transition-colors font-light">Discuss Parameters</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section (Light) -->
+    <section class="bg-[#f5f5f7] text-[#111] relative w-full border-t border-black/10">
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 border-x border-black/5">
+            
+            <div class="md:col-span-4 lg:col-span-4">
+                <div class="sticky top-24">
+                    <div class="mb-6">
+                        <span class="inline-block text-black/60 text-sm font-mono uppercase tracking-[0.2em]" style="background-image: radial-gradient(circle, currentColor 1px, transparent 1px); background-size: 4px 4px; padding: 0.5rem 1rem;">Inquiries</span>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-light tracking-tight mb-6 js-reveal-text"><span class="reveal-wrapper"><span class="reveal-inner">Operational&nbsp;Clarity</span></span></h3>
+                    <p class="text-lg text-black/50 leading-relaxed max-w-sm font-light">
+                        Understanding our engagement models, deployment strategies, and infrastructural philosophies.
+                    </p>
+                </div>
+            </div>
+
+            <div class="md:col-span-8 lg:col-span-8">
+                <div class="divide-y divide-black/10 border-t border-black/10">
+                    
+                    <details class="group py-8" open="">
+                        <summary class="flex justify-between items-center cursor-pointer text-xl md:text-2xl font-light tracking-tight text-black/90 outline-none select-none">
+                            What defines your structural methodology?
+                            <span class="relative flex-shrink-0 ml-4 w-5 h-5 flex items-center justify-center">
+                                <span class="absolute h-px w-5 bg-black/60 transition-transform duration-300"></span>
+                                <span class="absolute h-px w-5 bg-black/60 rotate-90 transition-transform duration-300 group-open:rotate-0"></span>
+                            </span>
+                        </summary>
+                        <div class="pt-6 text-lg md:text-xl text-black/60 leading-relaxed font-light pr-8 md:pr-12">
+                            We operate on a principle of deterministic design. This means every component, from micro-interactions to macro-architecture, is engineered with explicit intent. We do not rely on templates; we construct bespoke logic frameworks tailored to specific operational vectors.
+                        </div>
+                    </details>
+
+                    <details class="group py-8">
+                        <summary class="flex justify-between items-center cursor-pointer text-xl md:text-2xl font-light tracking-tight text-black/90 outline-none select-none">
+                            How do engagement phases sequence?
+                            <span class="relative flex-shrink-0 ml-4 w-5 h-5 flex items-center justify-center">
+                                <span class="absolute h-px w-5 bg-black/60 transition-transform duration-300"></span>
+                                <span class="absolute h-px w-5 bg-black/60 rotate-90 transition-transform duration-300 group-open:rotate-0"></span>
+                            </span>
+                        </summary>
+                        <div class="pt-6 text-lg md:text-xl text-black/60 leading-relaxed font-light pr-8 md:pr-12">
+                            Engagements initiate with a rigorous Discovery Phase to map variables, followed by Architectural Formulation. Once approved, we move into Asynchronous Deployment, ensuring rapid iteration without stalling your internal momentum, culminating in continuous structural refinement.
+                        </div>
+                    </details>
+
+                    <details class="group py-8">
+                        <summary class="flex justify-between items-center cursor-pointer text-xl md:text-2xl font-light tracking-tight text-black/90 outline-none select-none">
+                            Can we transition between allocation tiers?
+                            <span class="relative flex-shrink-0 ml-4 w-5 h-5 flex items-center justify-center">
+                                <span class="absolute h-px w-5 bg-black/60 transition-transform duration-300"></span>
+                                <span class="absolute h-px w-5 bg-black/60 rotate-90 transition-transform duration-300 group-open:rotate-0"></span>
+                            </span>
+                        </summary>
+                        <div class="pt-6 text-lg md:text-xl text-black/60 leading-relaxed font-light pr-8 md:pr-12">
+                            Fluidity is essential for survival. Tiers are designed to be malleable. You can escalate to Velocity during high-impact sprints and return to Foundation during consolidation periods. Adjustments take effect at the beginning of the subsequent operational cycle.
+                        </div>
+                    </details>
+
+                    <details class="group py-8">
+                        <summary class="flex justify-between items-center cursor-pointer text-xl md:text-2xl font-light tracking-tight text-black/90 outline-none select-none">
+                            What constitutes 'Asynchronous Support'?
+                            <span class="relative flex-shrink-0 ml-4 w-5 h-5 flex items-center justify-center">
+                                <span class="absolute h-px w-5 bg-black/60 transition-transform duration-300"></span>
+                                <span class="absolute h-px w-5 bg-black/60 rotate-90 transition-transform duration-300 group-open:rotate-0"></span>
+                            </span>
+                        </summary>
+                        <div class="pt-6 text-lg md:text-xl text-black/60 leading-relaxed font-light pr-8 md:pr-12">
+                            We utilize dedicated, encrypted channels for rapid data exchange and issue resolution. This eliminates the latency of traditional meetings, allowing our engineers to parse requests and deploy fixes within a 24-hour SLA window while you maintain operational focus.
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050505] text-white w-full border-t border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 py-16 md:py-24 border-x border-white/5 flex flex-col">
+            
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-12 lg:gap-8 mb-24">
+                
+                <div class="md:col-span-2">
+                    <div class="text-2xl font-light tracking-tight text-white/90 mb-6">NEXUS</div>
+                    <p class="text-lg text-white/40 max-w-sm leading-relaxed font-light">
+                        Structuring the unseen. Engineering the inevitable. Building the foundational layer for tomorrow's digital topography.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col gap-5">
+                    <div class="text-sm font-light text-white/80 mb-1 uppercase tracking-wider">Topology</div>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Logic Models</a>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Component Sets</a>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">System Status</a>
+                </div>
+                
+                <div class="flex flex-col gap-5">
+                    <div class="text-sm font-light text-white/80 mb-1 uppercase tracking-wider">Directives</div>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Manifesto</a>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Case Studies</a>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Signal Blog</a>
+                </div>
+
+                <div class="flex flex-col gap-5">
+                    <div class="text-sm font-light text-white/80 mb-1 uppercase tracking-wider">Legal</div>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Privacy Policy</a>
+                    <a href="#" class="text-lg text-white/40 hover:text-white transition-colors font-light">Terms of Service</a>
+                </div>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 gap-6">
+                <div class="text-sm text-white/30 font-light tracking-wide">
+                    © 2024 N/01 Protocol. All constraints applied.
+                </div>
+                <div class="flex gap-6">
+                    <a href="#" class="text-white/30 hover:text-white transition-colors">
+                        <i data-lucide="mail" class="w-5 h-5" stroke-width="1.5"></i>
+                    </a>
+                    <a href="#" class="text-white/30 hover:text-white transition-colors">
+                        <i data-lucide="hash" class="w-5 h-5" stroke-width="1.5"></i>
+                    </a>
+                    <a href="#" class="text-white/30 hover:text-white transition-colors">
+                        <i data-lucide="graduation-cap" class="w-5 h-5" stroke-width="1.5"></i>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Initialize Lucide Icons
+            lucide.createIcons();
+            
+            // --- Three.js WebGL Setup ---
+            const initWebGL = () => {
+                const container = document.getElementById('webgl-container');
+                if (!container) return;
+
+                const scene = new THREE.Scene();
+                
+                const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 30;
+                camera.position.y = 5;
+
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                container.appendChild(renderer.domElement);
+
+                const geometry = new THREE.BufferGeometry();
+                const count = 15000;
+                const positions = new Float32Array(count * 3);
+                
+                const radius = 25;
+
+                for (let i = 0; i < count; i++) {
+                    const u = Math.random();
+                    const v = Math.random();
+                    const theta = u * 2.0 * Math.PI;
+                    const phi = Math.acos((Math.random() * 0.8) + 0.2);
+
+                    const x = radius * Math.sin(phi) * Math.cos(theta);
+                    const y = radius * Math.cos(phi);
+                    const z = radius * Math.sin(phi) * Math.sin(theta);
+
+                    positions[i * 3] = x;
+                    positions[i * 3 + 1] = y - 20;
+                    positions[i * 3 + 2] = z;
+                }
+
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                const material = new THREE.PointsMaterial({
+                    size: 0.08,
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.4,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+
+                const particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    particles.rotation.y += 0.0008;
+                    particles.rotation.z += 0.0002;
+                    renderer.render(scene, camera);
+                };
+
+                animate();
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            };
+
+            // --- GSAP Masked Text Reveal Setup ---
+            const initGSAP = () => {
+                gsap.registerPlugin(ScrollTrigger);
+
+                const revealTexts = document.querySelectorAll('.js-reveal-text');
+
+                revealTexts.forEach(textEl => {
+                    const text = textEl.innerText;
+                    textEl.innerHTML = '';
+                    
+                    const words = text.split(' ');
+                    words.forEach((word, i) => {
+                        const wrapper = document.createElement('span');
+                        wrapper.className = 'reveal-wrapper';
+                        
+                        const inner = document.createElement('span');
+                        inner.className = 'reveal-inner';
+                        inner.innerText = word + (i < words.length - 1 ? '\u00A0' : '');
+                        
+                        wrapper.appendChild(inner);
+                        textEl.appendChild(wrapper);
+                    });
+
+                    gsap.to(textEl.querySelectorAll('.reveal-inner'), {
+                        y: '0%',
+                        duration: 1.2,
+                        stagger: 0.03,
+                        ease: 'power4.out',
+                        scrollTrigger: {
+                            trigger: textEl,
+                            start: 'top 85%',
+                            toggleActions: 'play none none reverse'
+                        }
+                    });
+                });
+            };
+
+            initWebGL();
+            setTimeout(initGSAP, 150);
+        });
+    </script>
+
+</body></html>

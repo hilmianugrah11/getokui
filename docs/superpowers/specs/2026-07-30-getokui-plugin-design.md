@@ -34,8 +34,8 @@ local and curated.
 The reference library ships **inside the plugin** under `references/`. A single
 `/plugin install` pulls the manifest, the five skills, and the whole library
 together — one repo, one install step, works offline immediately. The library is
-only ~2MB, so bundling keeps install trivially fast while removing the separate
-clone that could fail during a live demo.
+~28MB (213 templates + WebP thumbs), so bundling keeps install self-contained
+while removing the separate clone that could fail during a live demo.
 
 ```
 getokui/
@@ -45,7 +45,7 @@ getokui/
 ├── references/              # BUNDLED library — ships with the plugin
 │   ├── index.json           # metadata for all templates (read by the agent)
 │   ├── templates/
-│   │   └── <slug>.html      # 20 curated templates
+│   │   └── <slug>.html      # all 213 templates
 │   └── thumbs/
 │       └── <slug>.webp      # self-screenshotted, WebP, compressed
 └── skills/
@@ -140,7 +140,7 @@ ${CLAUDE_PLUGIN_ROOT}/references/index.json   ← already there after install
 
 **Why bundle (not fetch per-request, not a second repo):** lighter at use time
 (reads local files, no network latency), one public repo, one install step, and
-demos don't depend on connectivity. Total library size is small (~2MB, see §7).
+demos don't depend on connectivity. Total library size is ~28MB (see §7).
 This is also the core difference from `design-agent`, which searches for live
 references from the web on every request — getokui is offline & curated.
 
@@ -172,9 +172,10 @@ to *match* without having to read the HTML first.
 
 Fields:
 - `slug` — unique id, same as the `.html` & `.webp` filename.
-- `category` — main bucket for fast filtering: `landing`, `fintech`,
-  `real-estate`, `portfolio`, `ecommerce`, `restaurant`, `wellness`, `gaming`,
-  `agency`, `architecture`.
+- `category` — main bucket for fast filtering, inferred from each template:
+  `ai-saas`, `saas`, `fintech`, `crypto-web3`, `dev-tools`, `real-estate`,
+  `architecture`, `portfolio`, `restaurant`, `wellness`, `luxury`, `travel`,
+  `music`, `cinematic`, `gaming`, `agency`, `tech` (generic/fallback).
 - `tags` — keywords for finer matching.
 - `description` — one sentence, so the agent understands the "feel" without
   reading the HTML.
@@ -248,29 +249,42 @@ with a quick internal review first. Neither writes into the bundled
 
 ---
 
-## 7. Curation & Thumbnail Pipeline
+## 7. Curation & Catalog Pipeline
 
-References are prepared **manually** (quality guaranteed, stable demos). Initial
-source: 213 templates scraped in `template/aura` — pick the **15-25 best & most
-varied** (landing pages across verticals: SaaS/AI, fintech, real-estate,
-portfolio, e-commerce, restaurant, wellness, gaming, agency, architecture).
+The library includes **all 213 templates** from `template/aura` — the full pool,
+no template left out. Cataloging is automated by four scripts in `scripts/`:
 
-**Thumbnails are made by us (NO supabase / external URLs):**
+1. **`scan.mjs`** — Playwright headless (chromium-1223) opens each of the 213
+   HTML files (local, `file://`), waits 1200ms for render to settle, and
+   screenshots the desktop viewport **1280×800** → `scripts/_scan/<slug>.png`.
+   Resume-safe (skips existing). Playwright is already a dependency in
+   `template/aura/package.json` (^1.61.1).
+2. **`contact.py`** — Pillow builds contact-sheet grids (5×6) from the PNGs so
+   the whole pool can be eyeballed at once → `scripts/_contact/sheet_NN.png`.
+   (Review aid only; not shipped.)
+3. **`catalog.py`** — for each template, extract metadata and write
+   `references/index.json`:
+   - `name` ← `<title>` (or prettified slug),
+   - `fonts` ← Google Fonts families in the HTML,
+   - `colors` ← dominant palette **sampled from the rendered PNG** (Pillow
+     median-cut) — accurate to what actually renders, not Tailwind classes,
+   - `category` ← inferred from slug keywords (17-bucket ruleset, `tech`
+     fallback),
+   - `tags` / `sections` / `description` ← slug tokens + HTML probes + heuristics.
+4. **`publish.py`** — copy all 213 HTML verbatim → `references/templates/`, and
+   convert each PNG → **WebP** (Pillow, 640px wide, quality 80) →
+   `references/thumbs/<slug>.webp`.
 
-1. Open each curated HTML template with **Playwright headless** (local file).
-   - Playwright is already a dependency in `template/aura/package.json`
-     (^1.61.1).
-2. Screenshot the desktop viewport **1280×800**, waiting for render to settle.
-3. Convert to **WebP** + compress with **Pillow** (quality ~80, resize to
-   ~640px wide).
-4. Save to `thumbs/<slug>.webp`.
+Result: ~17KB per thumbnail, ~3.5MB thumbs + ~24.7MB HTML = **~28MB** total.
 
-Result: ~20-50KB per thumbnail. 25 thumbnails ≈ ~1MB. The library repo stays
-light.
+**Why screenshot & catalog ourselves (NO supabase / external URLs):** all assets
+are our own production, living in the repo, bundled with the plugin. No
+dependency on an external URL that could die/change, and no network at runtime.
 
-**Why screenshot ourselves:** all assets are our own production, living in the
-repo, bundled with the plugin along with everything else. No dependency on an
-external URL that could die/change.
+**Why all 213 (not a hand-picked 15-25):** more coverage = better matches for any
+brief. The `category`/`tags` metadata + ranking in `brainstorming` still surface
+only the 5 best candidates per request, so the larger pool never overwhelms the
+user — it just widens what the agent can draw from.
 
 ---
 
@@ -390,8 +404,9 @@ library** bundled with the plugin — offline, demo-safe, quality guaranteed.
 
 - Dashboard preview (gallery on the left + iframe on the right) — **deferred**,
   focus on the skill first for a safe demo (no server that can crash).
-- Final number of curated templates (15 or 25) — decide when filling the
-  library.
+- ~~Final number of curated templates (15 or 25)~~ — **resolved:** ship all 213
+  (auto-cataloged via `catalog.py`); ranking keeps the user seeing only 5 per
+  request.
 - How far "adaptation" goes (swap text+colors only, or allow layout changes) —
   default: layout changes allowed, agent uses judgment.
 - Need a lightweight registry/journal to track used templates? — optional, next

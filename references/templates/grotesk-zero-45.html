@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grotesk Zero — a typeface by Halftone Foundry</title>
+<meta name="description" content="Grotesk Zero. 9 weights, 2 widths, variable. A grotesk that holds its counters open at 7 pixels and its nerve at 700 weight. By Halftone Foundry.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--bone:#f4f1ea; --ink:#161513; --verm:#d43d17;
+--hair-ink:rgba(22,21,19,.16); --hair-bone:rgba(244,241,234,.18);
+--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+--arch:'Archivo','Helvetica Neue',Arial,sans-serif;
+--ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html,body{overflow-x:clip}
+body{
+background:var(--bone); color:var(--ink); font-family:var(--arch);
+-webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+::selection{background:var(--verm);color:var(--bone)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.vr{color:var(--verm)}
+/* grain */
+body::after{
+content:""; position:fixed; inset:-50%; z-index:90; pointer-events:none; opacity:.05;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+animation:grain 7s steps(10) infinite;
+}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,3%)}}
+/* ---------- cursor ---------- */
+.cursor{position:fixed;z-index:99;top:0;left:0;width:8px;height:8px;border-radius:50%;
+background:var(--verm);pointer-events:none;transform:translate(-50%,-50%);
+transition:width .3s var(--ease),height .3s var(--ease),opacity .3s}
+.cursor.is-link{width:42px;height:42px;background:transparent;border:1px solid var(--verm)}
+@media(pointer:coarse){.cursor{display:none}}
+/* ---------- veil ---------- */
+.veil{position:fixed;inset:0;z-index:80;background:var(--ink);
+display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.veil .mono{color:rgba(244,241,234,.55)}
+.veil .mark{font-family:var(--arch);font-weight:900;font-size:clamp(20px,3vw,30px);
+letter-spacing:.04em;color:var(--bone)}
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;
+justify-content:space-between;padding:18px 3.2vw;mix-blend-mode:difference;color:#fff}
+nav .wordmark{font-weight:900;font-size:15px;letter-spacing:.05em;
+font-variation-settings:'wght' 900;transition:font-variation-settings .5s var(--ease)}
+nav .wordmark:hover{font-variation-settings:'wght' 100}
+nav .links{display:flex;gap:30px;align-items:center}
+nav .links a{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+position:relative}
+nav .links a::after{content:"";position:absolute;left:0;bottom:-5px;height:1px;width:0;
+background:currentColor;transition:width .35s var(--ease)}
+nav .links a:hover::after{width:100%}
+nav .buy{border:1px solid currentColor;padding:9px 18px;font-family:var(--mono);
+font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+@media(max-width:760px){nav .links a:not(.buy){display:none}}
+/* ---------- scenes (pin rig) ---------- */
+section{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.scene-tag{position:absolute;right:3.2vw;bottom:18px;z-index:5;
+font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:inherit;opacity:.4;text-transform:uppercase}
+/* ---------- 02 hero ---------- */
+.hero{height:100vh;height:100svh;position:relative;display:flex;flex-direction:column;
+justify-content:center;padding:0 3.2vw;background:var(--bone)}
+.reg-v,.reg-h{position:absolute;background:var(--hair-ink);z-index:1}
+.reg-v{top:0;bottom:0;width:1px;left:50%;transform-origin:top;transform:scaleY(0)}
+.reg-h{left:0;right:0;height:1px;top:50%;transform-origin:left;transform:scaleX(0)}
+.reg-cross{position:absolute;right:3.2vw;top:96px;width:26px;height:26px;opacity:0}
+.reg-cross::before,.reg-cross::after{content:"";position:absolute;background:var(--ink)}
+.reg-cross::before{left:50%;top:0;bottom:0;width:1px}
+.reg-cross::after{top:50%;left:0;right:0;height:1px}
+.hero-title{position:relative;z-index:2;line-height:.86;user-select:none}
+.hero-title .row{display:block;overflow:hidden}
+.hero-title .row > span{display:inline-block;transform:translateY(115%)}
+.hero-title .ch{display:inline-block;font-weight:900;
+font-size:clamp(64px,12.4vw,196px);letter-spacing:-.035em;
+font-variation-settings:'wght' 900,'wdth' 100}
+.hero-title .row.thin .ch{font-variation-settings:'wght' 100,'wdth' 100}
+.hero-meta{position:absolute;right:3.2vw;bottom:41vh;z-index:2;text-align:right;
+font-family:var(--mono);font-size:11px;letter-spacing:.14em;line-height:2.1;
+text-transform:uppercase;color:rgba(22,21,19,.62)}
+.hero-meta b{color:var(--ink);font-weight:500}
+.hero-kicker{position:absolute;left:3.2vw;top:96px;z-index:2}
+.hero-cue{position:absolute;left:3.2vw;bottom:18px;z-index:2;opacity:.75;
+color:rgba(244,241,234,.85);animation:cue 2.6s infinite}
+@keyframes cue{50%{opacity:.15}}
+.hero-sub{margin-top:4vh;max-width:430px;font-size:15px;line-height:1.6;
+color:rgba(22,21,19,.82);z-index:2;position:relative;
+opacity:0;transform:translateY(20px)}
+.hero-bed{position:absolute;left:0;right:0;bottom:0;height:44vh;z-index:1;margin:0;
+overflow:hidden;opacity:0}
+.hero-bed img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;
+filter:grayscale(1) contrast(1.06) brightness(1.08);mix-blend-mode:multiply}
+/* the dissolve is a painted bone gradient ON TOP of the image (an alpha mask on
+the figure dropped out whenever the img got its own compositor layer) */
+.hero-bed::after{content:"";position:absolute;inset:0;pointer-events:none;
+background:radial-gradient(62% 80% at 22% 22%,rgba(244,241,234,.96) 0%,rgba(244,241,234,.78) 42%,rgba(244,241,234,0) 76%),
+linear-gradient(180deg,var(--bone) 0,rgba(244,241,234,.88) 16%,rgba(244,241,234,.42) 44%,rgba(244,241,234,0) 74%)}
+.hero-bed figcaption{position:absolute;right:3.2vw;bottom:14px;z-index:3;
+color:rgba(244,241,234,.6);font-family:var(--mono);font-size:10px;
+letter-spacing:.18em;text-transform:uppercase}
+@media(max-width:760px){.hero-bed{height:26vh}}
+/* ---------- 03 ribbons ---------- */
+.ribbons{border-top:1px solid var(--hair-ink);border-bottom:1px solid var(--hair-ink);
+padding:10px 0;background:var(--bone);overflow:clip}
+.ribbon{white-space:nowrap;will-change:transform}
+.ribbon span{display:inline-block;font-size:clamp(28px,4.4vw,58px);letter-spacing:.02em;
+padding-right:3vw;line-height:1.25}
+.ribbon.r1 span{font-variation-settings:'wght' 900,'wdth' 100}
+.ribbon.r2 span{font-variation-settings:'wght' 150,'wdth' 100;color:transparent;
+-webkit-text-stroke:1px rgba(22,21,19,.6)}
+/* ---------- 04 portal ---------- */
+#portal{height:300vh;background:var(--ink)} /* ink behind the unpin: seamless into the manifesto */
+#portal .stage{display:flex;align-items:center;justify-content:center;background:var(--bone)}
+#portal .stage.inked{background:var(--ink)}
+.o-wrap{position:relative;z-index:2;line-height:1}
+.o-glyph{font-weight:900;font-size:64vmin;line-height:1;display:block;
+font-variation-settings:'wght' 900;color:var(--ink)}
+/* the O is scrubbed via font-size (not transform scale) so the glyph
+re-rasterizes every frame and stays a crisp vector at any size */
+.inked .o-glyph{color:var(--ink)} /* stroke fills frame while ink flips behind */
+.portal-line{position:absolute;z-index:3;left:50%;top:42%;transform:translate(-50%,-50%);
+color:var(--bone);opacity:0;font-family:var(--mono);font-size:12px;letter-spacing:.22em;
+text-transform:uppercase;white-space:nowrap}
+.shards{position:absolute;inset:0;z-index:2;pointer-events:none;color:var(--bone)}
+.shard{position:absolute;font-weight:900;opacity:.16;will-change:transform;line-height:1}
+.shard.s-deep{font-size:9vmin;opacity:.10}
+.shard.s-mid{font-size:16vmin;opacity:.14}
+.shard.s-near{font-size:26vmin;opacity:.2}
+.portal-eyebrow{position:absolute;left:3.2vw;top:96px;z-index:3;opacity:.55}
+/* ---------- 05 manifesto (pinned: words ink in under your eyes) ---------- */
+#manifesto{height:230vh;background:var(--ink)}
+.manifesto{background:var(--ink);color:var(--bone);display:flex;align-items:center;
+padding:0 3.2vw;
+-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
+.manifesto .inner{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.manifesto p{font-size:clamp(22px,min(4.2vw,6.8vh),58px);line-height:1.16;font-weight:700;
+letter-spacing:-.02em}
+.manifesto p .w{opacity:.14;display:inline-block;transition:opacity .4s linear}
+.manifesto p .w.on{opacity:1}
+.manifesto .mono{display:block;margin-bottom:5vh;color:rgba(244,241,234,.5)}
+.mani-shard{position:absolute;font-weight:900;color:rgba(244,241,234,.05);z-index:1;
+font-size:34vmin;line-height:1;will-change:transform}
+/* ---------- 06 weight axis ---------- */
+#axis{height:280vh;background:var(--ink)}
+#axis .stage{background:var(--ink);color:var(--bone);display:flex;align-items:center;justify-content:center}
+.axis-rule{position:absolute;left:6vw;right:6vw;height:1px;background:var(--hair-bone)}
+.axis-rule small{position:absolute;right:0;top:-18px;font-family:var(--mono);font-size:10px;
+letter-spacing:.2em;color:rgba(244,241,234,.4);text-transform:uppercase}
+.zero-mask{overflow:hidden;line-height:.92}
+#zeroWord{display:block;font-size:clamp(120px,24vw,360px);letter-spacing:-.02em;
+font-variation-settings:'wght' 100;will-change:transform;transform:translateY(115%)}
+.axis-hud{position:absolute;left:6vw;bottom:9vh;opacity:0}
+.axis-rail{position:relative;width:min(300px,30vw);height:1px;background:var(--hair-bone);margin-bottom:14px}
+.axis-rail i{position:absolute;top:-3px;width:1px;height:7px;background:rgba(244,241,234,.4)}
+#railTick{position:absolute;top:-6px;width:2px;height:13px;background:var(--verm)}
+.axis-read{display:flex;gap:14px;align-items:baseline;font-family:var(--mono);
+text-transform:uppercase;letter-spacing:.16em}
+#wghtNum{font-size:13px;color:var(--bone)}
+#wghtName{font-size:11px;color:rgba(244,241,234,.55)}
+#wghtName.stamped{animation:stamp .4s var(--ease)}
+@keyframes stamp{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+/* ---------- 07 tester ---------- */
+.tester{background:var(--bone);padding:16vh 3.2vw;position:relative}
+.tester .head{display:flex;justify-content:space-between;align-items:baseline;
+border-bottom:1px solid var(--hair-ink);padding-bottom:18px;margin-bottom:7vh}
+.tester h2,.features h2,.inuse h2,.license h2{font-weight:900;font-size:clamp(26px,3.4vw,44px);letter-spacing:-.02em}
+#testerLine{display:block;width:100%;border:0;outline:none;background:transparent;color:var(--ink);
+font-family:var(--arch);line-height:1.04;min-height:1.2em;white-space:pre-wrap;word-break:break-word;
+caret-color:var(--verm)}
+#testerLine:empty::before{content:"Type something true";color:rgba(22,21,19,.25)}
+.tester-controls{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr)) auto;gap:4vw;
+margin-top:8vh;border-top:1px solid var(--hair-ink);padding-top:26px;align-items:center}
+.ctl label{display:flex;justify-content:space-between;margin-bottom:12px;
+font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(22,21,19,.6)}
+.ctl label b{color:var(--ink);font-weight:500}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:1px;background:var(--hair-ink);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;
+border-radius:50%;background:var(--verm);cursor:pointer;border:0}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--verm);cursor:pointer;border:0}
+.presets{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.presets button{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+padding:6px 12px;border:1px solid var(--hair-ink);transition:.25s var(--ease)}
+.presets button:hover,.presets button.on{background:var(--ink);color:var(--bone);border-color:var(--ink)}
+@media(max-width:900px){.tester-controls{grid-template-columns:1fr 1fr;gap:26px}}
+/* ---------- 08 features ---------- */
+.features{background:var(--bone);padding:4vh 3.2vw 16vh}
+.feat-row{display:grid;grid-template-columns:60px 1fr 1.1fr;gap:3vw;align-items:center;
+border-top:1px solid var(--hair-ink);padding:34px 0;cursor:default}
+.feat-row:last-child{border-bottom:1px solid var(--hair-ink)}
+.feat-row .idx{font-family:var(--mono);font-size:11px;color:rgba(22,21,19,.45);letter-spacing:.14em}
+.feat-row h3{font-weight:700;font-size:clamp(18px,2.2vw,28px);letter-spacing:-.01em}
+.feat-row .demo{font-size:clamp(22px,3vw,40px);text-align:right;white-space:nowrap;overflow:hidden;
+font-variation-settings:'wght' 500;color:rgba(22,21,19,.84);transition:color .3s}
+.feat-row:hover .demo{color:var(--verm)}
+.feat-row .demo .tnum{font-variant-numeric:tabular-nums}
+@media(max-width:760px){.feat-row{grid-template-columns:40px 1fr}.feat-row .demo{grid-column:1/-1;text-align:left}}
+/* ---------- 09 in use (horizontal) ---------- */
+#inuse{background:var(--bone)}
+#inuse .head{padding:10vh 3.2vw 6vh;display:flex;justify-content:space-between;align-items:baseline}
+.h-pin{height:auto}
+.track{display:flex;gap:3vw;padding:0 3.2vw;align-items:center;height:74vh;will-change:transform;width:max-content}
+.frame{position:relative;height:62vh;flex:none;overflow:hidden;background:#dedacf}
+.frame.w-a{width:44vw}.frame.w-b{width:30vw}.frame.w-c{width:24vw}
+@media(max-width:760px){.frame.w-a{width:78vw}.frame.w-b{width:64vw}.frame.w-c{width:56vw}}
+.frame img{width:112%;height:112%;object-fit:cover;filter:grayscale(.25) contrast(1.04);will-change:transform}
+.frame .cap{position:absolute;left:14px;bottom:12px;z-index:2;color:#fff;
+font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.frame .num{position:absolute;right:14px;top:12px;z-index:2;color:var(--verm);
+font-family:var(--mono);font-size:11px;letter-spacing:.14em}
+.frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.38));pointer-events:none}
+/* ---------- 10 interlude ---------- */
+.interlude{position:relative;height:120vh;overflow:clip;background:var(--ink)}
+.interlude img{position:absolute;left:0;top:-12%;width:100%;height:124%;object-fit:cover;
+filter:grayscale(.85) contrast(1.06) brightness(.62);will-change:transform}
+.interlude::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+background:linear-gradient(180deg,rgba(0,0,0,.30),rgba(0,0,0,.58) 36%,rgba(0,0,0,.58) 66%,rgba(0,0,0,.32));}
+.interlude .knock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+z-index:2;mix-blend-mode:difference;color:#fff;text-align:center;line-height:.92}
+.interlude .knock span{display:block;font-weight:900;font-size:clamp(48px,10vw,150px);letter-spacing:-.03em}
+/* upgrade: the photograph at full strength INSIDE the letterforms, dimmed outside */
+@supports (-webkit-background-clip:text){
+.interlude .knock{mix-blend-mode:normal}
+/* bg + clip live ON each span: clip:text on an ancestor does not paint through
+transformed children in Chromium, and the reveal transforms the spans */
+.interlude .knock .fill span{
+background-image:url("https://images.unsplash.com/photo-1471890701797-59336a877de4?q=80&w=2000&auto=format&fit=crop&bri=38&con=12");
+background-size:cover;
+-webkit-background-clip:text;background-clip:text;
+color:transparent;
+}
+.interlude .knock .fill span:nth-child(1){background-position:50% 42%}
+.interlude .knock .fill span:nth-child(2){background-position:50% 54%}
+}
+.interlude .credit{position:absolute;right:3.2vw;bottom:16px;z-index:3;color:rgba(255,255,255,.5)}
+/* ---------- 11 ledger + glyphs ---------- */
+.ledger{background:var(--ink);color:var(--bone);padding:18vh 3.2vw}
+.ledger .grid2{display:grid;grid-template-columns:1fr 1.2fr;gap:6vw;max-width:1500px;margin:0 auto}
+@media(max-width:900px){.ledger .grid2{grid-template-columns:1fr}}
+.ledger h2{font-weight:900;font-size:clamp(26px,3.4vw,44px);letter-spacing:-.02em;margin-bottom:6vh}
+.led-row{display:flex;justify-content:space-between;align-items:baseline;
+border-bottom:1px solid var(--hair-bone);padding:16px 2px}
+.led-row .k{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+color:rgba(244,241,234,.55)}
+.led-row .v{font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(18px,2vw,26px)}
+.glyphs{display:grid;grid-template-columns:repeat(8,1fr);border:1px solid var(--hair-bone)}
+@media(max-width:760px){.glyphs{grid-template-columns:repeat(5,1fr)}}
+.glyph{aspect-ratio:1;display:grid;place-items:center;border-right:1px solid var(--hair-bone);
+border-bottom:1px solid var(--hair-bone);font-size:clamp(18px,2.4vw,34px);font-weight:500;
+font-variation-settings:'wght' 500;transition:background .25s var(--ease),color .25s var(--ease),font-variation-settings .35s var(--ease);
+opacity:0;transform:scale(.8)}
+.glyph:hover{background:var(--bone);color:var(--ink);font-variation-settings:'wght' 900}
+/* ---------- 12 license ---------- */
+.license{background:var(--bone);padding:16vh 3.2vw}
+.license .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7vh}
+.lic-row{display:grid;grid-template-columns:1fr clamp(110px,12vw,180px) clamp(150px,14vw,200px);gap:3vw;align-items:center;
+border-top:1px solid var(--hair-ink);padding:38px 0;position:relative;cursor:pointer;
+transition:padding-left .4s var(--ease)}
+.lic-row:last-of-type{border-bottom:1px solid var(--hair-ink)}
+.lic-row:hover{padding-left:18px}
+.lic-row::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:0;background:var(--verm);
+transition:width .5s var(--ease)}
+.lic-row:hover::before{width:100%}
+.lic-row h3{font-weight:900;font-size:clamp(24px,3.4vw,46px);letter-spacing:-.02em}
+.lic-row p{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+color:rgba(22,21,19,.5);margin-top:8px}
+.lic-row .price{font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(20px,2.6vw,34px);
+justify-self:end;text-align:right}
+.lic-row .go{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+display:flex;align-items:center;gap:10px;justify-self:end}
+.lic-row .go i{font-style:normal;transition:transform .35s var(--ease)}
+.lic-row:hover .go i{transform:translateX(8px)}
+.lic-note{margin-top:5vh;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+text-transform:uppercase;color:rgba(22,21,19,.45)}
+/* ---------- 13 footer ---------- */
+main{position:relative;z-index:2;background:var(--bone)}
+footer{position:sticky;bottom:0;z-index:1;background:#0c0b0a;color:var(--bone);
+padding:10vh 3.2vw 4vh;min-height:74vh;display:flex;flex-direction:column;justify-content:space-between;
+overflow:clip}
+.foot-zero{position:absolute;right:-5vw;bottom:-24vh;z-index:0;pointer-events:none;user-select:none;
+font-weight:900;font-size:96vh;line-height:1;color:transparent;
+-webkit-text-stroke:1.5px rgba(244,241,234,.09);will-change:transform}
+footer > div{position:relative;z-index:1}
+.foot-mark{font-weight:900;font-size:clamp(48px,10.4vw,156px);letter-spacing:-.035em;line-height:.9;
+user-select:none;white-space:nowrap}
+.foot-mark .fch{display:inline-block;font-variation-settings:'wght' 900}
+.foot-cta{margin:5vh 0 0;display:inline-flex;align-items:center;gap:16px;
+font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+border:1px solid rgba(244,241,234,.4);padding:16px 26px;width:max-content;
+transition:background .3s var(--ease),color .3s var(--ease),border-color .3s var(--ease)}
+.foot-cta:hover{background:var(--verm);border-color:var(--verm);color:var(--bone)}
+.foot-cols{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+border-top:1px solid rgba(244,241,234,.18);padding-top:22px;
+font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+color:rgba(244,241,234,.75);line-height:2}
+.foot-cross{position:absolute;right:3.2vw;top:10vh;width:30px;height:30px;opacity:.6}
+.foot-cross::before,.foot-cross::after{content:"";position:absolute;background:var(--verm)}
+.foot-cross::before{left:50%;top:0;bottom:0;width:1px}
+.foot-cross::after{top:50%;left:0;right:0;height:1px}
+/* reduced motion: everything lands in final state */
+@media(prefers-reduced-motion:reduce){
+.veil{display:none}
+.hero-title .row > span{transform:none}
+.reg-v{transform:scaleY(1)}.reg-h{transform:scaleX(1)}.reg-cross{opacity:1}
+.hero-sub{opacity:1;transform:none}
+#zeroWord{transform:none;font-variation-settings:'wght' 500}
+.hero-bed{opacity:1}
+.axis-hud{opacity:1}
+.manifesto p .w{opacity:1}
+.glyph{opacity:1;transform:none}
+body::after{animation:none}
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="veil" id="veil">
+  <div class="mono">est. 2019 &middot; type for architecture you can read</div>
+  <div class="mark">HALFTONE FOUNDRY</div>
+</div>
+
+<nav>
+  <a class="wordmark" href="#top">GROTESK ZERO</a>
+  <div class="links">
+    <a href="#tester">Specimen</a>
+    <a href="#inuse">In use</a>
+    <a href="#license" class="buy">Get Grotesk Zero</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- 02 HERO -->
+  <header class="hero" id="hero">
+    <span class="reg-v"></span><span class="reg-h"></span><span class="reg-cross"></span>
+    <div class="hero-kicker mono">Halftone Foundry presents &middot; release 2.1</div>
+    <h1 class="hero-title" id="heroTitle" aria-label="Grotesk Zero">
+      <span class="row"><span data-chars="GROTESK"></span></span>
+      <span class="row thin"><span data-chars="ZERO"></span></span>
+    </h1>
+    <figure class="hero-bed" id="heroBed">
+      <img src="https://images.unsplash.com/photo-1576529365111-4f58baa70f7a?q=80&w=2400&auto=format&fit=crop" alt="A case of metal type sorts, Halftone archive" loading="eager">
+      <figcaption>set from case 12 &middot; halftone archive</figcaption>
+    </figure>
+    <p class="hero-sub" id="heroSub">A grotesk that holds its counters open at 7 pixels and its
+      nerve at 700 weight. Nine weights, two widths, fully variable. Move your cursor across the
+      letters. That is the variable axis working.</p>
+    <div class="hero-meta">
+      <b>9</b> weights &middot; <b>2</b> widths<br>
+      <b>1,243</b> glyphs &middot; <b>217</b> languages<br>
+      variable <b>wght + wdth</b><br>
+      desktop &middot; web &middot; app
+    </div>
+    <div class="hero-cue mono">Scroll &darr;</div>
+  </header>
+
+  <!-- 03 RIBBONS -->
+  <div class="ribbons" aria-hidden="true">
+    <div class="ribbon r1" id="ribbon1"></div>
+    <div class="ribbon r2" id="ribbon2"></div>
+  </div>
+
+  <!-- 04 PORTAL -->
+  <section id="portal">
+    <div class="stage" id="portalStage">
+      <div class="portal-eyebrow mono">A letter is a room. Enter it.</div>
+      <div class="o-wrap" id="oWrap"><span class="o-glyph">O</span></div>
+      <p class="portal-line mono" id="portalLine">you are now inside the counter.</p>
+      <div class="shards" aria-hidden="true">
+        <span class="shard s-deep" style="left:12%;top:70%">k</span>
+        <span class="shard s-mid"  style="left:64%;top:85%">R</span>
+        <span class="shard s-near" style="left:30%;top:110%">g</span>
+        <span class="shard s-deep" style="left:80%;top:120%">a</span>
+        <span class="shard s-mid"  style="left:8%;top:135%">Q</span>
+      </div>
+      <div class="scene-tag" style="color:var(--bone)">02 portal</div>
+    </div>
+  </section>
+
+  <!-- 05 MANIFESTO -->
+  <section id="manifesto">
+    <div class="stage manifesto">
+      <span class="mani-shard" style="right:-4vw;top:8%">7</span>
+      <span class="mani-shard" style="left:-6vw;bottom:4%">&amp;</span>
+      <div class="inner">
+        <span class="mono">/ the argument</span>
+        <p id="maniText">You spend your whole day inside type. Tickets, timelines, term sheets,
+        the news. Most of it was built cheap, and you can feel it before you can say why.
+        Grotesk Zero is the room with the lights on: counters held open at seven pixels,
+        terminals cut square, a spine that does not flinch at 700. Architecture you can read.</p>
+      </div>
+      <div class="scene-tag" style="color:var(--bone)">02b argument</div>
+    </div>
+  </section>
+
+  <!-- 06 WEIGHT AXIS -->
+  <section id="axis">
+    <div class="stage">
+      <span class="axis-rule" style="top:24%"><small>cap</small></span>
+      <span class="axis-rule" style="bottom:24%"><small>baseline</small></span>
+      <div class="zero-mask"><span id="zeroWord">ZERO</span></div>
+      <div class="axis-hud" id="axisHud">
+        <div class="axis-rail" id="axisRail"><span id="railTick"></span></div>
+        <div class="axis-read"><span id="wghtNum">wght 100</span><span id="wghtName">hairline</span></div>
+      </div>
+      <div class="scene-tag" style="color:var(--bone)">03 wght axis</div>
+    </div>
+  </section>
+
+  <!-- 07 TESTER -->
+  <section class="tester" id="tester">
+    <div class="head">
+      <h2>Try the room before you rent it.</h2>
+      <span class="mono" id="testerRead">wght 700 &middot; wdth 100 &middot; 96px</span>
+    </div>
+    <div id="testerLine" contenteditable="true" spellcheck="false">Type something true</div>
+    <div class="tester-controls">
+      <div class="ctl">
+        <label>Weight <b id="rWght">700</b></label>
+        <input type="range" id="cWght" min="100" max="900" step="1" value="700">
+      </div>
+      <div class="ctl">
+        <label>Width <b id="rWdth">100</b></label>
+        <input type="range" id="cWdth" min="62" max="125" step="1" value="100">
+      </div>
+      <div class="ctl">
+        <label>Size <b id="rSize">96</b></label>
+        <input type="range" id="cSize" min="24" max="220" step="1" value="96">
+      </div>
+      <div class="presets" id="presets">
+        <button data-w="100" data-d="100">Hairline 100</button>
+        <button data-w="400" data-d="100">Book 400</button>
+        <button class="on" data-w="700" data-d="100">Nerve 700</button>
+        <button data-w="900" data-d="62">Black condensed</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 FEATURES -->
+  <section class="features">
+    <div class="feat-row reveal">
+      <span class="idx">ot/01</span><h3>Tabular figures hold the line.</h3>
+      <div class="demo tnum" data-anim="count">$1,000,000.00</div>
+    </div>
+    <div class="feat-row reveal">
+      <span class="idx">ot/02</span><h3>Case-sensitive forms.</h3>
+      <div class="demo" data-anim="case">[H&ndash;O] (ZERO) &laquo;700&raquo;</div>
+    </div>
+    <div class="feat-row reveal">
+      <span class="idx">ot/03</span><h3>Two storeys, your choice.</h3>
+      <div class="demo" data-anim="alt">a g &rarr; &#593; g</div>
+    </div>
+    <div class="feat-row reveal">
+      <span class="idx">ot/04</span><h3>Arrows that match the metal.</h3>
+      <div class="demo" data-anim="arrows">&larr; &uarr; &rarr; &darr; &#8599; &#8600;</div>
+    </div>
+  </section>
+
+  <!-- 09 IN USE -->
+  <section id="inuse">
+    <div class="head">
+      <h2>In use, not in theory.</h2>
+      <span class="mono">drag of scroll &middot; 6 commissions</span>
+    </div>
+    <div class="h-pin" id="hPin">
+      <div class="track" id="track">
+        <figure class="frame w-a">
+          <img src="https://images.unsplash.com/photo-1446688568582-55ddb4b37cad?q=80&w=1800&auto=format&fit=crop" alt="Wood letterpress type sorted in a case" loading="eager">
+          <span class="num">01</span><figcaption class="cap">Halftone archive, wood type room</figcaption>
+        </figure>
+        <figure class="frame w-b">
+          <img src="https://images.unsplash.com/photo-1543487945-139a97f387d5?q=80&w=1400&auto=format&fit=crop" alt="Poster wall" loading="lazy">
+          <span class="num">02</span><figcaption class="cap">Brutalist Film Week, poster series</figcaption>
+        </figure>
+        <figure class="frame w-c">
+          <img src="https://images.unsplash.com/photo-1522337094846-8a818192de1f?q=80&w=1400&auto=format&fit=crop" alt="Stack of printed magazines" loading="lazy">
+          <span class="num">03</span><figcaption class="cap">Counter Journal, issues 01 to 09</figcaption>
+        </figure>
+        <figure class="frame w-b">
+          <img src="https://images.unsplash.com/photo-1496449903678-68ddcb189a24?q=80&w=1400&auto=format&fit=crop" alt="Neon sign typography" loading="lazy">
+          <span class="num">04</span><figcaption class="cap">Night signage, Dundas West</figcaption>
+        </figure>
+        <figure class="frame w-a">
+          <img src="https://images.unsplash.com/photo-1512143889056-b57b4153f038?q=80&w=1800&auto=format&fit=crop" alt="Open magazine editorial spread" loading="lazy">
+          <span class="num">05</span><figcaption class="cap">Annual report, set entirely in Zero</figcaption>
+        </figure>
+        <figure class="frame w-c">
+          <img src="https://images.unsplash.com/photo-1436918898788-ebce04d38e46?q=80&w=1400&auto=format&fit=crop" alt="Letterpress print detail" loading="lazy">
+          <span class="num">06</span><figcaption class="cap">Specimen No. 0, letterpress edition</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 INTERLUDE -->
+  <section class="interlude" id="interlude">
+    <img id="interImg" src="https://images.unsplash.com/photo-1471890701797-59336a877de4?q=80&w=2000&auto=format&fit=crop" alt="Letterpress printing press detail" loading="lazy">
+    <div class="knock"><div class="fill"><span>PRESSURE</span><span>MAKES TYPE.</span></div></div>
+    <span class="credit mono">photograph &middot; unsplash &middot; to be reshot in zero</span>
+  </section>
+
+  <!-- 11 LEDGER + GLYPHS -->
+  <section class="ledger">
+    <div class="grid2">
+      <div>
+        <h2>The ledger.</h2>
+        <div class="led-row reveal"><span class="k">Glyphs per style</span><span class="v">1,243</span></div>
+        <div class="led-row reveal"><span class="k">Languages, Latin ext.</span><span class="v">217</span></div>
+        <div class="led-row reveal"><span class="k">Weights &times; widths</span><span class="v">9 &times; 2</span></div>
+        <div class="led-row reveal"><span class="k">Variable axes</span><span class="v">wght, wdth</span></div>
+        <div class="led-row reveal"><span class="k">Smallest open counter</span><span class="v">7 px</span></div>
+        <div class="led-row reveal"><span class="k">Kerning pairs, hand set</span><span class="v">4,108</span></div>
+      </div>
+      <div>
+        <h2>Touch the glyphs.</h2>
+        <div class="glyphs" id="glyphGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 LICENSE -->
+  <section class="license" id="license">
+    <div class="head">
+      <h2>License the family.</h2>
+      <span class="mono">one purchase &middot; no subscriptions</span>
+    </div>
+    <div class="lic-row reveal">
+      <div><h3>Single style</h3><p>One weight, one width &middot; desktop + web</p></div>
+      <span class="price">$90</span>
+      <span class="go">Choose style <i>&rarr;</i></span>
+    </div>
+    <div class="lic-row reveal">
+      <div><h3>Complete family</h3><p>18 styles &middot; desktop + web + app</p></div>
+      <span class="price">$480</span>
+      <span class="go">Get the family <i>&rarr;</i></span>
+    </div>
+    <div class="lic-row reveal">
+      <div><h3>Variable family</h3><p>Both variable files + 18 statics &middot; everything, forever</p></div>
+      <span class="price">$640</span>
+      <span class="go">Go variable <i>&rarr;</i></span>
+    </div>
+    <p class="lic-note">Student or studio under 3 people? Write to type@halftone.example for 50 percent off.</p>
+  </section>
+
+</main>
+
+<!-- 13 FOOTER (uncovers from beneath main) -->
+<footer id="footer">
+  <span class="foot-zero" aria-hidden="true">0</span>
+  <span class="foot-cross"></span>
+  <div>
+    <div class="mono" style="margin-bottom:3vh;opacity:.85">Halftone Foundry &middot; Grotesk Zero 2.1</div>
+    <div class="foot-mark" id="footMark" aria-label="Grotesk Zero"></div>
+    <a class="foot-cta" href="#tester">Type something true <span>&rarr;</span></a>
+  </div>
+  <div class="foot-cols">
+    <span>Halftone Foundry is a fictional foundry.<br>Built by Claude Fable 5 as a production demo.</span>
+    <span>Typeface on this page: Archivo variable<br>standing in for Grotesk Zero</span>
+    <span>Photography: Unsplash, interim<br>to be replaced with art-directed shots</span>
+    <span>No cookies. No tracking.<br>Just type.</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+"use strict";
+gsap.registerPlugin(ScrollTrigger);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const touch = matchMedia("(pointer: coarse)").matches;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+/* ---------- substrate ---------- */
+let lenis = null;
+if (!reduce) {
+  lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ---------- cursor ---------- */
+if (!touch && !reduce) {
+  const cur = $("#cursor");
+  let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy;
+  addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; });
+  gsap.ticker.add(() => {
+    cx += (tx - cx) * 0.22; cy += (ty - cy) * 0.22;
+    cur.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+  });
+  $$("a,button,.lic-row,.glyph,input,[contenteditable]").forEach(el => {
+    el.addEventListener("pointerenter", () => cur.classList.add("is-link"));
+    el.addEventListener("pointerleave", () => cur.classList.remove("is-link"));
+  });
+} else { $("#cursor").style.display = "none"; }
+
+/* ---------- hero: build chars + entrance ---------- */
+$$(".hero-title [data-chars]").forEach(row => {
+  row.innerHTML = row.dataset.chars.split("").map(c => `<span class="ch">${c}</span>`).join("");
+});
+const veil = $("#veil");
+if (reduce) { veil.remove(); }
+else {
+  const intro = gsap.timeline({ delay: 0.25 });
+  intro.to(veil, { yPercent: -100, duration: 0.9, ease: "power3.inOut" })
+    .set(veil, { display: "none" })
+    .from(".reg-v", { scaleY: 0, duration: 1.0, ease: "expo.out" }, "-=0.45")
+    .from(".reg-h", { scaleX: 0, duration: 1.0, ease: "expo.out" }, "<")
+    .to(".reg-cross", { opacity: 0.5, duration: 0.6 }, "<0.3")
+    .to(".hero-title .row > span", { y: 0, duration: 1.1, ease: "expo.out", stagger: 0.12 }, "-=0.7")
+    .to("#heroSub", { opacity: 1, y: 0, duration: 0.8, ease: "expo.out" }, "-=0.5")
+    .to(".hero-bed", { opacity: 1, duration: 1.4, ease: "power2.out" }, "-=0.9");
+}
+
+/* hero: cursor proximity drives per-glyph weight (the variable axis, felt) */
+const heroChs = $$("#heroTitle .ch");
+if (!touch && !reduce && heroChs.length) {
+  let hx = -9999, hy = -9999, heroOn = false;
+  const hero = $("#hero");
+  hero.addEventListener("pointermove", e => { hx = e.clientX; hy = e.clientY; heroOn = true; });
+  hero.addEventListener("pointerleave", () => { heroOn = false; });
+  const states = heroChs.map(ch => ({ ch, w: ch.closest(".row").classList.contains("thin") ? 100 : 900,
+    base: ch.closest(".row").classList.contains("thin") ? 100 : 900 }));
+  gsap.ticker.add(() => {
+    for (const s of states) {
+      let target = s.base;
+      if (heroOn) {
+        const r = s.ch.getBoundingClientRect();
+        const d = Math.hypot(hx - (r.left + r.width / 2), hy - (r.top + r.height / 2));
+        const f = Math.max(0, 1 - d / 340);
+        target = s.base === 900 ? 900 - 800 * f : 100 + 800 * f;  /* bold thins, thin bolds */
+      }
+      s.w += (target - s.w) * 0.16;
+      s.ch.style.fontVariationSettings = `'wght' ${s.w.toFixed(0)}, 'wdth' 100`;
+    }
+  });
+}
+
+/* ---------- ribbons: infinite + scroll-velocity coupling ---------- */
+const GLYPH_LINE = "Aa Bb Gg Kk Qq Rr Ss &amp; ? 0 4 7 # @ ";
+["#ribbon1", "#ribbon2"].forEach((sel, i) => {
+  const el = $(sel);
+  el.innerHTML = `<span>${GLYPH_LINE.repeat(6)}</span><span>${GLYPH_LINE.repeat(6)}</span>`;
+});
+if (!reduce) {
+  const r1 = { x: 0 }, r2 = { x: -50 };
+  let vel = 0;
+  ScrollTrigger.create({ onUpdate: self => { vel = self.getVelocity() / 4000; } });
+  gsap.ticker.add((t, dt) => {
+    const base = dt * 0.0022;
+    r1.x -= base * (1 + Math.min(Math.abs(vel), 3)); if (r1.x <= -50) r1.x += 50;
+    r2.x += base * (1 + Math.min(Math.abs(vel), 3)); if (r2.x >= 0) r2.x -= 50;
+    $("#ribbon1").style.transform = `translate3d(${r1.x}%,0,0)`;
+    $("#ribbon2").style.transform = `translate3d(${r2.x}%,0,0)`;
+  });
+}
+
+/* ---------- portal: through the counter, palette flips on the stroke ---------- */
+{
+  const stage = $("#portalStage"), oWrap = $("#oWrap"), line = $("#portalLine");
+  const oGlyph = stage.querySelector(".o-glyph");
+  const shards = $$(".shard");
+  const prox = { p: 0 };
+  const eyebrow = stage.querySelector(".portal-eyebrow");
+  const FLIP = 0.69;                     /* flip only once the stroke owns every pixel */
+  if (!reduce) {
+    /* the trigger spans slide-in AND pin (300vh): the O is already growing while
+       the stage enters, and the interior is still moving when it leaves */
+    gsap.to(prox, {
+      p: 1, ease: "none",
+      scrollTrigger: { trigger: "#portal", start: "top bottom", end: "bottom bottom", scrub: 0.6,
+        invalidateOnRefresh: true },
+      onUpdate: () => {
+        const p = prox.p;
+        const travel = Math.min(Math.max((p - 0.15) / 0.597, 0), 1);
+        if (p < FLIP + 0.03) {                         /* stop paying layout cost once hidden */
+          const fs = 64 * Math.pow(46, travel);        /* exponential = constant z-speed */
+          const dx = 36 * gsap.parseEase("power2.inOut")(Math.min(Math.max((travel - 0.1) / 0.7, 0), 1));
+          oGlyph.style.fontSize = fs.toFixed(2) + "vmin";
+          oWrap.style.transform = `translate3d(${dx.toFixed(2)}%,0,0)`;
+        }
+        eyebrow.style.opacity = 1 - Math.min(Math.max((p - 0.42) / 0.16, 0), 1);
+        stage.classList.toggle("inked", p >= FLIP);
+        /* shards travel from long BEFORE they are visible: the develop reveals
+           them already mid-flight, in step with the zoom, never parked */
+        const ip = Math.min(Math.max((p - 0.40) / 0.60, 0), 1);
+        const lk = Math.min(Math.max((p - 0.66) / 0.10, 0), 1);
+        line.style.opacity = lk;
+        line.style.transform = `translate(-50%,-50%) translateY(${(1 - lk) * 22}px)`;
+        shards.forEach((sh, i) => {
+          const depth = sh.classList.contains("s-near") ? 190 : sh.classList.contains("s-mid") ? 130 : 85;
+          const drift = (i % 2 ? 1 : -1) * ip * 7;
+          sh.style.transform = `translate3d(${drift.toFixed(2)}vw,${(-ip * depth).toFixed(2)}vh,0)`;
+        });
+        /* continuous develop to ink: the bone outside the bowl darkens in sync
+           with the zoom, so there is no discrete flip frame at all */
+        stage.style.backgroundColor = gsap.utils.interpolate("#f4f1ea", "#161513")(
+          Math.min(Math.max((p - 0.613) / 0.077, 0), 1));
+        oWrap.style.opacity = p >= FLIP ? 0 : 1;       /* glyph has merged into the room */
+      }
+    });
+  } else { stage.classList.add("inked"); stage.style.backgroundColor = "#161513"; oWrap.style.display = "none"; line.style.opacity = 1; }
+}
+
+/* ---------- manifesto: word-breath ---------- */
+{
+  const p = $("#maniText");
+  p.innerHTML = p.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(" ");
+  const words = $$("#maniText .w");
+  if (!reduce) {
+    ScrollTrigger.create({
+      trigger: "#manifesto", start: "top 85%", end: "bottom bottom", scrub: 0.4,
+      onUpdate: self => {
+        const k = Math.min(Math.max((self.progress - 0.05) / 0.75, 0), 1);
+        const n = Math.floor(k * words.length);
+        words.forEach((w, i) => w.classList.toggle("on", i < n));
+      }
+    });
+    $$(".mani-shard").forEach((sh, i) => gsap.fromTo(sh,
+      { yPercent: i ? -70 : 80 },
+      { yPercent: i ? 80 : -100, ease: "none",
+        scrollTrigger: { trigger: "#manifesto", start: "top bottom", end: "bottom top", scrub: true } }));
+  } else words.forEach(w => w.classList.add("on"));
+}
+
+/* ---------- weight axis: nine detents ---------- */
+{
+  const NAMES = ["hairline","thin","light","book","regular","medium","nerve","bold","black"];
+  const word = $("#zeroWord"), hud = $("#axisHud"), tick = $("#railTick"),
+        num = $("#wghtNum"), name = $("#wghtName"), rail = $("#axisRail");
+  for (let i = 0; i < 9; i++) { const n = document.createElement("i"); n.style.left = (i / 8 * 100) + "%"; rail.appendChild(n); }
+  let detent = -1;
+  const apply = idx => {
+    if (idx === detent) return; detent = idx;
+    const w = 100 + idx * 100;
+    word.style.fontVariationSettings = `'wght' ${w}`;
+    num.textContent = "wght " + w;
+    name.textContent = NAMES[idx];
+    name.classList.remove("stamped"); void name.offsetWidth; name.classList.add("stamped");
+  };
+  if (!reduce) {
+    const st = { p: 0 };
+    /* trigger spans slide-in AND pin: the word is already rising during the
+       transition, detents run across the dwell */
+    gsap.to(st, { p: 1, ease: "none",
+      scrollTrigger: { trigger: "#axis", start: "top bottom", end: "bottom bottom", scrub: 0.5, invalidateOnRefresh: true },
+      onUpdate: () => {
+        const p = st.p;
+        const rev = gsap.parseEase("expo.out")(Math.min(Math.max((p - 0.08) / 0.34, 0), 1));
+        word.style.transform = `translateY(${(1 - rev) * 115}%)`;
+        hud.style.opacity = Math.min(Math.max((p - 0.30) / 0.12, 0), 1);
+        const wp = Math.min(Math.max((p - 0.44) / 0.52, 0), 1);
+        apply(Math.round(wp * 8));
+        tick.style.left = (wp * 100) + "%";
+      } });
+  } else { word.style.transform = "none"; hud.style.opacity = 1; apply(4); }
+}
+
+/* ---------- tester (real component) ---------- */
+{
+  const line = $("#testerLine"), read = $("#testerRead");
+  const cW = $("#cWght"), cD = $("#cWdth"), cS = $("#cSize");
+  const rW = $("#rWght"), rD = $("#rWdth"), rS = $("#rSize");
+  const state = { w: 700, d: 100, s: 96 };
+  const render = () => {
+    line.style.fontVariationSettings = `'wght' ${state.w}, 'wdth' ${state.d}`;
+    line.style.fontSize = state.s + "px";
+    rW.textContent = state.w; rD.textContent = state.d; rS.textContent = state.s;
+    read.innerHTML = `wght ${state.w} &middot; wdth ${state.d} &middot; ${state.s}px`;
+  };
+  cW.addEventListener("input", () => { state.w = +cW.value; render(); clearPreset(); });
+  cD.addEventListener("input", () => { state.d = +cD.value; render(); clearPreset(); });
+  cS.addEventListener("input", () => { state.s = +cS.value; render(); });
+  const presets = $$("#presets button");
+  const clearPreset = () => presets.forEach(b => b.classList.remove("on"));
+  presets.forEach(b => b.addEventListener("click", () => {
+    clearPreset(); b.classList.add("on");
+    gsap.to(state, { w: +b.dataset.w, d: +b.dataset.d, duration: 0.6, ease: "expo.out",
+      onUpdate: () => { state.w = Math.round(state.w); state.d = Math.round(state.d);
+        cW.value = state.w; cD.value = state.d; render(); } });
+  }));
+  line.addEventListener("paste", e => { e.preventDefault();
+    document.execCommand("insertText", false, (e.clipboardData || window.clipboardData).getData("text/plain")); });
+  render();
+}
+
+/* ---------- features: hover demos ---------- */
+{
+  const anims = {
+    count: el => { const o = { n: 0 }; const final = 1000000;
+      gsap.to(o, { n: final, duration: 0.9, ease: "power2.out",
+        onUpdate: () => el.textContent = "$" + o.n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }); },
+    case: el => gsap.fromTo(el, { letterSpacing: "0.2em", opacity: 0.4 }, { letterSpacing: "0em", opacity: 1, duration: 0.6, ease: "expo.out" }),
+    alt: el => gsap.fromTo(el, { fontVariationSettings: "'wght' 100" }, { fontVariationSettings: "'wght' 800", duration: 0.7, ease: "expo.out" }),
+    arrows: el => gsap.fromTo(el, { x: -16, opacity: 0.3 }, { x: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" }),
+  };
+  $$(".feat-row").forEach(row => {
+    const demo = row.querySelector(".demo");
+    const kind = demo.dataset.anim;
+    const orig = demo.innerHTML;
+    row.addEventListener("pointerenter", () => { if (!reduce && anims[kind]) anims[kind](demo); });
+    row.addEventListener("pointerleave", () => { if (kind === "count") demo.innerHTML = orig; });
+  });
+}
+
+/* ---------- in use: pinned horizontal + inner parallax ---------- */
+{
+  const track = $("#track");
+  if (!reduce) {
+    const dist = () => track.scrollWidth - innerWidth;
+    const move = gsap.to(track, { x: () => -dist(), ease: "none",
+      scrollTrigger: { trigger: "#hPin", start: "top 12%", end: () => "+=" + dist(),
+        pin: true, scrub: 0.6, invalidateOnRefresh: true } });
+    $$(".frame").forEach(f => {
+      gsap.fromTo(f, { clipPath: "inset(0 0 0 28%)" }, { clipPath: "inset(0 0 0 0%)", duration: 1, ease: "expo.out",
+        scrollTrigger: { trigger: f, containerAnimation: move, start: "left 90%" } });
+      gsap.fromTo(f.querySelector("img"), { xPercent: -8 }, { xPercent: 0, ease: "none",
+        scrollTrigger: { trigger: f, containerAnimation: move, start: "left right", end: "right left", scrub: true } });
+    });
+  }
+}
+
+/* ---------- interlude parallax ---------- */
+if (!reduce) {
+  gsap.fromTo("#interImg", { yPercent: -8 }, { yPercent: 8, ease: "none",
+    scrollTrigger: { trigger: "#interlude", start: "top bottom", end: "bottom top", scrub: true } });
+  gsap.fromTo(".knock .fill span:nth-child(1)", { backgroundPositionY: "36%" }, { backgroundPositionY: "48%", ease: "none",
+    scrollTrigger: { trigger: "#interlude", start: "top bottom", end: "bottom top", scrub: true } });
+  gsap.fromTo(".knock .fill span:nth-child(2)", { backgroundPositionY: "48%" }, { backgroundPositionY: "60%", ease: "none",
+    scrollTrigger: { trigger: "#interlude", start: "top bottom", end: "bottom top", scrub: true } });
+  gsap.from(".interlude .knock span", { yPercent: 70, opacity: 0, stagger: 0.16, duration: 1.5, ease: "expo.out",
+    scrollTrigger: { trigger: "#interlude", start: "top 78%" } });
+}
+
+/* ---------- glyph grid ---------- */
+{
+  const chars = "AGHKMQRSW&agkrst?!&0479#@";
+  const grid = $("#glyphGrid");
+  chars.split("").forEach(c => { const d = document.createElement("span");
+    d.className = "glyph"; d.textContent = c; grid.appendChild(d); });
+  /* pad to full rows of 8 */
+  while (grid.children.length % 8) { const d = document.createElement("span");
+    d.className = "glyph"; d.innerHTML = "&middot;"; grid.appendChild(d); }
+  if (!reduce) {
+    gsap.to(".glyph", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)",
+      stagger: { each: 0.018, grid: "auto", from: "random" },
+      scrollTrigger: { trigger: "#glyphGrid", start: "top 78%" } });
+  } else $$(".glyph").forEach(g => { g.style.opacity = 1; g.style.transform = "none"; });
+}
+
+/* ---------- generic reveals ---------- */
+if (!reduce) {
+  ScrollTrigger.batch(".reveal", { start: "top 88%",
+    onEnter: els => gsap.from(els, { y: 30, autoAlpha: 0, duration: 0.7, ease: "expo.out", stagger: 0.08 }) });
+}
+
+/* ---------- footer wordmark: weight follows cursor X ---------- */
+{
+  const mark = $("#footMark");
+  mark.innerHTML = "GROTESK ZERO".split("").map(c =>
+    c === " " ? "&nbsp;" : `<span class="fch">${c}</span>`).join("");
+  const fchs = $$("#footMark .fch");
+  if (!touch && !reduce) {
+    addEventListener("pointermove", e => {
+      const t = e.clientX / innerWidth;
+      fchs.forEach((ch, i) => {
+        const pos = i / (fchs.length - 1);
+        const d = Math.abs(pos - t);
+        const w = 900 - Math.min(d * 2.2, 1) * 750;
+        ch.style.fontVariationSettings = `'wght' ${w.toFixed(0)}`;
+      });
+    });
+  }
+}
+
+/* footer ghost zero drifts up as the page uncovers it */
+if (!reduce) {
+  gsap.fromTo(".foot-zero", { yPercent: 16 }, { yPercent: -6, ease: "none",
+    scrollTrigger: { trigger: "#footer", start: "top bottom", end: "bottom bottom", scrub: true } });
+}
+
+addEventListener("load", () => ScrollTrigger.refresh());
+</script>
+</body>
+</html>

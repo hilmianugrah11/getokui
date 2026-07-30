@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura Studios</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="bg-[#050505] text-white font-sans antialiased min-h-screen relative flex flex-col selection:bg-white/20 selection:text-white overflow-x-hidden m-0" style="font-family: 'Inter', sans-serif;">
+
+    <!-- Background Image -->
+    <div class="fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-[-3] bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/13fe9128-aded-4ad4-bbe1-491e1d5fb9f2_3840w.webp)]"></div>
+    
+    <!-- Base Darkener Overlay -->
+    <div class="fixed inset-0 w-full h-full bg-black/50 z-[-2]"></div>
+
+    <!-- WebGL Smoke / Cloud Overlay Blended with Image -->
+    <canvas id="webgl-canvas" class="fixed inset-0 w-full h-full object-cover z-[-1] pointer-events-none opacity-80" width="1440" height="2048"></canvas>
+
+    <!-- UI Overlay (Dark Hero) -->
+    <main class="flex flex-col md:p-10 lg:p-12 min-h-[1200px] w-full z-10 pt-6 pr-6 pb-6 pl-6 relative">
+        
+        <!-- Top Navigation -->
+        <header class="flex justify-between items-center w-full">
+            <div class="text-sm md:text-base tracking-widest font-thin uppercase z-20">
+                A U R A
+            </div>
+            <nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 space-x-10 text-xs md:text-sm text-white/60 font-thin">
+                <a href="#" class="relative group hover:text-white transition-colors duration-300 pb-1">Showcase<span class="absolute bottom-0 left-0 w-0 h-[1px] bg-white/70 transition-all duration-300 group-hover:w-full"></span></a>
+                <a href="#" class="relative group hover:text-white transition-colors duration-300 pb-1">Studio<span class="absolute bottom-0 left-0 w-0 h-[1px] bg-white/70 transition-all duration-300 group-hover:w-full"></span></a>
+                <a href="#" class="relative group hover:text-white transition-colors duration-300 pb-1">Expertise<span class="absolute bottom-0 left-0 w-0 h-[1px] bg-white/70 transition-all duration-300 group-hover:w-full"></span></a>
+                <a href="#" class="relative group hover:text-white transition-colors duration-300 pb-1">Connect<span class="absolute bottom-0 left-0 w-0 h-[1px] bg-white/70 transition-all duration-300 group-hover:w-full"></span></a>
+            </nav>
+            <div class="flex flex-col gap-1.5 cursor-pointer group ml-auto md:ml-0 p-2 z-20">
+                <div class="w-8 h-[1px] bg-white group-hover:w-6 transition-all duration-300 ease-out ml-auto"></div>
+                <div class="w-6 h-[1px] bg-white group-hover:w-8 transition-all duration-300 ease-out ml-auto"></div>
+            </div>
+        </header>
+
+        <!-- Vertical Copyright -->
+        <div class="hidden lg:block fixed top-1/2 right-8 text-base md:text-lg font-thin text-white/40 tracking-widest z-10" style="transform: translateY(-50%) rotate(180deg); writing-mode: vertical-rl;">
+            20–26
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col-reverse lg:flex-row lg:items-end lg:mt-0 gap-16 lg:gap-24 z-10 w-full mt-24 pb-8 relative gap-x-16 gap-y-16 items-start justify-between">
+            <div class="w-full sm:w-80 shrink-0 group hover:-translate-y-2 transition-transform duration-700 ease-out" style="perspective: 1000px;">
+                <div class="p-[1px] rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent shadow-2xl">
+                    <div class="bg-black/40 backdrop-blur-2xl rounded-[calc(1.5rem-1px)] p-4 flex flex-col gap-3">
+                        <div class="flex flex-col gap-2">
+                            <div class="h-20 w-full rounded-xl bg-neutral-900 overflow-hidden relative group/img"><img src="https://images.unsplash.com/photo-1532680678473-a16f2cda8e43?ixid=M3w3NTc5NzN8MHwxfHNlYXJjaHw4fHxhYnN0cmFjdCUyMGFyY2hpdGVjdHVyZXxlbnwxfDB8fHwxNzczOTAyOTgxfDA&ixlib=rb-4.1.0&w=1600&fit=max&auto=format&q=80" class="w-full h-full object-cover opacity-60 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-700 ease-out" alt="Project 1"></div>
+                            <div class="h-20 w-full rounded-xl bg-neutral-900 overflow-hidden relative group/img"><img src="https://images.unsplash.com/photo-1768577908037-bbc3da95c1cf?ixid=M3w3NTc5NzN8MHwxfHNlYXJjaHwzMHx8YW1iaWVudCUyMGxpZ2h0fGVufDF8MHx8fDE3NzM5MDI5MTh8MA&ixlib=rb-4.1.0&w=1600&fit=max&auto=format&q=80" class="w-full h-full object-cover opacity-60 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-700 ease-out" alt="Project 2"></div>
+                            <div class="h-20 w-full rounded-xl bg-neutral-900 overflow-hidden relative group/img"><img src="https://images.unsplash.com/photo-1507908708918-778587c9e563?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover opacity-60 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-700 ease-out" alt="Project 3"></div>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center text-xs text-white/40 px-1">
+                            <span class="font-thin uppercase tracking-widest">Selected Work</span>
+                            <iconify-icon icon="solar:arrow-right-up-linear" class="text-xl text-white/70 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" style="stroke-width: 1.5;"></iconify-icon>
+                        </div>
+                        <div class="px-1 pb-1">
+                            <div class="text-xs md:text-sm font-light text-white/90 tracking-wide">Atmospheric Voids</div>
+                            <div class="text-xs text-white/30 font-thin mt-1 tracking-wider">04 Nov, 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-4xl lg:text-right w-full">
+                <h1 id="hero-title" class="text-3xl md:text-5xl lg:text-6xl font-thin tracking-tight text-white/95 leading-tight"><span style="display: inline-block; overflow: hidden; vertical-align: top;"><span class="reveal-inner" style="display: inline-block; will-change: transform;">Crafting&nbsp;ethereal&nbsp;digital&nbsp;environments&nbsp;and&nbsp;structural&nbsp;narratives&nbsp;that&nbsp;blend&nbsp;deep&nbsp;atmospheric&nbsp;presence,&nbsp;human&nbsp;emotion,&nbsp;and&nbsp;mathematical&nbsp;elegance.&nbsp;&nbsp;&nbsp;&nbsp;</span></span></h1>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mathematical/Architecture Light Section -->
+    <section class="bg-[#F8F7F4] text-neutral-900 relative z-20 w-full py-24 md:py-32 px-6 md:px-10 shadow-[0_-30px_60px_rgba(0,0,0,0.8)] border-t border-white/10">
+        <div class="max-w-7xl mx-auto flex flex-col pt-4 md:pt-8">
+            
+            <!-- Header Block -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-20 gap-10">
+                <h2 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-neutral-900 leading-[1.05]">
+                    Where Precision<br>
+                    <span class="italic text-neutral-800" style="font-family: 'Playfair Display', serif;">Meets the Ethereal</span>
+                </h2>
+                
+                <div class="flex flex-col items-start md:items-end gap-3 mt-4 md:mt-0">
+                    <div class="flex items-center gap-1.5 text-[#636C5C]">
+                        <iconify-icon icon="solar:star-linear" class="text-base fill-current stroke-current" style="stroke-width: 1.5;"></iconify-icon>
+                        <iconify-icon icon="solar:star-linear" class="text-base fill-current stroke-current" style="stroke-width: 1.5;"></iconify-icon>
+                        <iconify-icon icon="solar:star-linear" class="text-base fill-current stroke-current" style="stroke-width: 1.5;"></iconify-icon>
+                        <iconify-icon icon="solar:star-linear" class="text-base fill-current stroke-current" style="stroke-width: 1.5;"></iconify-icon>
+                        <iconify-icon icon="solar:star-linear" class="text-base fill-current stroke-current" style="stroke-width: 1.5;"></iconify-icon>
+                    </div>
+                    <div class="flex items-center gap-5">
+                        <span class="text-sm md:text-base font-light text-neutral-800">4.9 (2,048 environments rendered)</span>
+                        <div class="flex -space-x-3">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/beaf81e2-db7d-46d9-8dc2-26de271cab83_320w.jpg" class="w-12 h-12 rounded-xl border-[3px] border-[#F8F7F4] object-cover -rotate-6 z-10 shadow-sm" alt="Render Element">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1f6c82f7-e18c-4dc9-82dc-96bb615bfa30_320w.webp" class="w-12 h-12 rounded-xl border-[3px] border-[#F8F7F4] object-cover rotate-3 z-20 shadow-sm" alt="Render Element">
+                            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=200&auto=format&fit=crop" class="w-12 h-12 rounded-xl border-[3px] border-[#F8F7F4] object-cover -rotate-3 z-30 shadow-sm" alt="Render Element">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+                
+                <!-- Left Column: Large Image -->
+                <div class="lg:col-span-6 relative h-[500px] md:h-[650px] rounded-[2rem] overflow-hidden group">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6d5d1d1a-b4ab-422c-895b-78809cb13c87_1600w.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out" alt="Abstract architectural rendering">
+                    
+                    <!-- Overlay Card -->
+                    <div class="absolute bottom-6 left-6 right-6 md:right-auto md:w-80 bg-white rounded-2xl p-7 md:p-8 shadow-2xl transition-transform duration-500 hover:-translate-y-2">
+                        <div class="flex items-center gap-2.5 mb-2">
+                            <iconify-icon icon="solar:verified-check-linear" class="text-xl text-neutral-900" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-base md:text-lg font-normal text-neutral-900">Optimized</span>
+                        </div>
+                        <div class="text-2xl md:text-3xl text-neutral-800 mb-3 italic tracking-tight" style="font-family: 'Playfair Display', serif;">Flawless Execution</div>
+                        <p class="text-sm md:text-base font-light text-neutral-500 leading-relaxed">
+                            Every environment is meticulously compiled for maximum spatial coherence.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Split Cards -->
+                <div class="lg:col-span-6 flex flex-col gap-6 md:gap-8">
+                    
+                    <!-- Top Right Card: Procedural -->
+                    <div class="bg-[#EAE8E2] rounded-[2rem] relative overflow-hidden flex flex-col sm:flex-row min-h-[300px] p-8 md:p-10 group">
+                        <div class="w-full sm:w-2/3 flex flex-col relative z-10 justify-center">
+                            <iconify-icon icon="solar:box-minimalistic-linear" class="text-3xl text-neutral-800 mb-6" style="stroke-width: 1.5;"></iconify-icon>
+                            <h3 class="text-2xl md:text-4xl font-light tracking-tight text-neutral-900 mb-1">Procedural</h3>
+                            <div class="text-2xl md:text-4xl italic tracking-tight text-neutral-800 mb-5" style="font-family: 'Playfair Display', serif;">Topology</div>
+                            <p class="text-sm md:text-base font-light text-neutral-600 leading-relaxed max-w-[280px]">
+                                Algorithmic structures designed to scale infinitely across digital plains.
+                            </p>
+                        </div>
+                        <div class="absolute right-0 bottom-0 top-0 w-1/2 min-w-[200px] flex items-end justify-end opacity-90 group-hover:scale-105 transition-transform duration-700 ease-out">
+                            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f21c5120-8174-4b8b-99f8-868bbb3e3757_800w.webp" class="h-[140%] object-cover object-left mix-blend-darken translate-x-8 translate-y-12" alt="Procedural Geometry">
+                        </div>
+                    </div>
+
+                    <!-- Bottom Right Card: Volumetric -->
+                    <div class="bg-[#414F3D] rounded-[2rem] relative overflow-hidden flex min-h-[300px] text-white p-8 md:p-10">
+                        <!-- Abstract Light Placement -->
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f0a20e21-9ae4-4a4e-aa48-fb19b0ce94a8_800w.webp" class="absolute -left-16 -bottom-16 w-80 h-80 object-cover mix-blend-screen opacity-70 transition-transform duration-1000 ease-out hover:scale-110" alt="Volumetric Light rays">
+                        
+                        <div class="w-full flex justify-end">
+                            <div class="w-full sm:w-2/3 flex flex-col relative z-10 justify-center pl-8 sm:pl-0">
+                                <h3 class="text-2xl md:text-4xl font-light tracking-tight mb-1">Volumetric</h3>
+                                <div class="text-2xl md:text-4xl italic tracking-tight text-white/90 mb-8" style="font-family: 'Playfair Display', serif;">Illumination</div>
+                                
+                                <div class="space-y-4 md:space-y-5">
+                                    <div class="flex items-center gap-3.5">
+                                        <iconify-icon icon="solar:sun-linear" class="text-xl text-white/60" style="stroke-width: 1.5;"></iconify-icon>
+                                        <span class="text-sm md:text-base font-light text-white/90">Raytraced Brilliance</span>
+                                    </div>
+                                    <div class="flex items-center gap-3.5">
+                                        <iconify-icon icon="solar:layers-minimalistic-linear" class="text-xl text-white/60" style="stroke-width: 1.5;"></iconify-icon>
+                                        <span class="text-sm md:text-base font-light text-white/90">Global Illumination</span>
+                                    </div>
+                                    <div class="flex items-center gap-3.5">
+                                        <iconify-icon icon="solar:cpu-bolt-linear" class="text-xl text-white/60" style="stroke-width: 1.5;"></iconify-icon>
+                                        <span class="text-sm md:text-base font-light text-white/90">Physically Based Processing</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Dashboard App Feature Section (Telemetry) -->
+    <section class="bg-[#050505] text-white relative z-20 w-full py-24 md:py-32 px-6 shadow-[0_-20px_60px_rgba(0,0,0,0.8)] border-t border-white/5 overflow-hidden">
+        
+        <!-- Ambient background glow behind the phone -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] bg-white/[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto flex flex-col items-center relative z-10 pt-4 md:pt-8">
+            
+            <!-- Main Title -->
+            <div class="max-w-3xl mx-auto text-center mb-16 md:mb-24">
+                <h2 class="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight text-[#f3f3f3] leading-tight">
+                    Monitor render nodes, topology, and atmospheric density in one clean view.
+                </h2>
+            </div>
+
+            <div class="flex flex-col lg:flex-row w-full relative items-center justify-between z-10 gap-12 lg:gap-4 xl:gap-8">
+    
+    <!-- Left Texts -->
+    <div class="hidden lg:flex flex-col justify-between h-[500px] sm:h-[560px] flex-1 py-16 xl:py-24">
+        <div class="flex items-center w-full group">
+            <p class="text-xs xl:text-sm text-[#8a8a8e] font-light leading-relaxed tracking-wide w-[180px] xl:w-[220px] shrink-0">
+                Control atmospheric scattering — down to the voxel.
+            </p>
+            <div class="flex-grow h-[1px] bg-gradient-to-r from-white/5 to-white/20 ml-4 xl:ml-6 relative flex items-center transition-opacity duration-300">
+                <div class="absolute right-0 w-1.5 h-1.5 rounded-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
+            </div>
+        </div>
+        <div class="flex items-center w-full group">
+            <p class="text-xs xl:text-sm text-[#8a8a8e] font-light leading-relaxed tracking-wide w-[180px] xl:w-[220px] shrink-0">
+                Observe render telemetry — no clutter, just pure data.
+            </p>
+            <div class="flex-grow h-[1px] bg-gradient-to-r from-white/5 to-white/20 ml-4 xl:ml-6 relative flex items-center transition-opacity duration-300">
+                <div class="absolute right-0 w-1.5 h-1.5 rounded-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phone Mockup Container -->
+    <div class="relative w-[300px] sm:w-[350px] h-[640px] sm:h-[700px] shrink-0 bg-black rounded-[2.5rem] sm:rounded-[3.25rem] border-[10px] sm:border-[14px] border-[#1C1C1E] shadow-[0_40px_80px_rgba(0,0,0,0.7)] flex flex-col overflow-hidden z-20 ring-1 ring-white/10">
+        
+        <!-- Hardware Notch / Dynamic Island -->
+        <div class="absolute top-0 inset-x-0 h-6 flex justify-center z-30 pointer-events-none">
+            <div class="w-24 h-6 bg-black rounded-b-3xl"></div>
+        </div>
+
+        <!-- Screen Interface -->
+        <div class="w-full h-full bg-[#0A0A0A] p-3 sm:p-4 pt-10 sm:pt-12 flex flex-col gap-3 overflow-y-auto [&amp;::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center px-1 text-white text-[9px] sm:text-[10px] font-normal tracking-wide mb-1 opacity-90">
+                <span>9:41</span>
+                <div class="flex gap-1 items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-2"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi"><path d="M5 13a10 10 0 0 1 14 0"></path><path d="M8.5 16.5a5 5 0 0 1 7 0"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><line x1="12" x2="12.01" y1="20" y2="20"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-battery-full"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"></rect><line x1="22" x2="22" y1="11" y2="13"></line><line x1="6" x2="6" y1="11" y2="13"></line><line x1="10" x2="10" y1="11" y2="13"></line><line x1="14" x2="14" y1="11" y2="13"></line></svg>
+                </div>
+            </div>
+
+            <!-- User Header -->
+            <div class="flex justify-between items-center mb-1 px-1">
+                <h3 class="text-sm sm:text-base font-light tracking-tight text-[#f3f3f3]">Hi, Architect</h3>
+                <div class="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-teal-400"></div>
+            </div>
+
+            <!-- Activity Card 1 -->
+            <div class="bg-[#141414] border border-white/[0.04] rounded-xl sm:rounded-2xl p-3 flex flex-col gap-1 relative overflow-hidden group">
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light tracking-wide uppercase">Active Simulation</span>
+                <div class="text-sm sm:text-base font-light tracking-tight text-white mt-0.5">Volumetric Fog Pass</div>
+                
+                <!-- Progress Bar Segments -->
+                <div class="w-full flex gap-0.5 h-[2px] mt-1.5">
+                    <div class="h-full bg-[#34C759] rounded-full w-[45%]"></div>
+                    <div class="h-full bg-white/20 rounded-full w-[25%]"></div>
+                    <div class="h-full bg-white/20 rounded-full w-[30%]"></div>
+                </div>
+                
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light mt-1">1h 40m remaining · Node 04</span>
+            </div>
+
+            <!-- Activity Card 2 -->
+            <div class="bg-[#141414] border border-white/[0.04] rounded-xl sm:rounded-2xl p-3 flex flex-col gap-1">
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light tracking-wide uppercase">Array Status</span>
+                <div class="text-sm sm:text-base font-light tracking-tight text-white mt-0.5">82% GPU Utilization</div>
+                
+                <!-- Continuous Progress -->
+                <div class="w-full flex h-[2px] mt-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-[#FF9F0A] rounded-full w-[82%]"></div>
+                </div>
+                
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light mt-1">Balanced thermal output</span>
+            </div>
+
+            <!-- Activity Card 3 -->
+            <div class="bg-[#141414] border border-white/[0.04] rounded-xl sm:rounded-2xl p-3 flex flex-col gap-1">
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light tracking-wide uppercase">Scene Statistics</span>
+                <div class="text-sm sm:text-base font-light tracking-tight text-white mt-0.5">24.3M Polygons</div>
+            </div>
+
+            <!-- Activity Card 4 -->
+            <div class="bg-[#141414] border border-white/[0.04] rounded-xl sm:rounded-2xl p-3 flex flex-col gap-1">
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light tracking-wide uppercase">Memory Cache</span>
+                <div class="text-sm sm:text-base font-light tracking-tight text-white mt-0.5">14.2 TB Allocated</div>
+                
+                <!-- Continuous Progress -->
+                <div class="w-full flex h-[2px] mt-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-500 rounded-full w-[64%]"></div>
+                </div>
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light mt-1">DDR6 VRAM clusters active</span>
+            </div>
+
+            <!-- Activity Card 5 -->
+            <div class="bg-[#141414] border border-white/[0.04] rounded-xl sm:rounded-2xl p-3 flex flex-col gap-1 mb-2">
+                <span class="text-[9px] sm:text-[10px] text-[#8a8a8e] font-light tracking-wide uppercase">Network Uplink</span>
+                <div class="text-sm sm:text-base font-light tracking-tight text-white mt-0.5">400 Gbps Synchronized</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Right Texts -->
+    <div class="hidden lg:flex flex-col justify-between h-[500px] sm:h-[560px] flex-1 py-16 xl:py-24 text-right">
+        <div class="flex items-center w-full group">
+            <div class="flex-grow h-[1px] bg-gradient-to-l from-white/5 to-white/20 mr-4 xl:mr-6 relative flex items-center justify-start transition-opacity duration-300">
+                <div class="absolute left-0 w-1.5 h-1.5 rounded-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
+            </div>
+            <p class="text-xs xl:text-sm text-[#8a8a8e] font-light leading-relaxed tracking-wide w-[180px] xl:w-[220px] shrink-0">
+                Track continuous resource allocation across global GPU clusters.
+            </p>
+        </div>
+        <div class="flex items-center w-full group">
+            <div class="flex-grow h-[1px] bg-gradient-to-l from-white/5 to-white/20 mr-4 xl:mr-6 relative flex items-center justify-start transition-opacity duration-300">
+                <div class="absolute left-0 w-1.5 h-1.5 rounded-full bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
+            </div>
+            <p class="text-xs xl:text-sm text-[#8a8a8e] font-light leading-relaxed tracking-wide w-[180px] xl:w-[220px] shrink-0">
+                Optimized for mathematical precision, not just visuals.
+            </p>
+        </div>
+    </div>
+
+    <!-- Mobile Text Stack -->
+    <div class="flex lg:hidden flex-col gap-2 text-center mt-12 px-6 max-w-md mx-auto w-full">
+        <div class="py-4 border-b border-white/5">
+            <p class="text-xs sm:text-sm text-[#8a8a8e] font-light leading-relaxed">Control atmospheric scattering — down to the voxel.</p>
+        </div>
+        <div class="py-4 border-b border-white/5">
+            <p class="text-xs sm:text-sm text-[#8a8a8e] font-light leading-relaxed">Observe render telemetry — no clutter, just pure data.</p>
+        </div>
+        <div class="py-4 border-b border-white/5">
+            <p class="text-xs sm:text-sm text-[#8a8a8e] font-light leading-relaxed">Track continuous resource allocation across global GPU clusters.</p>
+        </div>
+        <div class="py-4">
+            <p class="text-xs sm:text-sm text-[#8a8a8e] font-light leading-relaxed">Optimized for mathematical precision, not just visuals.</p>
+        </div>
+    </div>
+
+</div>
+        </div>
+    </section>
+
+    <!-- Pricing Dark Mode Section -->
+    <section class="bg-[#050505] text-white relative z-20 w-full py-24 md:py-32 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.6)] border-t border-white/5">
+        <div class="max-w-6xl mx-auto flex flex-col items-center">
+            <h2 class="text-3xl md:text-5xl font-light tracking-tight text-white/95 mb-4 text-center">
+                Commitment tiers.
+            </h2>
+            <p class="text-base md:text-lg font-light tracking-wide text-white/50 mb-16 text-center max-w-xl">
+                Structured resource allocation for discrete environments and persistent spatial narratives.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                <!-- Tier 1 -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col relative overflow-hidden group hover:border-white/20 transition-colors duration-300">
+                    <div class="text-xs md:text-sm font-medium tracking-widest text-white/40 uppercase mb-4">Phase 01</div>
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="text-3xl md:text-4xl font-light tracking-tight text-white/95">$4,500</span>
+                        <span class="text-xs md:text-sm font-thin text-white/40">/project</span>
+                    </div>
+                    <p class="text-xs md:text-sm font-light text-white/60 mb-8 h-10">Essential geometric and ambient light structural modeling.</p>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">3 Render passes</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Basic procedural rules</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Standard 4K output</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs md:text-sm font-medium transition-colors border border-white/5">Initiate</button>
+                </div>
+
+                <!-- Tier 2 (Optimal) -->
+                <div class="bg-neutral-900 border border-white/20 rounded-3xl p-8 flex flex-col relative overflow-hidden group hover:border-white/30 transition-colors duration-300 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+                    <div class="text-xs md:text-sm font-medium tracking-widest text-white/90 uppercase mb-4 flex justify-between items-center">
+                        Phase 02
+                        <span class="bg-white text-black text-xs px-2.5 py-0.5 rounded-full font-medium tracking-normal">Optimal</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="text-3xl md:text-4xl font-light tracking-tight text-white/95">$8,200</span>
+                        <span class="text-xs md:text-sm font-thin text-white/40">/project</span>
+                    </div>
+                    <p class="text-xs md:text-sm font-light text-white/60 mb-8 h-10">Advanced atmospheric simulations with complex mathematical topology.</p>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Unlimited render passes</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Complex volumetric acoustics</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Material refraction nodes</span>
+                        </li>
+                        
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-white text-black hover:bg-neutral-200 text-xs md:text-sm font-medium transition-colors border border-transparent shadow-[0_0_20px_rgba(255,255,255,0.2)]">Initiate</button>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col relative overflow-hidden group hover:border-white/20 transition-colors duration-300">
+                    <div class="text-xs md:text-sm font-medium tracking-widest text-white/40 uppercase mb-4">Continuous</div>
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="text-3xl md:text-4xl font-light tracking-tight text-white/95">$14k</span>
+                        <span class="text-xs md:text-sm font-thin text-white/40">/month</span>
+                    </div>
+                    <p class="text-xs md:text-sm font-light text-white/60 mb-8 h-10">Dedicated resource allocation for ongoing environmental expansion.</p>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Dedicated simulation array</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Infinite fractal recursion</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-white/50 text-lg" style="stroke-width: 1.5;"></iconify-icon>
+                            <span class="text-xs md:text-sm font-light text-white/80">Priority render queuing</span>
+                        </li>
+                        
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs md:text-sm font-medium transition-colors border border-white/5">Connect</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Light Mode Section -->
+    <section class="bg-[#FBFBFA] text-neutral-900 relative z-20 w-full py-32 md:py-40 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.3)]">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            <h2 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-neutral-900 mb-8 leading-tight">
+                Construct the <br class="hidden md:block"> ethereal void.
+            </h2>
+            <p class="text-base md:text-xl font-light text-neutral-500 mb-12 max-w-2xl tracking-wide">
+                Begin the synthesis of mathematical precision and atmospheric depth for your next spatial narrative.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <button class="px-8 py-4 rounded-full bg-neutral-900 text-white hover:bg-neutral-800 text-xs md:text-sm font-medium transition-colors shadow-lg shadow-neutral-900/20 flex items-center justify-center gap-2 group">
+                    Initialize Project
+                    <iconify-icon icon="solar:arrow-right-linear" class="text-lg group-hover:translate-x-1 transition-transform" style="stroke-width: 1.5;"></iconify-icon>
+                </button>
+                <button class="px-8 py-4 rounded-full bg-white text-neutral-900 hover:bg-neutral-50 border border-neutral-200 text-xs md:text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                    View Documentation
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Dark Mode -->
+    <footer class="bg-[#050505] text-white py-12 md:py-16 px-6 relative z-20 w-full border-t border-white/5">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4 text-center md:text-left">
+            
+            <!-- Logo -->
+            <div class="text-sm md:text-base tracking-widest font-thin uppercase text-white/90">
+                A U R A
+            </div>
+            
+            <!-- Links -->
+            <div class="flex flex-wrap justify-center gap-8 text-xs md:text-sm font-thin text-white/50">
+                <a href="#" class="hover:text-white transition-colors">Showcase</a>
+                <a href="#" class="hover:text-white transition-colors">Studio</a>
+                <a href="#" class="hover:text-white transition-colors">Expertise</a>
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms</a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-xs font-thin text-white/30 tracking-wide">
+                © 2026 Aura Studios.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- GSAP Masked Text Reveal with ScrollTrigger ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        const titleElement = document.getElementById('hero-title');
+        const text = titleElement.innerText;
+        titleElement.innerHTML = '';
+        
+        const words = text.split(' ');
+        words.forEach(word => {
+            const wordSpan = document.createElement('span');
+            wordSpan.style.display = 'inline-block';
+            wordSpan.style.overflow = 'hidden';
+            wordSpan.style.verticalAlign = 'top';
+            
+            const innerSpan = document.createElement('span');
+            innerSpan.className = 'reveal-inner';
+            innerSpan.style.display = 'inline-block';
+            innerSpan.style.transform = 'translateY(110%)';
+            innerSpan.style.willChange = 'transform';
+            innerSpan.innerHTML = word + '&nbsp;';
+            
+            wordSpan.appendChild(innerSpan);
+            titleElement.appendChild(wordSpan);
+        });
+
+        window.addEventListener('load', () => {
+            gsap.to('.reveal-inner', {
+                scrollTrigger: {
+                    trigger: '#hero-title',
+                    start: 'top 95%'
+                },
+                y: '0%',
+                duration: 1.6,
+                ease: 'power4.out',
+                stagger: 0.03,
+                delay: 0.1
+            });
+            
+            gsap.from('header, .fixed.right-8, .group', {
+                opacity: 0,
+                y: 15,
+                duration: 1.8,
+                ease: 'power3.out',
+                stagger: 0.15,
+                delay: 0.6
+            });
+        });
+
+        // --- WebGL Abstract Cloud / Smoke Background ---
+        const canvas = document.getElementById('webgl-canvas');
+        const gl = canvas.getContext('webgl');
+
+        if (gl) {
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const vsSource = `
+                attribute vec2 position;
+                void main() { gl_Position = vec4(position, 0.0, 1.0); }
+            `;
+
+            const fsSource = `
+                precision highp float;
+                uniform vec2 u_resolution;
+                uniform float u_time;
+
+                vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+                float snoise(vec2 v) {
+                    const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+                    vec2 i  = floor(v + dot(v, C.yy) );
+                    vec2 x0 = v -   i + dot(i, C.xx);
+                    vec2 i1; i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+                    vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1;
+                    i = mod289(i);
+                    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
+                    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+                    m = m*m ; m = m*m ;
+                    vec3 x = 2.0 * fract(p * C.www) - 1.0;
+                    vec3 h = abs(x) - 0.5; vec3 ox = floor(x + 0.5); vec3 a0 = x - ox;
+                    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+                    vec3 g;
+                    g.x  = a0.x  * x0.x  + h.x  * x0.y;
+                    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                    return 130.0 * dot(m, g);
+                }
+
+                void main() {
+                    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+                    st.x *= u_resolution.x / u_resolution.y;
+
+                    vec2 pos1 = st * 1.5 + vec2(u_time * 0.02, u_time * 0.015);
+                    vec2 pos2 = st * 2.5 - vec2(u_time * 0.01, u_time * 0.03);
+
+                    float n1 = snoise(pos1) * 0.5 + 0.5;
+                    float n2 = snoise(pos2) * 0.5 + 0.5;
+                    float finalNoise = mix(n1, n2, 0.6);
+
+                    // Dark smoke overlay opacity mapping
+                    float alpha = smoothstep(0.1, 0.9, finalNoise);
+
+                    vec2 center = gl_FragCoord.xy / u_resolution.xy - 0.5;
+                    float dist = length(center);
+                    alpha *= smoothstep(0.9, 0.1, dist);
+
+                    // Dark/shadow tint output for a moody smoke effect
+                    gl_FragColor = vec4(0.01, 0.01, 0.02, alpha * 0.9);
+                }
+            `;
+
+            function createShader(type, source) {
+                const s = gl.createShader(type);
+                gl.shaderSource(s, source);
+                gl.compileShader(s);
+                return s;
+            }
+            
+            const vs = createShader(gl.VERTEX_SHADER, vsSource);
+            const fs = createShader(gl.FRAGMENT_SHADER, fsSource);
+            const program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+            const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+            
+            const posAttr = gl.getAttribLocation(program, "position");
+            gl.enableVertexAttribArray(posAttr);
+            gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
+
+            const resUni = gl.getUniformLocation(program, "u_resolution");
+            const timeUni = gl.getUniformLocation(program, "u_time");
+
+            let startTime = Date.now();
+            function render() {
+                gl.uniform2f(resUni, canvas.width, canvas.height);
+                gl.uniform1f(timeUni, (Date.now() - startTime) * 0.001);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                requestAnimationFrame(render);
+            }
+            render();
+        }
+    </script>
+
+</body></html>

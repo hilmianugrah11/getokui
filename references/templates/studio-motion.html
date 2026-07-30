@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en" class=""><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heva — Thoughtful Wellness Care</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="bg-[#F1EEE7] text-[#1C2419] antialiased selection:bg-[#CFE76A] selection:text-[#1C2419]">
+    <!-- NAV -->
+    <header class="fixed top-0 inset-x-0 z-50 px-4 sm:px-6 lg:px-10 pt-4">
+      <nav class="max-w-7xl mx-auto flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2.5 bg-[#1C2419]/80 backdrop-blur-md rounded-full pl-3 pr-5 py-2.5 text-[#F1EEE7] transition-transform duration-300 hover:scale-[1.03]">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="11" stroke="#CFE76A" stroke-width="1.5"></circle>
+            <path d="M12 4c0 6-3 8-3 8s3 2 3 8c0-6 3-8 3-8s-3-2-3-8z" fill="#CFE76A"></path>
+          </svg>
+          <span class="text-sm font-medium tracking-wide">HEVA</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1 bg-[#1C2419]/80 backdrop-blur-md rounded-full p-1.5 text-[#F1EEE7]">
+          <a href="#about" class="text-xs px-4 py-2 rounded-full hover:bg-white/10 transition-colors duration-300">
+            About
+          </a>
+          <a href="#treatments" class="text-xs px-4 py-2 rounded-full hover:bg-white/10 transition-colors duration-300">
+            Treatments
+          </a>
+          <a href="#journey" class="text-xs px-4 py-2 rounded-full hover:bg-white/10 transition-colors duration-300">
+            Journey
+          </a>
+          <a href="#testimonials" class="text-xs px-4 py-2 rounded-full hover:bg-white/10 transition-colors duration-300">
+            Stories
+          </a>
+          <a href="#contact" class="text-xs px-4 py-2 rounded-full bg-[#CFE76A] text-[#1C2419] font-medium hover:bg-[#dff58a] transition-colors duration-300">
+            Contact us
+          </a>
+        </div>
+        <button id="menuBtn" class="md:hidden bg-[#1C2419]/80 backdrop-blur-md rounded-full p-3 text-[#F1EEE7]">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </nav>
+      <div id="mobileMenu" class="hidden md:hidden mt-3 max-w-7xl mx-auto bg-[#1C2419]/95 backdrop-blur-md rounded-3xl p-4 text-[#F1EEE7] flex flex-col gap-1">
+        <a href="#about" class="text-sm px-4 py-3 rounded-2xl hover:bg-white/10">
+          About
+        </a>
+        <a href="#treatments" class="text-sm px-4 py-3 rounded-2xl hover:bg-white/10">
+          Treatments
+        </a>
+        <a href="#journey" class="text-sm px-4 py-3 rounded-2xl hover:bg-white/10">
+          Journey
+        </a>
+        <a href="#testimonials" class="text-sm px-4 py-3 rounded-2xl hover:bg-white/10">
+          Stories
+        </a>
+        <a href="#contact" class="text-sm px-4 py-3 rounded-2xl bg-[#CFE76A] text-[#1C2419] font-medium">
+          Contact us
+        </a>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="px-3 sm:px-4 pt-3 sm:pt-4">
+      <div class="relative rounded-[2rem] overflow-hidden min-h-[92vh] flex flex-col">
+        <video src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/9109ecbb-cdc4-4815-981e-2ea83be13765/1781085902595-e0902c5a-fc26-40b9-a3f0-48f2f81fa4dc.mp4" poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dd193dcc-9b6c-4525-bb5b-1440be21c9e8_3840w.png" data-aura-generated-video="true" data-aura-video-preset="loop-in-view" muted="" playsinline="" preload="metadata" loop="" aria-label="Woman in sunlight, eyes closed in calm" class="absolute inset-0 w-full h-full object-cover"></video>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#1C2419]/80 via-[#1C2419]/20 to-[#1C2419]/30"></div>
+        <div class="relative flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-14 pt-28 sm:pt-32">
+          <div class="flex items-center gap-2 text-[#F1EEE7]">
+            <span class="bg-[#CFE76A] text-[#1C2419] text-xs font-medium px-3 py-1.5 rounded-full">
+              New
+            </span>
+            <span class="text-xs tracking-widest uppercase">
+              Available for treatment
+            </span>
+          </div>
+          <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mt-auto">
+            <h1 class="reveal text-3xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#F1EEE7] leading-[1.1] max-w-3xl">
+              Thoughtful care for your body. Designed to bring balance,
+              naturally and gently.
+            </h1>
+            <div class="reveal max-w-xs flex flex-col gap-5">
+              <p class="text-base text-[#F1EEE7]/85 leading-relaxed">
+                A gentle approach to wellness, thoughtfully guided by care that
+                supports everyday life.
+              </p>
+              <a href="#contact" class="group inline-flex items-center justify-between gap-3 bg-[#F1EEE7] text-[#1C2419] rounded-full pl-6 pr-2 py-2 text-sm font-medium w-fit transition-all duration-300 hover:bg-[#CFE76A]">
+                Book now
+                <span class="bg-[#1C2419] text-[#F1EEE7] rounded-full p-2.5 transition-transform duration-300 group-hover:translate-x-1">
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-xs text-[#F1EEE7]/70 tracking-widest uppercase mt-10 pt-6 border-t border-white/15">
+            <span>London, UK — GMT+0</span>
+            <span class="hidden sm:block">Scroll to explore</span>
+            <span>[ Bali ID — GMT+7 ]</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT + STORY -->
+    <section id="about" class="px-4 sm:px-6 lg:px-10 py-20 sm:py-28">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between text-xs tracking-widest uppercase text-[#1C2419]/60 mb-12">
+          <span>// About us</span>
+          <span>[ 01 ]</span>
+        </div>
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+          <div class="reveal lg:col-span-4 group">
+            <div class="rounded-3xl overflow-hidden">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ba721100-2f18-43b7-bf8e-33e88fafc585_3840w.png" alt="Member portrait" class="w-full h-72 sm:h-96 object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ba721100-2f18-43b7-bf8e-33e88fafc585_3840w.png">
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <p class="text-sm text-[#1C2419]/70 italic max-w-[12rem]">
+                “This platform transformed my daily routine.”
+              </p>
+              <div class="flex items-center gap-1.5 text-sm font-medium">
+                <i data-lucide="star" class="w-4 h-4 fill-[#CFE76A] text-[#1C2419]"></i>
+                5.0
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-8 flex flex-col gap-10">
+            <h2 class="reveal text-2xl sm:text-4xl font-medium tracking-tight leading-snug max-w-2xl">
+              “ We approach digital self-help as a mindful practice — designed
+              to support balance, clarity, and personal growth ”
+            </h2>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="reveal rounded-3xl overflow-hidden group">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ee4e1d6-cb5c-40f0-b7f6-e147b51f409c_3840w.png" alt="Calm meditation space" class="w-full h-56 sm:h-64 object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4ee4e1d6-cb5c-40f0-b7f6-e147b51f409c_3840w.png">
+              </div>
+              <div class="flex flex-col gap-5">
+                <p class="reveal text-base text-[#1C2419]/70 leading-relaxed">
+                  Founded in a small studio in Bali, Heva grew from a simple
+                  belief: care should feel human. Today, thousands find
+                  structure, calm and lasting success in self-help guided by
+                  real specialists.
+                </p>
+                <div class="reveal bg-[#CFE76A] rounded-3xl p-6 flex flex-col gap-3">
+                  <span class="text-xs tracking-widest uppercase text-[#1C2419]/70">
+                    Weekly practice time
+                  </span>
+                  <span class="text-4xl font-medium tracking-tight">16h</span>
+                  <div class="flex gap-1.5 mt-1">
+                    <span class="h-1.5 flex-1 rounded-full bg-[#1C2419]"></span>
+                    <span class="h-1.5 flex-1 rounded-full bg-[#1C2419]/60"></span>
+                    <span class="h-1.5 flex-1 rounded-full bg-[#1C2419]/25"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES / FEATURED TREATMENT -->
+    <section id="treatments" class="px-4 sm:px-6 lg:px-10 py-20 sm:py-28 border-t border-[#1C2419]/10">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between text-xs tracking-widest uppercase text-[#1C2419]/60 mb-12">
+          <span>// Featured treatment</span>
+          <span>[ 02 ]</span>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
+          <div class="flex flex-col gap-8">
+            <h2 class="reveal text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
+              Nutritional support for balanced living
+            </h2>
+            <div class="reveal flex flex-wrap gap-2">
+              <span class="text-xs px-4 py-2 rounded-full border border-[#1C2419]/20 hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300 cursor-default">
+                Clinical nutrition
+              </span>
+              <span class="text-xs px-4 py-2 rounded-full border border-[#1C2419]/20 hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300 cursor-default">
+                Professional mentor
+              </span>
+              <span class="text-xs px-4 py-2 rounded-full border border-[#1C2419]/20 hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300 cursor-default">
+                Metabolic support
+              </span>
+              <span class="text-xs px-4 py-2 rounded-full border border-[#1C2419]/20 hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300 cursor-default">
+                Meal planning
+              </span>
+              <span class="text-xs px-4 py-2 rounded-full border border-[#1C2419]/20 hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300 cursor-default">
+                Consultation
+              </span>
+              <span class="text-xs px-4 py-2 rounded-full border border-[#1C2419]/20 hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300 cursor-default">
+                Best facilities
+              </span>
+            </div>
+            <div class="reveal flex items-start gap-5">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop" alt="Dr. Adam Jack" class="w-20 h-24 rounded-2xl object-cover">
+              <div class="flex flex-col gap-1.5">
+                <h3 class="text-lg font-medium tracking-tight">
+                  Dr. Adam Jack
+                </h3>
+                <p class="text-sm text-[#1C2419]/60">Our specialist</p>
+                <div class="flex items-center gap-1.5 text-sm font-medium">
+                  <i data-lucide="star" class="w-4 h-4 fill-[#CFE76A] text-[#1C2419]"></i>
+                  5.0
+                </div>
+                <p class="text-sm text-[#1C2419]/70 italic mt-1">
+                  “ Join thousands finding success through real, sustainable
+                  habits. ”
+                </p>
+                <a href="#contact" class="group mt-3 inline-flex items-center gap-2 bg-[#1C2419] text-[#F1EEE7] rounded-full px-5 py-2.5 text-xs font-medium w-fit transition-colors duration-300 hover:bg-[#33402d]">
+                  Book now
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-6">
+            <div class="reveal bg-white rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div class="flex items-end justify-between gap-6">
+                <div>
+                  <p class="text-xs tracking-widest uppercase text-[#1C2419]/50 mb-2">
+                    Max calories / day
+                  </p>
+                  <p class="text-3xl font-medium tracking-tight">
+                    1.800
+                    <span class="text-sm font-normal text-[#1C2419]/50">
+                      kcal
+                    </span>
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-xs tracking-widest uppercase text-[#1C2419]/50 mb-2">
+                    Protein
+                  </p>
+                  <p class="text-3xl font-medium tracking-tight">
+                    142
+                    <span class="text-sm font-normal text-[#1C2419]/50">g</span>
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-1 mt-5">
+                <span class="h-6 flex-1 rounded bg-[#CFE76A]"></span>
+                <span class="h-6 flex-1 rounded bg-[#CFE76A]"></span>
+                <span class="h-6 flex-1 rounded bg-[#CFE76A]"></span>
+                <span class="h-6 flex-1 rounded bg-[#CFE76A]"></span>
+                <span class="h-6 flex-1 rounded bg-[#CFE76A]"></span>
+                <span class="h-6 flex-1 rounded bg-[#CFE76A]"></span>
+                <span class="h-6 flex-1 rounded bg-[#1C2419]/10"></span>
+                <span class="h-6 flex-1 rounded bg-[#1C2419]/10"></span>
+                <span class="h-6 flex-1 rounded bg-[#1C2419]/10"></span>
+                <span class="h-6 flex-1 rounded bg-[#1C2419]/10"></span>
+              </div>
+              <p class="text-xs text-[#1C2419]/50 mt-3">
+                Today tracking · 60% complete
+              </p>
+            </div>
+            <div class="reveal rounded-3xl overflow-hidden group">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3be6915d-8591-4f0b-a36c-d5475f2c891d_3840w.png" alt="Healthy salmon bowl" class="w-full h-64 sm:h-80 object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3be6915d-8591-4f0b-a36c-d5475f2c891d_3840w.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOURNEY -->
+    <section id="journey" class="px-4 sm:px-6 lg:px-10 py-20 sm:py-28 border-t border-[#1C2419]/10">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between text-xs tracking-widest uppercase text-[#1C2419]/60 mb-12">
+          <span>// Your journey</span>
+          <span>[ 03 ]</span>
+        </div>
+        <div class="flex flex-col lg:flex-row justify-between gap-8 mb-14">
+          <h2 class="reveal text-3xl sm:text-5xl font-medium tracking-tight leading-tight max-w-xl">
+            Discover the treatment that’s right for you
+          </h2>
+          <p class="reveal text-base text-[#1C2419]/70 max-w-sm leading-relaxed">
+            “ Join thousands finding success through a guided, step-by-step path
+            designed around your own rhythm. ”
+          </p>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-10 items-start">
+          <div class="reveal relative rounded-3xl overflow-hidden group">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b5841789-af78-4a48-8f9d-352e1b07dab4_3840w.png" alt="Woman exercising outdoors" class="w-full h-[28rem] sm:h-[34rem] object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b5841789-af78-4a48-8f9d-352e1b07dab4_3840w.png">
+            <div class="absolute bottom-4 left-4 right-4 sm:right-auto bg-[#F1EEE7]/95 backdrop-blur rounded-3xl p-5 sm:w-72">
+              <p class="text-xs tracking-widest uppercase text-[#1C2419]/50">
+                Start from
+              </p>
+              <p class="text-3xl font-medium tracking-tight mt-1">$400</p>
+              <p class="text-xs text-[#1C2419]/60 mt-2 leading-relaxed">
+                Personalized plans for sustainable, healthy weight loss.
+              </p>
+              <div class="flex gap-8 mt-4 pt-4 border-t border-[#1C2419]/10">
+                <div>
+                  <p class="text-xs text-[#1C2419]/50">Fat content</p>
+                  <p class="text-lg font-medium">
+                    19
+                    <span class="text-xs text-[#1C2419]/40">%</span>
+                  </p>
+                </div>
+                <div>
+                  <p class="text-xs text-[#1C2419]/50">Body muscle</p>
+                  <p class="text-lg font-medium">
+                    33
+                    <span class="text-xs text-[#1C2419]/40">%</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <div class="reveal py-7 border-b border-[#1C2419]/10 group cursor-pointer">
+              <div class="flex items-start gap-5">
+                <span class="text-xs tracking-widest text-[#1C2419]/40 mt-1.5">
+                  01
+                </span>
+                <div class="flex-1">
+                  <h3 class="text-xl sm:text-2xl font-medium tracking-tight">
+                    Weight loss treatment
+                  </h3>
+                  <p class="text-base text-[#1C2419]/60 mt-2 leading-relaxed">
+                    Support sustainable, balanced weight loss through
+                    personalized care, guided support, and healthier long-term
+                    habits.
+                  </p>
+                  <div class="flex items-center justify-between mt-5 flex-wrap gap-3">
+                    <a href="#contact" class="group/b inline-flex items-center gap-2 bg-[#1C2419] text-[#F1EEE7] rounded-full px-5 py-2.5 text-xs font-medium transition-colors duration-300 hover:bg-[#33402d]">
+                      Book now
+                      <i data-lucide="arrow-right" class="w-3.5 h-3.5 transition-transform duration-300 group-hover/b:translate-x-1"></i>
+                    </a>
+                    <span class="flex items-center gap-1.5 text-sm">
+                      <i data-lucide="star" class="w-4 h-4 fill-[#CFE76A] text-[#1C2419]"></i>
+                      5.0 reviews
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="reveal py-7 border-b border-[#1C2419]/10 group cursor-pointer transition-colors duration-300 hover:bg-white/60 rounded-2xl px-3 -mx-3">
+              <div class="flex items-start gap-5">
+                <span class="text-xs tracking-widest text-[#1C2419]/40 mt-1.5">
+                  02
+                </span>
+                <div>
+                  <h3 class="text-xl sm:text-2xl font-medium tracking-tight text-[#1C2419]/70 group-hover:text-[#1C2419] transition-colors duration-300">
+                    Testosterone booster
+                  </h3>
+                  <p class="text-base text-[#1C2419]/50 mt-2">
+                    Support energy, strength, and vitality.
+                  </p>
+                </div>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 ml-auto text-[#1C2419]/40 group-hover:text-[#1C2419] transition-all duration-300 group-hover:rotate-45"></i>
+              </div>
+            </div>
+            <div class="reveal py-7 border-b border-[#1C2419]/10 group cursor-pointer transition-colors duration-300 hover:bg-white/60 rounded-2xl px-3 -mx-3">
+              <div class="flex items-start gap-5">
+                <span class="text-xs tracking-widest text-[#1C2419]/40 mt-1.5">
+                  03
+                </span>
+                <div>
+                  <h3 class="text-xl sm:text-2xl font-medium tracking-tight text-[#1C2419]/70 group-hover:text-[#1C2419] transition-colors duration-300">
+                    Progesterone balancing
+                  </h3>
+                  <p class="text-base text-[#1C2419]/50 mt-2">
+                    Balance hormones for improved wellbeing.
+                  </p>
+                </div>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 ml-auto text-[#1C2419]/40 group-hover:text-[#1C2419] transition-all duration-300 group-hover:rotate-45"></i>
+              </div>
+            </div>
+            <div class="reveal py-7 group cursor-pointer transition-colors duration-300 hover:bg-white/60 rounded-2xl px-3 -mx-3">
+              <div class="flex items-start gap-5">
+                <span class="text-xs tracking-widest text-[#1C2419]/40 mt-1.5">
+                  04
+                </span>
+                <div>
+                  <h3 class="text-xl sm:text-2xl font-medium tracking-tight text-[#1C2419]/70 group-hover:text-[#1C2419] transition-colors duration-300">
+                    Anti-aging treatment
+                  </h3>
+                  <p class="text-base text-[#1C2419]/50 mt-2">
+                    Support longevity and youthful vitality.
+                  </p>
+                </div>
+                <i data-lucide="arrow-up-right" class="w-5 h-5 ml-auto text-[#1C2419]/40 group-hover:text-[#1C2419] transition-all duration-300 group-hover:rotate-45"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="px-3 sm:px-4 py-4">
+      <div class="bg-[#222B1E] rounded-[2rem] px-6 sm:px-10 lg:px-14 py-16 sm:py-24 text-[#F1EEE7]">
+        <div class="max-w-7xl mx-auto">
+          <div class="flex items-center justify-between text-xs tracking-widest uppercase text-[#F1EEE7]/50 mb-12">
+            <span>// Testimonial</span>
+            <span>[ 04 ]</span>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-12">
+            <h2 class="reveal text-3xl sm:text-5xl font-medium tracking-tight leading-tight max-w-xl">
+              Our happy members built on trusted wellness care
+            </h2>
+            <div class="flex gap-3">
+              <button class="border border-white/20 rounded-full p-3 hover:bg-[#CFE76A] hover:text-[#1C2419] hover:border-[#CFE76A] transition-all duration-300">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <button class="border border-white/20 rounded-full p-3 hover:bg-[#CFE76A] hover:text-[#1C2419] hover:border-[#CFE76A] transition-all duration-300">
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-12 gap-6 items-stretch">
+            <div class="reveal lg:col-span-4 rounded-3xl overflow-hidden group">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/73ce180b-c952-4edc-8e5d-e8ff63357656_1600w.png" alt="Savannah Watson" class="w-full h-72 lg:h-full object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/73ce180b-c952-4edc-8e5d-e8ff63357656_1600w.png">
+            </div>
+            <div class="reveal lg:col-span-8 bg-[#CFE76A] text-[#1C2419] rounded-3xl p-8 sm:p-12 flex flex-col justify-between gap-10">
+              <div>
+                <i data-lucide="quote" class="w-8 h-8 mb-6"></i>
+                <p class="text-xl sm:text-3xl font-medium tracking-tight leading-snug max-w-2xl">
+                  Being part of a guided wellness program has supported my daily
+                  routine in meaningful ways, making consistency feel
+                  effortless.
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop" alt="" class="w-11 h-11 rounded-full object-cover">
+                <div>
+                  <p class="text-sm font-medium">Savannah Watson</p>
+                  <p class="text-xs text-[#1C2419]/60">2-year member</p>
+                </div>
+                <span class="ml-auto text-xs text-[#1C2419]/50">1 / 8</span>
+              </div>
+            </div>
+          </div>
+          <div class="reveal flex flex-wrap gap-10 sm:gap-16 mt-16 pt-10 border-t border-white/10">
+            <div>
+              <p class="text-3xl sm:text-4xl font-medium tracking-tight text-[#CFE76A]">
+                12k+
+              </p>
+              <p class="text-sm text-[#F1EEE7]/60 mt-1">Active members</p>
+            </div>
+            <div>
+              <p class="text-3xl sm:text-4xl font-medium tracking-tight text-[#CFE76A]">
+                98%
+              </p>
+              <p class="text-sm text-[#F1EEE7]/60 mt-1">Satisfaction rate</p>
+            </div>
+            <div>
+              <p class="text-3xl sm:text-4xl font-medium tracking-tight text-[#CFE76A]">
+                40+
+              </p>
+              <p class="text-sm text-[#F1EEE7]/60 mt-1">Specialists</p>
+            </div>
+            <div>
+              <p class="text-3xl sm:text-4xl font-medium tracking-tight text-[#CFE76A]">
+                5.0
+              </p>
+              <p class="text-sm text-[#F1EEE7]/60 mt-1">Average rating</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY / TEAM -->
+    <section class="px-4 sm:px-6 lg:px-10 py-20 sm:py-28">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between text-xs tracking-widest uppercase text-[#1C2419]/60 mb-12">
+          <span>// Our story</span>
+          <span>[ 05 ]</span>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="flex flex-col gap-6">
+            <h2 class="reveal text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
+              Born from a quieter way of caring
+            </h2>
+            <p class="reveal text-base text-[#1C2419]/70 leading-relaxed max-w-lg">
+              Heva began in 2020 when our founders — a nutritionist and a
+              mindfulness teacher — noticed how rushed modern care had become.
+              They built a practice on patience: small steps, real
+              conversations, and treatments shaped around the person, not the
+              protocol.
+            </p>
+            <p class="reveal text-base text-[#1C2419]/70 leading-relaxed max-w-lg">
+              Today our team of forty specialists carries that philosophy
+              forward, from London to Bali — guiding every member with the same
+              gentle attention.
+            </p>
+            <div class="reveal flex -space-x-3 mt-2">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover ring-2 ring-[#F1EEE7]" alt="Team member">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover ring-2 ring-[#F1EEE7]" alt="Team member">
+              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover ring-2 ring-[#F1EEE7]" alt="Team member">
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover ring-2 ring-[#F1EEE7]" alt="Team member">
+              <span class="w-12 h-12 rounded-full bg-[#1C2419] text-[#CFE76A] text-xs font-medium flex items-center justify-center ring-2 ring-[#F1EEE7]">
+                +36
+              </span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="reveal rounded-3xl overflow-hidden group mt-8">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2cb0683c-7e2f-4013-bef1-530eb48d4d00_3840w.png" alt="Yoga practice" class="w-full h-56 sm:h-72 object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2cb0683c-7e2f-4013-bef1-530eb48d4d00_3840w.png">
+            </div>
+            <div class="reveal rounded-3xl overflow-hidden group">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/979c1e97-b1a4-49e1-8c06-6c4c6fc27940_3840w.png" alt="Spa treatment" class="w-full h-56 sm:h-72 object-cover transition-transform duration-700 group-hover:scale-105" data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/979c1e97-b1a4-49e1-8c06-6c4c6fc27940_3840w.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="px-4 sm:px-6 lg:px-10 pb-20 sm:pb-28">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between text-xs tracking-widest uppercase text-[#1C2419]/60 mb-12">
+          <span>// Contact</span>
+          <span>[ 06 ]</span>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-12">
+          <div class="flex flex-col gap-6">
+            <h2 class="reveal text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
+              Begin your journey into inner serenity
+            </h2>
+            <p class="reveal text-base text-[#1C2419]/70 leading-relaxed max-w-md">
+              Tell us a little about yourself and a specialist will reach out
+              within one business day. No commitment, just a conversation.
+            </p>
+            <div class="reveal flex flex-col gap-4 mt-2">
+              <div class="flex items-center gap-3 text-sm">
+                <span class="bg-[#CFE76A] rounded-full p-2.5">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </span>
+                hello@helovecontent.com
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="bg-[#CFE76A] rounded-full p-2.5">
+                  <i data-lucide="phone" class="w-4 h-4"></i>
+                </span>
+                +62 814 7305 9152
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="bg-[#CFE76A] rounded-full p-2.5">
+                  <i data-lucide="map-pin" class="w-4 h-4"></i>
+                </span>
+                62 Kensington High Street, London W8 6DT
+              </div>
+            </div>
+            <div class="reveal bg-white rounded-3xl p-5 mt-2 max-w-xs">
+              <p class="text-xs tracking-widest uppercase text-[#1C2419]/50">
+                Only 13 slots left this month
+              </p>
+              <div class="h-1.5 rounded-full bg-[#1C2419]/10 mt-3 overflow-hidden">
+                <span class="block h-full w-3/4 rounded-full bg-[#CFE76A]"></span>
+              </div>
+            </div>
+          </div>
+          <form class="reveal bg-white rounded-[2rem] p-7 sm:p-10 flex flex-col gap-5 shadow-sm" onsubmit="event.preventDefault()">
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-medium tracking-wide uppercase text-[#1C2419]/60">
+                  Full name
+                </label>
+                <input type="text" placeholder="Jane Cooper" class="bg-[#F1EEE7] rounded-2xl px-5 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#CFE76A] transition-shadow duration-300 placeholder:text-[#1C2419]/40">
+              </div>
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-medium tracking-wide uppercase text-[#1C2419]/60">
+                  Email
+                </label>
+                <input type="email" placeholder="jane@email.com" class="bg-[#F1EEE7] rounded-2xl px-5 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#CFE76A] transition-shadow duration-300 placeholder:text-[#1C2419]/40">
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="text-xs font-medium tracking-wide uppercase text-[#1C2419]/60">
+                I'm interested in
+              </label>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" class="interest text-xs px-4 py-2.5 rounded-full bg-[#1C2419] text-[#F1EEE7] transition-colors duration-300">
+                  Weight loss
+                </button>
+                <button type="button" class="interest text-xs px-4 py-2.5 rounded-full bg-[#F1EEE7] hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300">
+                  Hormone balance
+                </button>
+                <button type="button" class="interest text-xs px-4 py-2.5 rounded-full bg-[#F1EEE7] hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300">
+                  Anti-aging
+                </button>
+                <button type="button" class="interest text-xs px-4 py-2.5 rounded-full bg-[#F1EEE7] hover:bg-[#1C2419] hover:text-[#F1EEE7] transition-colors duration-300">
+                  Nutrition
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="text-xs font-medium tracking-wide uppercase text-[#1C2419]/60">
+                Message
+              </label>
+              <textarea rows="4" placeholder="Tell us about your goals…" class="bg-[#F1EEE7] rounded-2xl px-5 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#CFE76A] transition-shadow duration-300 placeholder:text-[#1C2419]/40 resize-none"></textarea>
+            </div>
+            <button class="group inline-flex items-center justify-center gap-2 bg-[#1C2419] text-[#F1EEE7] rounded-full px-7 py-4 text-sm font-medium transition-all duration-300 hover:bg-[#CFE76A] hover:text-[#1C2419]">
+              Send inquiry
+              <i data-lucide="arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"></i>
+            </button>
+            <p class="text-xs text-[#1C2419]/50 text-center">
+              We reply within 24 hours · Your details stay private
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="px-3 sm:px-4 pb-3 sm:pb-4">
+      <div class="bg-[#161C13] rounded-[2rem] px-6 sm:px-10 lg:px-14 py-14 sm:py-20 text-[#F1EEE7]">
+        <div class="max-w-7xl mx-auto">
+          <div class="grid lg:grid-cols-12 gap-12 pb-12 border-b border-white/10">
+            <div class="lg:col-span-5 flex flex-col gap-6">
+              <a href="#" class="flex items-center gap-3">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="11" stroke="#CFE76A" stroke-width="1.5"></circle>
+                  <path d="M12 4c0 6-3 8-3 8s3 2 3 8c0-6 3-8 3-8s-3-2-3-8z" fill="#CFE76A"></path>
+                </svg>
+                <span class="text-lg font-medium tracking-wide">HEVA</span>
+              </a>
+              <h3 class="text-2xl sm:text-3xl font-medium tracking-tight max-w-sm">
+                Begin your journey into inner serenity.
+              </h3>
+              <a href="#contact" class="group inline-flex items-center gap-3 bg-[#CFE76A] text-[#1C2419] rounded-full pl-6 pr-2 py-2 text-sm font-medium w-fit transition-colors duration-300 hover:bg-[#dff58a]">
+                Book now
+                <span class="bg-[#1C2419] text-[#CFE76A] rounded-full p-2.5 transition-transform duration-300 group-hover:translate-x-1">
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </span>
+              </a>
+            </div>
+            <div class="lg:col-span-3 flex flex-col gap-5 text-sm">
+              <p class="text-xs tracking-widest uppercase text-[#F1EEE7]/40">
+                Open daily
+              </p>
+              <div>
+                <p class="text-[#F1EEE7]/60">Monday — Friday</p>
+                <p class="mt-1">09:00 AM — 09:00 PM</p>
+              </div>
+              <div>
+                <p class="text-[#F1EEE7]/60">Phone</p>
+                <p class="mt-1">(+62) 814 7305 9152</p>
+              </div>
+              <div>
+                <p class="text-[#F1EEE7]/60">Email</p>
+                <p class="mt-1">hello@helovecontent.com</p>
+              </div>
+            </div>
+            <div class="lg:col-span-4 flex flex-col gap-5 text-sm">
+              <p class="text-xs tracking-widest uppercase text-[#F1EEE7]/40">
+                Our locations
+              </p>
+              <p class="text-[#F1EEE7]/80 leading-relaxed">
+                Jl. Raya Pantangan No. 88, Kerobokan, Kuta Utara, Badung, Bali
+                80361 — Indonesia
+              </p>
+              <p class="text-[#F1EEE7]/80 leading-relaxed">
+                62 Kensington High Street, Kensington District, London W8 6DT —
+                United Kingdom
+              </p>
+              <div class="flex flex-wrap gap-2 mt-2">
+                <a href="#" class="text-xs px-4 py-2 rounded-full border border-white/15 hover:bg-[#CFE76A] hover:text-[#1C2419] hover:border-[#CFE76A] transition-all duration-300">
+                  Instagram
+                </a>
+                <a href="#" class="text-xs px-4 py-2 rounded-full border border-white/15 hover:bg-[#CFE76A] hover:text-[#1C2419] hover:border-[#CFE76A] transition-all duration-300">
+                  Facebook
+                </a>
+                <a href="#" class="text-xs px-4 py-2 rounded-full border border-white/15 hover:bg-[#CFE76A] hover:text-[#1C2419] hover:border-[#CFE76A] transition-all duration-300">
+                  Twitter
+                </a>
+                <a href="#" class="text-xs px-4 py-2 rounded-full border border-white/15 hover:bg-[#CFE76A] hover:text-[#1C2419] hover:border-[#CFE76A] transition-all duration-300">
+                  YouTube
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-xs text-[#F1EEE7]/50">
+            <div class="flex flex-wrap gap-5">
+              <a href="#about" class="hover:text-[#CFE76A] transition-colors duration-300">
+                About
+              </a>
+              <a href="#treatments" class="hover:text-[#CFE76A] transition-colors duration-300">
+                Treatments
+              </a>
+              <a href="#journey" class="hover:text-[#CFE76A] transition-colors duration-300">
+                Journey
+              </a>
+              <a href="#testimonials" class="hover:text-[#CFE76A] transition-colors duration-300">
+                Stories
+              </a>
+            </div>
+            <p>© 2024 Assembly Movement Ltd. All rights reserved.</p>
+            <div class="flex gap-5">
+              <a href="#" class="hover:text-[#CFE76A] transition-colors duration-300">
+                Terms &amp; Conditions
+              </a>
+              <a href="#" class="hover:text-[#CFE76A] transition-colors duration-300">
+                Privacy Policy
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Earth-tone palette remap (orange & brown)
+      (function(){
+        var map = {'#1C2419':'#3B2A1C','#CFE76A':'#E8884A','#F1EEE7':'#F6EDDE','#222B1E':'#46321F','#161C13':'#2A1C10','#33402d':'#55402C','#dff58a':'#F0A06A'};
+        document.querySelectorAll('[class]').forEach(function(el){
+          var c = el.getAttribute('class');
+          Object.keys(map).forEach(function(k){ c = c.split(k).join(map[k]); });
+          el.setAttribute('class', c);
+        });
+        document.querySelectorAll('[stroke],[fill]').forEach(function(el){
+          var s = el.getAttribute('stroke'); if (s && map[s]) el.setAttribute('stroke', map[s]);
+          var f = el.getAttribute('fill'); if (f && map[f]) el.setAttribute('fill', map[f]);
+        });
+      })();
+
+      lucide.createIcons({ attrs: { 'stroke-width': 1.5 } });
+
+      // Close mobile menu on anchor click (native browser scrolling)
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', () => { document.getElementById('mobileMenu').classList.add('hidden'); });
+      });
+
+      // Mobile menu
+      document.getElementById('menuBtn').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+      });
+
+      // Scroll reveal
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      // Interest pills toggle
+      document.querySelectorAll('.interest').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.interest').forEach(b => { b.classList.remove('bg-[#3B2A1C]','text-[#F6EDDE]'); b.classList.add('bg-[#F6EDDE]'); });
+          btn.classList.add('bg-[#3B2A1C]','text-[#F6EDDE]'); btn.classList.remove('bg-[#F6EDDE]');
+        });
+      });
+    </script>
+  
+<script data-aura-video-controller="true">
+(function () {
+  function playVideo(video) {
+    var promise = video.play();
+    if (promise && typeof promise.catch === "function") {
+      promise.catch(function () {});
+    }
+  }
+
+  function setupVideo(video) {
+    if (video.__auraVideoReady === true) return;
+    video.__auraVideoReady = true;
+    video.removeAttribute("data-aura-video-ready");
+    video.removeAttribute("data-aura-video-played");
+    video.muted = true;
+    video.playsInline = true;
+
+    var preset = video.dataset.auraVideoPreset || "loop-in-view";
+    if (preset === "hover") {
+      video.addEventListener("mouseenter", function () {
+        playVideo(video);
+      });
+      video.addEventListener("mouseleave", function () {
+        video.pause();
+        video.currentTime = 0;
+      });
+      return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      playVideo(video);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          if (preset === "play-once" && video.__auraVideoPlayed === true) {
+            return;
+          }
+          playVideo(video);
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+
+    if (preset === "play-once") {
+      video.addEventListener("ended", function () {
+        video.__auraVideoPlayed = true;
+      }, { once: true });
+    }
+
+    observer.observe(video);
+  }
+
+  function setupVideos() {
+    document
+      .querySelectorAll("video[data-aura-video-preset]")
+      .forEach(setupVideo);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupVideos);
+  } else {
+    setupVideos();
+  }
+})();</script></body></html>

@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIBots - AI Education Intelligence</title>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+body {
+font-family: 'Inter', sans-serif;
+background-color: #FAFAFA;
+color: #0f172a;
+}
+/* Custom glow for the lightning card - Light Mode */
+.electric-card {
+box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.15), 0 0 20px rgba(59, 130, 246, 0.05);
+}
+.electric-border {
+background: linear-gradient(180deg, rgba(59, 130, 246, 0.5) 0%, rgba(59, 130, 246, 0) 100%);
+}
+/* Starry background effect - Inverted for Light Mode (Subtle dust) */
+.stars {
+background-image:
+radial-gradient(1px 1px at 20px 30px, #94a3b8, rgba(0,0,0,0)),
+radial-gradient(1px 1px at 40px 70px, #94a3b8, rgba(0,0,0,0)),
+radial-gradient(1px 1px at 50px 160px, #94a3b8, rgba(0,0,0,0)),
+radial-gradient(1.5px 1.5px at 90px 40px, #94a3b8, rgba(0,0,0,0)),
+radial-gradient(1px 1px at 130px 80px, #94a3b8, rgba(0,0,0,0));
+background-size: 200px 200px;
+opacity: 0.15;
+}
+/* Subtle grid background for app showcase */
+.grid-bg {
+background-image: linear-gradient(to right, #00000005 1px, transparent 1px),
+linear-gradient(to bottom, #00000005 1px, transparent 1px);
+background-size: 24px 24px;
+}
+/* Hide scrollbar for clean UI look */
+.no-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.no-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+</style>
+<meta name="disabled-font-classes" content="font-roboto,font-poppins,font-playfair,font-merriweather,font-space-grotesk,font-work-sans,font-pt-serif,font-space-mono,font-nunito,font-bricolage,font-google-sans-flex,font-newsreader,font-dm-sans,font-instrument-serif,font-cormorant,font-geist,font-jakarta,font-oswald,font-geist-mono,font-quicksand,font-montserrat">
+<style>
+.invisible { visibility: hidden !important; }
+</style>
+<style>
+@keyframes fadeInUpBlur{0%{opacity:0;transform:translateY(20px);filter:blur(10px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}.animate-entry{animation:fadeInUpBlur 1s cubic-bezier(0.2,0.8,0.2,1) both}.delay-75{animation-delay:75ms}.delay-100{animation-delay:100ms}.delay-150{animation-delay:150ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}.delay-500{animation-delay:500ms}.delay-700{animation-delay:700ms}
+</style>
+<style class="">
+@keyframes animationIn {
+0% {
+opacity: 0;
+transform: translateY(30px);
+filter: blur(8px);
+}
+100% {
+opacity: 1;
+transform: translateY(0);
+filter: blur(0px);
+}
+}
+</style>
+<script>
+(function () {
+const style = document.createElement("style");
+style.textContent = `
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+`;
+document.head.appendChild(style);
+const once = true;
+if (!window.__inViewIO) {
+window.__inViewIO = new IntersectionObserver((entries) => {
+entries.forEach((entry) => {
+if (entry.isIntersecting) {
+entry.target.classList.add("animate");
+if (once) window.__inViewIO.unobserve(entry.target);
+}
+});
+}, { threshold: 0.2, rootMargin: "0px 0px -10% 0px" });
+}
+window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+document.querySelectorAll(selector).forEach((el) => {
+window.__inViewIO.observe(el);
+});
+};
+document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+})();
+</script><style>
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+</style>
+<style>
+/* Disable animations during code generation */
+*, *::before, *::after {
+animation-duration: 0s !important;
+animation-delay: 0s !important;
+transition-duration: 0s !important;
+transition-delay: 0s !important;
+scroll-behavior: auto !important;
+animation: none !important;
+}
+/* Disable CSS transforms that might be animated */
+@media (prefers-reduced-motion: reduce) {
+*, *::before, *::after {
+animation-duration: 0.01ms !important;
+animation-iteration-count: 1 !important;
+transition-duration: 0.01ms !important;
+}
+}
+/* Override opacity-0 class during generation to keep elements visible */
+.opacity-0 {
+opacity: 1 !important;
+}
+/* Disable classes with "animate" in their name */
+[class*="animate"] {
+animation: none !important;
+animation-duration: 0s !important;
+animation-delay: 0s !important;
+animation-iteration-count: 1 !important;
+animation-fill-mode: none !important;
+opacity: 1 !important;
+filter: none !important;
+-webkit-filter: none !important;
+backdrop-filter: none !important;
+-webkit-backdrop-filter: none !important;
+}
+/* Override inline opacity: 0 for animation-related elements */
+[class*="animation"][style*="opacity: 0"],
+[class*="animation"][style*="opacity:0"],
+[class*="reveal"][style*="opacity: 0"],
+[class*="reveal"][style*="opacity:0"],
+[class*="fade"][style*="opacity: 0"],
+[class*="fade"][style*="opacity:0"],
+[class*="Fade"][style*="opacity: 0"],
+[class*="Fade"][style*="opacity:0"],
+[class*="slide"][style*="opacity: 0"],
+[class*="slide"][style*="opacity:0"],
+[class*="Slide"][style*="opacity: 0"],
+[class*="Slide"][style*="opacity:0"] {
+opacity: 1 !important;
+}
+/* Handle Tailwind opacity-0 class with animation-related classes */
+[class*="animation"].opacity-0,
+[class*="reveal"].opacity-0,
+[class*="fade"].opacity-0,
+[class*="Fade"].opacity-0,
+[class*="slide"].opacity-0,
+[class*="Slide"].opacity-0 {
+opacity: 1 !important;
+}
+/* Hide Spline embeds during generation */
+spline-viewer,
+[data-spline],
+iframe[src*="spline.design"],
+iframe[src*="my.spline.design"],
+embed[src*="spline.design"],
+embed[src*="my.spline.design"],
+object[data*="spline.design"],
+object[data*="my.spline.design"] {
+display: none !important;
+visibility: hidden !important;
+}
+</style>
+<script>
+(function() {
+// Store original methods to restore later
+const originalRequestAnimationFrame = window.requestAnimationFrame;
+const originalSetTimeout = window.setTimeout;
+const originalSetInterval = window.setInterval;
+const originalGetContext = HTMLCanvasElement.prototype.getContext;
+// Disable requestAnimationFrame during loading
+window.requestAnimationFrame = function(callback) {
+// Return a fake ID and don't execute the callback
+return -1;
+};
+// Disable setTimeout for short intervals (likely animations)
+window.setTimeout = function(callback, delay) {
+// Only disable short timeouts that are likely animations
+if (delay < 100) {
+return -1;
+}
+return originalSetTimeout.apply(this, arguments);
+};
+// Disable setInterval (likely animations)
+window.setInterval = function(callback, delay) {
+// Disable all intervals during loading
+return -1;
+};
+// Disable canvas rendering
+HTMLCanvasElement.prototype.getContext = function(contextType, contextAttributes) {
+const context = originalGetContext.call(this, contextType, contextAttributes);
+if (!context) return context;
+// For 2D context, override drawing methods
+if (contextType === '2d') {
+const originalMethods = {};
+const drawingMethods = [
+'clearRect', 'fillRect', 'strokeRect', 'fillText', 'strokeText',
+'drawImage', 'putImageData', 'fill', 'stroke', 'arc', 'arcTo',
+'beginPath', 'closePath', 'lineTo', 'moveTo', 'quadraticCurveTo',
+'bezierCurveTo', 'rect', 'ellipse'
+];
+drawingMethods.forEach(method => {
+if (typeof context[method] === 'function') {
+originalMethods[method] = context[method];
+context[method] = function() {
+// Do nothing - disable drawing during loading
+return this;
+};
+}
+});
+// Store original methods for potential restoration
+context._originalMethods = originalMethods;
+}
+// For WebGL context, override key methods
+else if (contextType === 'webgl' || contextType === 'webgl2' || contextType === 'experimental-webgl') {
+const originalMethods = {};
+const webglMethods = [
+'clear', 'drawArrays', 'drawElements', 'useProgram', 'bindBuffer',
+'bindTexture', 'bindFramebuffer', 'viewport', 'enable', 'disable'
+];
+webglMethods.forEach(method => {
+if (typeof context[method] === 'function') {
+originalMethods[method] = context[method];
+context[method] = function() {
+// Do nothing - disable WebGL operations during loading
+return this;
+};
+}
+});
+// Store original methods for potential restoration
+context._originalMethods = originalMethods;
+}
+return context;
+};
+// Disable Three.js specific functionality
+const disableThreeJS = function() {
+// Wait for Three.js to potentially load
+setTimeout(() => {
+if (typeof THREE !== 'undefined') {
+// Override Three.js WebGLRenderer render method
+if (THREE.WebGLRenderer) {
+const originalRender = THREE.WebGLRenderer.prototype.render;
+THREE.WebGLRenderer.prototype.render = function() {
+// Do nothing - disable rendering during loading
+return this;
+};
+THREE.WebGLRenderer.prototype._originalRender = originalRender;
+}
+// Override Animation Mixer
+if (THREE.AnimationMixer) {
+const originalUpdate = THREE.AnimationMixer.prototype.update;
+THREE.AnimationMixer.prototype.update = function() {
+// Do nothing - disable animations during loading
+return this;
+};
+THREE.AnimationMixer.prototype._originalUpdate = originalUpdate;
+}
+}
+}, 100);
+};
+// Apply Three.js disabling
+disableThreeJS();
+// Disable Spline functionality during loading
+const disableSpline = function() {
+// Hide any existing spline viewers immediately
+const hideSplineElements = () => {
+const splineSelectors = [
+'spline-viewer',
+'[data-spline]',
+'iframe[src*="spline.design"]',
+'iframe[src*="my.spline.design"]',
+'embed[src*="spline.design"]',
+'embed[src*="my.spline.design"]',
+'object[data*="spline.design"]',
+'object[data*="my.spline.design"]'
+];
+splineSelectors.forEach(selector => {
+const elements = document.querySelectorAll(selector);
+elements.forEach(el => {
+el.style.display = 'none';
+el.style.visibility = 'hidden';
+});
+});
+};
+// Hide existing elements immediately
+hideSplineElements();
+// Monitor for new spline elements being added
+const observer = new MutationObserver(hideSplineElements);
+// Ensure document.body is available before observing
+if (document.body instanceof Node) {
+observer.observe(document.body, {
+childList: true,
+subtree: true,
+attributes: true,
+attributeFilter: ['src', 'data']
+});
+}
+// Disable Spline runtime if it exists
+if (typeof window.Spline !== 'undefined') {
+const originalSpline = window.Spline;
+window.Spline = function() {
+// Do nothing - disable Spline initialization during loading
+return {
+load: () => Promise.resolve(),
+setSize: () => {},
+dispose: () => {},
+play: () => {},
+pause: () => {},
+stop: () => {}
+};
+};
+window.Spline._originalSpline = originalSpline;
+}
+// Prevent new Spline instances from being created
+Object.defineProperty(window, 'Spline', {
+set: function(value) {
+// Store original but don't activate during loading
+window._SplineOriginal = value;
+},
+get: function() {
+// Return dummy implementation during loading
+return function() {
+return {
+load: () => Promise.resolve(),
+setSize: () => {},
+dispose: () => {},
+play: () => {},
+pause: () => {},
+stop: () => {}
+};
+};
+},
+configurable: true
+});
+};
+// Apply Spline disabling
+disableSpline();
+// Store restoration function globally (though we don't restore in this loading context)
+window._restoreCanvasAndAnimations = function() {
+window.requestAnimationFrame = originalRequestAnimationFrame;
+window.setTimeout = originalSetTimeout;
+window.setInterval = originalSetInterval;
+HTMLCanvasElement.prototype.getContext = originalGetContext;
+// Restore Three.js if available
+if (typeof THREE !== 'undefined') {
+if (THREE.WebGLRenderer && THREE.WebGLRenderer.prototype._originalRender) {
+THREE.WebGLRenderer.prototype.render = THREE.WebGLRenderer.prototype._originalRender;
+}
+if (THREE.AnimationMixer && THREE.AnimationMixer.prototype._originalUpdate) {
+THREE.AnimationMixer.prototype.update = THREE.AnimationMixer.prototype._originalUpdate;
+}
+}
+// Restore Spline if available
+if (window._SplineOriginal) {
+window.Spline = window._SplineOriginal;
+} else if (window.Spline && window.Spline._originalSpline) {
+window.Spline = window.Spline._originalSpline;
+}
+// Restore visibility of Spline elements
+const splineSelectors = [
+'spline-viewer',
+'[data-spline]',
+'iframe[src*="spline.design"]',
+'iframe[src*="my.spline.design"]',
+'embed[src*="spline.design"]',
+'embed[src*="my.spline.design"]',
+'object[data*="spline.design"]',
+'object[data*="my.spline.design"]'
+];
+splineSelectors.forEach(selector => {
+const elements = document.querySelectorAll(selector);
+elements.forEach(el => {
+el.style.display = '';
+el.style.visibility = '';
+});
+});
+};
+})();
+</script>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.-inset-0\.5{inset:-0.125rem}.-inset-10{inset:-2.5rem}.inset-x-0{left:0px;right:0px}.bottom-0{bottom:0px}.left-0{left:0px}.left-1\/2{left:50%}.right-0{right:0px}.top-0{top:0px}.top-4{top:1rem}.top-1\/2{top:50%}.bottom-2{bottom:0.5rem}.left-\[11px\]{left:11px}.top-1{top:0.25rem}.top-2{top:0.5rem}.-bottom-3{bottom:-0.75rem}.-bottom-8{bottom:-2rem}.-bottom-10{bottom:-2.5rem}.z-0{z-index:0}.z-50{z-index:50}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.col-span-12{grid-column:span 12 / span 12}.mx-auto{margin-left:auto;margin-right:auto}.mb-8{margin-bottom:2rem}.ml-auto{margin-left:auto}.mr-auto{margin-right:auto}.mb-10{margin-bottom:2.5rem}.mb-2{margin-bottom:0.5rem}.mb-6{margin-bottom:1.5rem}.mt-0{margin-top:0px}.-mt-4{margin-top:-1rem}.mr-1{margin-right:0.25rem}.-mb-3\.5{margin-bottom:-0.875rem}.mt-0\.5{margin-top:0.125rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mb-4{margin-bottom:1rem}.mt-5{margin-top:1.25rem}.mb-0{margin-bottom:0px}.mb-24{margin-bottom:6rem}.mb-5{margin-bottom:1.25rem}.mt-1{margin-top:0.25rem}.mt-24{margin-top:6rem}.mt-8{margin-top:2rem}.mt-16{margin-top:4rem}.mb-16{margin-bottom:4rem}.mb-12{margin-bottom:3rem}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/5\]{aspect-ratio:4/5}.h-8{height:2rem}.h-\[45px\]{height:45px}.h-\[500px\]{height:500px}.h-\[600px\]{height:600px}.h-2{height:0.5rem}.h-40{height:10rem}.h-5{height:1.25rem}.h-full{height:100%}.h-0\.5{height:0.125rem}.h-1\.5{height:0.375rem}.h-\[300px\]{height:300px}.h-\[3px\]{height:3px}.h-10{height:2.5rem}.h-2\.5{height:0.625rem}.h-px{height:1px}.h-16{height:4rem}.h-4{height:1rem}.h-48{height:12rem}.h-12{height:3rem}.h-24{height:6rem}.h-20{height:5rem}.h-\[76px\]{height:76px}.h-\[110px\]{height:110px}.h-14{height:3.5rem}.h-32{height:8rem}.h-11{height:2.75rem}.min-h-screen{min-height:100vh}.min-h-\[520px\]{min-height:520px}.min-h-\[560px\]{min-height:560px}.min-h-\[900px\]{min-height:900px}.w-8{width:2rem}.w-\[140px\]{width:140px}.w-\[600px\]{width:600px}.w-\[800px\]{width:800px}.w-2{width:0.5rem}.w-5{width:1.25rem}.w-\[360px\]{width:360px}.w-full{width:100%}.w-0\.5{width:0.125rem}.w-1\.5{width:0.375rem}.w-\[80\%\]{width:80%}.w-48{width:12rem}.w-10{width:2.5rem}.w-\[42\%\]{width:42%}.w-2\.5{width:0.625rem}.w-px{width:1px}.w-16{width:4rem}.w-4{width:1rem}.w-12{width:3rem}.w-32{width:8rem}.w-\[300px\]{width:300px}.w-20{width:5rem}.w-\[76px\]{width:76px}.w-\[110px\]{width:110px}.w-14{width:3.5rem}.w-11{width:2.75rem}.min-w-max{min-width:max-content}.min-w-0{min-width:0px}.max-w-6xl{max-width:72rem}.max-w-7xl{max-width:80rem}.max-w-xl{max-width:36rem}.max-w-3xl{max-width:48rem}.max-w-2xl{max-width:42rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-\[-100\%\]{--tw-translate-x:-100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-1\/2{--tw-translate-x:50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-\[20\%\]{--tw-translate-y:20%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-75{--tw-scale-x:.75;--tw-scale-y:.75;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes ping{75%, 100%{transform:scale(2);opacity:0}}.animate-ping{animation:ping 1s cubic-bezier(0, 0, 0.2, 1) infinite}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-rows-\[1fr\]{grid-template-rows:1fr}.grid-rows-\[0fr\]{grid-template-rows:0fr}.flex-row{flex-direction:row}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-1{gap:0.25rem}.gap-4{gap:1rem}.gap-1\.5{gap:0.375rem}.gap-3{gap:0.75rem}.gap-6{gap:1.5rem}.gap-0\.5{gap:0.125rem}.gap-10{gap:2.5rem}.gap-14{gap:3.5rem}.gap-16{gap:4rem}.gap-12{gap:3rem}.gap-x-10{column-gap:2.5rem}.gap-y-10{row-gap:2.5rem}.gap-x-6{column-gap:1.5rem}.gap-y-6{row-gap:1.5rem}.gap-x-16{column-gap:4rem}.gap-y-16{row-gap:4rem}.gap-y-4{row-gap:1rem}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.-space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(-0.5rem * var(--tw-space-x-reverse));margin-left:calc(-0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-8 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem * var(--tw-space-y-reverse))}.self-start{align-self:flex-start}.overflow-hidden{overflow:hidden}.overflow-visible{overflow:visible}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.overflow-x-hidden{overflow-x:hidden}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.rounded-\[30px\]{border-radius:30px}.rounded-\[32px\]{border-radius:32px}.rounded-\[6px\]{border-radius:6px}.rounded-md{border-radius:0.375rem}.rounded-3xl{border-radius:1.5rem}.rounded-none{border-radius:0px}.rounded-\[2rem\]{border-radius:2rem}.rounded-\[24px\]{border-radius:24px}.rounded-r{border-top-right-radius:0.25rem;border-bottom-right-radius:0.25rem}.border{border-width:1px}.border-0{border-width:0px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-r{border-right-width:1px}.border-b-2{border-bottom-width:2px}.border-l-4{border-left-width:4px}.border-l{border-left-width:1px}.border-dashed{border-style:dashed}.border-slate-200\/60{border-color:rgb(226 232 240 / 0.6)}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-green-200{--tw-border-opacity:1;border-color:rgb(187 247 208 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-blue-400\/20{border-color:rgb(96 165 250 / 0.2)}.border-indigo-600{--tw-border-opacity:1;border-color:rgb(79 70 229 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-blue-600{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.border-green-500\/50{border-color:rgb(34 197 94 / 0.5)}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-l-blue-600{--tw-border-opacity:1;border-left-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.bg-\[\#FAFAFA\]{--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity, 1))}.bg-blue-100\/50{background-color:rgb(219 234 254 / 0.5)}.bg-indigo-100\/40{background-color:rgb(224 231 255 / 0.4)}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-indigo-400{--tw-bg-opacity:1;background-color:rgb(129 140 248 / var(--tw-bg-opacity, 1))}.bg-indigo-500{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-400{--tw-bg-opacity:1;background-color:rgb(148 163 184 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-blue-400{--tw-bg-opacity:1;background-color:rgb(96 165 250 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-orange-400{--tw-bg-opacity:1;background-color:rgb(251 146 60 / var(--tw-bg-opacity, 1))}.bg-purple-400{--tw-bg-opacity:1;background-color:rgb(192 132 252 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-50\/30{background-color:rgb(248 250 252 / 0.3)}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-50\/50{background-color:rgb(239 246 255 / 0.5)}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-orange-300{--tw-bg-opacity:1;background-color:rgb(253 186 116 / var(--tw-bg-opacity, 1))}.bg-orange-500{--tw-bg-opacity:1;background-color:rgb(249 115 22 / var(--tw-bg-opacity, 1))}.bg-purple-500{--tw-bg-opacity:1;background-color:rgb(168 85 247 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-blue-100\/60{background-color:rgb(219 234 254 / 0.6)}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-indigo-100\/50{background-color:rgb(224 231 255 / 0.5)}.bg-slate-100\/50{background-color:rgb(241 245 249 / 0.5)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-\[radial-gradient\(circle\2c _rgba\(99\2c 102\2c 241\2c 0\.2\)\2c _transparent_65\%\)\]{background-image:radial-gradient(circle, rgba(99,102,241,0.2), transparent 65%)}.bg-\[url\(https\:\/\/images\.unsplash\.com\/photo-1550751827-4bd374c3f58b\?q\=80\&w\=2070\&auto\=format\&fit\=crop\)\]{background-image:url(https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop)}.bg-gradient-to-t{background-image:linear-gradient(to top, var(--tw-gradient-stops))}.from-indigo-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-400{--tw-gradient-from:#60a5fa var(--tw-gradient-from-position);--tw-gradient-to:rgb(96 165 250 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-400\/10{--tw-gradient-from:rgb(96 165 250 / 0.1) var(--tw-gradient-from-position);--tw-gradient-to:rgb(96 165 250 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-50\/80{--tw-gradient-from:rgb(239 246 255 / 0.8) var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-transparent{--tw-gradient-from:transparent var(--tw-gradient-from-position);--tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-200{--tw-gradient-from:#c7d2fe var(--tw-gradient-from-position);--tw-gradient-to:rgb(199 210 254 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgb(79 70 229 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-slate-900{--tw-gradient-from:#0f172a var(--tw-gradient-from-position);--tw-gradient-to:rgb(15 23 42 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-500{--tw-gradient-from:#3b82f6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(59 130 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-50{--tw-gradient-from:#eff6ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-600{--tw-gradient-from:#2563eb var(--tw-gradient-from-position);--tw-gradient-to:rgb(37 99 235 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-slate-200\/50{--tw-gradient-from:rgb(226 232 240 / 0.5) var(--tw-gradient-from-position);--tw-gradient-to:rgb(226 232 240 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-blue-200{--tw-gradient-to:rgb(191 219 254 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #bfdbfe var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-white\/20{--tw-gradient-to:rgb(255 255 255 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), rgb(255 255 255 / 0.2) var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-blue-600{--tw-gradient-to:rgb(37 99 235 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #2563eb var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-indigo-500{--tw-gradient-to:rgb(99 102 241 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #6366f1 var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-blue-600{--tw-gradient-to:#2563eb var(--tw-gradient-to-position)}.to-transparent{--tw-gradient-to:transparent var(--tw-gradient-to-position)}.to-blue-200{--tw-gradient-to:#bfdbfe var(--tw-gradient-to-position)}.to-cyan-600{--tw-gradient-to:#0891b2 var(--tw-gradient-to-position)}.to-slate-800{--tw-gradient-to:#1e293b var(--tw-gradient-to-position)}.to-indigo-500{--tw-gradient-to:#6366f1 var(--tw-gradient-to-position)}.to-indigo-600{--tw-gradient-to:#4f46e5 var(--tw-gradient-to-position)}.bg-cover{background-size:cover}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.bg-center{background-position:center}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.py-px{padding-top:1px;padding-bottom:1px}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.pl-3{padding-left:0.75rem}.pb-20{padding-bottom:5rem}.pl-6{padding-left:1.5rem}.pr-6{padding-right:1.5rem}.pt-24{padding-top:6rem}.pb-8{padding-bottom:2rem}.pb-\[2px\]{padding-bottom:2px}.pl-8{padding-left:2rem}.pl-\[2px\]{padding-left:2px}.pr-8{padding-right:2rem}.pr-\[2px\]{padding-right:2px}.pt-8{padding-top:2rem}.pt-\[2px\]{padding-top:2px}.pb-24{padding-bottom:6rem}.pb-3{padding-bottom:0.75rem}.pl-2\.5{padding-left:0.625rem}.pl-4{padding-left:1rem}.pr-2\.5{padding-right:0.625rem}.pr-4{padding-right:1rem}.pt-0{padding-top:0px}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}.pb-0{padding-bottom:0px}.pb-10{padding-bottom:2.5rem}.pl-0{padding-left:0px}.pl-10{padding-left:2.5rem}.pl-2{padding-left:0.5rem}.pr-0{padding-right:0px}.pr-10{padding-right:2.5rem}.pt-10{padding-top:2.5rem}.pb-12{padding-bottom:3rem}.pt-12{padding-top:3rem}.pb-6{padding-bottom:1.5rem}.pb-14{padding-bottom:3.5rem}.pt-20{padding-top:5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-\[11px\]{font-size:11px}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[8px\]{font-size:8px}.text-\[9px\]{font-size:9px}.text-6xl{font-size:3.75rem;line-height:1}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-\[17vw\]{font-size:17vw}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-light{font-weight:300}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-\[1\.05\]{line-height:1.05}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.leading-\[1\.1\]{line-height:1.1}.leading-\[0\.8\]{line-height:0.8}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.tracking-wide{letter-spacing:0.025em}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-orange-500{--tw-text-opacity:1;color:rgb(249 115 22 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-blue-200{--tw-text-opacity:1;color:rgb(191 219 254 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.text-pink-500{--tw-text-opacity:1;color:rgb(236 72 153 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.decoration-slate-300{-webkit-text-decoration-color:#cbd5e1;text-decoration-color:#cbd5e1}.placeholder-slate-400::placeholder{--tw-placeholder-opacity:1;color:rgb(148 163 184 / var(--tw-placeholder-opacity, 1))}.opacity-75{opacity:0.75}.opacity-80{opacity:0.8}.opacity-40{opacity:0.4}.opacity-90{opacity:0.9}.opacity-70{opacity:0.7}.opacity-60{opacity:0.6}.opacity-50{opacity:0.5}.opacity-\[0\.4\]{opacity:0.4}.opacity-0{opacity:0}.opacity-10{opacity:0.1}.mix-blend-multiply{mix-blend-mode:multiply}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_4px_10px_rgba\(79\2c 70\2c 229\2c 0\.3\)\]{--tw-shadow:0 4px 10px rgba(79,70,229,0.3);--tw-shadow-colored:0 4px 10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_4px_15px_rgba\(79\2c 70\2c 229\2c 0\.25\)\]{--tw-shadow:0 4px 15px rgba(79,70,229,0.25);--tw-shadow-colored:0 4px 15px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_10px_rgba\(59\2c 130\2c 246\2c 0\.2\)\]{--tw-shadow:0 0 10px rgba(59,130,246,0.2);--tw-shadow-colored:0 0 10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_20px_60px_-10px_rgba\(99\2c 102\2c 241\2c 0\.25\)\]{--tw-shadow:0 20px 60px -10px rgba(99,102,241,0.25);--tw-shadow-colored:0 20px 60px -10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_10px_40px_-10px_rgba\(0\2c 0\2c 0\2c 0\.08\)\]{--tw-shadow:0 10px 40px -10px rgba(0,0,0,0.08);--tw-shadow-colored:0 10px 40px -10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-blue-500\/20{--tw-shadow-color:rgb(59 130 246 / 0.2);--tw-shadow:var(--tw-shadow-colored)}.shadow-slate-900\/10{--tw-shadow-color:rgb(15 23 42 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-slate-200\/50{--tw-shadow-color:rgb(226 232 240 / 0.5);--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-100{--tw-shadow-color:#e0e7ff;--tw-shadow:var(--tw-shadow-colored)}.ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-slate-200\/50{--tw-ring-color:rgb(226 232 240 / 0.5)}.ring-slate-200{--tw-ring-opacity:1;--tw-ring-color:rgb(226 232 240 / var(--tw-ring-opacity, 1))}.ring-green-600\/20{--tw-ring-color:rgb(22 163 74 / 0.2)}.ring-blue-100{--tw-ring-opacity:1;--tw-ring-color:rgb(219 234 254 / var(--tw-ring-opacity, 1))}.ring-red-200{--tw-ring-opacity:1;--tw-ring-color:rgb(254 202 202 / var(--tw-ring-opacity, 1))}.ring-slate-100{--tw-ring-opacity:1;--tw-ring-color:rgb(241 245 249 / var(--tw-ring-opacity, 1))}.ring-white{--tw-ring-opacity:1;--tw-ring-color:rgb(255 255 255 / var(--tw-ring-opacity, 1))}.ring-slate-50{--tw-ring-opacity:1;--tw-ring-color:rgb(248 250 252 / var(--tw-ring-opacity, 1))}.blur-\[100px\]{--tw-blur:blur(100px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-sm{--tw-blur:blur(4px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[120px\]{--tw-blur:blur(120px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-3xl{--tw-blur:blur(64px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[60px\]{--tw-blur:blur(60px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[50px\]{--tw-blur:blur(50px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-\[0_0_8px_rgba\(59\2c 130\2c 246\2c 0\.6\)\]{--tw-drop-shadow:drop-shadow(0 0 8px rgba(59,130,246,0.6));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-2xl{--tw-backdrop-blur:blur(40px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-shadow{transition-property:box-shadow;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-\[grid-template-rows\]{transition-property:grid-template-rows;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.delay-100{transition-delay:100ms}.delay-150{transition-delay:150ms}.delay-200{transition-delay:200ms}.delay-300{transition-delay:300ms}.delay-500{transition-delay:500ms}.delay-700{transition-delay:700ms}.duration-1000{transition-duration:1000ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.duration-700{transition-duration:700ms}.duration-200{transition-duration:200ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.\[animation\:animationIn_0\.8s_ease-out_0\.1s_both\]{animation:animationIn 0.8s ease-out 0.1s both}.\[animation\:animationIn_0\.8s_ease-out_0\.6s_both\]{animation:animationIn 0.8s ease-out 0.6s both}.selection\:bg-blue-500\/20 *::selection{background-color:rgb(59 130 246 / 0.2)}.selection\:bg-blue-500\/20::selection{background-color:rgb(59 130 246 / 0.2)}.hover\:scale-\[1\.02\]:hover{--tw-scale-x:1.02;--tw-scale-y:1.02;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-slate-300:hover{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.hover\:border-indigo-400:hover{--tw-border-opacity:1;border-color:rgb(129 140 248 / var(--tw-border-opacity, 1))}.hover\:border-slate-200:hover{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.hover\:border-blue-300:hover{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.hover\:text-blue-600:hover{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.hover\:opacity-80:hover{opacity:0.8}.hover\:shadow-\[0_10px_30px_-5px_rgba\(37\2c 99\2c 235\2c 0\.4\)\]:hover{--tw-shadow:0 10px 30px -5px rgba(37,99,235,0.4);--tw-shadow-colored:0 10px 30px -5px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:brightness-105:hover{--tw-brightness:brightness(1.05);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.hover\:brightness-110:hover{--tw-brightness:brightness(1.1);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:translate-x-\[100\%\]{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:translate-x-1{--tw-translate-x:0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:-translate-y-1{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:rotate-180{--tw-rotate:180deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-\[1\.06\]{--tw-scale-x:1.06;--tw-scale-y:1.06;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.group:hover .group-hover\:bg-indigo-100\/50{background-color:rgb(224 231 255 / 0.5)}.group:hover .group-hover\:text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:opacity-60{opacity:0.6}.group:hover .group-hover\:opacity-100{opacity:1}.group:hover .group-hover\:ring-slate-200{--tw-ring-opacity:1;--tw-ring-color:rgb(226 232 240 / var(--tw-ring-opacity, 1))}@media (min-width: 640px){.sm\:block{display:block}.sm\:flex{display:flex}.sm\:inline-flex{display:inline-flex}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:col-span-3{grid-column:span 3 / span 3}.md\:col-span-6{grid-column:span 6 / span 6}.md\:col-span-1{grid-column:span 1 / span 1}.md\:mt-0{margin-top:0px}.md\:block{display:block}.md\:flex{display:flex}.md\:h-\[92px\]{height:92px}.md\:h-\[132px\]{height:132px}.md\:w-\[92px\]{width:92px}.md\:w-\[132px\]{width:132px}.md\:translate-x-16{--tw-translate-x:4rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.md\:-translate-x-16{--tw-translate-x:-4rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:flex-col{flex-direction:column}.md\:items-end{align-items:flex-end}.md\:justify-between{justify-content:space-between}.md\:gap-0{gap:0px}.md\:gap-14{gap:3.5rem}.md\:px-12{padding-left:3rem;padding-right:3rem}.md\:py-0{padding-top:0px;padding-bottom:0px}.md\:text-5xl{font-size:3rem;line-height:1}}@media (min-width: 1024px){.lg\:absolute{position:absolute}.lg\:left-1\/2{left:50%}.lg\:top-1\/2{top:50%}.lg\:left-\[2\%\]{left:2%}.lg\:right-\[2\%\]{right:2%}.lg\:top-\[8\%\]{top:8%}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-3{grid-column:span 3 / span 3}.lg\:col-span-2{grid-column:span 2 / span 2}.lg\:mx-auto{margin-left:auto;margin-right:auto}.lg\:mt-0{margin-top:0px}.lg\:-mt-8{margin-top:-2rem}.lg\:mb-0{margin-bottom:0px}.lg\:mt-8{margin-top:2rem}.lg\:block{display:block}.lg\:-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.lg\:-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:items-start{align-items:flex-start}.lg\:justify-end{justify-content:flex-end}.lg\:gap-8{gap:2rem}.lg\:gap-24{gap:6rem}.lg\:gap-20{gap:5rem}.lg\:bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.lg\:px-0{padding-left:0px;padding-right:0px}.lg\:pt-24{padding-top:6rem}.lg\:pb-16{padding-bottom:4rem}.lg\:pl-16{padding-left:4rem}.lg\:text-\[76px\]{font-size:76px}.lg\:text-6xl{font-size:3.75rem;line-height:1}}@media (min-width: 1280px){.xl\:left-\[4\%\]{left:4%}.xl\:right-\[4\%\]{right:4%}}</style><style id="cms-loading-styles">
+@keyframes cms-shimmer {
+0% { background-position: -200% 0; }
+100% { background-position: 200% 0; }
+}
+.cms-loading {
+position: relative;
+color: transparent !important;
+/* Override any background-image (inline styles, Tailwind bg-[url(...)]) */
+background-image: none !important;
+background-color: transparent !important;
+background: linear-gradient(90deg,
+rgba(128, 128, 128, 0.1) 25%,
+rgba(128, 128, 128, 0.2) 50%,
+rgba(128, 128, 128, 0.1) 75%
+) !important;
+background-size: 200% 100% !important;
+animation: cms-shimmer 1.5s infinite !important;
+border-radius: 12px;
+min-height: 1em;
+min-width: 3em;
+overflow: hidden;
+}
+.cms-loading * {
+visibility: hidden !important;
+}
+.cms-loading img {
+opacity: 0 !important;
+}
+</style>  <style>
+/* 3D Transform utilities */
+.rotate-x-0 { --tw-rotate-x: 0deg; transform: translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0)) rotateX(var(--tw-rotate-x, 0)) rotateY(var(--tw-rotate-y, 0)) rotateZ(var(--tw-rotate-z, 0)) skewX(var(--tw-skew-x, 0)) skewY(var(--tw-skew-y, 0)) scaleX(var(--tw-scale-x, 1)) scaleY(var(--tw-scale-y, 1)) !important; }
+.rotate-x-5 { --tw-rotate-x: 5deg; transform: translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0)) rotateX(var(--tw-rotate-x, 0)) rotateY(var(--tw-rotate-y, 0)) rotateZ(var(--tw-rotate-z, 0)) skewX(var(--tw-skew-x, 0)) skewY(var(--tw-skew-y, 0)) scaleX(var(--tw-scale-x, 1)) scaleY(var(--tw-scale-y, 1)) !important; }
+.perspective-distant { perspective: 1200px !important; }
+.transform-style-preserve-3d { transform-style: preserve-3d !important; }
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><style id="border-gradient-shared-style">
+[style*="--border-gradient"]::before {
+content: "";
+position: absolute;
+inset: 0;
+padding: 1px;
+border-radius: var(--border-radius-before, inherit);
+-webkit-mask: linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
+background: var(--border-gradient);
+pointer-events: none;
+}</style></head>
+  <body class="min-h-screen overflow-x-hidden selection:bg-blue-500/20 text-slate-900 bg-[#FAFAFA] border-0 relative">
+    <!-- Background Gradients (Light Mode) -->
+    <div class="fixed z-0 pointer-events-none top-0 right-0 bottom-0 left-0">
+      <div class="stars absolute inset-0"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] blur-[100px] rounded-full mix-blend-multiply bg-indigo-100/50"></div>
+      <div class="absolute bottom-0 right-0 w-[600px] h-[600px] blur-[100px] rounded-full bg-indigo-100/40 mix-blend-multiply"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky z-50 flex bg-white/80 max-w-6xl border-slate-200/60 border rounded-2xl mr-auto ml-auto pt-2 pr-2 pb-2 pl-2 top-4 shadow-sm backdrop-blur-xl items-center justify-between">
+      <a href="#" class="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 flex items-center justify-center shadow-lg to-indigo-600 shadow-indigo-500/20">
+          <iconify-icon icon="solar:smart-home-angle-linear" class="text-white text-xl"></iconify-icon>
+        </div>
+        <span class="font-medium text-xl tracking-tight text-slate-900 font-sans">
+          AIBOTS
+        </span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-1">
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-900 bg-slate-100 rounded-xl transition-all font-sans">
+          Courses
+        </a>
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-all font-sans">
+          Mentorship
+        </a>
+        <a href="#" class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-all font-sans">
+          Paths
+        </a>
+        <div class="relative group">
+          <button class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-slate-500 group-hover:text-slate-900 transition-all font-sans">
+            Resources
+            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 group-hover:rotate-180 transition-transform"></iconify-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-4 pr-1 sm:pr-0">
+        <a href="#" class="hidden sm:block text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors font-sans">
+          Log In
+        </a>
+        <a href="#" class="px-4 sm:px-6 py-2.5 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-xl shadow-lg shadow-slate-900/10 transition-all active:scale-95 font-sans whitespace-nowrap">
+          Start Learning
+        </a>
+        <button class="md:hidden p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-colors active:scale-95">
+          <iconify-icon icon="solar:hamburger-menu-linear" class="text-xl block"></iconify-icon>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Content -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 lg:gap-8 lg:pt-24 max-w-7xl mr-auto ml-auto pt-24 pr-6 pb-20 pl-6 relative items-center">
+      <!-- Left Column -->
+      <div class="lg:col-span-7 flex flex-col relative items-start z-10">
+        <!-- Tag -->
+        <div class="mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white shadow-sm backdrop-blur-sm text-xs text-slate-500 animate-entry delay-100">
+          <iconify-icon icon="solar:stars-minimalistic-linear" class="text-sm text-indigo-500"></iconify-icon>
+          <span class="font-sans" style="">
+            The Next Generation of AI Education
+          </span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="lg:text-[76px] leading-[1.05] animate-entry delay-150 text-5xl text-slate-900 max-w-xl mb-6 tracking-tight font-manrope font-medium" style="">
+          Master AI Engineering. Build the Future.
+        </h1>
+
+        <!-- Subhead -->
+        <p class="text-lg text-slate-500 max-w-xl mb-10 leading-relaxed animate-entry delay-200 font-sans" style="">
+          Stop watching static videos. Engage with interactive AI tutors,
+          real-world projects, and a global community of builders.
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex flex-wrap gap-6 items-center animate-entry delay-300">
+          <button class="group relative px-8 py-3.5 rounded-full text-white text-lg font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_10px_30px_-5px_rgba(37,99,235,0.4)] active:scale-95 overflow-hidden bg-indigo-600">
+            <div class="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+            <div class="relative flex items-center justify-center gap-2">
+              <span class="font-sans">Explore Paths</span>
+            </div>
+          </button>
+
+          <button class="relative px-8 py-3.5 rounded-full bg-white border border-slate-200 text-slate-700 text-lg font-medium backdrop-blur-md transition-all duration-300 hover:bg-slate-50 hover:border-slate-300 flex items-center gap-2 shadow-sm hover:text-indigo-600">
+            <span class="font-sans">View Syllabus</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column (Card with Lightning) -->
+      <div class="lg:col-span-5 flex lg:justify-end lg:mt-0 animate-entry delay-500 z-10 mt-0 relative justify-center">
+        <!-- Card Container -->
+        <div class="electric-card overflow-hidden bg-white w-[360px] rounded-[32px] pt-[2px] pr-[2px] pb-[2px] pl-[2px] relative ring-1 ring-slate-200/50">
+          <!-- Glowing Border Gradient -->
+          <div class="absolute inset-0 bg-gradient-to-b to-transparent opacity-80 z-0 from-indigo-400 via-indigo-200 from-indigo-400/10"></div>
+
+          <!-- Inner Card Content -->
+          <div class="z-10 flex flex-col overflow-hidden bg-white h-full rounded-[30px] pt-8 pr-8 pb-8 pl-8 relative items-start" style="">
+            <!-- Background Noise/Particles inside card -->
+            <div class="absolute top-0 right-0 w-full h-40 bg-gradient-to-b to-transparent from-indigo-50/80"></div>
+
+            <!-- Header -->
+            <div class="flex justify-between w-full items-center mb-6 relative">
+              <span class="text-[10px] uppercase text-slate-500 border border-slate-200 px-2 py-1 rounded bg-slate-50 flex items-center gap-1.5 font-sans" style="">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                </span>
+                Learning Streak
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 tracking-wider font-sans" style="">
+                DAY 12
+              </span>
+            </div>
+
+            <h3 class="text-xl text-slate-900 mb-2 tracking-tight font-semibold font-sans" style="">
+              Today's Curriculum
+            </h3>
+            <p class="text-xs text-slate-500 mb-6 leading-relaxed font-sans" style="">
+              You have 3 modules to complete today.
+            </p>
+
+            <!-- Task List -->
+            <div class="w-full mb-8 space-y-3">
+              <!-- Completed Task -->
+              <div class="flex items-center gap-3 group">
+                <div class="w-5 h-5 rounded-[6px] border border-green-200 bg-green-50 flex items-center justify-center text-green-600">
+                  <iconify-icon icon="solar:check-circle-linear" class="text-sm"></iconify-icon>
+                </div>
+                <span class="text-sm text-slate-400 line-through decoration-slate-300 font-sans" style="">
+                  Intro to Neural Networks
+                </span>
+                <span class="ml-auto text-[10px] text-slate-400 font-mono font-sans" style="">
+                  100%
+                </span>
+              </div>
+
+              <!-- Active Task -->
+              <div class="relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-200 rounded-xl opacity-40 blur-sm group-hover:opacity-60 transition-opacity to-indigo-200"></div>
+                <div class="relative flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-100 shadow-md">
+                  <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 flex items-center justify-center shadow-[0_4px_10px_rgba(79,70,229,0.3)] text-white to-indigo-600">
+                    <iconify-icon icon="solar:play-circle-linear" class="text-lg"></iconify-icon>
+                  </div>
+                  <div class="flex flex-col gap-0.5">
+                    <span class="text-sm text-slate-900 font-medium font-sans" style="">
+                      Transformers Deep Dive
+                    </span>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] text-indigo-600 font-sans" style="">
+                        Video + Lab
+                      </span>
+                      <span class="w-0.5 h-0.5 rounded-full bg-slate-400"></span>
+                      <span class="text-[10px] text-slate-500 font-sans" style="">
+                        25m left
+                      </span>
+                    </div>
+                  </div>
+                  <span class="ml-auto text-[10px] text-slate-600 font-mono bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded font-sans" style="">
+                    RESUME
+                  </span>
+                </div>
+              </div>
+
+              <!-- Upcoming Task -->
+              <div class="flex items-center gap-3 group opacity-80">
+                <div class="w-5 h-5 rounded-[6px] border border-slate-200 hover:border-indigo-400 transition-colors bg-white flex items-center justify-center text-slate-400">
+                  <iconify-icon icon="solar:lock-keyhole-minimalistic-linear" class="text-xs"></iconify-icon>
+                </div>
+                <span class="text-sm text-slate-500 font-sans" style="">
+                  Advanced Python Quiz
+                </span>
+                <span class="ml-auto text-[10px] text-slate-400 font-mono font-sans" style="">
+                  10m
+                </span>
+              </div>
+            </div>
+
+            <!-- Button -->
+            <button class="hover:brightness-105 transition-all text-sm text-white bg-gradient-to-r w-full rounded-full border-t mb-8 pt-3 pb-3 from-indigo-600 shadow-[0_4px_15px_rgba(79,70,229,0.25)] font-sans border-indigo-400/20 via-indigo-600 to-sky-600" style="">
+              Continue Learning
+            </button>
+
+            <!-- Bottom Stats -->
+            <div class="flex items-center justify-between w-full pt-4 border-t border-slate-100">
+              <div class="flex flex-col gap-1">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-sans" style="">
+                  XP Gained
+                </span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-slate-900 font-medium font-sans" style="">
+                    2,450
+                  </span>
+                  <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1 py-px rounded font-sans" style="">
+                    +15%
+                  </span>
+                </div>
+              </div>
+              <div class="flex flex-col gap-1 text-right">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-sans" style="">
+                  Study Time
+                </span>
+                <span class="text-slate-900 font-medium font-sans" style="">
+                  5h 12m
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Desktop App Showcase Section -->
+    <section class="-mt-4 lg:-mt-8 animate-entry delay-700 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll lg:px-0 animate max-w-7xl mr-auto ml-auto pt-0 pr-2.5 pb-24 pl-2.5 relative perspective-distant group">
+      <!-- Glow Effect Behind App -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[300px] blur-[120px] rounded-full z-0 bg-indigo-100/50 transition-transform duration-1000 group-hover:scale-125 group-hover:bg-indigo-200/40"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transform-style-preserve-3d">
+        <!-- Main Panel (full width) -->
+        <div class="overflow-hidden md:col-span-2 lg:col-span-3 lg:bg-white/80 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.6s_both] animate bg-white/80 ring-slate-200 ring-1 rounded-2xl relative shadow-2xl backdrop-blur-md rotate-x-5 hover:rotate-x-0 hover:scale-[1.02] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] hover:shadow-[0_40px_80px_-20px_rgba(79,70,229,0.3)] transform-style-preserve-3d">
+          <!-- Card-style Top Border -->
+          <div class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-90 z-30"></div>
+
+          <!-- Top bar -->
+          <div class="flex sm:px-6 bg-white border-slate-100 border-b pt-3 pr-4 pb-3 pl-4 items-center justify-between relative z-20">
+            <div class="flex items-center gap-3 text-sm text-slate-500">
+              <a href="#" class="inline-flex items-center gap-2 text-slate-900 transition-colors font-sans" style="">
+                AIBots Edu
+              </a>
+              <span class="opacity-40 font-sans" style="">/</span>
+              <span class="text-slate-900 font-sans" style="">
+                My Classroom
+              </span>
+              <span class="inline text-[11px] font-sans" style="">
+                <span class="w-1.5 h-1.5 rounded-full animate-pulse bg-green-500 inline-block mr-1"></span>
+                Online
+              </span>
+            </div>
+
+            <!-- Search & Actions -->
+            <div class="flex items-center gap-3">
+              <div class="hidden sm:flex items-center gap-2 bg-slate-50 ring-1 ring-slate-200 rounded-lg pl-2.5 pr-2.5 h-8">
+                <iconify-icon icon="solar:magnifer-linear" class="text-slate-400 text-sm"></iconify-icon>
+                <input type="text" placeholder="Search courses..." class="bg-transparent text-sm text-slate-700 placeholder-slate-400 focus:outline-none w-48">
+              </div>
+              <button class="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-white text-slate-600 text-xs ring-1 ring-slate-200 px-3 py-1.5 hover:bg-slate-50 transition font-sans" style="">
+                <iconify-icon icon="solar:users-group-rounded-linear" class="text-sm"></iconify-icon>
+                Study Group
+              </button>
+            </div>
+          </div>
+
+          <!-- Desktop layout -->
+          <div class="grid grid-cols-12 z-10 relative">
+            <!-- Left Sidebar -->
+            <aside class="hidden md:flex md:col-span-3 lg:col-span-2 flex-col min-h-[520px] bg-slate-50/50 border-slate-100 border-r">
+              <div class="pt-4 pr-4 pb-4 pl-4">
+                <button class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/10 text-sm hover:brightness-110 transition-all px-3 py-2 font-sans" style="">
+                  <iconify-icon icon="solar:add-circle-linear" class="text-lg"></iconify-icon>
+                  New Goal
+                </button>
+              </div>
+
+              <nav class="px-3 pb-4 space-y-6 overflow-y-auto">
+                <!-- Focus -->
+                <div class="">
+                  <div class="px-2 mb-2 text-[10px] uppercase text-slate-400 font-sans" style="">
+                    Menu
+                  </div>
+                  <ul class="space-y-1">
+                    <li class="">
+                      <a href="#" class="flex items-center gap-2 px-2 py-2 rounded-md text-sm text-slate-900 bg-white ring-1 ring-slate-200 shadow-sm font-sans" style="">
+                        <iconify-icon icon="solar:widget-linear"></iconify-icon>
+                        Dashboard
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center gap-2 px-2 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-white transition-colors font-sans" style="">
+                        <iconify-icon icon="solar:book-linear"></iconify-icon>
+                        My Courses
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center gap-2 px-2 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-white transition-colors font-sans" style="">
+                        <iconify-icon icon="solar:medal-star-circle-linear"></iconify-icon>
+                        Certificates
+                        <span class="ml-auto text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-sans" style="">
+                          2
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Projects -->
+                <div class="">
+                  <div class="px-2 mb-2 text-[10px] uppercase text-slate-400 font-sans" style="">
+                    Active Paths
+                  </div>
+                  <ul class="space-y-1">
+                    <li>
+                      <a href="#" class="flex items-center gap-2 px-2 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-white transition-colors font-sans" style="">
+                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                        Machine Learning
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="#" class="flex items-center gap-2 px-2 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-white transition-colors font-sans" style="">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        Full Stack AI
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="flex items-center gap-2 px-2 py-2 rounded-md text-sm text-slate-500 hover:text-slate-900 hover:bg-white transition-colors font-sans" style="">
+                        <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                        Python Basics
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            </aside>
+
+            <!-- Center Content -->
+            <main class="col-span-12 md:col-span-6 lg:col-span-7 min-h-[520px] bg-white">
+              <!-- Tabs -->
+              <div class="px-4 sm:px-6 py-3 border-b border-slate-100 overflow-x-auto">
+                <div class="flex items-center gap-6 min-w-max">
+                  <button class="text-sm text-slate-900 border-b-2 border-indigo-600 pb-3 -mb-3.5 font-sans" style="">
+                    Current
+                  </button>
+                  <button class="text-sm text-slate-500 hover:text-slate-900 transition pb-3 -mb-3.5 border-b-2 border-transparent hover:border-slate-200 font-sans" style="">
+                    Completed
+                  </button>
+                  <button class="text-sm text-slate-500 hover:text-slate-900 transition pb-3 -mb-3.5 border-b-2 border-transparent hover:border-slate-200 font-sans" style="">
+                    Saved
+                  </button>
+                  <button class="text-sm text-slate-500 hover:text-slate-900 transition pb-3 -mb-3.5 border-b-2 border-transparent hover:border-slate-200 font-sans" style="">
+                    Assignments
+                  </button>
+                </div>
+              </div>
+
+              <!-- Header -->
+              <div class="px-4 sm:px-6 py-6 border-b border-slate-100 bg-slate-50/30">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <h3 class="text-slate-900 text-2xl font-manrope font-medium" style="">
+                      Full Stack AI Engineer
+                    </h3>
+                    <span class="text-[11px] rounded-md bg-green-100 text-green-700 ring-1 px-2 py-0.5 uppercase ring-green-600/20 font-sans" style="">
+                      Career Path
+                    </span>
+                  </div>
+                  <div class="text-xs text-slate-500 flex items-center gap-1.5 font-sans" style="">
+                    <iconify-icon icon="solar:flame-linear" class="text-orange-500 text-sm"></iconify-icon>
+                    Top Rated
+                  </div>
+                </div>
+                <div class="mt-2 text-sm text-slate-500 font-sans" style="">
+                  You have completed
+                  <span class="text-slate-900 font-medium font-sans" style="">
+                    12 modules
+                  </span>
+                  and have
+                  <span class="text-slate-900 font-medium font-sans" style="">
+                    2 projects
+                  </span>
+                  pending review.
+                </div>
+              </div>
+
+              <!-- Feed / Tasks -->
+              <div class="px-4 sm:px-6 py-6 space-y-4">
+                <!-- Card 1: Task -->
+                <div class="rounded-xl ring-1 ring-slate-200 bg-white p-4 hover:shadow-md transition-shadow group cursor-pointer">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="flex-shrink-0 mt-0.5">
+                        <div class="w-10 h-10 rounded-md border border-slate-200 bg-slate-50 transition-colors flex items-center justify-center">
+                          <iconify-icon icon="solar:code-square-linear" class="text-xl text-indigo-600"></iconify-icon>
+                        </div>
+                      </div>
+                      <div class="">
+                        <div class="text-sm text-slate-900 transition-colors font-medium font-sans" style="">
+                          Advanced RAG Pipelines
+                        </div>
+                        <div class="text-xs text-slate-500 mt-0.5 font-sans flex items-center gap-2">
+                          <span class="flex items-center gap-1 font-sans" style="">
+                            <iconify-icon icon="solar:clock-circle-linear" class="text-[10px]"></iconify-icon>
+                            2h 15m
+                          </span>
+                          <span class="font-sans" style="">•</span>
+                          <span class="text-orange-600 font-sans" style="">
+                            Project Due
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex -space-x-2">
+                      <button class="text-xs bg-white border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition font-sans">
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 2: Progress -->
+                <div class="rounded-xl ring-1 p-4 ring-indigo-100 bg-indigo-50/50">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="">
+                        <div class="text-sm text-slate-900 font-medium font-sans" style="">
+                          Fine-Tuning Llama 3
+                        </div>
+                        <div class="text-xs text-slate-500 mt-0.5 font-sans" style="">
+                          Training Model • GPU Cluster Active
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-[11px] font-mono font-sans text-indigo-600" style="">
+                      42%
+                    </div>
+                  </div>
+                  <div class="mt-4 flex items-center gap-3">
+                    <span class="text-xs text-slate-500 font-sans" style="">
+                      Training
+                    </span>
+                    <div class="flex-1 h-1.5 rounded-full overflow-hidden bg-indigo-100">
+                      <div class="h-full w-[42%] rounded-full bg-gradient-to-r to-indigo-500 shadow-[0_0_10px_rgba(59,130,246,0.2)] from-indigo-500"></div>
+                    </div>
+                    <button class="text-[10px] rounded hover:bg-white text-slate-500 px-2 py-1 transition-colors uppercase font-sans" style="">
+                      View Logs
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Card 3: Meeting Alert -->
+                <div class="rounded-xl ring-1 ring-slate-200 bg-white p-4 hover:shadow-md transition-shadow border-l-4 border-l-indigo-600">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="">
+                        <div class="text-sm text-slate-900 font-medium font-sans" style="">
+                          Live Workshop: Prompt Engineering
+                        </div>
+                        <div class="text-xs text-slate-500 mt-0.5 font-sans" style="">
+                          Starts in 15m • Instructor: Dr. Li
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-[10px] rounded-md bg-red-100 text-red-600 ring-1 ring-red-200 px-2 py-0.5 font-sans" style="">
+                      LIVE
+                    </span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-2">
+                    <button class="text-xs rounded-md ring-1 px-3 py-1.5 transition-colors text-white font-sans bg-indigo-600 border-indigo-600 hover:bg-indigo-700" style="">
+                      Join Stream
+                    </button>
+                    <button class="text-xs rounded-md text-slate-500 hover:text-slate-900 px-3 py-1.5 transition-colors font-sans" style="">
+                      Remind Me
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Card 4: Task -->
+                <div class="rounded-xl ring-1 ring-slate-100 bg-slate-50 p-4 opacity-70 group cursor-pointer">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="flex-shrink-0 mt-0.5">
+                        <div class="w-5 h-5 rounded-md border-2 border-green-500/50 flex items-center justify-center text-green-600">
+                          <iconify-icon icon="solar:check-circle-linear" class="text-xs"></iconify-icon>
+                        </div>
+                      </div>
+                      <div class="">
+                        <div class="text-sm text-slate-500 line-through font-sans" style="">
+                          Python Basics Quiz
+                        </div>
+                        <div class="text-xs text-slate-400 mt-0.5 font-sans" style="">
+                          Score: 95/100 • Completed yesterday
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="hidden md:block md:col-span-3 lg:col-span-3 min-h-[520px] bg-slate-50/50 border-slate-100 border-l">
+              <div class="flex flex-col h-full">
+                <!-- Team Members Section -->
+                <div class="px-5 py-5 border-b border-slate-200">
+                  <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-[11px] font-semibold text-slate-400 uppercase tracking-widest font-sans">
+                      Classmates Online
+                    </h3>
+                    <span class="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-mono font-sans">
+                      12
+                    </span>
+                  </div>
+                  <div class="space-y-4">
+                    <!-- Member 1 -->
+                    <div class="flex items-center gap-3 group cursor-pointer">
+                      <div class="relative">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e69e5f8e-07cd-4ef2-97e3-d4bcfccc3881_320w.webp" alt="User" class="w-8 h-8 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-slate-200 transition-all" style="">
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-slate-900 truncate font-sans">
+                          Sarah J.
+                        </div>
+                        <div class="text-xs text-slate-500 truncate font-sans">
+                          Studying
+                          <span class="text-slate-700 font-sans">
+                            Computer Vision
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Member 2 -->
+                    <div class="flex items-center gap-3 group cursor-pointer">
+                      <div class="relative">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b202409f-816e-4451-8ac9-bd0b04439d1b_320w.webp" alt="User" class="w-8 h-8 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-slate-200 transition-all" style="">
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-slate-900 truncate font-sans">
+                          David Chen
+                        </div>
+                        <div class="text-xs text-slate-500 truncate font-sans">
+                          Coding
+                          <span class="text-slate-700 font-sans">Lab #4</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="mt-5 w-full py-2 text-xs font-medium text-slate-500 hover:text-slate-900 border border-dashed border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 font-sans">
+                    <iconify-icon icon="solar:chat-line-linear" class="text-sm"></iconify-icon>
+                    Open Study Chat
+                  </button>
+                </div>
+
+                <!-- Recent Activity Feed -->
+                <div class="flex-1 px-5 py-5 overflow-y-auto custom-scrollbar">
+                  <h3 class="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-5 font-sans">
+                    Community Feed
+                  </h3>
+                  <div class="relative pl-2 space-y-8">
+                    <!-- Vertical Timeline Line -->
+                    <div class="absolute left-[11px] top-2 bottom-2 w-px bg-slate-200"></div>
+
+                    <!-- Activity Item 1 -->
+                    <div class="relative pl-6">
+                      <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center z-10 shadow-sm">
+                        <div class="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                      </div>
+                      <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                        <span class="font-medium text-slate-900 font-sans">
+                          Alex
+                        </span>
+                        earned the
+                        <span class="font-mono text-[10px] bg-slate-100 px-1 py-0.5 rounded text-slate-700 border border-slate-200 font-sans">
+                          ML Specialist
+                        </span>
+                        cert
+                      </p>
+                      <span class="text-[10px] text-slate-400 mt-1 block font-sans">
+                        10m ago
+                      </span>
+                    </div>
+
+                    <!-- Activity Item 2 -->
+                    <div class="relative pl-6">
+                      <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center z-10 shadow-sm">
+                        <div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+                      </div>
+                      <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                        <span class="font-medium text-slate-900 font-sans">
+                          AI Tutor
+                        </span>
+                        posted new resources for
+                        <span class="text-slate-900 font-sans">
+                          "Ethics in AI"
+                        </span>
+                      </p>
+                      <span class="text-[10px] text-slate-400 mt-1 block font-sans">
+                        1h ago
+                      </span>
+                    </div>
+
+                    <!-- Activity Item 3 -->
+                    <div class="relative pl-6">
+                      <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center z-10 shadow-sm">
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                      </div>
+                      <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                        New discussion in
+                        <span class="text-slate-900 font-sans">
+                          "Reinforcement Learning"
+                        </span>
+                      </p>
+                      <div class="mt-2 p-2 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-500 italic relative font-sans">
+                        <div class="absolute left-0 top-2 bottom-2 w-0.5 bg-orange-300 rounded-r"></div>
+                        "Can someone explain Q-Learning simply?"
+                      </div>
+                      <span class="text-[10px] text-slate-400 mt-1 block font-sans">
+                        2h ago
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="animate-entry delay-200 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll animate lg:mx-auto bg-white border border-slate-200 shadow-sm max-w-7xl rounded-3xl mt-24 mr-auto mb-24 ml-auto pt-10 pr-10 pb-10 pl-10 relative group/section" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.05)); --border-radius-before: 24px">
+      <!-- Header -->
+
+      <!-- Main Grid -->
+      <div class="flex flex-col rounded-none mt-0 mb-0 pt-0 pr-0 pb-0 pl-0 relative">
+        <!-- Header Section -->
+        <div class="flex flex-col gap-10 w-full gap-x-10 gap-y-10">
+          <!-- Top label row -->
+          <div class="flex items-center gap-6">
+            <span class="text-xs font-mono tracking-widest font-sans text-indigo-600">
+              01
+            </span>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <span class="uppercase text-xs tracking-widest text-slate-400 font-sans">
+              Platform Features
+            </span>
+          </div>
+
+          <!-- Main content -->
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10 gap-x-10 gap-y-10">
+            <div class="max-w-3xl flex flex-col gap-6">
+              <h2 class="text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-slate-900 font-manrope font-medium tracking-tight">
+                Learn by doing.
+                <span class="block text-slate-400 font-manrope font-medium transition-colors duration-500 group-hover/section:text-slate-500">
+                  Mastery you can verify.
+                </span>
+              </h2>
+
+              <p class="text-lg text-slate-500 font-light max-w-xl leading-relaxed font-sans">
+                Our curriculum adapts to your pace, providing instant feedback
+                and personalized challenges to ensure deep understanding.
+              </p>
+            </div>
+
+            <!-- Secondary CTA -->
+            <button class="group/btn flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 text-sm font-medium rounded-full hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm active:scale-95 transition-all duration-300 font-sans whitespace-nowrap">
+              <span class="font-sans">View All Features</span>
+              <iconify-icon icon="solar:arrow-right-linear" class="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1"></iconify-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 w-full mt-8 gap-x-6 gap-y-6 perspective-distant">
+          <!-- Card 1: AI Tutor -->
+          <div class="group flex flex-col overflow-hidden transition-all duration-500 md:col-span-1 bg-white border-slate-200 border rounded-[2rem] pt-8 pr-8 pb-8 pl-8 relative justify-between shadow-sm hover:border-indigo-300 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.1)] hover:-translate-y-1 cursor-default">
+            <style>
+              @keyframes orbit-slow {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+              }
+              @keyframes breathe-glow {
+                0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.1); }
+                50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(59, 130, 246, 0.2); }
+              }
+            </style>
+
+            <!-- Visual -->
+            <div class="relative h-48 w-full flex items-center justify-center mb-6 overflow-visible">
+              <div class="absolute inset-0 bg-gradient-to-b to-transparent opacity-80 rounded-full blur-3xl transform scale-75 from-indigo-50 transition-all duration-700 group-hover:scale-90 group-hover:opacity-100"></div>
+
+              <svg class="w-full h-full z-10 text-indigo-200 transition-colors duration-500 group-hover:text-indigo-300" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g style="transform-origin: 100px 100px; animation: orbit-slow 12s linear infinite;" class="">
+                  <circle cx="100" cy="100" r="80" stroke="currentColor" stroke-width="1" stroke-dasharray="6 6" class="opacity-80"></circle>
+                  <circle cx="100" cy="20" r="3" fill="#3B82F6" class="drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]"></circle>
+                  <circle cx="180" cy="100" r="2.5" fill="#60A5FA" class="opacity-80"></circle>
+                </g>
+                <circle cx="100" cy="100" r="50" stroke="currentColor" stroke-width="1" class="opacity-60"></circle>
+              </svg>
+
+              <!-- Breathing Center Icon -->
+              <div class="absolute flex items-center justify-center w-16 h-16 bg-white rounded-full border border-slate-200 z-20 shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:shadow-indigo-200/50" style="animation: breathe-glow 4s ease-in-out infinite;">
+                <div class="absolute inset-0 rounded-full blur-sm bg-indigo-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <iconify-icon icon="solar:chat-round-line-linear" class="text-2xl text-indigo-600 transition-transform duration-500 group-hover:rotate-12"></iconify-icon>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10">
+              <h3 class="text-3xl lg:text-4xl text-slate-900 text-left font-manrope font-medium tracking-tight group-hover:text-indigo-600 transition-colors duration-300">
+                AI Personal Tutor
+              </h3>
+              <p class="leading-relaxed text-lg font-light text-slate-500 text-left mt-2 font-sans group-hover:text-slate-600 transition-colors duration-300">
+                24/7 assistance for debugging code, explaining complex concepts,
+                and personalized quiz generation.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2: Coding Labs -->
+          <div class="md:col-span-2 group flex flex-col overflow-hidden transition-all duration-500 bg-white border-slate-200 border rounded-[2rem] px-8 py-8 relative justify-between shadow-sm hover:border-indigo-300 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.1)] hover:-translate-y-1 cursor-default">
+            <style>
+              @keyframes flowData {
+                0% { stroke-dashoffset: 120; opacity: 0; }
+                15% { opacity: 1; }
+                85% { opacity: 1; }
+                100% { stroke-dashoffset: 0; opacity: 0; }
+              }
+            </style>
+
+            <!-- Background Glow -->
+            <div class="absolute top-0 right-0 w-[300px] h-[300px] bg-indigo-50 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-indigo-100/60 transition-colors duration-700"></div>
+
+            <!-- Visual -->
+            <div class="relative h-48 w-full flex items-center justify-center mb-6 overflow-visible">
+              <svg class="absolute top-0 right-0 bottom-0 left-0 w-full h-full" viewBox="0 0 400 200" fill="none" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <linearGradient id="flowGradientLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#3B82F6" stop-opacity="0"></stop>
+                    <stop offset="50%" stop-color="#60A5FA" stop-opacity="1"></stop>
+                    <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M50 100 L120 100 L150 70" stroke="currentColor" stroke-width="1" class="text-slate-200"></path>
+                <path d="M350 100 L280 100 L250 130" stroke="currentColor" stroke-width="1" class="text-slate-200"></path>
+                <path d="M50 100 L120 100 L150 70" stroke="url(#flowGradientLeft)" stroke-width="2" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="120" style="animation: flowData 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;"></path>
+              </svg>
+
+              <!-- Center Console -->
+              <div class="relative flex items-center justify-center group-hover:scale-105 transition-transform duration-500 ease-out">
+                <div class="w-32 h-24 border border-slate-200 bg-white rounded-lg flex flex-col p-2 shadow-2xl z-10 relative overflow-hidden font-mono text-[8px] text-slate-700 leading-tight group-hover:border-indigo-200 transition-colors duration-300">
+                  <span class="opacity-50 text-slate-400 font-sans">
+                    // executing code...
+                  </span>
+                  <span class="font-sans text-indigo-600/80">&gt; import torch</span>
+                  <span class="font-sans">&gt; model = Transformer()</span>
+                  <span class="font-sans text-green-600/80">&gt; training started...</span>
+                  <span class="animate-pulse font-sans text-indigo-600">_</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10">
+              <h3 class="text-3xl lg:text-4xl text-slate-900 text-left transition-colors duration-300 font-manrope font-medium group-hover:text-indigo-600 tracking-tight">
+                In-Browser Coding Labs
+              </h3>
+              <p class="leading-relaxed text-lg font-light text-slate-500 text-left mt-2 group-hover:text-slate-600 transition-colors duration-300 font-sans">
+                No setup required. Access powerful GPU-backed environments
+                directly in your browser to build and train models.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 3: Certification -->
+          <div class="md:col-span-2 group flex flex-col overflow-hidden transition-all duration-500 bg-white border-slate-200 border rounded-[2rem] px-8 py-8 relative justify-between shadow-sm hover:border-indigo-300 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.1)] hover:-translate-y-1 cursor-default">
+            <style>
+              @keyframes shimmer-lock {
+                0%, 100% { opacity: 0.4; border-color: rgba(148, 163, 184, 0.2); transform: scale(1); }
+                50% { opacity: 0.8; border-color: rgba(148, 163, 184, 0.4); transform: scale(1.05); }
+              }
+              @keyframes active-pulse {
+                0%, 100% { box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15); transform: scale(1); border-color: rgba(79, 70, 229, 0.1); }
+                50% { box-shadow: 0 15px 35px rgba(79, 70, 229, 0.25); transform: scale(1.02); border-color: rgba(79, 70, 229, 0.3); }
+              }
+            </style>
+
+            <!-- Visual -->
+            <div class="flex w-full h-48 mb-6 relative items-center justify-center">
+              <div class="flex items-center gap-4 relative">
+                <!-- Background Glow -->
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 blur-[60px] rounded-full pointer-events-none bg-indigo-100 opacity-60 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                <!-- Locks -->
+                <div class="w-12 h-12 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 group-hover:border-slate-300 transition-colors duration-500" style="animation: shimmer-lock 4s ease-in-out infinite; animation-delay: 0s;">
+                  <iconify-icon icon="solar:lock-keyhole-minimalistic-linear"></iconify-icon>
+                </div>
+
+                <!-- Active Asset -->
+                <div class="relative w-20 h-20 rounded-2xl bg-white flex items-center justify-center text-indigo-600 shadow-xl z-10 border border-slate-100 ring-4 ring-slate-50 transition-all duration-500 group-hover:scale-110 group-hover:ring-indigo-50" style="animation: active-pulse 3s ease-in-out infinite;">
+                  <iconify-icon icon="solar:diploma-verified-linear" class="text-4xl text-indigo-600"></iconify-icon>
+                  <div class="absolute -bottom-3 bg-slate-900 text-white border border-slate-800 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg transform group-hover:scale-110 transition-transform duration-300 delay-100">
+                    <span class="text-[9px] font-mono tracking-wider font-semibold font-sans">
+                      VERIFIED
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Right Lock -->
+                <div class="w-12 h-12 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 group-hover:border-slate-300 transition-colors duration-500" style="animation: shimmer-lock 4s ease-in-out infinite; animation-delay: 2s;">
+                  <iconify-icon icon="solar:lock-keyhole-minimalistic-linear"></iconify-icon>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10">
+              <h3 class="text-3xl lg:text-4xl text-slate-900 text-left font-manrope font-medium tracking-tight group-hover:text-indigo-600 transition-colors duration-300">
+                Industry-Recognized Certification
+              </h3>
+              <p class="leading-relaxed text-lg font-light text-slate-500 text-left mt-2 font-sans group-hover:text-slate-600 transition-colors duration-300">
+                Complete projects and assessments to earn certificates that
+                showcase your skills to top employers.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 4: Career -->
+          <div class="md:col-span-1 group flex flex-col overflow-hidden transition-all duration-500 bg-slate-50 border-slate-200 border rounded-[2rem] p-8 relative justify-between shadow-inner hover:border-indigo-300 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.1)] hover:-translate-y-1 cursor-default">
+            <div class="absolute inset-0 opacity-[0.4] pointer-events-none group-hover:opacity-60 transition-opacity duration-500" style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+            <!-- Visual -->
+            <div class="relative h-48 w-full flex items-center justify-center mb-6 z-10">
+              <iconify-icon icon="solar:graph-up-linear" class="text-6xl text-slate-300 transition-all duration-500 group-hover:text-indigo-500 group-hover:scale-110 group-hover:-rotate-3"></iconify-icon>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10">
+              <h3 class="text-3xl lg:text-4xl text-slate-900 text-left transition-colors duration-300 font-manrope font-medium group-hover:text-indigo-600 tracking-tight">
+                Career Growth
+              </h3>
+              <p class="leading-relaxed text-lg font-light text-slate-500 text-left mt-2 group-hover:text-slate-600 transition-colors duration-300 font-sans">
+                Connect with hiring partners and get mentorship to land your
+                dream job in AI.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap / Graph Section -->
+    <section class="animate-entry delay-200 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll animate lg:mx-auto bg-white border border-slate-200 shadow-sm max-w-7xl rounded-3xl mt-24 mr-auto mb-24 ml-auto pt-10 pr-10 pb-10 pl-10 relative" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.05)); --border-radius-before: 24px">
+      <!-- Header -->
+      <div class="flex flex-col rounded-none mt-0 mb-0 pt-0 pr-0 pb-0 pl-0 relative">
+        <div class="flex flex-col gap-10 w-full gap-x-10 gap-y-10">
+          <div class="flex items-center gap-6">
+            <span class="text-xs font-mono tracking-widest font-sans text-indigo-600">
+              02
+            </span>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <span class="uppercase text-xs tracking-widest text-slate-400 font-sans">
+              The Curriculum
+            </span>
+          </div>
+
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+            <div class="max-w-3xl flex flex-col gap-6">
+              <h2 class="text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-slate-900 font-manrope font-medium">
+                A structured path to
+                <span class="block text-slate-400 font-manrope font-medium">
+                  expertise.
+                </span>
+              </h2>
+
+              <p class="text-lg text-slate-500 font-light max-w-xl leading-relaxed font-sans">
+                Navigate through connected domains of knowledge. From
+                foundational Python to advanced Large Language Models.
+              </p>
+            </div>
+
+            <button class="group flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 text-sm font-medium rounded-full hover:bg-slate-50 transition font-sans whitespace-nowrap">
+              <span class="font-sans">View Full Syllabus</span>
+              <iconify-icon icon="solar:arrow-right-linear" class="w-4 h-4 transition-transform group-hover:translate-x-1"></iconify-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Node Grid Visual -->
+        <div class="min-h-[560px] flex md:mt-0 w-full max-w-6xl mt-16 mr-auto ml-auto pr-4 pl-4 relative items-center justify-center">
+          <!-- Kept complex SVG but can update colors/nodes symbolically -->
+          <svg class="absolute inset-0 hidden h-full w-full pointer-events-none md:block" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet">
+            <!-- SVG Definitions and Paths remain similar to preserve the "Node" aesthetic which fits "Knowledge Graph" -->
+            <defs>
+              <linearGradient id="noodleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4F46E5" stop-opacity="0"></stop>
+                <stop offset="50%" stop-color="#818CF8" stop-opacity="1"></stop>
+                <stop offset="100%" stop-color="#4F46E5" stop-opacity="0"></stop>
+              </linearGradient>
+              <filter id="wireGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="2" result="blur"></feGaussianBlur>
+                <feMerge>
+                  <feMergeNode in="blur"></feMergeNode>
+                  <feMergeNode in="SourceGraphic"></feMergeNode>
+                </feMerge>
+              </filter>
+            </defs>
+            <path d="M 165 130 L 290 130 Q 360 130 360 200 V 255 Q 360 280 390 280 L 440 280" stroke="#cbd5e1" stroke-opacity="0.8" stroke-width="1.5" fill="none"></path>
+            <path d="M 165 430 L 290 430 Q 360 430 360 360 V 305 Q 360 280 390 280 L 440 280" stroke="#cbd5e1" stroke-opacity="0.8" stroke-width="1.5" fill="none"></path>
+            <path d="M 560 280 L 771 280" stroke="#cbd5e1" stroke-opacity="0.8" stroke-width="1.5" fill="none"></path>
+
+            <!-- Animated Paths -->
+            <path d="M 165 130 L 290 130 Q 360 130 360 200 V 255 Q 360 280 390 280 L 440 280" stroke="url(#noodleGradient)" stroke-width="2" fill="none" filter="url(#wireGlow)" stroke-dasharray="100" stroke-dashoffset="100">
+              <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="3s" repeatCount="indefinite"></animate>
+            </path>
+          </svg>
+
+          <!-- Nodes Grid -->
+          <div class="relative z-10 grid h-full w-full grid-cols-1 gap-14 md:grid-cols-3 md:gap-0">
+            <!-- Left Column -->
+            <div class="flex h-full flex-row items-center justify-center gap-6 px-4 md:flex-col md:gap-14 md:px-12">
+              <!-- Node 1 -->
+              <div class="group relative">
+                <div class="relative flex h-[76px] w-[76px] items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg shadow-slate-200/50 backdrop-blur-xl transition-transform duration-300 group-hover:scale-[1.06] md:h-[92px] md:w-[92px]">
+                  <iconify-icon icon="solar:code-circle-linear" class="text-orange-500 text-3xl"></iconify-icon>
+                  <span class="absolute -bottom-8 text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity font-sans">
+                    Python
+                  </span>
+                </div>
+              </div>
+              <!-- Node 2 -->
+              <div class="group relative md:translate-x-16">
+                <div class="relative flex h-[76px] w-[76px] items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg shadow-slate-200/50 backdrop-blur-xl transition-transform duration-300 group-hover:scale-[1.06] md:h-[92px] md:w-[92px]">
+                  <iconify-icon icon="solar:database-linear" class="text-3xl text-indigo-500"></iconify-icon>
+                  <span class="absolute -bottom-8 text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity font-sans">
+                    Data
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Center Hub -->
+            <div class="flex items-center justify-center py-10 md:py-0">
+              <div class="relative">
+                <div class="absolute -inset-10 rounded-full blur-3xl bg-[radial-gradient(circle,_rgba(99,102,241,0.2),_transparent_65%)]"></div>
+                <div class="relative flex h-[110px] w-[110px] items-center justify-center rounded-full border border-indigo-100 bg-white backdrop-blur-2xl shadow-[0_20px_60px_-10px_rgba(99,102,241,0.25)] md:h-[132px] md:w-[132px]">
+                  <iconify-icon icon="solar:smart-home-angle-linear" class="text-indigo-600 text-5xl"></iconify-icon>
+                </div>
+                <span class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm text-slate-900 font-medium font-sans">
+                  AI Mastery
+                </span>
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="flex h-full flex-row items-center justify-center gap-6 px-4 md:flex-col md:gap-14 md:px-12">
+              <!-- Node 4 -->
+              <div class="group relative">
+                <div class="relative flex h-[76px] w-[76px] items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg shadow-slate-200/50 backdrop-blur-xl transition-transform duration-300 group-hover:scale-[1.06] md:h-[92px] md:w-[92px]">
+                  <iconify-icon icon="solar:chat-square-linear" class="text-emerald-500 text-3xl"></iconify-icon>
+                  <span class="absolute -bottom-8 text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity font-sans">
+                    NLP
+                  </span>
+                </div>
+              </div>
+              <!-- Node 5 -->
+              <div class="group relative md:-translate-x-16">
+                <div class="relative flex h-[76px] w-[76px] items-center justify-center rounded-full border border-slate-200 bg-white shadow-lg shadow-slate-200/50 backdrop-blur-xl transition-transform duration-300 group-hover:scale-[1.06] md:h-[92px] md:w-[92px]">
+                  <iconify-icon icon="solar:eye-linear" class="text-3xl text-indigo-500"></iconify-icon>
+                  <span class="absolute -bottom-8 text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity font-sans">
+                    Vision
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="animate-entry delay-200 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll animate lg:mx-auto bg-transparent max-w-7xl rounded-3xl mt-24 mr-auto mb-24 ml-auto pt-10 pr-10 pb-10 pl-10 relative">
+      <div class="flex flex-col rounded-none mt-0 mb-0 pt-0 pr-0 pb-0 pl-0 relative gap-x-16 gap-y-4">
+        <!-- Header Section -->
+        <div class="flex flex-col gap-10 w-full gap-x-10 gap-y-10">
+          <div class="flex gap-6 gap-x-10 gap-y-10 items-center">
+            <span class="text-xs font-mono tracking-widest font-sans text-indigo-600" style="">
+              03
+            </span>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <span class="uppercase text-xs text-slate-400 tracking-widest font-sans" style="">
+              Student Success
+            </span>
+          </div>
+        </div>
+
+        <!-- Testimonials Grid -->
+        <div class="min-h-[900px] flex flex-col overflow-hidden lg:block w-full max-w-7xl mr-auto ml-auto pt-12 pb-12 relative gap-x-16 gap-y-16 items-center justify-center">
+          <!-- Abstract Background Pattern -->
+          <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 32px 32px; mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 100%);"></div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] blur-[100px] rounded-full pointer-events-none z-0 bg-indigo-100/60"></div>
+
+          <!-- Center Content -->
+          <div class="z-20 flex flex-col lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:mb-0 text-center max-w-3xl mb-16 pr-6 pl-6 relative items-center" style="">
+            <h2 class="flex flex-col gap-4">
+              <span class="text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-slate-900 font-manrope font-medium" style="">
+                From Beginner to Hired.
+              </span>
+              <span class="block text-slate-500 text-lg max-w-2xl mx-auto font-sans" style="">
+                Join thousands of graduates working at top AI companies.
+              </span>
+            </h2>
+            <button class="mt-8 group flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-900 text-sm font-medium rounded-full hover:bg-slate-50 transition font-sans whitespace-nowrap bg-white shadow-sm">
+              <span class="font-sans">See Alumni Stories</span>
+              <iconify-icon icon="solar:arrow-right-linear" class="w-4 h-4 transition-transform group-hover:translate-x-1"></iconify-icon>
+            </button>
+          </div>
+
+          <!-- Card 1 (Top Left) -->
+          <div class="z-10 lg:absolute lg:top-[8%] lg:left-[2%] xl:left-[4%] transition-opacity duration-500 ease-in-out group w-full max-w-sm relative" id="testimonial-card-0">
+            <div class="transition-all duration-300 group-hover:-translate-y-1 bg-white border-slate-200 border rounded-[24px] mb-6 pt-8 pr-8 pb-8 pl-8 relative shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] group-hover:border-indigo-300">
+              <p class="quote-text text-slate-700 text-lg leading-relaxed relative z-10 font-sans" style="">
+                "The hands-on labs were a game changer. I went from knowing zero
+                Python to building my own LLM agents in 3 months."
+              </p>
+            </div>
+            <div class="flex items-center gap-4 pl-4">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/fb5cb84d-a173-4050-a57f-3c150dcec588_320w.webp" alt="User Avatar" class="avatar-img w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" style="">
+              <div class="flex flex-col">
+                <span class="author-name text-slate-900 font-medium text-base font-sans" style="">
+                  Jessica Wu
+                </span>
+                <span class="author-role text-slate-500 text-sm font-sans" style="">
+                  AI Engineer at Anthropic
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 (Top Right) -->
+          <div id="testimonial-card-1" class="relative z-10 w-full max-w-sm lg:absolute lg:top-[8%] lg:right-[2%] xl:right-[4%] transition-opacity duration-500 ease-in-out group">
+            <div class="transition-all duration-300 group-hover:-translate-y-1 bg-white border-slate-200 border rounded-[24px] mb-6 px-8 py-8 relative shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] group-hover:border-indigo-300">
+              <p class="quote-text text-slate-700 text-lg leading-relaxed relative z-10 font-sans" style="">
+                "The curriculum is rigorous but the AI tutor helped me unstuck
+                instantly. Best investment for my career."
+              </p>
+            </div>
+            <div class="flex items-center gap-4 pl-4">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/152b527e-f3bb-44db-98a8-e224a84a1318_320w.webp" alt="User Avatar" class="avatar-img w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" style="">
+              <div class="flex flex-col">
+                <span class="author-name text-slate-900 font-medium text-base font-sans" style="">
+                  Alex Thompson
+                </span>
+                <span class="author-role text-slate-500 text-sm font-sans" style="">
+                  Junior Dev at OpenAI
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 (Bottom Left) -->
+          <div class="z-10 lg:absolute lg:bottom-[8%] lg:left-[2%] xl:left-[4%] transition-opacity duration-500 ease-in-out group w-full max-w-sm relative" id="testimonial-card-2">
+            <div class="transition-all duration-300 group-hover:-translate-y-1 bg-white border-slate-200 border rounded-[24px] mb-6 px-8 py-8 relative shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] group-hover:border-indigo-300">
+              <p class="quote-text text-slate-700 text-lg leading-relaxed relative z-10 font-sans">
+                "The community support is incredible. I found my co-founder here and we're now building our own AI startup."
+              </p>
+            </div>
+            <div class="flex items-center gap-4 pl-4">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/265ef229-059a-430b-b72b-0c721470692c_320w.jpg" alt="User Avatar" class="avatar-img w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" style="">
+              <div class="flex flex-col">
+                <span class="author-name text-slate-900 font-medium text-base font-sans">
+                  David Park
+                </span>
+                <span class="author-role text-slate-500 text-sm font-sans">
+                  Co-founder at Nexus AI
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 (Bottom Right) -->
+          <div class="z-10 lg:absolute lg:bottom-[8%] lg:right-[2%] xl:right-[4%] transition-opacity duration-500 ease-in-out group w-full max-w-sm relative" id="testimonial-card-3">
+            <div class="transition-all duration-300 group-hover:-translate-y-1 bg-white border-slate-200 border rounded-[24px] mb-6 px-8 py-8 relative shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] group-hover:border-indigo-300">
+              <p class="quote-text text-slate-700 text-lg leading-relaxed relative z-10 font-sans">
+                "Transitioning from web dev to AI seemed impossible until I found this path. The projects are exactly what employers want."
+              </p>
+            </div>
+            <div class="flex items-center gap-4 pl-4">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5b6eee8f-691b-4350-9b31-3391c2e8d926_320w.jpg" alt="User Avatar" class="avatar-img w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm">
+              <div class="flex flex-col">
+                <span class="author-name text-slate-900 font-medium text-base font-sans">
+                  Sarah Miller
+                </span>
+                <span class="author-role text-slate-500 text-sm font-sans">
+                  ML Engineer at Tesla
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section><section class="animate-entry delay-200 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll animate lg:mx-auto group/section bg-white max-w-7xl rounded-3xl mt-24 mr-auto mb-24 ml-auto pt-10 pr-10 pb-10 pl-10 relative shadow-sm" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.05)); --border-radius-before: 24px">
+  <div class="flex flex-col rounded-none mt-0 mb-0 pt-0 pr-0 pb-0 pl-0 relative">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col gap-10 w-full gap-x-10 gap-y-10 mb-16">
+      <div class="flex items-center gap-6">
+        <span class="text-xs font-mono tracking-widest font-sans text-indigo-600">
+          04
+        </span>
+        <div class="h-px flex-1 bg-slate-200"></div>
+        <span class="uppercase text-xs tracking-widest text-slate-400 font-sans">
+          Membership Plans
+        </span>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+        <div class="max-w-3xl flex flex-col gap-6">
+          <h2 class="text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-slate-900 font-manrope font-medium tracking-tight">
+            Invest in your
+            <span class="block text-slate-400 transition-colors duration-500 group-hover/section:text-indigo-600">
+              future intelligence.
+            </span>
+          </h2>
+          <p class="text-lg text-slate-500 font-light max-w-xl leading-relaxed font-sans">
+            Choose the path that fits your learning style. From self-paced exploration to intensive bootcamps with 1:1 mentorship.
+          </p>
+        </div>
+
+        <!-- Custom Billing Toggle -->
+        <div class="flex items-center gap-4 bg-slate-100/50 p-1.5 rounded-full border border-slate-200">
+          <button id="toggle-monthly" onclick="switchBilling('monthly')" class="px-6 py-2 rounded-full text-sm font-medium transition-all font-sans bg-white shadow-sm ring-1 ring-black/5 text-slate-900">
+            Monthly
+          </button>
+          <button id="toggle-yearly" onclick="switchBilling('yearly')" class="px-6 py-2 rounded-full text-sm font-medium transition-all font-sans relative group text-slate-500 hover:text-slate-900">
+            Yearly
+            <span class="absolute -top-3 -right-6 text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+              Save 20%
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 perspective-distant">
+      
+      <!-- Plan 1: Starter -->
+      <div class="group relative flex flex-col p-8 bg-white border border-slate-200 rounded-[2rem] hover:border-slate-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50">
+        <div class="mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <iconify-icon icon="solar:leaf-linear" class="text-2xl text-slate-600"></iconify-icon>
+          </div>
+          <h3 class="text-xl font-manrope font-semibold text-slate-900 mb-2">Starter</h3>
+          <p class="text-sm text-slate-500 font-sans leading-relaxed">Perfect for exploring AI concepts and basic Python.</p>
+        </div>
+        
+        <div class="mb-8 flex items-baseline gap-1">
+          <span class="text-4xl font-manrope font-bold text-slate-900">$0</span>
+          <span class="text-slate-400 font-sans">/mo</span>
+        </div>
+
+        <ul class="flex-1 space-y-4 mb-8">
+          <li class="flex items-start gap-3 text-sm text-slate-600 font-sans">
+            <iconify-icon icon="solar:check-circle-linear" class="text-lg text-slate-400 shrink-0"></iconify-icon>
+            Access to 5 introductory courses
+          </li>
+          <li class="flex items-start gap-3 text-sm text-slate-600 font-sans">
+            <iconify-icon icon="solar:check-circle-linear" class="text-lg text-slate-400 shrink-0"></iconify-icon>
+            Community forum access
+          </li>
+          <li class="flex items-start gap-3 text-sm text-slate-600 font-sans">
+            <iconify-icon icon="solar:check-circle-linear" class="text-lg text-slate-400 shrink-0"></iconify-icon>
+            Basic coding sandbox
+          </li>
+        </ul>
+
+        <button class="w-full py-3 px-6 rounded-xl border border-slate-200 text-slate-900 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95 font-sans">
+          Start for Free
+        </button>
+      </div>
+
+      <!-- Plan 2: Pro (Highlighted) -->
+      <div class="group relative flex flex-col p-8 bg-slate-900 text-white rounded-[2rem] shadow-2xl shadow-indigo-500/20 transform md:scale-105 z-10 hover:-translate-y-1 transition-all duration-300 border border-slate-800">
+        <!-- Abstract Decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+        
+        <div class="relative z-10 mb-6">
+          <div class="flex justify-between items-start">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
+              <iconify-icon icon="solar:stars-minimalistic-linear" class="text-2xl text-indigo-300"></iconify-icon>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-200 border border-indigo-500/30">
+              Most Popular
+            </span>
+          </div>
+          <h3 class="text-xl font-manrope font-semibold text-white mb-2">Pro Scholar</h3>
+          <p class="text-sm text-slate-400 font-sans leading-relaxed">Full access to career paths, projects, and certifications.</p>
+        </div>
+        
+        <div class="relative z-10 mb-8 flex items-baseline gap-1">
+          <span id="price-pro" class="text-4xl font-manrope font-bold text-white transition-all duration-300">$29</span>
+          <span class="text-slate-500 font-sans">/mo</span>
+        </div>
+
+        <ul class="relative z-10 flex-1 space-y-4 mb-8">
+          <li class="flex items-start gap-3 text-sm text-slate-200 font-sans">
+            <iconify-icon icon="solar:check-circle-bold" class="text-lg text-indigo-400 shrink-0"></iconify-icon>
+            Unlimited Course Access
+          </li>
+          <li class="flex items-start gap-3 text-sm text-slate-200 font-sans">
+            <iconify-icon icon="solar:check-circle-bold" class="text-lg text-indigo-400 shrink-0"></iconify-icon>
+            Verified Certificates
+          </li>
+          <li class="flex items-start gap-3 text-sm text-slate-200 font-sans">
+            <iconify-icon icon="solar:check-circle-bold" class="text-lg text-indigo-400 shrink-0"></iconify-icon>
+            AI Tutor Assistance (Unlimited)
+          </li>
+          
+        </ul>
+
+        <button class="relative z-10 w-full py-3 px-6 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all active:scale-95 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] font-sans flex items-center justify-center gap-2 group/btn">
+          <span>Get Started</span>
+          <iconify-icon icon="solar:arrow-right-linear" class="transition-transform group-hover/btn:translate-x-1"></iconify-icon>
+        </button>
+      </div>
+
+      <!-- Plan 3: Team -->
+      <div class="group relative flex flex-col p-8 bg-white border border-slate-200 rounded-[2rem] hover:border-indigo-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/5">
+        <div class="mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <iconify-icon icon="solar:users-group-rounded-linear" class="text-2xl text-indigo-600"></iconify-icon>
+          </div>
+          <h3 class="text-xl font-manrope font-semibold text-slate-900 mb-2">Team</h3>
+          <p class="text-sm text-slate-500 font-sans leading-relaxed">Admin controls and analytics for your engineering team.</p>
+        </div>
+        
+        <div class="mb-8 flex items-baseline gap-1">
+          <span id="price-team" class="text-4xl font-manrope font-bold text-slate-900 transition-all duration-300">$99</span>
+          <span class="text-slate-400 font-sans">/mo/user</span>
+        </div>
+
+        <ul class="flex-1 space-y-4 mb-8">
+          <li class="flex items-start gap-3 text-sm text-slate-600 font-sans">
+            <iconify-icon icon="solar:check-circle-linear" class="text-lg text-slate-400 shrink-0"></iconify-icon>
+            Everything in Pro
+          </li>
+          <li class="flex items-start gap-3 text-sm text-slate-600 font-sans">
+            <iconify-icon icon="solar:check-circle-linear" class="text-lg text-slate-400 shrink-0"></iconify-icon>
+            Team Progress Analytics
+          </li>
+          <li class="flex items-start gap-3 text-sm text-slate-600 font-sans">
+            <iconify-icon icon="solar:check-circle-linear" class="text-lg text-slate-400 shrink-0"></iconify-icon>
+            SSO &amp; Priority Support
+          </li>
+          
+        </ul>
+
+        <button class="w-full py-3 px-6 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all active:scale-95 font-sans">
+          Contact Sales
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Social Proof Footer -->
+    <div class="mt-16 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6">
+      <p class="text-sm text-slate-500 font-sans">
+        Trusted by engineering teams at
+      </p>
+      <div class="flex items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+        <!-- Simple SVG Logos for generic tech companies -->
+        <svg class="h-6 w-auto text-slate-800" viewBox="0 0 100 30" fill="currentColor">
+          <path d="M10,15 L20,5 L30,15 L20,25 Z M35,5 H45 V25 H35 Z M50,5 H60 V25 H50 Z M65,5 L75,5 L80,15 L75,25 L65,25 L70,15 Z"></path>
+        </svg>
+        <svg class="h-5 w-auto text-slate-800" viewBox="0 0 100 30" fill="currentColor">
+          <circle cx="15" cy="15" r="10"></circle>
+          <rect x="30" y="5" width="20" height="20"></rect>
+          <path d="M60,25 L70,5 L80,25" stroke="currentColor" stroke-width="3"></path>
+        </svg>
+        <svg class="h-6 w-auto text-slate-800" viewBox="0 0 100 30" fill="currentColor">
+          <rect x="5" y="10" width="20" height="10" rx="5"></rect>
+          <circle cx="40" cy="15" r="8"></circle>
+          <rect x="60" y="5" width="10" height="20"></rect>
+        </svg>
+        <span class="text-xs font-mono text-slate-400 tracking-widest uppercase">
+          + 200 More
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchBilling(period) {
+      const monthlyBtn = document.getElementById('toggle-monthly');
+      const yearlyBtn = document.getElementById('toggle-yearly');
+      const pricePro = document.getElementById('price-pro');
+      const priceTeam = document.getElementById('price-team');
+
+      // Classes for active/inactive states
+      const activeClasses = ['bg-white', 'shadow-sm', 'ring-1', 'ring-black/5', 'text-slate-900'];
+      const inactiveClasses = ['text-slate-500', 'hover:text-slate-900'];
+
+      if (period === 'monthly') {
+        // Activate Monthly
+        monthlyBtn.classList.add(...activeClasses);
+        monthlyBtn.classList.remove(...inactiveClasses);
+        
+        // Deactivate Yearly
+        yearlyBtn.classList.remove(...activeClasses);
+        yearlyBtn.classList.add(...inactiveClasses);
+
+        // Update Prices
+        pricePro.innerText = '$29';
+        priceTeam.innerText = '$99';
+      } else {
+        // Activate Yearly
+        yearlyBtn.classList.add(...activeClasses);
+        yearlyBtn.classList.remove(...inactiveClasses);
+        
+        // Deactivate Monthly
+        monthlyBtn.classList.remove(...activeClasses);
+        monthlyBtn.classList.add(...inactiveClasses);
+
+        // Update Prices
+        pricePro.innerText = '$24';
+        priceTeam.innerText = '$79';
+      }
+    }
+  </script>
+</section>
+
+    <!-- FAQ / Pricing Context -->
+    <section class="animate-entry delay-200 [animation:animationIn_0.8s_ease-out_0.1s_both] animate-on-scroll lg:mx-auto animate bg-slate-100/50 max-w-7xl border-slate-200 border rounded-3xl mt-24 mr-auto mb-24 ml-auto pt-12 pr-10 pb-12 pl-10 relative">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-indigo-100/50 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div class="z-10 grid lg:grid-cols-2 gap-16 lg:gap-24 lg:items-start relative gap-x-16 gap-y-16 items-start">
+        <div class="flex flex-col">
+          <div class="mb-12">
+            <p class="text-slate-500 mb-4 text-sm font-medium tracking-wide font-sans">
+              Common Questions
+            </p>
+            <h2 class="leading-[1.1] md:text-5xl text-5xl text-slate-900 font-manrope font-medium" style="">
+              Start your journey
+              <span class="text-transparent bg-clip-text bg-gradient-to-r to-indigo-600 font-manrope font-medium from-indigo-600" style="">
+                today
+              </span>
+            </h2>
+          </div>
+
+          <div class="aspect-[4/5] overflow-hidden flex group shadow-indigo-100 bg-white w-full border-slate-200 border rounded-3xl relative shadow-xl items-center justify-center">
+            <!-- Abstract educational visual -->
+            <div class="bg-center opacity-50 bg-cover absolute top-0 right-0 bottom-0 left-0 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/244fac58-66ac-48ae-b48d-4bec089b4c26_1600w.webp)]"></div>
+            
+            <iconify-icon icon="solar:round-alt-arrow-right-linear" class="text-6xl text-indigo-600 relative z-10"></iconify-icon>
+          </div>
+        </div>
+
+        <!-- Right Column: Accordion -->
+        <div class="flex flex-col space-y-6 lg:mt-8 self-start">
+          <!-- Item 1 -->
+          <div class="group border-b border-slate-200 pb-6">
+            <button class="w-full flex items-center justify-between text-left focus:outline-none group" onclick="toggleFaq(this)">
+              <span class="text-xl font-medium text-slate-900 pr-8 font-sans transition-colors group-hover:text-indigo-600">
+                Do I need prior coding experience?
+              </span>
+              <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 transition-transform duration-300"></iconify-icon>
+            </button>
+            <div class="grid grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-out">
+              <div class="overflow-hidden">
+                <p class="text-slate-500 text-base leading-relaxed mt-4 font-light max-w-xl font-sans">
+                  We have paths for complete beginners starting with Python, as
+                  well as advanced tracks for experienced engineers looking to
+                  specialize in AI.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="group border-b border-slate-200 pb-6">
+            <button class="w-full flex items-center justify-between text-left focus:outline-none group" onclick="toggleFaq(this)">
+              <span class="text-xl font-medium text-slate-900 pr-8 transition-colors font-sans group-hover:text-indigo-600">
+                Are the certificates recognized?
+              </span>
+              <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 transition-transform duration-300"></iconify-icon>
+            </button>
+            <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+              <div class="overflow-hidden">
+                <p class="text-slate-500 text-base leading-relaxed mt-4 font-light max-w-xl font-sans">
+                  Yes, our certificates are recognized by our network of 500+
+                  hiring partners including major tech companies and AI
+                  startups.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="group border-b border-slate-200 pb-6">
+            <button class="w-full flex items-center justify-between text-left focus:outline-none group" onclick="toggleFaq(this)">
+              <span class="text-xl font-medium text-slate-900 pr-8 transition-colors font-sans group-hover:text-indigo-600">
+                How much time should I dedicate weekly?
+              </span>
+              <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 transition-transform duration-300"></iconify-icon>
+            </button>
+            <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+              <div class="overflow-hidden">
+                <p class="text-slate-500 text-base leading-relaxed mt-4 font-light max-w-xl font-sans">
+                  Most students spend 5-10 hours per week. Our flexible schedule allows you to learn at your own pace while keeping up with your cohort.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="group border-b border-slate-200 pb-6">
+            <button class="w-full flex items-center justify-between text-left focus:outline-none group" onclick="toggleFaq(this)">
+              <span class="text-xl font-medium text-slate-900 pr-8 transition-colors font-sans group-hover:text-indigo-600">
+                Is there a community aspect?
+              </span>
+              <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 transition-transform duration-300"></iconify-icon>
+            </button>
+            <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+              <div class="overflow-hidden">
+                <p class="text-slate-500 text-base leading-relaxed mt-4 font-light max-w-xl font-sans">
+                  Absolutely. You'll join a vibrant Discord community of peers, mentors, and alumni for daily support, networking, and collaboration.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="group border-b border-slate-200 pb-6">
+            <button class="w-full flex items-center justify-between text-left focus:outline-none group" onclick="toggleFaq(this)">
+              <span class="text-xl font-medium text-slate-900 pr-8 transition-colors font-sans group-hover:text-indigo-600">
+                Do you offer job placement support?
+              </span>
+              <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 transition-transform duration-300"></iconify-icon>
+            </button>
+            <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+              <div class="overflow-hidden">
+                <p class="text-slate-500 text-base leading-relaxed mt-4 font-light max-w-xl font-sans">
+                  We provide career coaching, resume reviews, and direct introductions to our hiring partner network upon graduation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function toggleFaq(button) {
+          const content = button.nextElementSibling;
+          const icon = button.querySelector('iconify-icon');
+          const isOpen = content.classList.contains('grid-rows-[1fr]');
+
+          if (isOpen) {
+            content.classList.remove('grid-rows-[1fr]');
+            content.classList.add('grid-rows-[0fr]');
+            icon.style.transform = 'rotate(0deg)';
+          } else {
+            content.classList.remove('grid-rows-[0fr]');
+            content.classList.add('grid-rows-[1fr]');
+             icon.style.transform = 'rotate(180deg)';
+          }
+        }
+      </script>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative w-full overflow-hidden bg-slate-50 text-slate-900 border-t border-slate-200 font-sans">
+      <div class="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none select-none z-0 overflow-hidden">
+        <h1 class="text-[17vw] leading-[0.8] text-transparent bg-clip-text bg-gradient-to-t from-slate-200/50 to-transparent opacity-80 translate-y-[20%] font-manrope font-medium" style="">
+          AIBOTS
+        </h1>
+      </div>
+
+      <div class="relative z-10">
+        <div class="max-w-7xl mx-auto px-6 pt-20 pb-14 lg:pt-24 lg:pb-16">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20">
+            <div class="lg:col-span-5">
+              <h2 class="flex items-start text-4xl font-medium text-slate-900 font-manrope mb-6">AIBOTS EDU</h2>
+
+              <p class="max-w-sm text-slate-500 text-lg leading-relaxed font-light mb-10 font-sans" style="">
+                Empowering the next generation of AI engineers through
+                interactive learning, mentorship, and community.
+              </p>
+
+              <div class="col-span-2 md:col-span-2 flex gap-4">
+    <a href="#" class="glass flex items-center justify-center hover:text-white hover:bg-white/10 transition text-slate-400 bg-slate-50 w-10 h-10 border-slate-300 border rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:facebook" class="iconify iconify--simple-icons w-[16px] h-[16px] text-slate-500" stroke-width="2" data-icon-replaced="true" style="width: 16px; height: 16px;">
+            <path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978c.401 0 .955.042 1.468.103a9 9 0 0 1 1.141.195v3.325a9 9 0 0 0-.653-.036a27 27 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.7 1.7 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103l-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647" class=""></path>
+        </svg>
+    </a>
+    <a href="#" class="glass flex items-center justify-center hover:text-white hover:bg-white/10 transition text-slate-400 bg-slate-50 w-10 h-10 border-slate-300 border rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:twitter" class="iconify iconify--simple-icons w-[16px] h-[16px] text-slate-500" stroke-width="2" data-icon-replaced="true" style="width: 16px; height: 16px;">
+            <path fill="currentColor" d="M21.543 7.104c.015.211.015.423.015.636c0 6.507-4.954 14.01-14.01 14.01v-.003A13.94 13.94 0 0 1 0 19.539a9.88 9.88 0 0 0 7.287-2.041a4.93 4.93 0 0 1-4.6-3.42a4.9 4.9 0 0 0 2.223-.084A4.926 4.926 0 0 1 .96 9.167v-.062a4.9 4.9 0 0 0 2.235.616A4.93 4.93 0 0 1 1.67 3.148a13.98 13.98 0 0 0 10.15 5.144a4.929 4.929 0 0 1 8.39-4.49a9.9 9.9 0 0 0 3.128-1.196a4.94 4.94 0 0 1-2.165 2.724A9.8 9.8 0 0 0 24 4.555a10 10 0 0 1-2.457 2.549" class="">
+            </path>
+        </svg>
+    </a>
+    <a href="#" class="glass flex items-center justify-center hover:text-white hover:bg-white/10 transition text-slate-400 bg-slate-50 w-10 h-10 border-slate-300 border rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:linkedin" class="iconify iconify--simple-icons w-[16px] h-[16px] text-slate-500" stroke-width="2" data-icon-replaced="true" style="width: 16px; height: 16px;">
+            <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037c-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85c3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.06 2.06 0 0 1-2.063-2.065a2.064 2.064 0 1 1 2.063 2.065m1.782 13.019H3.555V9h3.564zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z" class="">
+            </path>
+        </svg>
+    </a>
+    <a href="#" class="glass flex items-center justify-center hover:text-white hover:bg-white/10 transition text-slate-400 bg-slate-50 w-10 h-10 border-slate-300 border rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:instagram" class="iconify iconify--simple-icons w-[16px] h-[16px] text-slate-500" stroke-width="2" data-icon-replaced="true" style="width: 16px; height: 16px;">
+            <path fill="currentColor" d="M7.03.084c-1.277.06-2.149.264-2.91.563a5.9 5.9 0 0 0-2.124 1.388a5.9 5.9 0 0 0-1.38 2.127C.321 4.926.12 5.8.064 7.076s-.069 1.688-.063 4.947s.021 3.667.083 4.947c.061 1.277.264 2.149.563 2.911c.308.789.72 1.457 1.388 2.123a5.9 5.9 0 0 0 2.129 1.38c.763.295 1.636.496 2.913.552c1.278.056 1.689.069 4.947.063s3.668-.021 4.947-.082c1.28-.06 2.147-.265 2.91-.563a5.9 5.9 0 0 0 2.123-1.388a5.9 5.9 0 0 0 1.38-2.129c.295-.763.496-1.636.551-2.912c.056-1.28.07-1.69.063-4.948c-.006-3.258-.02-3.667-.081-4.947c-.06-1.28-.264-2.148-.564-2.911a5.9 5.9 0 0 0-1.387-2.123a5.9 5.9 0 0 0-2.128-1.38c-.764-.294-1.636-.496-2.914-.55C15.647.009 15.236-.006 11.977 0S8.31.021 7.03.084m.14 21.693c-1.17-.05-1.805-.245-2.228-.408a3.7 3.7 0 0 1-1.382-.895a3.7 3.7 0 0 1-.9-1.378c-.165-.423-.363-1.058-.417-2.228c-.06-1.264-.072-1.644-.08-4.848c-.006-3.204.006-3.583.061-4.848c.05-1.169.246-1.805.408-2.228c.216-.561.477-.96.895-1.382a3.7 3.7 0 0 1 1.379-.9c.423-.165 1.057-.361 2.227-.417c1.265-.06 1.644-.072 4.848-.08c3.203-.006 3.583.006 4.85.062c1.168.05 1.804.244 2.227.408c.56.216.96.475 1.382.895s.681.817.9 1.378c.165.422.362 1.056.417 2.227c.06 1.265.074 1.645.08 4.848c.005 3.203-.006 3.583-.061 4.848c-.051 1.17-.245 1.805-.408 2.23c-.216.56-.477.96-.896 1.38a3.7 3.7 0 0 1-1.378.9c-.422.165-1.058.362-2.226.418c-1.266.06-1.645.072-4.85.079s-3.582-.006-4.848-.06m9.783-16.192a1.44 1.44 0 1 0 1.437-1.442a1.44 1.44 0 0 0-1.437 1.442M5.839 12.012a6.161 6.161 0 1 0 12.323-.024a6.162 6.162 0 0 0-12.323.024M8 12.008A4 4 0 1 1 12.008 16A4 4 0 0 1 8 12.008" class="">
+            </path>
+        </svg>
+    </a>
+</div>
+            </div>
+
+            <div class="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12 lg:pl-16">
+              <div class="">
+                <h3 class="text-2xl text-slate-400 mb-6 font-manrope font-medium" style="">
+                  Platform
+                </h3>
+                <ul class="space-y-3 text-slate-500">
+                  <li class="">
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Catalog
+                    </a>
+                  </li>
+                  <li class="">
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      For Enterprise
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Success Stories
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="">
+                <h3 class="text-2xl text-slate-400 mb-6 font-manrope font-medium" style="">
+                  Resources
+                </h3>
+                <ul class="space-y-3 text-slate-500">
+                  <li>
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Blog
+                    </a>
+                  </li>
+                  <li class="">
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Cheatsheets
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Community
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 class="text-2xl text-slate-400 mb-6 font-manrope font-medium" style="">
+                  Legal
+                </h3>
+                <ul class="space-y-3 text-slate-500">
+                  <li>
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Privacy
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="hover:text-slate-900 transition-colors duration-200 font-sans">
+                      Terms
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <span class="font-mono text-xs uppercase tracking-widest text-slate-400 font-sans" style="">
+            ©2025 AIBots Education Inc.
+          </span>
+        </div>
+      </div>
+    </footer>
+  
+</body></html>

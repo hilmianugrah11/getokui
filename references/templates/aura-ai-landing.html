@@ -1,0 +1,3885 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aura — Context Before Canvas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap"
+rel="stylesheet"
+/>
+<style>
+:root {          --aura-black: #070707;          --aura-white: #EDEDEC;          --aura-red: #6366F1;      }      body {          font-family: 'Inter', sans-serif;          background-color: var(--aura-black);          color: var(--aura-white);          -webkit-font-smoothing: antialiased;      }      ::-webkit-scrollbar { width: 6px; }      ::-webkit-scrollbar-track { background: var(--aura-black); }      ::-webkit-scrollbar-thumb { background: #333; }      ::-webkit-scrollbar-thumb:hover { background: var(--aura-red); }      ::selection { background: var(--aura-red); color: var(--aura-white); }      .aura-heading { text-transform: uppercase; font-weight: 600; letter-spacing: -0.04em; line-height: 0.88; }      .aura-meta { text-transform: uppercase; font-weight: 500; letter-spacing: 0.02em; }      .hide-scrollbar::-webkit-scrollbar { display: none; }      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }      details > summary { list-style: none; cursor: pointer; }      details > summary::-webkit-details-marker { display: none; }      details[open] summary ~ * { animation: sweep .4s ease-in-out; }      @keyframes sweep { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }      .film-grain {          position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.04; mix-blend-mode: overlay;          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");      }      .img-editorial { filter: grayscale(100%) contrast(115%) brightness(90%); transition: filter 0.5s ease; }      .img-editorial:hover { filter: grayscale(100%) contrast(125%) brightness(100%); }
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body
+    class="relative overflow-x-hidden text-sm sm:text-base selection:bg-[#6366F1] selection:text-[#EDEDEC]"
+  >
+    <!-- Global Noise Overlay -->
+    <div class="film-grain"></div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 inset-x-0 z-[10002] bg-[#070707]/80 backdrop-blur-md border-b border-white/5 text-[#EDEDEC]"
+    >
+      <div class="flex items-center justify-between px-6 py-5">
+        <div class="flex items-center gap-4">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            class="text-[#EDEDEC]"
+          >
+            <path d="M2 22L12 2L22 22H2Z" stroke-linejoin="miter"></path>
+            <path d="M12 12L7 22H17L12 12Z" stroke-linejoin="miter"></path>
+          </svg>
+          <span class="aura-heading text-lg tracking-tighter" data-split="true">
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                AURA
+              </span>
+            </span>
+          </span>
+          <span
+            class="hidden md:inline-block aura-meta text-xs text-[#EDEDEC]/50 ml-2"
+            style=" filter: blur(0px);"
+          >
+            AI LANDING PAGES WITH CONTEXT
+          </span>
+        </div>
+        <nav
+          class="hidden md:flex items-center gap-6 aura-meta text-xs text-[#EDEDEC]/80"
+          style=" filter: blur(0px);"
+        >
+          <a
+            href="#gallery"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(0px);"
+          >
+            GALLERY
+          </a>
+          <span class="text-[#EDEDEC]/20">/</span>
+          <a
+            href="#workflow"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(0px);"
+          >
+            WORKFLOW
+          </a>
+          <span class="text-[#EDEDEC]/20">/</span>
+          <a
+            href="#learn"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(0px);"
+          >
+            LEARN
+          </a>
+          <span class="text-[#EDEDEC]/20">/</span>
+          <a
+            href="#pricing"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(0px);"
+          >
+            PRICING
+          </a>
+        </nav>
+        <div class="flex items-center gap-4">
+          <a
+            href="#build"
+            class="hidden md:flex bg-[#7C3AED] text-[#EDEDEC] aura-meta text-xs px-5 py-2.5 hover:bg-white hover:text-[#070707] transition-colors rounded-none"
+            style=" filter: blur(0px);"
+          >
+            BUILD A PAGE
+          </a>
+          <button class="md:hidden" style=" filter: blur(0px);">
+            <iconify-icon
+              icon="solar:hamburger-menu-linear"
+              class="text-2xl"
+              stroke-width="1.5"
+            ></iconify-icon>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Center Line for Desktop -->
+    <div
+      class="hidden lg:block fixed inset-y-0 left-1/2 w-[1px] bg-white/5 -ml-[0.5px] z-[-1] pointer-events-none mix-blend-difference"
+    ></div>
+
+    <!-- Hero Section -->
+    <section
+      class="relative h-screen w-full overflow-hidden flex items-center justify-center bg-[#070707]"
+    >
+      <!-- Background Image -->
+      <div class="absolute inset-0 z-0 bg-[#070707]">
+        <img
+          src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bc24bda1-b0b3-4e69-8bfb-a598a372654b_3840w.webp"
+          alt="Abstract Portrait"
+          class="w-full h-full object-cover img-editorial opacity-40 scale-105 js-parallax"
+          data-speed="0.1"
+        />
+      </div>
+      <!-- Grid overlay -->
+      <div
+        class="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] mix-blend-overlay"
+      ></div>
+
+      <!-- Central Frame -->
+      <div
+        class="relative z-10 w-[90%] md:w-[55%] h-[60%] md:h-[45%] border border-[#EDEDEC]/20 flex flex-col justify-center items-center p-8 mt-12 group"
+        stroke="#8B5CF6"
+      >
+        <!-- Frame Dots -->
+        <div
+          class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#EDEDEC] rounded-full"
+        ></div>
+        <div
+          class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#EDEDEC] rounded-full"
+        ></div>
+        <div
+          class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#EDEDEC] rounded-full"
+        ></div>
+        <div
+          class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#EDEDEC] rounded-full"
+        ></div>
+
+        <!-- Top Left Meta -->
+        <div class="absolute top-4 left-4 aura-meta text-xs text-[#EDEDEC]/60">
+          MODE 02 — DESIGN MEMORY ACTIVE
+        </div>
+
+        <!-- Title -->
+        <div class="relative w-full flex justify-center items-start mt-6">
+          <h1
+            class="aura-heading text-7xl md:text-9xl text-[#EDEDEC] select-none text-center"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                AURA
+              </span>
+            </span>
+          </h1>
+          <span
+            class="aura-heading text-xl md:text-3xl text-[#EDEDEC] mt-2 ml-2"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                PAGES
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              ></span>
+            </span>
+          </span>
+        </div>
+
+        <!-- Subcopy -->
+        <p
+          class="mt-6 md:mt-10 text-center aura-meta text-xs md:text-sm text-[#EDEDEC]/80 max-w-md leading-relaxed"
+          style=" filter: blur(0px);"
+        >
+          TURN SCREENSHOTS, PRODUCT NOTES, AND DESIGN.MD INTO LAUNCH-READY PAGES
+          WITH A DESIGN SYSTEM THAT SURVIVES EVERY ITERATION.
+        </p>
+
+        <!-- Avatar Chip -->
+        <div
+          class="mt-8 flex items-center border border-[#EDEDEC]/20 rounded-full pr-4 p-1 bg-[#070707]/50 backdrop-blur-sm"
+        >
+          <img
+            src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dd193dcc-9b6c-4525-bb5b-1440be21c9e8_320w.png"
+            class="w-6 h-6 rounded-full grayscale object-cover"
+            alt="User"
+          />
+          <span
+            class="aura-meta text-xs ml-3 text-[#EDEDEC]"
+            style=" filter: blur(0px);"
+          >
+            MIKA TAN — PRODUCT LEAD
+          </span>
+        </div>
+
+        <!-- Red Trace Annotation -->
+        <svg
+          class="absolute -bottom-10 md:-bottom-20 -right-10 md:-right-20 w-64 md:w-96 h-32 md:h-48 pointer-events-none z-20"
+          viewBox="0 0 400 200"
+          fill="none"
+        >
+          <path
+            d="M 50 150 C 100 120, 150 180, 200 100 C 250 20, 300 80, 380 40"
+            stroke="#E2482D"
+            stroke-width="4"
+            stroke-linecap="square"
+            class="animate-[dash_2s_ease-out_forwards]"
+            stroke-dasharray="1000"
+            stroke-dashoffset="1000"
+          ></path>
+        </svg>
+
+        <!-- Bottom Workflow Labels -->
+        <div
+          class="absolute bottom-4 inset-x-0 flex justify-center gap-4 md:gap-8 aura-meta text-[10px] md:text-xs text-[#EDEDEC]/50"
+        >
+          <span>PROMPT</span>
+          <span class="text-[#EDEDEC]/20">/</span>
+          <span>DESIGN SYSTEM</span>
+          <span class="text-[#EDEDEC]/20">/</span>
+          <span>PUBLISH</span>
+        </div>
+      </div>
+
+      <!-- Outside Frame Meta -->
+      <div class="absolute bottom-10 left-6 md:left-12 flex flex-col gap-2">
+        <span
+          class="aura-meta text-[10px] text-[#EDEDEC]/50"
+          style=" filter: blur(0px);"
+        >
+          PROMPT CREDITS:
+        </span>
+        <div class="flex items-center gap-1">
+          <div class="flex gap-1">
+            <div class="w-1 h-3 bg-[#7C3AED]"></div>
+            <div class="w-1 h-3 bg-[#7C3AED]"></div>
+            <div class="w-1 h-3 bg-[#7C3AED]"></div>
+            <div class="w-1 h-3 bg-[#7C3AED]"></div>
+          </div>
+          <span class="aura-meta text-xs ml-2" style=" filter: blur(0px);">
+            18 LEFT
+          </span>
+        </div>
+      </div>
+      <div class="absolute bottom-10 right-6 md:right-12 text-right">
+        <span
+          class="aura-meta text-[10px] text-[#EDEDEC]/50 block"
+          style=" filter: blur(0px);"
+        >
+          WORKSPACE STATUS
+        </span>
+        <span
+          class="aura-meta text-xs text-[#8B5CF6] block mt-1 flex items-center justify-end gap-2"
+          style=" filter: blur(0px);"
+        >
+          <span class="w-2 h-2 rounded-full bg-[#8B5CF6] animate-pulse"></span>
+          LIVE MODE: DRAFTING
+        </span>
+      </div>
+    </section>
+
+    <!-- Orange Context Section -->
+    <section
+      class="relative bg-[#8B5CF6] text-[#070707] border-t border-[#070707] z-20"
+    >
+      <!-- Top Meta Row -->
+      <div
+        class="flex justify-between items-center px-6 md:px-12 py-4 border-b border-[#070707]/10 aura-meta text-[10px] md:text-xs"
+      >
+        <span>04 ACTIVE WORKSPACES</span>
+        <span class="hidden md:inline-block">2,041 PROMPT RUNS TODAY</span>
+        <span>SYSTEM ONLINE</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 min-h-[60vh]">
+        <!-- Left Column -->
+        <div
+          class="p-6 md:p-12 lg:p-24 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#070707]/10"
+          style=" filter: blur(0px);"
+        >
+          <p
+            class="aura-heading text-xl md:text-3xl leading-[1.1] max-w-md"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                A
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                SCREENSHOT,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                A
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                PRODUCT
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                NOTE,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                AND
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                A
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                SAVED
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                STYLE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                SYSTEM
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                BEAT
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                A
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                BLANK
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                PROMPT.
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                AURA
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                KEEPS
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                THE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                PAGE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                GROUNDED
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                BEFORE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                IT
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                STARTS
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                GENERATING.
+              </span>
+            </span>
+          </p>
+          <div class="mt-16 flex justify-between items-end">
+            <a
+              href="#workflow"
+              class="flex items-center gap-2 aura-meta text-xs border-b border-[#070707] pb-1 hover:pr-4 transition-all"
+              style=" filter: blur(0px);"
+            >
+              SEE THE WORKFLOW
+              <iconify-icon
+                icon="solar:arrow-right-linear"
+                stroke-width="1.5"
+              ></iconify-icon>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div
+          class="p-6 md:p-12 lg:p-24 flex flex-col justify-between relative overflow-hidden"
+          style=" filter: blur(0px);"
+        >
+          <h2
+            class="aura-heading text-5xl md:text-7xl lg:text-8xl text-[#EDEDEC] text-right md:absolute md:top-12 md:-right-4 w-full md:w-[120%] leading-[0.85] z-10 mix-blend-difference"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                CONTEXT
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                BEFORE
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                CANVAS.
+              </span>
+            </span>
+          </h2>
+
+          <div
+            class="mt-12 md:mt-0 relative w-full max-w-sm mx-auto z-0 self-center md:self-start md:ml-12"
+          >
+            <div class="w-full aspect-[3/4] bg-[#070707] overflow-hidden">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d148d596-ffb7-4281-aa0a-b590cbca9d4d_1600w.png"
+                alt="Editorial abstract"
+                class="w-full h-full object-cover img-editorial mix-blend-luminosity opacity-80 js-parallax"
+                data-speed="0.05"
+              />
+            </div>
+          </div>
+
+          <div class="mt-12 text-right z-10">
+            <span
+              class="aura-heading text-6xl md:text-8xl block leading-none tracking-tighter"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(0px);"
+                >
+                  42K
+                </span>
+              </span>
+            </span>
+            <span
+              class="aura-meta text-[10px] md:text-xs block mt-2 opacity-80 max-w-[200px] ml-auto"
+              style=" filter: blur(0px);"
+            >
+              SAMPLE PAGES DRAFTED FROM SAVED CONTEXT
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- White Product Intro -->
+    <section
+      class="bg-[#EDEDEC] text-[#070707] border-t border-[#070707]/10 relative z-20"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <!-- Left Col -->
+        <div
+          class="p-6 md:p-12 lg:p-24 border-b md:border-b-0 md:border-r border-[#070707]/10"
+          style=" filter: blur(0px);"
+        >
+          <h2
+            class="aura-heading text-6xl md:text-8xl lg:text-9xl leading-[0.85] tracking-tighter sticky top-24"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                BUILD
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                BETTER
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(0px);"
+              >
+                PAGES.
+              </span>
+            </span>
+          </h2>
+          <div class="mt-24">
+            <a
+              href="#build"
+              class="inline-block bg-[#070707] text-[#EDEDEC] aura-meta text-xs px-6 py-3 hover:bg-[#8B5CF6] transition-colors rounded-none"
+              style=" filter: blur(0px);"
+            >
+              OPEN BUILDER
+            </a>
+          </div>
+        </div>
+        <!-- Right Col -->
+        <div
+          class="p-6 md:p-12 lg:p-24 flex flex-col justify-between"
+          style=" filter: blur(0px);"
+        >
+          <p
+            class="aura-meta text-sm md:text-base leading-relaxed max-w-lg font-medium"
+            style=" filter: blur(0px);"
+          >
+            TURN ROUGH PRODUCT CONTEXT INTO A PAGE THAT ALREADY KNOWS THE OFFER,
+            TONE, IMAGERY, AND CONVERSION GOAL. NO MORE BLANK CANVAS PARALYSIS.
+          </p>
+          <div
+            class="mt-12 w-full aspect-square md:aspect-video bg-[#070707] overflow-hidden relative"
+          >
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1424bc30-132d-4f48-aaac-82b03eeb35a2_1600w.png"
+              class="w-full h-full object-cover img-editorial opacity-70"
+              alt="Dark Silhouette"
+              style=" filter: blur(0px);"
+            />
+            <!-- Demo Overlay -->
+            <div
+              class="absolute inset-0 flex items-center justify-center bg-black/20 group cursor-pointer hover:bg-black/10 transition-colors"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-[#EDEDEC] text-[#070707] flex items-center justify-center group-hover:scale-110 transition-transform"
+              >
+                <iconify-icon
+                  icon="solar:play-bold"
+                  class="text-2xl ml-1"
+                ></iconify-icon>
+              </div>
+              <div
+                class="absolute bottom-6 right-6 aura-meta text-xs text-[#EDEDEC]"
+              >
+                WATCH DEMO
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Example Stack (Cinematic Portfolios) -->
+
+    <!-- Proof Transition -->
+    <section
+      class="bg-[#EDEDEC] text-[#070707] py-24 px-6 md:px-12 relative z-20 border-b border-[#070707]/10"
+    >
+      <div class="max-w-6xl mx-auto relative h-64 md:h-48">
+        <!-- Dark Card -->
+        <div
+          class="absolute top-0 left-0 md:left-12 bg-[#070707] text-[#EDEDEC] p-6 md:p-8 w-64 md:w-80 shadow-2xl z-10"
+        >
+          <span
+            class="aura-heading text-5xl md:text-6xl block"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                9.1/10
+              </span>
+            </span>
+          </span>
+          <a
+            href="#"
+            class="aura-meta text-xs mt-4 inline-block border-b border-[#EDEDEC]/30 hover:border-[#EDEDEC] transition-colors"
+            style=" filter: blur(8px);"
+          >
+            CREATOR RATING
+          </a>
+        </div>
+        <!-- Light Card -->
+        <div
+          class="absolute top-24 md:top-12 right-0 md:right-12 bg-[#EDEDEC] text-[#070707] p-6 md:p-8 w-64 md:w-80 border border-[#070707]/10 z-0"
+        >
+          <span
+            class="aura-heading text-5xl md:text-6xl block"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                72%
+              </span>
+            </span>
+          </span>
+          <span
+            class="aura-meta text-xs mt-2 block opacity-70"
+            style=" filter: blur(8px);"
+          >
+            SAMPLE FIRST-REVISION APPROVAL RATE
+          </span>
+          <a
+            href="#build"
+            class="aura-meta text-xs mt-4 inline-block text-[#8B5CF6] hover:text-[#070707] transition-colors"
+            style=" filter: blur(8px);"
+          >
+            BUILD A PAGE →
+          </a>
+        </div>
+        <!-- Brand Tile -->
+        <div
+          class="absolute top-16 left-1/2 -translate-x-1/2 w-16 h-16 bg-[#070707] flex items-center justify-center z-20"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#EDEDEC"
+            stroke-width="1.5"
+          >
+            <path d="M2 22L12 2L22 22H2Z" stroke-linejoin="miter"></path>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section
+      id="workflow"
+      class="bg-[#070707] text-[#EDEDEC] py-24 relative z-20"
+    >
+      <div class="px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
+        <!-- Label -->
+        <div class="md:col-span-3" style=" filter: blur(8px);">
+          <h3
+            class="aura-meta text-sm text-[#EDEDEC]/50 sticky top-24"
+            data-split="true"
+            style=" filter: blur(8px);"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                WORKFLOW
+              </span>
+            </span>
+          </h3>
+        </div>
+        <!-- Content -->
+        <div class="md:col-span-9" style=" filter: blur(8px);">
+          <h2
+            class="aura-heading text-3xl md:text-5xl lg:text-6xl max-w-4xl leading-[0.9] mb-16"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                EVERY
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                STRONG
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                GENERATION
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                STARTS
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                WITH
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                CONTEXT
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                THE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                MODEL
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                CAN
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                ACTUALLY
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                USE:
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                AUDIENCE,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                OFFER,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                PROOF,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                REFERENCES,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                ASSETS,
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                AND
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                TASTE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                RULES.
+              </span>
+            </span>
+          </h2>
+
+          <!-- Accordions -->
+          <div class="border-t border-white/10">
+            <!-- Item 1 -->
+            <details
+              class="group border-b border-white/10"
+              open=""
+              style=" filter: blur(8px);"
+            >
+              <summary
+                class="flex justify-between items-center py-8 outline-none"
+              >
+                <div class="flex items-center gap-6 md:gap-12 w-full">
+                  <span
+                    class="aura-meta text-xs text-[#EDEDEC]/50 w-8"
+                    style=" filter: blur(8px);"
+                  >
+                    01
+                  </span>
+                  <h4
+                    class="aura-heading text-xl md:text-3xl flex-1"
+                    data-split="true"
+                  >
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        CONTEXT
+                      </span>
+                    </span>
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        INTAKE
+                      </span>
+                    </span>
+                  </h4>
+                  <span
+                    class="hidden md:block aura-meta text-xs bg-white/10 px-2 py-1"
+                    style=" filter: blur(8px);"
+                  >
+                    STARTER PLAN
+                  </span>
+                </div>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-2xl group-open:hidden"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-2xl hidden group-open:block"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-8 pl-14 md:pl-24 grid grid-cols-1 md:grid-cols-2 gap-8 text-[#EDEDEC]/80 text-sm md:text-base"
+              >
+                <div style=" filter: blur(8px);">
+                  <p class="mb-4" style=" filter: blur(8px);">
+                    Upload screenshots of sites you like, paste product notes,
+                    or link an existing brief. Aura extracts the structural
+                    intent and brand tone before drafting a single component.
+                  </p>
+                  <p style=" filter: blur(8px);">
+                    This prevents the generic "AI look" by anchoring the output
+                    to your specific references and constraints.
+                  </p>
+                </div>
+                <div
+                  class="relative h-48 md:h-64 bg-[#111] overflow-hidden border border-white/10"
+                  style=" filter: blur(8px);"
+                >
+                  <img
+                    src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/15d34bb5-5ace-4046-9def-d319ecbc39d1_3840w.png"
+                    class="w-full h-full object-cover img-editorial opacity-60"
+                    alt="Context"
+                    style=" filter: blur(10px);"
+                  />
+                </div>
+              </div>
+            </details>
+
+            <!-- Item 2 -->
+            <details
+              class="group border-b border-white/10"
+              style=" filter: blur(8px);"
+            >
+              <summary
+                class="flex justify-between items-center py-8 outline-none"
+              >
+                <div class="flex items-center gap-6 md:gap-12 w-full">
+                  <span
+                    class="aura-meta text-xs text-[#EDEDEC]/50 w-8"
+                    style=" filter: blur(8px);"
+                  >
+                    02
+                  </span>
+                  <h4
+                    class="aura-heading text-xl md:text-3xl flex-1"
+                    data-split="true"
+                  >
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        DESIGN
+                      </span>
+                    </span>
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        SYSTEM
+                      </span>
+                    </span>
+                  </h4>
+                  <span
+                    class="hidden md:block aura-meta text-xs bg-white/10 px-2 py-1"
+                    style=" filter: blur(8px);"
+                  >
+                    PRO PLAN
+                  </span>
+                </div>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-2xl group-open:hidden"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-2xl hidden group-open:block"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-8 pl-14 md:pl-24 text-[#EDEDEC]/80 text-sm max-w-2xl"
+              >
+                <p style=" filter: blur(8px);">
+                  Generate or attach a strict DESIGN.md file. This locks in your
+                  typography scale, color palette, border radiuses, and grid
+                  spacing. Aura obeys these rules globally across every
+                  component it builds.
+                </p>
+              </div>
+            </details>
+
+            <!-- Item 3 -->
+            <details
+              class="group border-b border-white/10"
+              style=" filter: blur(8px);"
+            >
+              <summary
+                class="flex justify-between items-center py-8 outline-none"
+              >
+                <div class="flex items-center gap-6 md:gap-12 w-full">
+                  <span
+                    class="aura-meta text-xs text-[#EDEDEC]/50 w-8"
+                    style=" filter: blur(8px);"
+                  >
+                    03
+                  </span>
+                  <h4
+                    class="aura-heading text-xl md:text-3xl flex-1"
+                    data-split="true"
+                  >
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        PAGE
+                      </span>
+                    </span>
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        GENERATION
+                      </span>
+                    </span>
+                  </h4>
+                </div>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-2xl group-open:hidden"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-2xl hidden group-open:block"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-8 pl-14 md:pl-24 text-[#EDEDEC]/80 text-sm max-w-2xl"
+              >
+                <p style=" filter: blur(8px);">
+                  Watch as the layout constructs itself sequentially. Aura
+                  doesn't just output flat HTML; it builds a semantic,
+                  responsive tree using Tailwind CSS directly, ready for
+                  immediate iteration.
+                </p>
+              </div>
+            </details>
+
+            <!-- Item 4 -->
+            <details
+              class="group border-b border-white/10"
+              style=" filter: blur(8px);"
+            >
+              <summary
+                class="flex justify-between items-center py-8 outline-none"
+              >
+                <div class="flex items-center gap-6 md:gap-12 w-full">
+                  <span
+                    class="aura-meta text-xs text-[#EDEDEC]/50 w-8"
+                    style=" filter: blur(8px);"
+                  >
+                    04
+                  </span>
+                  <h4
+                    class="aura-heading text-xl md:text-3xl flex-1"
+                    data-split="true"
+                  >
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        MEDIA
+                      </span>
+                    </span>
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        DIRECTION
+                      </span>
+                    </span>
+                  </h4>
+                </div>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-2xl group-open:hidden"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-2xl hidden group-open:block"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-8 pl-14 md:pl-24 text-[#EDEDEC]/80 text-sm max-w-2xl"
+              >
+                <p style=" filter: blur(8px);">
+                  Direct the image generation with specific photographic styles.
+                  Request "monochrome editorial", "high contrast product shot",
+                  or "grainy abstract" and Aura sources or generates fitting
+                  assets.
+                </p>
+              </div>
+            </details>
+
+            <!-- Item 5 -->
+            <details
+              class="group border-b border-white/10"
+              style=" filter: blur(8px);"
+            >
+              <summary
+                class="flex justify-between items-center py-8 outline-none"
+              >
+                <div class="flex items-center gap-6 md:gap-12 w-full">
+                  <span
+                    class="aura-meta text-xs text-[#EDEDEC]/50 w-8"
+                    style=" filter: blur(8px);"
+                  >
+                    05
+                  </span>
+                  <h4
+                    class="aura-heading text-xl md:text-3xl flex-1"
+                    data-split="true"
+                  >
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        PUBLISH
+                      </span>
+                    </span>
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        &amp;
+                      </span>
+                    </span>
+                    <span
+                      style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                    >
+                      <span
+                        class="word-inner"
+                        style="display: inline-block; filter: blur(10px);"
+                      >
+                        EXPORT
+                      </span>
+                    </span>
+                  </h4>
+                </div>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-2xl group-open:hidden"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-2xl hidden group-open:block"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-8 pl-14 md:pl-24 text-[#EDEDEC]/80 text-sm max-w-2xl"
+              >
+                <p style=" filter: blur(8px);">
+                  Publish directly to an Aura domain, export the clean
+                  HTML/Tailwind codebase, or hand off to a developer. No vendor
+                  lock-in, just clean code.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Orange Results / Manifesto -->
+    <section class="bg-[#7C3AED] text-[#EDEDEC] relative z-20">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <!-- Stats Left -->
+        <div
+          class="p-6 md:p-12 lg:p-24 relative min-h-[50vh] border-b lg:border-b-0 lg:border-r border-[#070707]/10 bg-[linear-gradient(to_right,#0707071a_1px,transparent_1px),linear-gradient(to_bottom,#0707071a_1px,transparent_1px)] bg-[size:4rem_4rem]"
+          style=" filter: blur(8px);"
+        >
+          <!-- Stat 1 -->
+          <div class="absolute top-12 left-12">
+            <div class="w-1.5 h-1.5 bg-[#EDEDEC] rounded-full mb-2"></div>
+            <span
+              class="aura-heading text-5xl md:text-6xl block leading-none"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  42K
+                </span>
+              </span>
+            </span>
+            <span
+              class="aura-meta text-[10px] block mt-1 max-w-[120px]"
+              style=" filter: blur(8px);"
+            >
+              SAMPLE PAGES GENERATED FROM SAVED CONTEXT
+            </span>
+          </div>
+
+          <!-- Stat 2 -->
+          <div
+            class="absolute top-1/2 right-12 md:right-24 -translate-y-1/2 text-right"
+          >
+            <div
+              class="w-1.5 h-1.5 bg-[#EDEDEC] rounded-full mb-2 ml-auto"
+            ></div>
+            <span
+              class="aura-heading text-5xl md:text-6xl block leading-none text-[#070707]"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  18M
+                </span>
+              </span>
+            </span>
+            <span
+              class="aura-meta text-[10px] block mt-1 max-w-[120px] ml-auto text-[#070707]"
+              style=" filter: blur(8px);"
+            >
+              SAMPLE MEDIAN TIME FROM PROMPT TO SHAREABLE DRAFT
+            </span>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="absolute bottom-12 left-24 md:left-48">
+            <div class="w-1.5 h-1.5 bg-[#EDEDEC] rounded-full mb-2"></div>
+            <span
+              class="aura-heading text-5xl md:text-6xl block leading-none"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  73%
+                </span>
+              </span>
+            </span>
+            <span
+              class="aura-meta text-[10px] block mt-1 max-w-[150px]"
+              style=" filter: blur(8px);"
+            >
+              SAMPLE PROJECTS THAT REUSE A SAVED DESIGN.MD
+            </span>
+          </div>
+
+          <!-- Connecting lines decor -->
+          <svg
+            class="absolute inset-0 w-full h-full pointer-events-none opacity-20"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M 10 10 L 90 50 L 30 90"
+              stroke="#EDEDEC"
+              stroke-width="0.2"
+              fill="none"
+            ></path>
+          </svg>
+        </div>
+
+        <!-- Manifesto Right -->
+        <div
+          class="p-6 md:p-12 lg:p-24 flex flex-col justify-center bg-[#7C3AED]"
+          style=" filter: blur(8px);"
+        >
+          <h2
+            class="aura-heading text-5xl md:text-7xl lg:text-[5.5rem] leading-[0.88] tracking-tighter text-[#EDEDEC]"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                EVERY
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                GREAT
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                PAGE
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                STARTS
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                WITH
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                CONTEXT
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                WORTH
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                KEEPING.
+              </span>
+            </span>
+          </h2>
+          <p
+            class="mt-8 aura-meta text-sm md:text-base text-[#070707] max-w-md font-medium leading-relaxed"
+            style=" filter: blur(8px);"
+          >
+            AURA IS NOT HERE TO MAKE MORE EMPTY PAGES. IT KEEPS YOUR PRODUCT
+            STORY, REFERENCES, ASSETS, AND DESIGN RULES CLOSE ENOUGH FOR THE
+            NEXT DRAFT TO MATTER.
+          </p>
+          <div class="mt-12 flex items-center gap-3">
+            <div
+              class="w-8 h-8 bg-[#070707] rounded-full flex items-center justify-center"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#EDEDEC"
+                stroke-width="2"
+              >
+                <path
+                  d="M20 21V19C20 17.8954 19.1046 17 18 17H6C4.89543 17 4 17.8954 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+            <div>
+              <span
+                class="block aura-meta text-xs text-[#EDEDEC] leading-tight"
+                style=" filter: blur(8px);"
+              >
+                SYSTEM ARCHITECT
+              </span>
+              <span
+                class="block aura-meta text-[10px] text-[#070707]"
+                style=" filter: blur(8px);"
+              >
+                CORE TEAM
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section (Overlapping) -->
+    <section
+      class="bg-[#EDEDEC] text-[#070707] relative z-30 -mt-8 pt-24 pb-24 border-t border-[#070707]"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <!-- Title -->
+        <div
+          class="p-6 md:p-12 lg:p-24 overflow-hidden border-b lg:border-b-0 lg:border-r border-[#070707]/10"
+          style=" filter: blur(8px);"
+        >
+          <h2
+            class="aura-heading text-7xl md:text-8xl lg:text-9xl leading-[0.8] tracking-tighter -mt-4 mb-12"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                BEFORE
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                YOU
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                GENERATE.
+              </span>
+            </span>
+          </h2>
+          <a
+            href="#build"
+            class="inline-block bg-[#070707] text-[#EDEDEC] aura-meta text-xs px-8 py-4 hover:bg-[#7C3AED] transition-colors rounded-none"
+            style=" filter: blur(8px);"
+          >
+            OPEN AURA
+          </a>
+        </div>
+
+        <!-- Accordions -->
+        <div class="p-6 md:p-12 lg:p-24" style=" filter: blur(8px);">
+          <div class="border-t border-[#070707]/20">
+            <details
+              class="group border-b border-[#070707]/20"
+              open=""
+              style=" filter: blur(8px);"
+            >
+              <summary class="flex items-start gap-4 py-6 outline-none">
+                <span
+                  class="aura-meta text-[10px] text-[#070707]/50 mt-1"
+                  style=" filter: blur(8px);"
+                >
+                  01
+                </span>
+                <h4
+                  class="aura-heading text-lg md:text-xl flex-1 normal-case font-semibold tracking-tight"
+                  data-split="true"
+                >
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      Do
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      I
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      need
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      a
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      finished
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      brand
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      guide?
+                    </span>
+                  </span>
+                </h4>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-xl group-open:hidden mt-0.5"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-xl hidden group-open:block mt-0.5"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-6 pl-8 text-[#070707]/80 text-sm md:text-base pr-8"
+              >
+                <p style=" filter: blur(8px);">
+                  No. Aura can start with a screenshot, a rough product note, a
+                  color direction, or a DESIGN.md file. Better context gives
+                  better drafts, but you do not need a complete system before
+                  you begin.
+                </p>
+              </div>
+            </details>
+
+            <details
+              class="group border-b border-[#070707]/20"
+              style=" filter: blur(8px);"
+            >
+              <summary class="flex items-start gap-4 py-6 outline-none">
+                <span
+                  class="aura-meta text-[10px] text-[#070707]/50 mt-1"
+                  style=" filter: blur(8px);"
+                >
+                  02
+                </span>
+                <h4
+                  class="aura-heading text-lg md:text-xl flex-1 normal-case font-semibold tracking-tight"
+                  data-split="true"
+                >
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      Can
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      Aura
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      use
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      screenshots
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      or
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      existing
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      sites
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      as
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      references?
+                    </span>
+                  </span>
+                </h4>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-xl group-open:hidden mt-0.5"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-xl hidden group-open:block mt-0.5"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-6 pl-8 text-[#070707]/80 text-sm md:text-base pr-8"
+              >
+                <p style=" filter: blur(8px);">
+                  Yes. Visual references are often better than text prompts.
+                  Upload an image of a layout you like, and Aura will extract
+                  the structural hierarchy and apply your design system to that
+                  skeleton.
+                </p>
+              </div>
+            </details>
+
+            <details
+              class="group border-b border-[#070707]/20"
+              style=" filter: blur(8px);"
+            >
+              <summary class="flex items-start gap-4 py-6 outline-none">
+                <span
+                  class="aura-meta text-[10px] text-[#070707]/50 mt-1"
+                  style=" filter: blur(8px);"
+                >
+                  03
+                </span>
+                <h4
+                  class="aura-heading text-lg md:text-xl flex-1 normal-case font-semibold tracking-tight"
+                  data-split="true"
+                >
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      Can
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      I
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      export
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      the
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      page?
+                    </span>
+                  </span>
+                </h4>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-xl group-open:hidden mt-0.5"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-xl hidden group-open:block mt-0.5"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-6 pl-8 text-[#070707]/80 text-sm md:text-base pr-8"
+              >
+                <p style=" filter: blur(8px);">
+                  Every page generated is clean HTML styled with standard
+                  Tailwind CSS classes. You can export the raw code, publish to
+                  a custom domain, or sync directly to your repository.
+                </p>
+              </div>
+            </details>
+
+            <details
+              class="group border-b border-[#070707]/20"
+              style=" filter: blur(8px);"
+            >
+              <summary class="flex items-start gap-4 py-6 outline-none">
+                <span
+                  class="aura-meta text-[10px] text-[#070707]/50 mt-1"
+                  style=" filter: blur(8px);"
+                >
+                  04
+                </span>
+                <h4
+                  class="aura-heading text-lg md:text-xl flex-1 normal-case font-semibold tracking-tight"
+                  data-split="true"
+                >
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      What
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      if
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      the
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      first
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      generation
+                    </span>
+                  </span>
+                  <span
+                    style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                  >
+                    <span
+                      class="word-inner"
+                      style="display: inline-block; filter: blur(10px);"
+                    >
+                      misses?
+                    </span>
+                  </span>
+                </h4>
+                <iconify-icon
+                  icon="solar:add-linear"
+                  class="text-xl group-open:hidden mt-0.5"
+                ></iconify-icon>
+                <iconify-icon
+                  icon="solar:minus-linear"
+                  class="text-xl hidden group-open:block mt-0.5"
+                ></iconify-icon>
+              </summary>
+              <div
+                class="pb-6 pl-8 text-[#070707]/80 text-sm md:text-base pr-8"
+              >
+                <p style=" filter: blur(8px);">
+                  Iteration is built-in. Select any component and prompt a
+                  change, adjust the global DESIGN.md to restyle the whole page
+                  instantly, or provide a new screenshot to pivot the layout.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy & Pricing -->
+    <section
+      id="pricing"
+      class="bg-[#070707] text-[#EDEDEC] pt-24 pb-32 relative z-20"
+    >
+      <!-- Quote -->
+      <div class="max-w-4xl mx-auto text-center px-6 mb-24">
+        <h3
+          class="font-medium text-2xl md:text-4xl leading-snug tracking-tight"
+          data-split="true"
+        >
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              "THE
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              HARDEST
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              PART
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              OF
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              AI
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              DESIGN
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              IS
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              NOT
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              GENERATION.
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              IT
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              IS
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              GIVING
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              THE
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              MODEL
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              ENOUGH
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              TASTE,
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              PROOF,
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              AND
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              CONSTRAINT
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              TO
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              STOP
+            </span>
+          </span>
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              GUESSING."
+            </span>
+          </span>
+        </h3>
+        <p
+          class="mt-6 aura-meta text-xs text-[#EDEDEC]/50"
+          style=" filter: blur(8px);"
+        >
+          AURA TREATS CONTEXT AS A PRODUCT SURFACE, NOT A PROMPT AFTERTHOUGHT.
+        </p>
+      </div>
+
+      <!-- Pricing Table -->
+      <div class="max-w-7xl mx-auto px-6">
+        <h2
+          class="aura-heading text-6xl md:text-8xl text-right mb-12 tracking-tighter"
+          data-split="true"
+        >
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              PRICING.
+            </span>
+          </span>
+        </h2>
+
+        <div
+          class="w-full overflow-x-auto hide-scrollbar border border-white/10"
+        >
+          <div
+            class="min-w-[800px] grid grid-cols-4 text-sm divide-x divide-white/10 border-b border-white/10"
+          >
+            <!-- Headers -->
+            <div
+              class="p-6 flex items-end pb-4 bg-white/5"
+              style=" filter: blur(8px);"
+            >
+              <span
+                class="aura-meta text-xs text-[#EDEDEC]/50"
+                style=" filter: blur(8px);"
+              >
+                FEATURES
+              </span>
+            </div>
+            <div
+              class="p-6 flex flex-col justify-between"
+              style=" filter: blur(8px);"
+            >
+              <span
+                class="aura-meta text-xs text-[#EDEDEC]/50 mb-4"
+                style=" filter: blur(8px);"
+              >
+                CREATOR
+              </span>
+              <span class="aura-heading text-3xl block" data-split="true">
+                <span
+                  style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                >
+                  <span
+                    class="word-inner"
+                    style="display: inline-block; filter: blur(10px);"
+                  >
+                    $19
+                  </span>
+                </span>
+                <span
+                  style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                >
+                  <span
+                    class="word-inner"
+                    style="display: inline-block; filter: blur(10px);"
+                  >
+                    <span class="text-sm text-[#EDEDEC]/50 font-normal">
+                      /MO
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <p
+                class="text-xs text-[#EDEDEC]/70 mt-2 font-medium"
+                style=" filter: blur(8px);"
+              >
+                For solo builders testing ideas.
+              </p>
+            </div>
+            <div
+              class="p-6 flex flex-col justify-between bg-[#EDEDEC] text-[#070707]"
+              style=" filter: blur(8px);"
+            >
+              <span
+                class="aura-meta text-xs text-[#070707]/50 mb-4"
+                style=" filter: blur(8px);"
+              >
+                PRO
+              </span>
+              <span class="aura-heading text-3xl block" data-split="true">
+                <span
+                  style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                >
+                  <span
+                    class="word-inner"
+                    style="display: inline-block; filter: blur(10px);"
+                  >
+                    $49
+                  </span>
+                </span>
+                <span
+                  style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                >
+                  <span
+                    class="word-inner"
+                    style="display: inline-block; filter: blur(10px);"
+                  >
+                    <span class="text-sm text-[#070707]/50 font-normal">
+                      /MO
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <p
+                class="text-xs text-[#070707]/70 mt-2 font-medium"
+                style=" filter: blur(8px);"
+              >
+                For serious launches and systems.
+              </p>
+            </div>
+            <div
+              class="p-6 flex flex-col justify-between"
+              style=" filter: blur(8px);"
+            >
+              <span
+                class="aura-meta text-xs text-[#EDEDEC]/50 mb-4"
+                style=" filter: blur(8px);"
+              >
+                STUDIO
+              </span>
+              <span class="aura-heading text-3xl block" data-split="true">
+                <span
+                  style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                >
+                  <span
+                    class="word-inner"
+                    style="display: inline-block; filter: blur(10px);"
+                  >
+                    $149
+                  </span>
+                </span>
+                <span
+                  style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+                >
+                  <span
+                    class="word-inner"
+                    style="display: inline-block; filter: blur(10px);"
+                  >
+                    <span class="text-sm text-[#EDEDEC]/50 font-normal">
+                      /MO
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <p
+                class="text-xs text-[#EDEDEC]/70 mt-2 font-medium"
+                style=" filter: blur(8px);"
+              >
+                For agencies and product teams.
+              </p>
+            </div>
+
+            <!-- Row 1 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              Monthly prompt credits
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              500
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707] font-semibold"
+              style=" filter: blur(8px);"
+            >
+              2,500
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              Unlimited
+            </div>
+
+            <!-- Row 2 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              Private projects
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              5
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707] font-semibold"
+              style=" filter: blur(8px);"
+            >
+              Unlimited
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              Unlimited
+            </div>
+
+            <!-- Row 3 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              DESIGN.md memory
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              Basic
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707] font-semibold"
+              style=" filter: blur(8px);"
+            >
+              Full System
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              Global Shared
+            </div>
+
+            <!-- Row 4 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              Image direction
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center text-[#EDEDEC]/30"
+              style=" filter: blur(8px);"
+            >
+              -
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707]"
+              style=" filter: blur(8px);"
+            >
+              <iconify-icon
+                icon="solar:check-circle-linear"
+                class="text-lg"
+              ></iconify-icon>
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              <iconify-icon
+                icon="solar:check-circle-linear"
+                class="text-lg"
+              ></iconify-icon>
+            </div>
+
+            <!-- Row 5 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              HTML / Tailwind Export
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              <iconify-icon
+                icon="solar:check-circle-linear"
+                class="text-lg"
+              ></iconify-icon>
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707]"
+              style=" filter: blur(8px);"
+            >
+              <iconify-icon
+                icon="solar:check-circle-linear"
+                class="text-lg"
+              ></iconify-icon>
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              <iconify-icon
+                icon="solar:check-circle-linear"
+                class="text-lg"
+              ></iconify-icon>
+            </div>
+
+            <!-- Row 6 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              Custom domains
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              1
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707] font-semibold"
+              style=" filter: blur(8px);"
+            >
+              5
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              Unlimited
+            </div>
+
+            <!-- Row 7 -->
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center bg-white/5 font-medium text-[#EDEDEC]/80"
+              style=" filter: blur(8px);"
+            >
+              Team Seats
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              1 Seat
+            </div>
+            <div
+              class="p-4 px-6 border-t border-[#070707]/10 flex items-center justify-center text-center bg-[#EDEDEC] text-[#070707] font-semibold"
+              style=" filter: blur(8px);"
+            >
+              1 Seat
+            </div>
+            <div
+              class="p-4 px-6 border-t border-white/10 flex items-center justify-center text-center"
+              style=" filter: blur(8px);"
+            >
+              5 Included
+            </div>
+
+            <!-- CTAs -->
+            <div
+              class="p-6 border-t border-white/10 bg-white/5"
+              style=" filter: blur(8px);"
+            ></div>
+            <div
+              class="p-6 border-t border-white/10 flex items-center justify-center"
+              style=" filter: blur(8px);"
+            >
+              <button
+                class="w-full border border-white/20 py-3 aura-meta text-xs hover:bg-white hover:text-[#070707] transition-colors"
+                style=" filter: blur(8px);"
+              >
+                START CREATOR
+              </button>
+            </div>
+            <div
+              class="p-6 border-t border-[#070707]/10 flex items-center justify-center bg-[#EDEDEC]"
+              style=" filter: blur(8px);"
+            >
+              <button
+                class="w-full bg-[#7C3AED] text-[#EDEDEC] py-3 aura-meta text-xs hover:bg-[#070707] transition-colors"
+                style=" filter: blur(8px);"
+              >
+                START PRO
+              </button>
+            </div>
+            <div
+              class="p-6 border-t border-white/10 flex items-center justify-center"
+              style=" filter: blur(8px);"
+            >
+              <button
+                class="w-full border border-white/20 py-3 aura-meta text-xs hover:bg-white hover:text-[#070707] transition-colors"
+                style=" filter: blur(8px);"
+              >
+                CONTACT SALES
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section
+      class="bg-[#EDEDEC] text-[#070707] border-t border-[#070707]/10 relative z-20"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <!-- Left Header -->
+        <div
+          class="p-6 md:p-12 lg:p-24 border-b md:border-b-0 md:border-r border-[#070707]/10 flex flex-col justify-between"
+          style=" filter: blur(8px);"
+        >
+          <h2
+            class="aura-heading text-6xl md:text-8xl lg:text-9xl leading-[0.85] tracking-tighter"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                WHAT
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                BUILDERS
+              </span>
+            </span>
+            <br />
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                SAY.
+              </span>
+            </span>
+          </h2>
+
+          <div class="mt-16 md:mt-auto relative">
+            <span
+              class="absolute -top-12 -left-6 text-8xl text-[#070707]/10 font-serif leading-none"
+            >
+              "
+            </span>
+            <p
+              class="text-xl md:text-2xl font-medium leading-snug tracking-tight max-w-md relative z-10"
+              style=" filter: blur(8px);"
+            >
+              We turned a messy launch doc into a polished landing page before
+              our design review. The first draft already understood the product.
+            </p>
+            <div class="mt-8">
+              <span class="aura-meta text-xs block" style=" filter: blur(8px);">
+                LEAH MORENO — FOUNDER
+              </span>
+            </div>
+
+            <!-- Controls -->
+            <div class="mt-12 flex gap-4">
+              <button
+                class="w-10 h-10 rounded-full border border-[#070707] flex items-center justify-center hover:bg-[#070707] hover:text-[#EDEDEC] transition-colors"
+                style=" filter: blur(8px);"
+              >
+                <iconify-icon
+                  icon="solar:arrow-left-linear"
+                  class="text-lg"
+                ></iconify-icon>
+              </button>
+              <button
+                class="w-10 h-10 rounded-full border border-[#070707] flex items-center justify-center hover:bg-[#070707] hover:text-[#EDEDEC] transition-colors"
+                style=" filter: blur(8px);"
+              >
+                <iconify-icon
+                  icon="solar:arrow-right-linear"
+                  class="text-lg"
+                ></iconify-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Visual -->
+        <div
+          class="p-6 md:p-12 lg:p-24 flex flex-col items-end"
+          style=" filter: blur(8px);"
+        >
+          <span
+            class="aura-meta text-xs mb-12 block text-right"
+            style=" filter: blur(8px);"
+          >
+            CREATOR STORIES
+          </span>
+          <p
+            class="aura-meta text-sm md:text-base max-w-sm text-right mb-12 font-medium"
+            style=" filter: blur(8px);"
+          >
+            THE BEST FEEDBACK IS A PAGE THAT SHIPS BEFORE THE LAUNCH WINDOW
+            CLOSES.
+          </p>
+          <div
+            class="w-full md:w-[80%] aspect-[3/4] bg-[#070707] relative overflow-hidden"
+          >
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bbbf6406-31ac-4f70-a268-8d2264c56350_1600w.png"
+              class="w-full h-full object-cover img-editorial opacity-90 js-parallax"
+              data-speed="0.05"
+              alt="Leah Moreno"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- News / Studio Notes (Asymmetric Grid) -->
+    <section
+      id="learn"
+      class="bg-[#EDEDEC] text-[#070707] border-t border-[#070707]/10 py-24 px-6 md:px-12 relative z-20"
+    >
+      <div class="flex justify-between items-end mb-12">
+        <h2
+          class="aura-heading text-5xl md:text-7xl tracking-tighter"
+          data-split="true"
+        >
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              STUDIO
+            </span>
+          </span>
+          <br />
+          <span
+            style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+          >
+            <span
+              class="word-inner"
+              style="display: inline-block; filter: blur(10px);"
+            >
+              NOTES.
+            </span>
+          </span>
+        </h2>
+        <button
+          class="bg-[#070707] text-[#EDEDEC] aura-meta text-xs px-6 py-2.5 rounded-none hover:bg-[#E2482D] transition-colors"
+          style=" filter: blur(8px);"
+        >
+          SEE MORE
+        </button>
+      </div>
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[300px]"
+      >
+        <!-- Card 1 (Large Vertical) -->
+        <a
+          href="#"
+          class="md:col-span-2 md:row-span-2 group relative block overflow-hidden bg-[#070707]"
+          style=" filter: blur(8px);"
+        >
+          <img
+            src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5bc506e5-3463-4a86-95cf-f8db3df84ea0_3840w.png"
+            class="w-full h-full object-cover img-editorial opacity-70 group-hover:scale-105 transition-transform duration-700"
+            alt="Design Memory"
+            style=" filter: blur(10px);"
+          />
+          <div
+            class="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent"
+          >
+            <span
+              class="aura-meta text-[10px] text-[#EDEDEC]/60 mb-2"
+              style=" filter: blur(8px);"
+            >
+              OCT 12, 2026
+            </span>
+            <h3
+              class="text-2xl md:text-4xl font-semibold text-[#EDEDEC] tracking-tight leading-tight max-w-md"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  How
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  DESIGN.md
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  files
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  solve
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  the
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  consistency
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  problem
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  in
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  AI
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  generation.
+                </span>
+              </span>
+            </h3>
+          </div>
+        </a>
+
+        <!-- Card 2 (Text only top right) -->
+        <a
+          href="#"
+          class="md:col-span-1 md:row-span-1 bg-white border border-[#070707]/10 p-6 md:p-8 flex flex-col justify-between group hover:bg-[#070707] hover:text-[#EDEDEC] transition-colors"
+          style=" filter: blur(8px);"
+        >
+          <div class="flex justify-between items-start">
+            <span
+              class="aura-meta text-[10px] opacity-60"
+              style=" filter: blur(8px);"
+            >
+              SEP 28, 2026
+            </span>
+            <iconify-icon
+              icon="solar:arrow-right-up-linear"
+              class="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+            ></iconify-icon>
+          </div>
+          <h3
+            class="text-lg font-semibold tracking-tight leading-snug"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                Contextual
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                image
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                direction
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                vs
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                random
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                prompting.
+              </span>
+            </span>
+          </h3>
+          <div class="flex items-center gap-2 mt-4 opacity-80">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&amp;auto=format&amp;fit=crop"
+              class="w-6 h-6 rounded-full grayscale object-cover"
+              alt="Avatar"
+            />
+            <span class="aura-meta text-[10px]" style=" filter: blur(8px);">
+              DAVID S.
+            </span>
+          </div>
+        </a>
+
+        <!-- Card 3 (Portrait right) -->
+        <a
+          href="#"
+          class="md:col-span-1 md:row-span-2 bg-[#070707] group relative overflow-hidden block"
+          style=" filter: blur(8px);"
+        >
+          <img
+            src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/89e59b90-9974-4b3c-8139-4f07aa8aa09e_1600w.png"
+            class="w-full h-full object-cover img-editorial opacity-60 group-hover:scale-105 transition-transform duration-700"
+            alt="Faces"
+            style=" filter: blur(10px);"
+          />
+          <div
+            class="absolute inset-0 p-6 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent"
+          >
+            <span
+              class="aura-meta text-[10px] text-[#EDEDEC]/60 mb-2"
+              style=" filter: blur(8px);"
+            >
+              SEP 15, 2026
+            </span>
+            <h3
+              class="text-xl font-semibold text-[#EDEDEC] tracking-tight leading-snug"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  Tightening
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  the
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  loop
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  from
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  Figma
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  to
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  Published
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  Page.
+                </span>
+              </span>
+            </h3>
+          </div>
+        </a>
+
+        <!-- Card 4 (Object bottom middle) -->
+        <a
+          href="#"
+          class="md:col-span-1 md:row-span-1 bg-[#EDEDEC] border border-[#070707]/10 group overflow-hidden flex flex-col"
+          style=" filter: blur(8px);"
+        >
+          <div class="h-[60%] w-full overflow-hidden bg-[#070707]">
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6919aa0e-7263-4d71-8728-11aed3654a7c_3840w.png"
+              class="w-full h-full object-cover img-editorial opacity-80 group-hover:scale-105 transition-transform duration-700"
+              alt="Abstract"
+              style=" filter: blur(10px);"
+            />
+          </div>
+          <div class="p-4 md:p-6 flex-1 flex flex-col justify-center">
+            <span
+              class="aura-meta text-[10px] opacity-60 mb-1"
+              style=" filter: blur(8px);"
+            >
+              AUG 02, 2026
+            </span>
+            <h3
+              class="text-sm md:text-base font-semibold tracking-tight leading-snug"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  Better
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  prompt
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  systems
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  for
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  landing
+                </span>
+              </span>
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  pages.
+                </span>
+              </span>
+            </h3>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Contact & Footer -->
+    <section
+      id="build"
+      class="bg-[#070707] text-[#EDEDEC] relative z-20 border-t border-white/10 pt-24 pb-12"
+    >
+      <!-- Background Grid -->
+      <div
+        class="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] mix-blend-overlay"
+      ></div>
+
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 max-w-7xl mx-auto px-6 relative z-10 gap-24 lg:gap-12 min-h-[60vh]"
+      >
+        <!-- Left Info -->
+        <div class="flex flex-col justify-between" style=" filter: blur(8px);">
+          <div>
+            <!-- Mini testimonial card -->
+            <div class="aura-meta text-[10px] text-[#8B5CF6]">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5bab247f-35d9-400d-a82b-fd87cfe913d2_1600w.webp"
+                class="w-12 h-12 object-cover grayscale"
+                alt="Room"
+              />
+              <div>
+                <p
+                  class="text-xs text-[#EDEDEC]/80 italic mb-2"
+                  style=" filter: blur(8px);"
+                >
+                  "The only generator we trust with our brand assets."
+                </p>
+                <span
+                  class="aura-meta text-[10px] text-[#E2482D]"
+                  style=" filter: blur(8px);"
+                >
+                  STUDIO K.
+                </span>
+              </div>
+            </div>
+
+            <span
+              class="aura-meta text-xs text-[#EDEDEC]/50 block mb-4"
+              style=" filter: blur(8px);"
+            >
+              SUPPORT DESK
+            </span>
+            <a
+              href="mailto:help@aura.page"
+              class="text-3xl md:text-4xl font-medium tracking-tight hover:text-[#3B82F6] transition-colors"
+              style=" filter: blur(8px);"
+            >
+              help@aura.page
+            </a>
+            <p
+              class="aura-meta text-[10px] text-[#EDEDEC]/40 mt-4"
+              style=" filter: blur(8px);"
+            >
+              WE USUALLY REPLY WITHIN ONE BUSINESS DAY.
+            </p>
+          </div>
+
+          <div class="mt-24 lg:mt-0 flex items-center gap-4">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#EDEDEC"
+              stroke-width="1.5"
+            >
+              <path d="M2 22L12 2L22 22H2Z" stroke-linejoin="miter"></path>
+              <path d="M12 12L7 22H17L12 12Z" stroke-linejoin="miter"></path>
+            </svg>
+            <span
+              class="aura-heading text-2xl tracking-tighter"
+              data-split="true"
+            >
+              <span
+                style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+              >
+                <span
+                  class="word-inner"
+                  style="display: inline-block; filter: blur(10px);"
+                >
+                  AURA
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Right Form -->
+        <div class="flex flex-col justify-center" style=" filter: blur(8px);">
+          <h2
+            class="aura-heading text-6xl md:text-8xl tracking-tighter mb-6"
+            data-split="true"
+          >
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                START
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                A
+              </span>
+            </span>
+            <span
+              style="display: inline-block; overflow: hidden; vertical-align: bottom;"
+            >
+              <span
+                class="word-inner"
+                style="display: inline-block; filter: blur(10px);"
+              >
+                PAGE.
+              </span>
+            </span>
+          </h2>
+          <p
+            class="text-sm md:text-base text-[#EDEDEC]/70 max-w-md mb-12 font-medium"
+            style=" filter: blur(8px);"
+          >
+            BRING A ROUGH IDEA, A SCREENSHOT, OR A PRODUCT NOTE. AURA WILL HELP
+            TURN IT INTO A PAGE YOU CAN EDIT, EXPORT, AND PUBLISH.
+          </p>
+
+          <form class="flex flex-col gap-8 max-w-md">
+            <div class="relative">
+              <input
+                type="text"
+                id="workspace"
+                class="w-full bg-transparent border-b border-white/20 py-3 text-[#EDEDEC] text-sm focus:outline-none focus:border-[#7C3AED] peer placeholder-transparent"
+                placeholder="Workspace Name"
+                style=" filter: blur(8px);"
+              />
+              <label
+                for="workspace"
+                class="absolute left-0 -top-3.5 text-[#EDEDEC]/50 text-[10px] aura-meta transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-[10px] peer-focus:text-[#7C3AED]"
+                style=" filter: blur(8px);"
+              >
+                WORKSPACE NAME
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                type="email"
+                id="email"
+                class="w-full bg-transparent border-b border-white/20 py-3 text-[#EDEDEC] text-sm focus:outline-none focus:border-[#7C3AED] peer placeholder-transparent"
+                placeholder="Work Email"
+                style=" filter: blur(8px);"
+              />
+              <label
+                for="email"
+                class="absolute left-0 -top-3.5 text-[#EDEDEC]/50 text-[10px] aura-meta transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-[10px] peer-focus:text-[#7C3AED]"
+                style=" filter: blur(8px);"
+              >
+                WORK EMAIL
+              </label>
+            </div>
+            <div class="relative border-b border-white/20 pb-2">
+              <label
+                class="block text-[#EDEDEC]/50 text-[10px] aura-meta mb-2"
+                style=" filter: blur(8px);"
+              >
+                PRIMARY PAGE GOAL
+              </label>
+              <select
+                class="w-full bg-transparent text-[#EDEDEC] text-sm focus:outline-none appearance-none cursor-pointer"
+                style=" filter: blur(8px);"
+              >
+                <option value="lead" class="bg-[#070707]">
+                  Lead Generation
+                </option>
+                <option value="sales" class="bg-[#070707]">
+                  Direct Sales / Checkout
+                </option>
+                <option value="waitlist" class="bg-[#070707]">
+                  Product Waitlist
+                </option>
+                <option value="portfolio" class="bg-[#070707]">
+                  Editorial / Portfolio
+                </option>
+              </select>
+              <iconify-icon
+                icon="solar:alt-arrow-down-linear"
+                class="absolute right-0 bottom-3 text-lg pointer-events-none opacity-50"
+              ></iconify-icon>
+            </div>
+
+            <button
+              type="button"
+              class="mt-4 bg-[#EDEDEC] text-[#070707] aura-meta text-xs py-4 px-8 hover:bg-[#8B5CF6] hover:text-[#EDEDEC] transition-colors self-start"
+              style=" filter: blur(8px);"
+            >
+              CREATE PAGE →
+            </button>
+
+            <p
+              class="aura-meta text-[9px] text-[#EDEDEC]/30 max-w-xs mt-2"
+              style=" filter: blur(8px);"
+            >
+              BY CREATING A PAGE YOU AGREE TO OUR TERMS OF SERVICE AND DESIGN
+              MEMORY PRIVACY POLICY.
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Footer -->
+      <div
+        class="max-w-7xl mx-auto px-6 mt-32 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10"
+      >
+        <div
+          class="flex flex-wrap gap-6 aura-meta text-[10px] text-[#EDEDEC]/50"
+        >
+          <a
+            href="#"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            HOME
+          </a>
+          <a
+            href="#gallery"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            GALLERY
+          </a>
+          <a
+            href="#workflow"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            WORKFLOW
+          </a>
+          <a
+            href="#learn"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            LEARN
+          </a>
+          <a
+            href="#pricing"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            PRICING
+          </a>
+        </div>
+
+        <div class="flex items-center gap-6 text-[#EDEDEC]/50 text-lg">
+          <a
+            href="#"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            <iconify-icon icon="solar:twitter-linear"></iconify-icon>
+          </a>
+          <a
+            href="#"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            <iconify-icon icon="solar:figma-linear"></iconify-icon>
+          </a>
+          <a
+            href="#"
+            class="hover:text-white transition-colors"
+            style=" filter: blur(8px);"
+          >
+            <iconify-icon icon="solar:github-linear"></iconify-icon>
+          </a>
+        </div>
+
+        <div
+          class="flex gap-4 aura-meta text-[10px] text-[#EDEDEC]/30 text-center md:text-right"
+        >
+          <span>© 2026 AURA SYSTEMS INC.</span>
+          <span class="hidden md:inline">/</span>
+          <span>BUILT WITH AURA</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Parallax Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          if (typeof gsap === 'undefined') return;
+          gsap.registerPlugin(ScrollTrigger);
+
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (prefersReducedMotion) return;
+
+          const splitTextSafe = (element) => {
+              if(element.dataset.split) return element.querySelectorAll('.word-inner');
+              const childNodes = Array.from(element.childNodes);
+              element.innerHTML = '';
+              childNodes.forEach(node => {
+                  if(node.nodeType === 3) {
+                      const words = node.textContent.split(/(\s+)/);
+                      words.forEach(word => {
+                          if(word.trim() === '') {
+                              element.appendChild(document.createTextNode(word));
+                              return;
+                          }
+                          const span = document.createElement('span');
+                          span.style.display = 'inline-block';
+                          span.style.overflow = 'hidden';
+                          span.style.verticalAlign = 'bottom';
+                          const innerSpan = document.createElement('span');
+                          innerSpan.style.display = 'inline-block';
+                          innerSpan.innerText = word;
+                          innerSpan.classList.add('word-inner');
+                          span.appendChild(innerSpan);
+                          element.appendChild(span);
+                      });
+                  } else if (node.nodeName === 'BR') {
+                      element.appendChild(node.cloneNode(true));
+                  } else {
+                      const span = document.createElement('span');
+                      span.style.display = 'inline-block';
+                      span.style.overflow = 'hidden';
+                      span.style.verticalAlign = 'bottom';
+                      const innerSpan = document.createElement('span');
+                      innerSpan.style.display = 'inline-block';
+                      innerSpan.classList.add('word-inner');
+                      innerSpan.appendChild(node.cloneNode(true));
+                      span.appendChild(innerSpan);
+                      element.appendChild(span);
+                  }
+              });
+              element.dataset.split = 'true';
+              return element.querySelectorAll('.word-inner');
+          };
+
+          const largeHeadings = document.querySelectorAll('h1, h2, h3, .aura-heading');
+          largeHeadings.forEach(h => {
+              const words = splitTextSafe(h);
+              if(words.length > 0) {
+                  gsap.fromTo(words,
+                      { y: '120%', opacity: 0, filter: 'blur(10px)' },
+                      { y: '0%', opacity: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.03, ease: 'power4.out',
+                        scrollTrigger: {
+                          trigger: h,
+                          start: 'top 90%',
+                        }
+                      }
+                  );
+              }
+          });
+
+          const fadeElements = document.querySelectorAll('p:not(.aura-heading), a:not(.grid > a), button, .aura-meta:not(div), input, select, details');
+          fadeElements.forEach(el => {
+              gsap.fromTo(el,
+                  { y: 30, opacity: 0, filter: 'blur(8px)' },
+                  { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out',
+                    scrollTrigger: { trigger: el, start: 'top 95%' }
+                  }
+              );
+          });
+
+          const grids = document.querySelectorAll('.grid');
+          grids.forEach(grid => {
+              const children = grid.querySelectorAll(':scope > div, :scope > a');
+              if(children.length > 0) {
+                  gsap.fromTo(children,
+                      { y: 50, opacity: 0, filter: 'blur(8px)' },
+                      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.1, ease: 'power3.out',
+                        scrollTrigger: { trigger: grid, start: 'top 85%' }
+                      }
+                  );
+              }
+          });
+
+          const images = document.querySelectorAll('img:not(.js-parallax):not(.w-6):not(.w-12)');
+          images.forEach(img => {
+              gsap.fromTo(img,
+                  { scale: 1.1, opacity: 0, filter: 'blur(10px)' },
+                  { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.8, ease: 'power3.out',
+                    scrollTrigger: { trigger: img.parentElement, start: 'top 90%' }
+                  }
+              );
+          });
+
+          const parallaxImgs = document.querySelectorAll('.js-parallax');
+          parallaxImgs.forEach(img => {
+              const speed = parseFloat(img.getAttribute('data-speed')) || 0.05;
+              gsap.fromTo(img,
+                  { yPercent: -10, scale: 1.15 },
+                  { yPercent: speed * 200, scale: 1.15, ease: 'none',
+                    scrollTrigger: {
+                      trigger: img.parentElement,
+                      start: 'top bottom',
+                      end: 'bottom top',
+                      scrub: true
+                    }
+                  }
+              );
+          });
+
+          const bgBlurs = document.querySelectorAll('.blur-xl');
+          bgBlurs.forEach(bg => {
+              gsap.to(bg, {
+                  yPercent: 15,
+                  ease: 'none',
+                  scrollTrigger: { trigger: bg.parentElement, start: 'top bottom', end: 'bottom top', scrub: true }
+              });
+          });
+      });
+    </script>
+  </body>
+</html>

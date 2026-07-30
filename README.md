@@ -26,7 +26,7 @@ says "make it look good".
 | Part | Contents | Size |
 |---|---|---|
 | Plugin | manifest + 5 skills (`setup`, `brainstorming`, `build`, `review`, `glowup`) | Small |
-| `references/` (bundled) | Library: `index.json`, `templates/*.html`, `thumbs/*.webp` | ~2MB |
+| `references/` (bundled) | Library: `index.json`, 213 `templates/*.html`, `thumbs/*.webp` | ~28MB |
 
 The library **ships inside the plugin** under `references/`, so a single
 `/plugin install` pulls everything — no separate clone, works offline
@@ -110,7 +110,7 @@ and see the template count. To get newer templates, update the plugin (see
   └── marketplace.json   ← lets this repo be added as a marketplace
 references/              ← bundled library (ships with the plugin)
   ├── index.json         ← metadata for every template (read by the agent)
-  ├── templates/*.html   ← 20 curated templates
+  ├── templates/*.html   ← all 213 templates
   └── thumbs/*.webp      ← preview thumbnail per template
 skills/
   ├── setup/SKILL.md          ← verify the bundled library + report template count

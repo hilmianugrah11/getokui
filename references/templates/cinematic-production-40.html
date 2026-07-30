@@ -1,0 +1,646 @@
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CINE-LAB / ANALOG RESEARCH</title>
+<!-- FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<!-- TAILWIND CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- STYLES -->
+<style>
+:root {
+--bg-color: #050505;
+--text-main: #e0e0e0;
+--accent-color: #ff3300; /* International Orange */
+--grid-line: rgba(255, 255, 255, 0.03);
+}
+* { box-sizing: border-box; }
+body {
+background-color: var(--bg-color);
+color: var(--text-main);
+font-family: 'Manrope', sans-serif;
+margin: 0;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, .heading-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+/* LENIS SMOOTH SCROLL */
+html.lenis { width: auto; min-height: 100%; }
+html.lenis body { min-height: 100%; }
+/* BACKGROUND ELEMENTS */
+.bg-grid {
+position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+background-image:
+linear-gradient(var(--grid-line) 1px, transparent 1px),
+linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+background-size: 100px 100px;
+pointer-events: none; z-index: -2;
+}
+.noise {
+position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+pointer-events: none; z-index: 9000; opacity: 0.05;
+background: url('https://grainy-gradients.vercel.app/noise.svg');
+}
+/* UTILS */
+.line-wrapper { overflow: hidden; }
+.skew-on-scroll { transition: transform 0.1s ease-out; will-change: transform; }
+/* HERO IMAGE */
+.hero-img-container {
+position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+overflow: hidden; z-index: 0;
+}
+.hero-img {
+width: 100%; height: 100%; object-fit: cover;
+filter: grayscale(100%) contrast(110%) brightness(0.6);
+transform: scale(1.1);
+}
+/* PROCESS SECTION STYLES */
+.process-bg-layer {
+position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease;
+object-fit: cover; width: 100%; height: 100%; z-index: 0;
+filter: grayscale(100%) brightness(0.4) contrast(1.2);
+mix-blend-mode: luminosity;
+}
+.process-bg-layer.active { opacity: 1; }
+.process-step {
+border-top: 1px solid rgba(255,255,255,0.1);
+transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.process-step:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
+.process-step:hover { background: rgba(255,255,255,0.03); padding-left: 20px; }
+.process-step:hover .step-number { color: var(--accent-color); }
+.step-details {
+height: 0; overflow: hidden; opacity: 0;
+transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.process-step:hover .step-details { height: auto; opacity: 1; padding-bottom: 2rem; }
+.tech-spec-box {
+border: 1px solid rgba(255,255,255,0.1);
+background: rgba(0,0,0,0.5);
+backdrop-filter: blur(5px);
+}
+/* --- NEW STREAM SECTION --- */
+#stream {
+position: relative;
+background-color: #050505;
+padding: 120px 0;
+overflow: hidden;
+z-index: 20;
+border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.stream-row {
+display: flex;
+width: 100%;
+margin-bottom: 40px;
+position: relative;
+overflow: hidden;
+}
+.stream-track {
+display: flex;
+align-items: center;
+gap: 40px;
+white-space: nowrap;
+will-change: transform;
+animation-timing-function: linear;
+animation-iteration-count: infinite;
+}
+/* Alternate directions */
+.row-left .stream-track { animation-name: slideLeft; animation-duration: 40s; }
+.row-right .stream-track { animation-name: slideRight; animation-duration: 45s; }
+@keyframes slideLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes slideRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+/* Stream Items */
+.stream-img {
+width: 300px;
+height: 200px;
+object-fit: cover;
+filter: grayscale(100%);
+transition: filter 0.3s, transform 0.3s;
+cursor: crosshair;
+border: 1px solid #222;
+}
+.stream-img:hover {
+filter: grayscale(0%);
+transform: scale(1.05);
+border-color: var(--accent-color);
+z-index: 10;
+}
+.stream-text {
+font-family: 'Oswald', sans-serif;
+font-size: 4rem;
+font-weight: 700;
+color: transparent;
+-webkit-text-stroke: 1px rgba(255,255,255,0.2);
+line-height: 1;
+}
+.stream-code {
+font-family: 'JetBrains Mono', monospace;
+font-size: 0.8rem;
+color: var(--accent-color);
+background: rgba(255, 51, 0, 0.1);
+padding: 5px 10px;
+border: 1px solid var(--accent-color);
+}
+/* Hover Pausing */
+.stream-row:hover .stream-track { animation-play-state: paused; }
+/* ARCHIVE CARDS */
+.archive-card {
+border: 1px solid rgba(255,255,255,0.05);
+background: #0a0a0a;
+transition: all 0.4s ease;
+position: relative;
+overflow: hidden;
+}
+.archive-card:hover {
+border-color: rgba(255,255,255,0.2);
+transform: translateY(-5px);
+}
+.archive-thumb-wrap {
+overflow: hidden;
+position: relative;
+height: 280px;
+}
+.archive-thumb {
+width: 100%; height: 100%; object-fit: cover;
+filter: grayscale(100%);
+transition: transform 0.7s ease, filter 0.5s ease;
+}
+.archive-card:hover .archive-thumb {
+transform: scale(1.05);
+filter: grayscale(0%);
+}
+.archive-tag {
+font-size: 10px;
+border: 1px solid rgba(255,255,255,0.1);
+padding: 2px 6px;
+border-radius: 4px;
+color: #888;
+}
+/* MANIFESTO */
+#manifesto {
+position: relative;
+background-color: #050505;
+z-index: 10;
+padding-bottom: 6rem;
+border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.manifesto-text { color: #1a1a1a; transition: color 0.1s; }
+.flashlight-mask {
+position: fixed; top: 0; left: 0; width: 400px; height: 400px;
+background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%);
+border-radius: 50%; pointer-events: none; mix-blend-mode: color-dodge;
+transform: translate(-50%, -50%); z-index: 20; opacity: 0;
+}
+.manifesto-span {
+transition: color 0.2s ease, transform 0.3s ease;
+display: inline-block;
+}
+.manifesto-span:hover { color: var(--accent-color); transform: scale(1.1); }
+/* HOVER PREVIEW IMG */
+.hover-reveal-img {
+position: fixed; top: 0; left: 0; width: 300px; height: 400px;
+object-fit: cover; pointer-events: none; z-index: 60;
+opacity: 0; transform: scale(0.8);
+filter: grayscale(100%) contrast(120%);
+border: 1px solid var(--accent-color);
+background: #000;
+}
+/* BUTTONS */
+.btn-lab {
+position: relative; overflow: hidden;
+border: 1px solid rgba(255,255,255,0.2);
+transition: all 0.3s ease;
+}
+.btn-lab:hover { border-color: var(--accent-color); }
+.btn-lab::before {
+content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+background: var(--accent-color); transform: scaleX(0); transform-origin: left;
+transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); z-index: -1;
+}
+.btn-lab:hover::before { transform: scaleX(1); }
+.btn-lab:hover .btn-text { color: #000; }
+/* FOOTER */
+footer {
+position: relative;
+width: 100%;
+background-color: #050505;
+padding-top: 6rem;
+padding-bottom: 4rem;
+z-index: 10;
+overflow: hidden;
+}
+.footer-bg-text {
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+font-size: 20vw;
+font-family: 'Oswald', sans-serif;
+font-weight: 700;
+color: rgba(255,255,255,0.03);
+pointer-events: none;
+white-space: nowrap;
+z-index: 0;
+}
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">.font-newsreader { font-family: 'Newsreader', serif !important; }</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">.font-oswald { font-family: 'Oswald', sans-serif !important; }</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }</style></head>
+<body class="antialiased selection:bg-[#ff3300] selection:text-white">
+
+    <!-- OVERLAYS -->
+    <div class="noise"></div>
+    <div class="bg-grid"></div>
+    <img id="preview-img" src="" class="hover-reveal-img" alt="Preview">
+    <div id="flashlight" class="flashlight-mask"></div>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 w-full px-6 py-5 flex justify-between items-start z-50 mix-blend-difference text-white">
+        <div class="flex flex-col">
+            <div class="heading-font text-2xl font-bold tracking-tighter leading-none">CINE—LAB</div>
+            <div class="mono text-[10px] text-gray-400 mt-1 tracking-widest">EST. 2024</div>
+        </div>
+        
+        <div class="hidden md:flex gap-12 mono text-xs uppercase tracking-widest items-center">
+            <div class="flex items-center gap-2 text-[var(--accent-color)]">
+                <div class="w-2 h-2 rounded-full bg-[var(--accent-color)] animate-pulse"></div>
+                <span class="">Lab Online</span>
+            </div>
+            <a href="#process" class="hover:text-[var(--accent-color)] transition-colors">Process</a>
+            <a href="#stream" class="hover:text-[var(--accent-color)] transition-colors">Stream</a>
+            <a href="#archive" class="hover:text-[var(--accent-color)] transition-colors">Archive</a>
+            <a href="#manifesto" class="hover:text-[var(--accent-color)] transition-colors">Ethos</a>
+            <a href="#contact" class="btn-lab px-5 py-2 rounded-full text-xs">Start Project <span class="btn-text"></span></a>
+        </div>
+        <div class="md:hidden text-xs uppercase mono border border-white/20 px-3 py-1 rounded">Menu</div>
+    </nav>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="">
+
+        <!-- HERO SECTION -->
+        <section class="h-screen relative flex flex-col justify-between p-6 overflow-hidden border-b border-white/10 bg-black">
+            <div class="hero-img-container">
+                <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&amp;w=2560&amp;auto=format&amp;fit=crop" class="hero-img" alt="Cinema Camera" style="">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-black/60"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle,transparent_20%,#050505_120%)]"></div>
+            </div>
+
+            <div class="absolute top-1/2 left-6 -translate-y-1/2 hidden md:flex flex-col gap-4 z-10 mono text-[10px] text-gray-500 writing-vertical-lr opacity-60">
+                <span>ISO 500T / 5219</span>
+                <span class="">TEMP 24.5°C</span>
+                <span>PROCESS ECN-2</span>
+            </div>
+
+            <div class="absolute right-6 top-1/3 flex flex-col items-end z-10 mono text-xs text-[var(--accent-color)]">
+                <span id="timecode">00:00:00:00</span>
+                <span class="text-gray-500 mt-1">REC ●</span>
+            </div>
+
+            <div class="relative z-10 mt-auto mb-10 md:mb-20 ml-0 md:ml-12">
+                <div class="line-wrapper">
+                    <h1 class="hero-line text-[14vw] leading-[0.8] font-bold tracking-tighter mix-blend-screen text-white">ANALOG</h1>
+                </div>
+                <div class="line-wrapper flex items-center gap-4 md:gap-10">
+                    <h1 class="hero-line text-[14vw] leading-[0.8] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-600">RESEARCH</h1>
+                    <div class="hidden md:block w-32 h-[1px] bg-[var(--accent-color)] mt-8"></div>
+                    <p class="hero-sub mono text-xs md:text-sm max-w-xs text-gray-400 mt-4 leading-relaxed uppercase">
+                        We bridge the gap between photochemical tradition and digital precision. A full-service cinema laboratory.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCESS SECTION -->
+        <section id="process" class="relative min-h-screen py-32 overflow-hidden border-b border-white/5 bg-[#050505]">
+            <div class="absolute inset-0 z-0 pointer-events-none">
+                <div class="process-bg-layer active bg-[#050505]"></div>
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f3bf2a64-4eb0-40b9-9f2d-2ad4303037aa_3840w.webp" class="process-bg-layer object-cover w-full h-auto" id="bg-step-1" alt="Chemicals" style="">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d9ec54d2-3cc5-4bae-ac6d-4b4eef75799f_3840w.webp" class="process-bg-layer object-cover w-full h-auto" id="bg-step-2" alt="Laser" style="">
+                <img src="https://images.unsplash.com/photo-1504198458649-3128b932f49e?q=80&amp;w=2000" class="process-bg-layer" id="bg-step-3" alt="Color">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f3bf2a64-4eb0-40b9-9f2d-2ad4303037aa_3840w.webp" class="process-bg-layer object-cover w-full h-auto" id="bg-step-4" alt="Server">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent"></div>
+            </div>
+
+            <div class="relative z-10 px-6 md:px-20 grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-4 h-full">
+                    <div class="sticky top-32">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-[1px] bg-[var(--accent-color)]"></div>
+                            <span class="mono text-xs text-[var(--accent-color)] uppercase tracking-widest">Workflow</span>
+                        </div>
+                        <h2 class="text-6xl md:text-7xl heading-font mb-6 leading-none text-white">THE<br>LABORATORY</h2>
+                        <p class="mono text-sm text-gray-400 max-w-xs leading-relaxed">Precision engineering meets artistic intent. Explore our end-to-end analog pipeline.</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-8 flex flex-col">
+                    <div class="process-step py-8 cursor-pointer group" data-bg="bg-step-1">
+                        <div class="flex justify-between items-baseline mb-2"><h3 class="text-4xl md:text-5xl heading-font text-gray-400 group-hover:text-white transition-colors scramble-text">IMMERSION</h3><span class="step-number mono text-xl text-gray-600 transition-colors">01</span></div>
+                        <p class="mono text-xs text-gray-500 uppercase tracking-widest group-hover:text-[var(--accent-color)] transition-colors">Chemical Development</p>
+                        <div class="step-details">
+                            <p class="text-gray-300 mt-6 max-w-xl leading-relaxed">Your negative enters our Photomec ECN-2 processor. We utilize Kodak-certified chemistry, monitored in real-time.</p>
+                        </div>
+                    </div>
+                    <div class="process-step py-8 cursor-pointer group" data-bg="bg-step-2"><div class="flex justify-between items-baseline mb-2"><h3 class="text-4xl md:text-5xl heading-font text-gray-400 group-hover:text-white transition-colors scramble-text">DIGITIZATION</h3><span class="step-number mono text-xl text-gray-600 transition-colors">02</span></div><p class="mono text-xs text-gray-500 uppercase tracking-widest group-hover:text-[var(--accent-color)] transition-colors">Scanning</p><div class="step-details"><p class="text-gray-300 mt-6 max-w-xl leading-relaxed">6.5K HDR Arriscan XT.</p></div></div>
+                    <div class="process-step py-8 cursor-pointer group" data-bg="bg-step-3"><div class="flex justify-between items-baseline mb-2"><h3 class="text-4xl md:text-5xl heading-font text-gray-400 group-hover:text-white transition-colors scramble-text">MANIPULATION</h3><span class="step-number mono text-xl text-gray-600 transition-colors">03</span></div><p class="mono text-xs text-gray-500 uppercase tracking-widest group-hover:text-[var(--accent-color)] transition-colors">Color Grading</p><div class="step-details"><p class="text-gray-300 mt-6 max-w-xl leading-relaxed">DCI-P3 Color Science.</p></div></div>
+                    <div class="process-step py-8 cursor-pointer group" data-bg="bg-step-4"><div class="flex justify-between items-baseline mb-2"><h3 class="text-4xl md:text-5xl heading-font text-gray-400 group-hover:text-white transition-colors scramble-text">PRESERVATION</h3><span class="step-number mono text-xl text-gray-600 transition-colors">04</span></div><p class="mono text-xs text-gray-500 uppercase tracking-widest group-hover:text-[var(--accent-color)] transition-colors">Archival</p><div class="step-details"><p class="text-gray-300 mt-6 max-w-xl leading-relaxed">LTO-8 Cold Storage.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA STREAM (REPLACES BROKEN SECTION) -->
+        <section class="" id="stream">
+            <div class="absolute top-10 left-6 md:left-20 flex items-center gap-4 z-30 pointer-events-none">
+                 <div class="w-12 h-[1px] bg-[var(--accent-color)]"></div>
+                 <span class="mono text-xs text-[var(--accent-color)] uppercase tracking-widest">Data Stream</span>
+            </div>
+
+            <!-- ROW 1 (Left) -->
+            <div class="stream-row row-left">
+                <div class="stream-track">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/04cf950b-7612-44ac-a767-6b8b9dc3e83b_800w.jpg" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">RAW DATA</span>
+                    <span class="stream-code">XR-990</span>
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">NEGATIVE</span>
+                    <span class="stream-code">KODAK</span>
+                    <!-- Duplicate for loop -->
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c59ec7be-cfcf-4651-b25c-6f5baded8d17_800w.jpg" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">RAW DATA</span>
+                    <span class="stream-code">XR-990</span>
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">NEGATIVE</span>
+                    <span class="stream-code">KODAK</span>
+                </div>
+            </div>
+
+            <!-- ROW 2 (Right) -->
+            <div class="stream-row row-right">
+                <div class="stream-track">
+                    <span class="stream-text">DEVELOPMENT</span>
+                    <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-code">ECN-2</span>
+                    <span class="stream-text">PROCESS</span>
+                    <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <!-- Duplicate -->
+                    <span class="stream-text">DEVELOPMENT</span>
+                    <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-code">ECN-2</span>
+                    <span class="stream-text">PROCESS</span>
+                    <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                </div>
+            </div>
+
+            <!-- ROW 3 (Left) -->
+            <div class="stream-row row-left">
+                <div class="stream-track">
+                    <span class="stream-code">SCAN.LOG</span>
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/187a0108-cdee-4c0b-9d37-e438811c787e_800w.jpg" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">OPTICAL</span>
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f6191da6-cb07-4c17-b085-36202e1b172b_800w.jpg" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">TRANSFER</span>
+                    <!-- Duplicate -->
+                    <span class="stream-code">SCAN.LOG</span>
+                    <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&amp;w=400" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">OPTICAL</span>
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c03ed2fe-b5ae-4807-b063-a69067689369_800w.jpg" class="stream-img object-cover w-[300px] h-[200px] flex-none">
+                    <span class="stream-text">TRANSFER</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARCHIVE SECTION -->
+        <section id="archive" class="py-32 px-6 md:px-20 bg-[#050505] relative z-20 border-b border-white/5">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-6">
+                <div>
+                    <h2 class="text-6xl md:text-8xl heading-font text-white font-bold -mb-4 skew-on-scroll">ARCHIVE</h2>
+                    <p class="mono text-xs text-gray-500 mt-6">DATABASE ACCESS: LEVEL 4</p>
+                </div>
+                
+                <div class="flex gap-4 mono text-[10px] text-gray-400 mt-8 md:mt-0">
+                    <span class="text-[var(--accent-color)] cursor-pointer">[ALL]</span>
+                    <span class="hover:text-white cursor-pointer hover:underline">[16MM]</span>
+                    <span class="hover:text-white cursor-pointer hover:underline">[35MM]</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 1 -->
+                <div class="archive-card group">
+                    <div class="archive-thumb-wrap">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/14ce38c5-165b-458e-98d6-3b5cbb6b91dc_1600w.webp" class="archive-thumb object-cover w-full h-auto" alt="Neon" style="">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl heading-font text-gray-200 group-hover:text-white mb-4">NEON DRIFTER</h3>
+                        <span class="archive-tag mono">16MM / 5219</span>
+                    </div>
+                </div>
+                <!-- 2 -->
+                <div class="archive-card group">
+                    <div class="archive-thumb-wrap">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5dcf1acc-de58-41a8-a3cd-2bb642c6e66e_1600w.webp" class="archive-thumb object-cover w-full h-auto" alt="Void" style="">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl heading-font text-gray-200 group-hover:text-white mb-4">VOID RUNNER</h3>
+                        <span class="archive-tag mono">35MM / B&amp;W</span>
+                    </div>
+                </div>
+                <!-- 3 -->
+                <div class="archive-card group">
+                    <div class="archive-thumb-wrap">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a6398c31-e7f2-45ea-9396-0967a4ff0c97_1600w.jpg" class="archive-thumb object-cover w-full h-auto" alt="Horizon">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl heading-font text-gray-200 group-hover:text-white mb-4">HORIZON LOST</h3>
+                        <span class="archive-tag mono">65MM / IMAX</span>
+                    </div>
+                </div>
+                <!-- 4 -->
+                <div class="archive-card group">
+                    <div class="archive-thumb-wrap">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8f447586-99ce-4695-80ef-7e6a5ba06c4d_1600w.webp" class="archive-thumb object-cover w-full h-auto" alt="Static">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl heading-font text-gray-200 group-hover:text-white mb-4">STATIC NOISE</h3>
+                        <span class="archive-tag mono">S16 / BLEACH</span>
+                    </div>
+                </div>
+                <!-- 5 -->
+                <div class="archive-card group">
+                    <div class="archive-thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&amp;w=800" class="archive-thumb" alt="Tokyo">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl heading-font text-gray-200 group-hover:text-white mb-4">TOKYO DRIFT</h3>
+                        <span class="archive-tag mono">35MM / 5219</span>
+                    </div>
+                </div>
+                <!-- 6 -->
+                <div class="archive-card group">
+                    <div class="archive-thumb-wrap">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3a09bc92-f4bc-4e56-a19f-81c007a9fb04_1600w.webp" class="archive-thumb object-cover w-full h-auto" alt="Desert">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl heading-font text-gray-200 group-hover:text-white mb-4">DESERT ECHO</h3>
+                        <span class="archive-tag mono">16MM / 50D</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANIFESTO -->
+        <section id="manifesto" class="py-24 px-6 bg-black relative flex items-center justify-center z-20">
+            <div class="text-center relative z-10 max-w-5xl mx-auto">
+                <p class="mono text-[var(--accent-color)] text-sm mb-8 tracking-widest">[ THE ETHOS ]</p>
+                <h2 class="text-5xl md:text-8xl heading-font leading-tight text-[#1a1a1a] manifesto-text">
+                    <span class="manifesto-span">WE</span> <span class="manifesto-span">DO</span> <span class="manifesto-span">NOT</span> <span class="manifesto-span">FIX</span> <span class="manifesto-span">IT</span> <span class="manifesto-span">IN</span> <span class="manifesto-span">POST.</span><br>
+                    <span class="manifesto-span">WE</span> <span class="manifesto-span">CAPTURE</span> <span class="manifesto-span">IT</span> <span class="manifesto-span">IN</span> <span class="manifesto-span">CAMERA.</span>
+                </h2>
+                <div class="mt-16 border-t border-white/10 pt-8 flex justify-center gap-12 mono text-xs text-gray-600">
+                    <span class="">FILM IS FINITE</span>
+                    <span>GRAIN IS TEXTURE</span>
+                    <span>LIGHT IS DATA</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="bg-[#050505] flex flex-col justify-between p-6 md:p-12 relative overflow-hidden z-20 border-t border-white/5">
+        <div class="footer-bg-text">START NOW</div>
+        
+        <div class="flex flex-col md:flex-row justify-between items-start z-10 relative">
+            <div>
+                <h2 class="text-4xl heading-font uppercase mb-4 text-white">Ready to Develop?</h2>
+                <p class="mono text-sm text-gray-500 max-w-sm">Send us your reels. We handle logistics worldwide.</p>
+            </div>
+            <div class="text-right mt-8 md:mt-0">
+                <p class="mono text-xs text-[var(--accent-color)] uppercase mb-2">Location</p>
+                <p class="text-xl font-light text-white">85 N 3rd St, Brooklyn<br>New York, 11249</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center justify-center flex-grow z-10 relative mt-24 mb-24">
+            <a href="mailto:lab@cine-lab.com" class="group relative inline-block">
+                <span class="heading-font text-[12vw] md:text-[10vw] leading-none text-white group-hover:text-[var(--accent-color)] transition-colors duration-300">
+                    GET A QUOTE
+                </span>
+                <div class="w-full h-[4px] bg-[var(--accent-color)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+            </a>
+        </div>
+
+        <div class="flex justify-between items-end border-t border-white/10 pt-6 z-10 relative">
+            <p class="mono text-xs text-gray-500">© 2025 CINE-LAB.</p>
+            <div class="flex gap-6 font-mono text-xs uppercase text-gray-400">
+                <a href="#" class="hover:text-white">Instagram</a>
+                <a href="#" class="hover:text-white">Vimeo</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+
+    <script>
+        window.addEventListener("load", () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true,
+            });
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // TIMECODE
+            const timecode = document.getElementById('timecode');
+            setInterval(() => {
+                const now = new Date();
+                const ms = Math.floor(now.getMilliseconds() / 10).toString().padStart(2, '0');
+                if(timecode) timecode.innerText = now.toLocaleTimeString('en-GB') + ":" + ms;
+            }, 40);
+
+            // ENTRANCE
+            const tl = gsap.timeline();
+            tl.from(".hero-line", { y: 150, duration: 1.5, stagger: 0.15, ease: "power4.out", delay: 0.2 })
+              .from(".hero-sub", { opacity: 0, y: 20, duration: 1, ease: "power3.out" }, "-=1")
+              .from("nav", { y: -50, opacity: 0, duration: 1, ease: "power3.out" }, "-=1.2")
+              .from(".hero-img", { scale: 1.2, opacity: 0, duration: 2, ease: "power2.out" }, "-=2");
+
+            // SKEW TEXT
+            let proxy = { skew: 0 }, skewSetter = gsap.quickSetter(".skew-on-scroll", "skewY", "deg"), clamp = gsap.utils.clamp(-10, 10);
+            ScrollTrigger.create({
+                onUpdate: (self) => {
+                    let skew = clamp(self.getVelocity() / -300);
+                    if (Math.abs(skew) > Math.abs(proxy.skew)) {
+                        proxy.skew = skew;
+                        gsap.to(proxy, { skew: 0, duration: 0.8, ease: "power3", overwrite: true, onUpdate: () => skewSetter(proxy.skew) });
+                    }
+                }
+            });
+
+            // ARCHIVE CARD HOVER
+            document.querySelectorAll('.archive-card').forEach(card => {
+                card.addEventListener('mouseenter', () => gsap.to(card.querySelector('.archive-thumb'), { scale: 1.1, duration: 0.5 }));
+                card.addEventListener('mouseleave', () => gsap.to(card.querySelector('.archive-thumb'), { scale: 1, duration: 0.5 }));
+            });
+
+            // PROCESS INTERACTION
+            const bgLayers = document.querySelectorAll('.process-bg-layer');
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/<>[]";
+            
+            function scrambleText(element) {
+                const originalText = element.getAttribute('data-original') || element.innerText;
+                if(!element.getAttribute('data-original')) element.setAttribute('data-original', originalText);
+                let iterations = 0;
+                const interval = setInterval(() => {
+                    element.innerText = originalText.split("").map((l, i) => {
+                        if(i < iterations) return originalText[i];
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    }).join("");
+                    if(iterations >= originalText.length) clearInterval(interval);
+                    iterations += 1/2; 
+                }, 30);
+            }
+
+            document.querySelectorAll('.process-step').forEach(step => {
+                step.addEventListener('mouseenter', () => {
+                    const targetId = step.getAttribute('data-bg');
+                    bgLayers.forEach(layer => layer.classList.remove('active'));
+                    const targetBg = document.getElementById(targetId);
+                    if(targetBg) targetBg.classList.add('active');
+                    const header = step.querySelector('.scramble-text');
+                    if(header) scrambleText(header);
+                });
+            });
+            
+            document.getElementById('process').addEventListener('mouseleave', () => {
+                 bgLayers.forEach(layer => layer.classList.remove('active'));
+                 document.querySelector('.process-bg-layer').classList.add('active'); 
+            });
+
+            // MANIFESTO FLASHLIGHT
+            const flashlight = document.getElementById('flashlight');
+            const manifestoSection = document.getElementById('manifesto');
+            
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(flashlight, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+                gsap.to('#preview-img', { x: e.clientX + 20, y: e.clientY + 20, duration: 0.6, ease: "power3.out" });
+            });
+
+            manifestoSection.addEventListener('mouseenter', () => gsap.to(flashlight, { opacity: 1, duration: 0.3 }));
+            manifestoSection.addEventListener('mouseleave', () => gsap.to(flashlight, { opacity: 0, duration: 0.3 }));
+        });
+    </script>
+
+</body></html>

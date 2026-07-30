@@ -1,0 +1,3551 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matter in Motion — Immersive Exhibition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Onest:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+color-scheme: dark;
+--bg: #050506;
+--surface: #111216;
+--surface-soft: rgba(17, 18, 22, 0.52);
+--text: #f1ece3;
+--muted: rgba(241, 236, 227, 0.68);
+--faint: rgba(241, 236, 227, 0.42);
+--line: rgba(241, 236, 227, 0.14);
+--silver: #b8c7d9;
+--gold: #d5b574;
+--warm: #f1ece3;
+--blue-soft: #8fa8c5;
+--display: "Instrument Serif", Georgia, serif;
+--body: "Onest", system-ui, sans-serif;
+--mono: "IBM Plex Mono", ui-monospace, monospace;
+--ease: cubic-bezier(0.22, 1, 0.36, 1);
+--ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+html,
+body {
+min-height: 100%;
+width: 100%;
+}
+html {
+scroll-behavior: smooth;
+-webkit-text-size-adjust: 100%;
+}
+body {
+background: var(--bg);
+color: var(--text);
+font-family: var(--body);
+line-height: 1.5;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+}
+a {
+color: inherit;
+text-decoration: none;
+}
+::selection {
+background: rgba(213, 181, 116, 0.32);
+color: var(--text);
+}
+/* ===============================
+LIVE ATMOSPHERE CANVAS
+================================ */
+#atmosphere {
+position: fixed;
+inset: 0;
+z-index: 0;
+width: 100vw;
+height: 100vh;
+display: block;
+pointer-events: none;
+background:
+radial-gradient(120% 90% at 50% 40%, rgba(20, 25, 35, 0.85) 0%, rgba(5, 5, 6, 1) 68%),
+#050506;
+}
+#projection-glow {
+position: fixed;
+inset: 0;
+z-index: 1;
+pointer-events: none;
+background:
+radial-gradient(80% 55% at 50% 48%, rgba(184, 199, 217, 0.10), transparent 62%),
+radial-gradient(50% 38% at 74% 22%, rgba(213, 181, 116, 0.07), transparent 68%),
+radial-gradient(42% 34% at 22% 76%, rgba(143, 168, 197, 0.07), transparent 70%);
+mix-blend-mode: screen;
+}
+#scrim {
+position: fixed;
+inset: 0;
+z-index: 2;
+pointer-events: none;
+background:
+linear-gradient(to bottom, rgba(5,5,6,0.34), rgba(5,5,6,0.08) 42%, rgba(5,5,6,0.58)),
+radial-gradient(120% 90% at 50% 50%, transparent 44%, rgba(0, 0, 0, 0.68));
+}
+#grain {
+position: fixed;
+inset: -50%;
+z-index: 3;
+pointer-events: none;
+opacity: 0.055;
+mix-blend-mode: overlay;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+animation: grainMove 0.8s steps(2) infinite;
+}
+@keyframes grainMove {
+0% { transform: translate(0, 0); }
+50% { transform: translate(-3%, 2%); }
+100% { transform: translate(2%, -3%); }
+}
+/* ===============================
+PRELOADER
+================================ */
+#preloader {
+position: fixed;
+inset: 0;
+z-index: 100;
+background: #050506;
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+padding: clamp(24px, 5vw, 64px);
+transition: opacity 0.9s ease, visibility 0.9s ease;
+}
+#preloader.is-hidden {
+opacity: 0;
+visibility: hidden;
+pointer-events: none;
+}
+.pre-count {
+font-family: var(--display);
+font-size: clamp(70px, 18vw, 230px);
+font-weight: 400;
+letter-spacing: -0.06em;
+line-height: 0.76;
+color: var(--text);
+font-variant-numeric: tabular-nums;
+}
+.pre-label {
+font-family: var(--mono);
+font-size: 11px;
+line-height: 1.9;
+letter-spacing: 0.28em;
+text-transform: uppercase;
+color: var(--muted);
+text-align: right;
+}
+.pre-bar {
+position: absolute;
+left: clamp(24px, 5vw, 64px);
+right: clamp(24px, 5vw, 64px);
+bottom: 0;
+height: 1px;
+background: rgba(241, 236, 227, 0.12);
+}
+.pre-bar span {
+display: block;
+width: 0%;
+height: 100%;
+background: linear-gradient(90deg, var(--silver), var(--gold));
+}
+/* ===============================
+FIXED UI
+================================ */
+#progress {
+position: fixed;
+top: 0;
+left: 0;
+width: 0%;
+height: 2px;
+z-index: 80;
+background: linear-gradient(90deg, var(--silver), var(--gold));
+box-shadow: 0 0 22px rgba(184, 199, 217, 0.24);
+}
+.nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 70;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 24px clamp(20px, 4vw, 52px);
+color: var(--text);
+}
+.logo {
+font-family: var(--body);
+font-size: 13px;
+font-weight: 600;
+letter-spacing: 0.04em;
+text-transform: uppercase;
+}
+.logo span {
+color: var(--gold);
+}
+.nav-links {
+display: flex;
+align-items: center;
+gap: clamp(18px, 3vw, 34px);
+font-size: 13px;
+color: var(--muted);
+}
+.nav-links a {
+transition: color 0.25s ease;
+}
+.nav-links a:hover {
+color: var(--text);
+}
+.nav-ticket {
+border: 1px solid var(--line);
+border-radius: 999px;
+padding: 9px 16px;
+color: var(--text);
+background: rgba(241, 236, 227, 0.035);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+}
+.nav-ticket:hover {
+border-color: rgba(213, 181, 116, 0.42);
+color: var(--gold);
+}
+#index {
+position: fixed;
+right: clamp(18px, 3vw, 42px);
+top: 50%;
+transform: translateY(-50%);
+z-index: 65;
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+gap: 14px;
+}
+.index-item {
+display: flex;
+align-items: center;
+gap: 10px;
+cursor: pointer;
+}
+.index-label {
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: var(--faint);
+opacity: 0;
+transform: translateX(8px);
+transition: opacity 0.35s ease, transform 0.35s var(--ease);
+}
+.index-line {
+width: 22px;
+height: 1px;
+background: rgba(241, 236, 227, 0.26);
+transition: width 0.35s var(--ease), background 0.35s ease;
+}
+.index-item.is-active .index-line {
+width: 42px;
+background: var(--text);
+}
+.index-item.is-active .index-label,
+.index-item:hover .index-label {
+opacity: 1;
+transform: translateX(0);
+}
+@media (max-width: 820px) {
+#index {
+display: none;
+}
+.nav-links a:not(.nav-ticket) {
+display: none;
+}
+}
+/* ===============================
+LAYOUT
+================================ */
+main {
+position: relative;
+z-index: 10;
+}
+.section {
+position: relative;
+}
+.wrap {
+width: min(100%, 1320px);
+margin: 0 auto;
+padding: 0 clamp(20px, 5vw, 72px);
+}
+.eyebrow {
+display: inline-flex;
+align-items: center;
+gap: 12px;
+font-family: var(--mono);
+font-size: 11px;
+letter-spacing: 0.26em;
+text-transform: uppercase;
+color: var(--muted);
+}
+.eyebrow::before {
+content: "";
+width: 6px;
+height: 6px;
+border-radius: 999px;
+background: var(--gold);
+box-shadow: 0 0 18px rgba(213, 181, 116, 0.55);
+}
+.reveal {
+opacity: 0;
+transform: translateY(28px);
+transition: opacity 1s ease, transform 1s var(--ease);
+}
+.reveal.is-visible {
+opacity: 1;
+transform: translateY(0);
+}
+.mask {
+display: block;
+overflow: hidden;
+}
+.mask span {
+display: block;
+transform: translateY(110%);
+transition: transform 1.15s var(--ease);
+}
+.mask.is-visible span {
+transform: translateY(0);
+}
+/* ===============================
+HERO
+================================ */
+.hero {
+min-height: 100vh;
+min-height: 100svh;
+display: flex;
+align-items: center;
+padding: 120px 0 56px;
+}
+.hero-grid {
+position: relative;
+width: 100%;
+display: grid;
+grid-template-columns: 1fr;
+gap: 42px;
+}
+.hero-center {
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+}
+.hero .eyebrow {
+margin-bottom: clamp(24px, 4vh, 42px);
+}
+.hero-title {
+font-family: var(--display);
+font-weight: 400;
+letter-spacing: -0.065em;
+line-height: 0.76;
+font-size: clamp(82px, 17vw, 260px);
+text-wrap: balance;
+}
+.hero-title em {
+font-style: italic;
+color: var(--silver);
+}
+.hero-copy {
+margin-top: clamp(28px, 4vh, 42px);
+max-width: 620px;
+font-size: clamp(17px, 1.7vw, 22px);
+font-weight: 300;
+line-height: 1.45;
+color: rgba(241, 236, 227, 0.78);
+}
+.hero-copy strong {
+font-weight: 400;
+color: var(--text);
+}
+.hero-actions {
+margin-top: 34px;
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
+gap: 14px;
+}
+.btn {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-height: 50px;
+padding: 0 24px;
+border-radius: 999px;
+font-size: 14px;
+font-weight: 500;
+overflow: hidden;
+transition: transform 0.35s var(--ease), border-color 0.35s ease, color 0.35s ease;
+}
+.btn-primary {
+color: #070707;
+background: var(--text);
+}
+.btn-primary::before {
+content: "";
+position: absolute;
+inset: 0;
+background: linear-gradient(115deg, var(--silver), var(--gold));
+transform: translateY(102%);
+transition: transform 0.5s var(--ease);
+}
+.btn-primary:hover::before {
+transform: translateY(0);
+}
+.btn-secondary {
+color: var(--text);
+border: 1px solid var(--line);
+background: rgba(241, 236, 227, 0.035);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+}
+.btn-secondary:hover {
+border-color: rgba(241, 236, 227, 0.32);
+color: var(--gold);
+}
+.btn span {
+position: relative;
+z-index: 2;
+}
+.hero-meta {
+position: absolute;
+left: 0;
+right: 0;
+bottom: clamp(-22px, -2vh, -10px);
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+align-items: end;
+gap: 24px;
+pointer-events: none;
+}
+.meta-block {
+max-width: 260px;
+}
+.meta-block.right {
+justify-self: end;
+text-align: right;
+}
+.meta-label {
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(--faint);
+margin-bottom: 8px;
+}
+.meta-value {
+font-size: 14px;
+line-height: 1.55;
+color: var(--muted);
+}
+.scroll-cue {
+justify-self: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 14px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(--faint);
+}
+.scroll-cue span {
+display: block;
+width: 1px;
+height: 48px;
+background: linear-gradient(to bottom, rgba(241,236,227,0), rgba(241,236,227,0.6), rgba(241,236,227,0));
+transform-origin: top;
+animation: cueLine 2.4s ease-in-out infinite;
+}
+@keyframes cueLine {
+0%, 100% {
+transform: scaleY(0.45);
+opacity: 0.35;
+}
+50% {
+transform: scaleY(1);
+opacity: 1;
+}
+}
+.hero-frame {
+position: absolute;
+inset: clamp(86px, 10vh, 112px) clamp(20px, 4vw, 52px) clamp(32px, 5vh, 56px);
+z-index: -1;
+pointer-events: none;
+}
+.corner {
+position: absolute;
+width: 36px;
+height: 36px;
+border: 1px solid rgba(241, 236, 227, 0.18);
+opacity: 0;
+transition: opacity 1.2s ease 0.6s;
+}
+body.is-loaded .corner {
+opacity: 1;
+}
+.corner.tl {
+top: 0;
+left: 0;
+border-right: none;
+border-bottom: none;
+}
+.corner.tr {
+top: 0;
+right: 0;
+border-left: none;
+border-bottom: none;
+}
+.corner.bl {
+bottom: 0;
+left: 0;
+border-right: none;
+border-top: none;
+}
+.corner.br {
+bottom: 0;
+right: 0;
+border-left: none;
+border-top: none;
+}
+/* ===============================
+OPENING STATEMENT
+Pinned cinematic text reveal
+================================ */
+.opening-statement {
+position: relative;
+height: 260vh;
+}
+.statement-sticky {
+position: sticky;
+top: 0;
+min-height: 100vh;
+min-height: 100svh;
+display: flex;
+align-items: center;
+overflow: hidden;
+padding: 120px 0;
+}
+.statement-wrap {
+position: relative;
+}
+.statement-kicker {
+margin-bottom: clamp(28px, 5vh, 54px);
+font-family: var(--mono);
+font-size: 11px;
+letter-spacing: 0.26em;
+text-transform: uppercase;
+color: var(--muted);
+}
+.statement-lines {
+max-width: 1100px;
+}
+.statement-line {
+font-family: var(--display);
+font-size: clamp(46px, 8vw, 132px);
+font-weight: 400;
+letter-spacing: -0.052em;
+line-height: 0.95;
+color: rgba(241, 236, 227, 0.92);
+transform: translateY(42px);
+opacity: 0.16;
+filter: blur(6px);
+transition:
+opacity 0.45s ease,
+filter 0.45s ease,
+transform 0.45s var(--ease);
+will-change: opacity, filter, transform;
+}
+.statement-line .muted {
+color: rgba(241, 236, 227, 0.32);
+}
+.statement-line em {
+font-style: italic;
+color: var(--silver);
+}
+.statement-line.is-active {
+opacity: 1;
+filter: blur(0);
+transform: translateY(0);
+}
+.statement-line.is-passed {
+opacity: 0.34;
+filter: blur(1px);
+transform: translateY(0);
+}
+.statement-note {
+position: absolute;
+right: clamp(20px, 5vw, 72px);
+bottom: clamp(-80px, -8vh, -44px);
+max-width: 390px;
+padding-left: 22px;
+border-left: 1px solid rgba(213, 181, 116, 0.34);
+color: rgba(241, 236, 227, 0.64);
+font-size: clamp(14px, 1.2vw, 16px);
+line-height: 1.65;
+}
+@media (max-width: 820px) {
+.opening-statement {
+height: 220vh;
+}
+.statement-sticky {
+align-items: center;
+padding: 100px 0;
+}
+.statement-line {
+font-size: clamp(48px, 14vw, 86px);
+}
+.statement-note {
+position: relative;
+right: auto;
+bottom: auto;
+margin-top: 46px;
+max-width: 34ch;
+}
+}
+/* ===============================
+EXHIBITION ROOMS
+Horizontal pinned walkthrough
+================================ */
+.rooms-section {
+position: relative;
+height: 520vh;
+}
+.rooms-sticky {
+position: sticky;
+top: 0;
+height: 100vh;
+height: 100svh;
+overflow: hidden;
+display: flex;
+align-items: center;
+}
+.rooms-head {
+position: absolute;
+top: clamp(84px, 11vh, 124px);
+left: 0;
+right: 0;
+z-index: 5;
+pointer-events: none;
+}
+.rooms-head-inner {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 32px;
+}
+.rooms-head h2 {
+margin-top: 18px;
+font-family: var(--display);
+font-size: clamp(42px, 5.8vw, 92px);
+font-weight: 400;
+letter-spacing: -0.052em;
+line-height: 0.92;
+}
+.rooms-head h2 em {
+color: var(--silver);
+font-style: italic;
+}
+.rooms-head p {
+max-width: 380px;
+color: rgba(241, 236, 227, 0.62);
+font-size: clamp(14px, 1.2vw, 16px);
+line-height: 1.65;
+}
+.rooms-track {
+position: relative;
+z-index: 2;
+display: flex;
+gap: clamp(20px, 3vw, 44px);
+padding-left: clamp(20px, 11vw, 160px);
+padding-right: clamp(20px, 14vw, 220px);
+will-change: transform;
+}
+.room-card {
+position: relative;
+flex: 0 0 clamp(310px, 32vw, 460px);
+height: clamp(460px, 62vh, 640px);
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+overflow: hidden;
+border: 1px solid rgba(241, 236, 227, 0.15);
+border-radius: 28px;
+background:
+linear-gradient(to bottom, rgba(241,236,227,0.045), rgba(241,236,227,0.015)),
+rgba(12, 13, 16, 0.48);
+backdrop-filter: blur(18px) saturate(1.08);
+-webkit-backdrop-filter: blur(18px) saturate(1.08);
+box-shadow:
+inset 0 1px 0 rgba(255,255,255,0.08),
+0 46px 120px -64px rgba(0,0,0,0.95);
+}
+.room-card::before {
+content: "";
+position: absolute;
+inset: 0;
+z-index: 3;
+pointer-events: none;
+background:
+linear-gradient(to bottom, transparent 30%, rgba(5,5,6,0.72) 80%, rgba(5,5,6,0.9)),
+radial-gradient(90% 90% at 50% 8%, transparent 44%, rgba(0,0,0,0.42));
+}
+.room-card::after {
+content: "";
+position: absolute;
+inset: 1px;
+z-index: 5;
+pointer-events: none;
+border-radius: 27px;
+border: 1px solid rgba(255,255,255,0.045);
+}
+.room-number {
+position: absolute;
+top: 22px;
+left: 24px;
+z-index: 6;
+font-family: var(--mono);
+font-size: 11px;
+letter-spacing: 0.22em;
+color: rgba(241,236,227,0.58);
+}
+.room-visual {
+position: absolute;
+inset: 0;
+z-index: 1;
+opacity: 0.82;
+transform: scale(1.04);
+}
+.room-visual::before,
+.room-visual::after {
+content: "";
+position: absolute;
+inset: -12%;
+filter: blur(2px);
+animation: roomDrift 16s ease-in-out infinite alternate;
+}
+.room-visual::after {
+animation-duration: 22s;
+animation-direction: alternate-reverse;
+mix-blend-mode: screen;
+}
+.room-visual.surface {
+background: #07080b;
+}
+.room-visual.surface::before {
+background:
+radial-gradient(42% 34% at 50% 38%, rgba(184,199,217,0.42), transparent 64%),
+radial-gradient(36% 52% at 32% 68%, rgba(213,181,116,0.16), transparent 70%);
+}
+.room-visual.surface::after {
+background:
+linear-gradient(118deg, transparent 20%, rgba(241,236,227,0.13), transparent 52%),
+repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 18px);
+}
+.room-visual.body::before {
+background:
+radial-gradient(34% 72% at 52% 48%, rgba(241,236,227,0.24), transparent 58%),
+radial-gradient(52% 40% at 30% 26%, rgba(143,168,197,0.20), transparent 62%);
+}
+.room-visual.body::after {
+background:
+radial-gradient(18% 64% at 48% 52%, rgba(5,5,6,0.72), transparent 60%),
+radial-gradient(22% 54% at 59% 54%, rgba(5,5,6,0.52), transparent 66%);
+}
+.room-visual.signal::before {
+background:
+radial-gradient(42% 44% at 54% 42%, rgba(184,199,217,0.26), transparent 70%),
+linear-gradient(135deg, transparent 20%, rgba(213,181,116,0.12), transparent 70%);
+}
+.room-visual.signal::after {
+background-image:
+linear-gradient(rgba(241,236,227,0.08) 1px, transparent 1px),
+linear-gradient(90deg, rgba(241,236,227,0.08) 1px, transparent 1px);
+background-size: 42px 42px;
+mask-image: radial-gradient(circle at 50% 48%, #000 20%, transparent 72%);
+}
+.room-visual.archive::before {
+background:
+radial-gradient(42% 60% at 50% 45%, rgba(213,181,116,0.20), transparent 62%),
+radial-gradient(70% 60% at 50% 70%, rgba(184,199,217,0.16), transparent 70%);
+}
+.room-visual.archive::after {
+background:
+repeating-linear-gradient(0deg, rgba(241,236,227,0.06) 0 1px, transparent 1px 14px),
+repeating-linear-gradient(90deg, rgba(241,236,227,0.035) 0 1px, transparent 1px 26px);
+opacity: 0.75;
+}
+.room-visual.chamber::before {
+background:
+radial-gradient(60% 20% at 50% 50%, rgba(184,199,217,0.30), transparent 72%),
+radial-gradient(44% 60% at 50% 54%, rgba(213,181,116,0.11), transparent 70%);
+}
+.room-visual.chamber::after {
+background:
+repeating-radial-gradient(circle at 50% 50%, rgba(241,236,227,0.08) 0 1px, transparent 1px 22px);
+transform: scale(1.1);
+}
+.room-visual.exit::before {
+background:
+radial-gradient(52% 52% at 50% 42%, rgba(241,236,227,0.28), transparent 68%),
+radial-gradient(40% 60% at 68% 70%, rgba(213,181,116,0.20), transparent 72%),
+radial-gradient(42% 44% at 24% 26%, rgba(184,199,217,0.18), transparent 72%);
+}
+.room-visual.exit::after {
+background:
+conic-gradient(from 180deg at 50% 52%, transparent, rgba(241,236,227,0.11), transparent, rgba(213,181,116,0.08), transparent);
+}
+@keyframes roomDrift {
+0% {
+transform: scale(1) translate(-2%, -1%) rotate(0deg);
+}
+50% {
+transform: scale(1.08) translate(2%, 2%) rotate(3deg);
+}
+100% {
+transform: scale(1.04) translate(-1%, 2%) rotate(-2deg);
+}
+}
+.room-content {
+position: relative;
+z-index: 6;
+padding: 24px;
+}
+.room-label {
+margin-bottom: 14px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.22em;
+text-transform: uppercase;
+color: var(--gold);
+}
+.room-content h3 {
+max-width: 10ch;
+font-family: var(--display);
+font-size: clamp(34px, 3.5vw, 58px);
+font-weight: 400;
+letter-spacing: -0.046em;
+line-height: 0.94;
+color: var(--text);
+}
+.room-content p {
+margin-top: 18px;
+max-width: 31ch;
+color: rgba(241,236,227,0.66);
+font-size: 14px;
+line-height: 1.58;
+}
+.room-meta {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 22px;
+}
+.room-meta span {
+border: 1px solid rgba(241,236,227,0.14);
+border-radius: 999px;
+padding: 7px 10px;
+background: rgba(241,236,227,0.045);
+font-family: var(--mono);
+font-size: 9px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.62);
+}
+.rooms-progress {
+position: absolute;
+left: clamp(20px, 5vw, 72px);
+right: clamp(20px, 5vw, 72px);
+bottom: clamp(28px, 5vh, 52px);
+height: 1px;
+background: rgba(241,236,227,0.12);
+z-index: 8;
+}
+.rooms-progress span {
+display: block;
+width: 0%;
+height: 100%;
+background: linear-gradient(90deg, var(--silver), var(--gold));
+box-shadow: 0 0 18px rgba(184,199,217,0.22);
+}
+@media (max-width: 860px) {
+.rooms-section {
+height: auto;
+}
+.rooms-sticky {
+position: relative;
+height: auto;
+min-height: 100vh;
+display: block;
+overflow: visible;
+padding: 110px 0 80px;
+}
+.rooms-head {
+position: relative;
+top: auto;
+margin-bottom: 42px;
+}
+.rooms-head-inner {
+align-items: flex-start;
+flex-direction: column;
+}
+.rooms-track {
+overflow-x: auto;
+transform: none !important;
+padding: 0 20px 16px;
+scroll-snap-type: x mandatory;
+}
+.room-card {
+flex-basis: min(82vw, 380px);
+height: 540px;
+scroll-snap-align: center;
+}
+.rooms-progress {
+display: none;
+}
+}
+/* ===============================
+FEATURED INSTALLATION
+Large preview + annotation cards
+================================ */
+.featured-installation {
+position: relative;
+padding: clamp(110px, 18vh, 220px) 0 clamp(120px, 18vh, 220px);
+}
+.featured-head {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 40px;
+margin-bottom: clamp(54px, 8vh, 92px);
+}
+.featured-title {
+margin-top: 18px;
+font-family: var(--display);
+font-size: clamp(44px, 6.4vw, 104px);
+font-weight: 400;
+letter-spacing: -0.055em;
+line-height: 0.92;
+}
+.featured-title em {
+color: var(--silver);
+font-style: italic;
+}
+.featured-intro {
+max-width: 390px;
+color: rgba(241, 236, 227, 0.62);
+font-size: clamp(15px, 1.35vw, 18px);
+line-height: 1.65;
+}
+.installation-stage {
+position: relative;
+}
+.installation-window {
+position: relative;
+z-index: 3;
+overflow: hidden;
+min-height: clamp(420px, 58vh, 650px);
+border: 1px solid rgba(241, 236, 227, 0.16);
+border-radius: 30px;
+background:
+linear-gradient(to bottom, rgba(241, 236, 227, 0.045), rgba(241, 236, 227, 0.015)),
+rgba(10, 11, 14, 0.55);
+box-shadow:
+inset 0 1px 0 rgba(255,255,255,0.09),
+0 60px 140px -70px rgba(0,0,0,0.95);
+backdrop-filter: blur(20px) saturate(1.08);
+-webkit-backdrop-filter: blur(20px) saturate(1.08);
+}
+.window-top {
+position: relative;
+z-index: 8;
+height: 42px;
+display: flex;
+align-items: center;
+border-bottom: 1px solid rgba(241, 236, 227, 0.12);
+background: rgba(8, 9, 12, 0.62);
+}
+.window-dots {
+display: flex;
+gap: 7px;
+padding-left: 18px;
+}
+.window-dots span {
+width: 9px;
+height: 9px;
+border-radius: 999px;
+background: rgba(241, 236, 227, 0.22);
+}
+.window-dots span:nth-child(1) {
+background: rgba(213, 181, 116, 0.70);
+}
+.window-dots span:nth-child(2) {
+background: rgba(184, 199, 217, 0.52);
+}
+.window-dots span:nth-child(3) {
+background: rgba(241, 236, 227, 0.28);
+}
+.window-label {
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.48);
+}
+.installation-visual {
+position: relative;
+height: clamp(380px, 58vh, 608px);
+overflow: hidden;
+background:
+radial-gradient(80% 70% at 50% 42%, rgba(184,199,217,0.14), transparent 68%),
+radial-gradient(52% 46% at 70% 72%, rgba(213,181,116,0.10), transparent 72%),
+#050608;
+}
+.installation-visual::before {
+content: "";
+position: absolute;
+inset: -20%;
+background:
+radial-gradient(40% 34% at 42% 42%, rgba(241,236,227,0.16), transparent 70%),
+radial-gradient(44% 50% at 60% 56%, rgba(184,199,217,0.18), transparent 72%),
+radial-gradient(34% 30% at 76% 24%, rgba(213,181,116,0.12), transparent 72%);
+filter: blur(22px);
+animation: memoryDrift 18s ease-in-out infinite alternate;
+}
+.installation-visual::after {
+content: "";
+position: absolute;
+inset: 0;
+background:
+linear-gradient(to bottom, transparent 35%, rgba(5,5,6,0.72)),
+radial-gradient(100% 100% at 50% 50%, transparent 42%, rgba(0,0,0,0.70));
+z-index: 5;
+pointer-events: none;
+}
+@keyframes memoryDrift {
+0% {
+transform: scale(1.05) translate(-2%, -1%) rotate(0deg);
+}
+50% {
+transform: scale(1.14) translate(2%, 1%) rotate(4deg);
+}
+100% {
+transform: scale(1.08) translate(-1%, 2%) rotate(-3deg);
+}
+}
+.installation-grid {
+position: absolute;
+inset: 0;
+z-index: 2;
+opacity: 0.42;
+background-image:
+linear-gradient(rgba(241,236,227,0.06) 1px, transparent 1px),
+linear-gradient(90deg, rgba(241,236,227,0.05) 1px, transparent 1px);
+background-size: 54px 54px;
+mask-image: radial-gradient(circle at 50% 48%, #000 18%, transparent 78%);
+}
+.memory-field {
+position: absolute;
+inset: 0;
+z-index: 3;
+}
+.trace {
+position: absolute;
+display: block;
+border-radius: 999px;
+border: 1px solid rgba(241,236,227,0.24);
+box-shadow:
+0 0 24px rgba(184,199,217,0.16),
+inset 0 0 18px rgba(241,236,227,0.06);
+opacity: 0.56;
+animation: traceFloat 12s ease-in-out infinite alternate;
+}
+.trace-1 {
+width: 38vw;
+height: 14vw;
+left: 12%;
+top: 24%;
+--r: -11deg;
+}
+.trace-2 {
+width: 26vw;
+height: 10vw;
+right: 16%;
+top: 34%;
+--r: 18deg;
+animation-delay: -3s;
+}
+.trace-3 {
+width: 34vw;
+height: 13vw;
+left: 28%;
+bottom: 18%;
+--r: 7deg;
+animation-delay: -6s;
+}
+.trace-4 {
+width: 18vw;
+height: 34vw;
+right: 26%;
+top: 8%;
+--r: -18deg;
+opacity: 0.32;
+animation-delay: -8s;
+}
+.trace-5 {
+width: 16vw;
+height: 16vw;
+left: 18%;
+bottom: 20%;
+--r: 0deg;
+opacity: 0.24;
+animation-delay: -4s;
+}
+.trace-6 {
+width: 12vw;
+height: 12vw;
+right: 10%;
+bottom: 24%;
+--r: 0deg;
+opacity: 0.30;
+animation-delay: -10s;
+}
+@keyframes traceFloat {
+0% {
+transform: translate3d(-1%, -2%, 0) rotate(var(--r, 0deg)) scale(1);
+opacity: 0.28;
+}
+50% {
+opacity: 0.66;
+}
+100% {
+transform: translate3d(2%, 2%, 0) rotate(var(--r, 0deg)) scale(1.04);
+opacity: 0.42;
+}
+}
+.installation-mark {
+position: absolute;
+z-index: 6;
+left: clamp(28px, 4vw, 56px);
+bottom: clamp(28px, 4vw, 56px);
+font-family: var(--display);
+font-size: clamp(60px, 11vw, 170px);
+line-height: 0.78;
+letter-spacing: -0.06em;
+color: rgba(241,236,227,0.12);
+pointer-events: none;
+}
+.installation-hud {
+position: absolute;
+z-index: 7;
+left: clamp(20px, 3vw, 36px);
+right: clamp(20px, 3vw, 36px);
+bottom: 18px;
+display: flex;
+justify-content: space-between;
+gap: 18px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.13em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.50);
+}
+.installation-annotation {
+position: absolute;
+z-index: 6;
+max-width: 260px;
+}
+.annotation-card {
+padding: 16px 18px;
+border: 1px solid rgba(241,236,227,0.15);
+border-radius: 18px;
+background: rgba(13, 14, 18, 0.62);
+backdrop-filter: blur(20px) saturate(1.12);
+-webkit-backdrop-filter: blur(20px) saturate(1.12);
+box-shadow: 0 30px 90px -42px rgba(0,0,0,0.95);
+}
+.annotation-label {
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(--gold);
+}
+.annotation-value {
+margin-top: 8px;
+font-size: 15px;
+font-weight: 500;
+color: var(--text);
+}
+.annotation-value small {
+display: block;
+margin-top: 5px;
+color: rgba(241,236,227,0.56);
+font-size: 12.5px;
+font-weight: 400;
+line-height: 1.45;
+}
+.annotation-artist {
+left: -18px;
+top: 12%;
+}
+.annotation-medium {
+right: -24px;
+top: 38%;
+}
+.annotation-room {
+left: 18%;
+bottom: -34px;
+}
+.installation-details {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 0;
+margin-top: 72px;
+border-top: 1px solid rgba(241,236,227,0.12);
+border-bottom: 1px solid rgba(241,236,227,0.12);
+}
+.installation-details > div {
+padding: 28px 24px;
+border-right: 1px solid rgba(241,236,227,0.12);
+}
+.installation-details > div:last-child {
+border-right: none;
+}
+.detail-number {
+display: block;
+font-family: var(--display);
+font-size: clamp(48px, 6vw, 86px);
+letter-spacing: -0.05em;
+line-height: 0.85;
+color: var(--text);
+}
+.detail-label {
+display: block;
+margin-top: 12px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.52);
+}
+@media (max-width: 900px) {
+.featured-head {
+align-items: flex-start;
+flex-direction: column;
+}
+.installation-annotation {
+position: relative;
+inset: auto;
+max-width: none;
+margin-top: 14px;
+}
+.installation-details {
+grid-template-columns: 1fr;
+}
+.installation-details > div {
+border-right: none;
+border-bottom: 1px solid rgba(241,236,227,0.12);
+}
+.installation-details > div:last-child {
+border-bottom: none;
+}
+.installation-hud {
+flex-direction: column;
+}
+.trace-1,
+.trace-2,
+.trace-3,
+.trace-4 {
+width: 70vw;
+height: 28vw;
+}
+}
+/* ===============================
+VISIT / TICKET SECTION
+Functional glass card over atmosphere
+================================ */
+.visit-section {
+position: relative;
+min-height: 150vh;
+}
+.visit-sticky {
+position: sticky;
+top: 0;
+min-height: 100vh;
+min-height: 100svh;
+display: flex;
+align-items: center;
+padding: 120px 0;
+overflow: hidden;
+}
+.visit-sticky::before {
+content: "";
+position: absolute;
+inset: 0;
+background:
+radial-gradient(50% 46% at 74% 48%, rgba(213,181,116,0.13), transparent 72%),
+radial-gradient(60% 48% at 26% 56%, rgba(184,199,217,0.10), transparent 72%);
+pointer-events: none;
+}
+.visit-grid {
+position: relative;
+z-index: 2;
+display: grid;
+grid-template-columns: minmax(0, 1fr) minmax(340px, 480px);
+align-items: center;
+gap: clamp(48px, 8vw, 120px);
+}
+.visit-copy {
+max-width: 680px;
+}
+.visit-title {
+margin-top: 20px;
+font-family: var(--display);
+font-size: clamp(50px, 7.4vw, 124px);
+font-weight: 400;
+letter-spacing: -0.058em;
+line-height: 0.9;
+}
+.visit-title em {
+color: var(--silver);
+font-style: italic;
+}
+.visit-text {
+margin-top: 30px;
+max-width: 520px;
+color: rgba(241,236,227,0.66);
+font-size: clamp(16px, 1.45vw, 19px);
+line-height: 1.68;
+}
+.visit-actions {
+margin-top: 36px;
+display: flex;
+flex-wrap: wrap;
+gap: 14px;
+}
+.ticket-card {
+position: relative;
+overflow: hidden;
+border: 1px solid rgba(241,236,227,0.17);
+border-radius: 30px;
+padding: clamp(24px, 3vw, 34px);
+background:
+linear-gradient(to bottom right, rgba(241,236,227,0.095), rgba(241,236,227,0.025)),
+rgba(13, 14, 18, 0.58);
+backdrop-filter: blur(26px) saturate(1.14);
+-webkit-backdrop-filter: blur(26px) saturate(1.14);
+box-shadow:
+inset 0 1px 0 rgba(255,255,255,0.12),
+0 50px 130px -62px rgba(0,0,0,0.95);
+}
+.ticket-card::before {
+content: "";
+position: absolute;
+inset: 0;
+pointer-events: none;
+background:
+radial-gradient(50% 40% at 78% 0%, rgba(213,181,116,0.13), transparent 72%),
+linear-gradient(135deg, rgba(255,255,255,0.09), transparent 34%, transparent 74%, rgba(255,255,255,0.04));
+}
+.ticket-top,
+.ticket-row,
+.ticket-slots,
+.ticket-button,
+.ticket-note,
+.ticket-divider {
+position: relative;
+z-index: 2;
+}
+.ticket-top {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 24px;
+}
+.ticket-label {
+margin-bottom: 12px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--gold);
+}
+.ticket-top h3 {
+font-family: var(--display);
+font-size: clamp(34px, 4vw, 52px);
+font-weight: 400;
+letter-spacing: -0.05em;
+line-height: 0.92;
+}
+.ticket-price {
+flex: 0 0 auto;
+font-family: var(--display);
+font-size: clamp(44px, 5vw, 68px);
+letter-spacing: -0.06em;
+line-height: 0.86;
+color: var(--silver);
+}
+.ticket-divider {
+height: 1px;
+margin: 26px 0;
+background: rgba(241,236,227,0.13);
+}
+.ticket-row {
+display: flex;
+justify-content: space-between;
+gap: 24px;
+padding: 13px 0;
+border-bottom: 1px solid rgba(241,236,227,0.08);
+}
+.ticket-row:last-of-type {
+border-bottom: none;
+}
+.ticket-row span {
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.44);
+}
+.ticket-row strong {
+max-width: 220px;
+color: rgba(241,236,227,0.78);
+font-size: 13.5px;
+font-weight: 500;
+line-height: 1.45;
+text-align: right;
+}
+.ticket-slots {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 9px;
+}
+.slot {
+appearance: none;
+border: 1px solid rgba(241,236,227,0.13);
+border-radius: 16px;
+padding: 13px 10px;
+background: rgba(241,236,227,0.035);
+color: var(--text);
+cursor: pointer;
+transition:
+background 0.25s ease,
+border-color 0.25s ease,
+transform 0.25s var(--ease);
+}
+.slot:hover {
+transform: translateY(-2px);
+border-color: rgba(241,236,227,0.25);
+}
+.slot.is-active {
+background: rgba(213,181,116,0.13);
+border-color: rgba(213,181,116,0.42);
+}
+.slot span {
+display: block;
+margin-bottom: 7px;
+font-family: var(--mono);
+font-size: 9px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.48);
+}
+.slot strong {
+display: block;
+font-size: 14px;
+font-weight: 600;
+color: var(--text);
+}
+.ticket-button {
+position: relative;
+z-index: 2;
+margin-top: 18px;
+min-height: 54px;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 18px 0 22px;
+border-radius: 18px;
+background: var(--text);
+color: #070707;
+font-size: 14px;
+font-weight: 600;
+overflow: hidden;
+}
+.ticket-button::before {
+content: "";
+position: absolute;
+inset: 0;
+background: linear-gradient(115deg, var(--silver), var(--gold));
+transform: translateY(102%);
+transition: transform 0.5s var(--ease);
+}
+.ticket-button:hover::before {
+transform: translateY(0);
+}
+.ticket-button span,
+.ticket-button {
+transition: transform 0.35s var(--ease);
+}
+.ticket-button > * {
+position: relative;
+z-index: 2;
+}
+.ticket-button:hover span {
+transform: translateX(4px);
+}
+.ticket-note {
+margin-top: 16px;
+color: rgba(241,236,227,0.46);
+font-size: 12.5px;
+line-height: 1.5;
+}
+@media (max-width: 960px) {
+.visit-section {
+min-height: auto;
+}
+.visit-sticky {
+position: relative;
+min-height: auto;
+padding: 110px 0;
+}
+.visit-grid {
+grid-template-columns: 1fr;
+}
+.ticket-card {
+max-width: 560px;
+}
+}
+@media (max-width: 560px) {
+.ticket-top {
+flex-direction: column;
+}
+.ticket-row {
+flex-direction: column;
+gap: 8px;
+}
+.ticket-row strong {
+max-width: none;
+text-align: left;
+}
+.ticket-slots {
+grid-template-columns: 1fr;
+}
+}
+/* ===============================
+PROGRAM SECTION
+Light editorial contrast
+================================ */
+.program-section {
+position: relative;
+z-index: 12;
+overflow: hidden;
+padding: clamp(100px, 16vh, 190px) 0;
+background:
+radial-gradient(70% 70% at 72% 10%, rgba(213,181,116,0.18), transparent 64%),
+radial-gradient(60% 60% at 14% 86%, rgba(184,199,217,0.20), transparent 66%),
+#ede7dc;
+color: #101014;
+}
+.program-section::before {
+content: "";
+position: absolute;
+inset: 0;
+pointer-events: none;
+opacity: 0.38;
+background-image:
+linear-gradient(rgba(16,16,20,0.055) 1px, transparent 1px),
+linear-gradient(90deg, rgba(16,16,20,0.045) 1px, transparent 1px);
+background-size: 48px 48px;
+mask-image: radial-gradient(90% 80% at 50% 42%, #000 24%, transparent 84%);
+}
+.program-section .wrap {
+position: relative;
+z-index: 2;
+}
+.program-head {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 44px;
+margin-bottom: clamp(52px, 8vh, 92px);
+}
+.program-eyebrow {
+display: inline-flex;
+align-items: center;
+gap: 12px;
+font-family: var(--mono);
+font-size: 11px;
+letter-spacing: 0.24em;
+text-transform: uppercase;
+color: rgba(16,16,20,0.56);
+}
+.program-eyebrow::before {
+content: "";
+width: 6px;
+height: 6px;
+border-radius: 999px;
+background: #a98643;
+}
+.program-title {
+margin-top: 20px;
+font-family: var(--display);
+font-size: clamp(46px, 6.8vw, 112px);
+font-weight: 400;
+letter-spacing: -0.058em;
+line-height: 0.92;
+color: #101014;
+}
+.program-intro {
+max-width: 410px;
+color: rgba(16,16,20,0.62);
+font-size: clamp(15px, 1.35vw, 18px);
+line-height: 1.65;
+}
+.program-grid {
+display: grid;
+grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+gap: clamp(28px, 5vw, 72px);
+align-items: stretch;
+}
+.program-feature {
+position: relative;
+overflow: hidden;
+min-height: 620px;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+border: 1px solid rgba(16,16,20,0.12);
+border-radius: 30px;
+background: #f8f3e9;
+box-shadow: 0 42px 100px -60px rgba(16,16,20,0.45);
+}
+.program-feature-image {
+position: absolute;
+inset: 0;
+overflow: hidden;
+background:
+radial-gradient(44% 44% at 50% 44%, rgba(184,199,217,0.42), transparent 70%),
+radial-gradient(48% 44% at 68% 72%, rgba(213,181,116,0.30), transparent 70%),
+radial-gradient(44% 40% at 24% 24%, rgba(16,16,20,0.16), transparent 70%),
+#e7dfd2;
+}
+.program-feature-image::before {
+content: "";
+position: absolute;
+inset: -20%;
+background:
+conic-gradient(from 180deg at 50% 50%, transparent, rgba(16,16,20,0.16), transparent, rgba(213,181,116,0.18), transparent);
+animation: programRotate 24s linear infinite;
+}
+.program-feature-image::after {
+content: "";
+position: absolute;
+inset: 0;
+background:
+linear-gradient(to bottom, transparent 18%, rgba(248,243,233,0.04) 42%, rgba(248,243,233,0.92) 86%),
+radial-gradient(100% 85% at 50% 50%, transparent 26%, rgba(248,243,233,0.72));
+}
+@keyframes programRotate {
+to {
+transform: rotate(360deg);
+}
+}
+.program-orbit {
+position: absolute;
+inset: 18%;
+z-index: 2;
+border: 1px solid rgba(16,16,20,0.16);
+border-radius: 999px;
+animation: orbitPulse 8s ease-in-out infinite alternate;
+}
+.program-orbit span {
+position: absolute;
+width: 10px;
+height: 10px;
+border-radius: 999px;
+background: #101014;
+opacity: 0.54;
+}
+.program-orbit span:nth-child(1) {
+top: 8%;
+left: 50%;
+}
+.program-orbit span:nth-child(2) {
+right: 12%;
+bottom: 24%;
+background: #a98643;
+}
+.program-orbit span:nth-child(3) {
+left: 16%;
+bottom: 18%;
+background: #6c8198;
+}
+@keyframes orbitPulse {
+from {
+transform: scale(0.94) rotate(-3deg);
+opacity: 0.72;
+}
+to {
+transform: scale(1.04) rotate(4deg);
+opacity: 1;
+}
+}
+.program-feature-content {
+position: relative;
+z-index: 4;
+padding: clamp(24px, 3vw, 34px);
+}
+.program-date {
+margin-bottom: 16px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: rgba(16,16,20,0.54);
+}
+.program-feature h3 {
+max-width: 10ch;
+font-family: var(--display);
+font-size: clamp(42px, 5vw, 72px);
+font-weight: 400;
+letter-spacing: -0.055em;
+line-height: 0.9;
+color: #101014;
+}
+.program-feature p {
+margin-top: 20px;
+max-width: 34ch;
+color: rgba(16,16,20,0.62);
+font-size: 15px;
+line-height: 1.6;
+}
+.program-link {
+margin-top: 26px;
+display: inline-flex;
+align-items: center;
+gap: 10px;
+color: #101014;
+font-size: 14px;
+font-weight: 600;
+}
+.program-link span {
+transition: transform 0.3s var(--ease);
+}
+.program-link:hover span {
+transform: translateX(4px);
+}
+.program-list {
+display: flex;
+flex-direction: column;
+border-top: 1px solid rgba(16,16,20,0.13);
+}
+.program-item {
+display: grid;
+grid-template-columns: 150px minmax(0, 1fr) auto;
+gap: 28px;
+align-items: center;
+padding: clamp(24px, 3.2vw, 38px) 0;
+border-bottom: 1px solid rgba(16,16,20,0.13);
+}
+.program-item-date span {
+display: block;
+margin-bottom: 8px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: rgba(16,16,20,0.46);
+}
+.program-item-date strong {
+display: block;
+font-family: var(--display);
+font-size: clamp(32px, 4vw, 52px);
+font-weight: 400;
+letter-spacing: -0.05em;
+line-height: 0.9;
+color: #101014;
+}
+.program-item-copy h3 {
+font-size: clamp(21px, 2.2vw, 30px);
+font-weight: 500;
+letter-spacing: -0.035em;
+color: #101014;
+}
+.program-item-copy p {
+margin-top: 8px;
+max-width: 44ch;
+color: rgba(16,16,20,0.58);
+font-size: 14px;
+line-height: 1.55;
+}
+.program-item > a {
+border: 1px solid rgba(16,16,20,0.16);
+border-radius: 999px;
+padding: 10px 14px;
+color: rgba(16,16,20,0.72);
+font-size: 13px;
+font-weight: 500;
+transition:
+background 0.25s ease,
+color 0.25s ease,
+border-color 0.25s ease;
+}
+.program-item > a:hover {
+background: #101014;
+border-color: #101014;
+color: #f1ece3;
+}
+@media (max-width: 960px) {
+.program-head {
+align-items: flex-start;
+flex-direction: column;
+}
+.program-grid {
+grid-template-columns: 1fr;
+}
+.program-feature {
+min-height: 560px;
+}
+}
+@media (max-width: 680px) {
+.program-item {
+grid-template-columns: 1fr;
+gap: 16px;
+}
+.program-item > a {
+width: fit-content;
+}
+}
+/* ===============================
+CURATORIAL MANIFESTO
+Dark editorial return
+================================ */
+.manifesto-section {
+position: relative;
+z-index: 10;
+overflow: hidden;
+padding: clamp(130px, 22vh, 280px) 0;
+background:
+radial-gradient(60% 46% at 68% 20%, rgba(184,199,217,0.10), transparent 72%),
+radial-gradient(48% 44% at 22% 80%, rgba(213,181,116,0.09), transparent 72%),
+#050506;
+color: var(--text);
+}
+.manifesto-section::before {
+content: "";
+position: absolute;
+inset: 0;
+pointer-events: none;
+background:
+linear-gradient(to bottom, rgba(5,5,6,0.18), rgba(5,5,6,0.72)),
+radial-gradient(110% 90% at 50% 50%, transparent 42%, rgba(0,0,0,0.68));
+}
+.manifesto-wrap {
+position: relative;
+z-index: 2;
+}
+.manifesto-kicker {
+margin-bottom: clamp(42px, 7vh, 82px);
+font-family: var(--mono);
+font-size: 11px;
+letter-spacing: 0.26em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.54);
+}
+.manifesto-lines {
+display: flex;
+flex-direction: column;
+gap: clamp(14px, 2.4vh, 28px);
+}
+.manifesto-line {
+max-width: 1120px;
+font-family: var(--display);
+font-size: clamp(42px, 6.8vw, 116px);
+font-weight: 400;
+letter-spacing: -0.056em;
+line-height: 0.98;
+color: rgba(241,236,227,0.86);
+}
+.manifesto-line span {
+color: rgba(241,236,227,0.38);
+}
+.manifesto-line em {
+display: inline;
+color: var(--silver);
+font-style: italic;
+}
+.manifesto-line:nth-child(even) {
+align-self: flex-end;
+text-align: right;
+max-width: 980px;
+}
+.manifesto-line:nth-child(3) {
+max-width: 1040px;
+}
+.manifesto-credit {
+margin-top: clamp(70px, 10vh, 120px);
+display: flex;
+align-items: center;
+gap: 18px;
+color: rgba(241,236,227,0.54);
+font-size: 14px;
+}
+.manifesto-credit::before {
+content: "";
+width: 72px;
+height: 1px;
+background: rgba(213,181,116,0.46);
+}
+.manifesto-credit span {
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+}
+.manifesto-credit strong {
+font-weight: 500;
+color: rgba(241,236,227,0.78);
+}
+@media (max-width: 760px) {
+.manifesto-line,
+.manifesto-line:nth-child(even) {
+align-self: flex-start;
+text-align: left;
+max-width: none;
+}
+.manifesto-credit {
+align-items: flex-start;
+flex-direction: column;
+}
+.manifesto-credit::before {
+width: 48px;
+}
+}
+/* ===============================
+FINAL CTA
+================================ */
+.final-cta {
+position: relative;
+z-index: 10;
+overflow: hidden;
+min-height: 100vh;
+min-height: 100svh;
+display: flex;
+align-items: center;
+padding: clamp(110px, 18vh, 210px) 0;
+background:
+radial-gradient(58% 42% at 50% 38%, rgba(184,199,217,0.15), transparent 70%),
+radial-gradient(42% 38% at 66% 70%, rgba(213,181,116,0.11), transparent 72%),
+#050506;
+color: var(--text);
+}
+.final-cta::before {
+content: "";
+position: absolute;
+inset: 0;
+pointer-events: none;
+background:
+radial-gradient(100% 80% at 50% 50%, transparent 34%, rgba(0,0,0,0.72)),
+linear-gradient(to bottom, rgba(5,5,6,0.15), rgba(5,5,6,0.72));
+}
+.final-cta::after {
+content: "";
+position: absolute;
+left: 50%;
+top: 50%;
+width: min(78vw, 980px);
+aspect-ratio: 1;
+transform: translate(-50%, -50%);
+border: 1px solid rgba(241,236,227,0.10);
+border-radius: 999px;
+box-shadow:
+0 0 90px rgba(184,199,217,0.06),
+inset 0 0 90px rgba(213,181,116,0.035);
+pointer-events: none;
+animation: finalPulse 9s ease-in-out infinite alternate;
+}
+@keyframes finalPulse {
+from {
+transform: translate(-50%, -50%) scale(0.94);
+opacity: 0.45;
+}
+to {
+transform: translate(-50%, -50%) scale(1.04);
+opacity: 1;
+}
+}
+.final-wrap {
+position: relative;
+z-index: 2;
+text-align: center;
+}
+.final-kicker {
+margin-bottom: 28px;
+font-family: var(--mono);
+font-size: 11px;
+letter-spacing: 0.26em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.58);
+}
+.final-title {
+font-family: var(--display);
+font-size: clamp(58px, 10vw, 172px);
+font-weight: 400;
+letter-spacing: -0.066em;
+line-height: 0.83;
+}
+.final-title em {
+color: var(--silver);
+font-style: italic;
+}
+.final-copy {
+max-width: 660px;
+margin: clamp(30px, 4vh, 44px) auto 0;
+color: rgba(241,236,227,0.66);
+font-size: clamp(16px, 1.45vw, 19px);
+line-height: 1.65;
+}
+.final-actions {
+margin-top: 36px;
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
+gap: 14px;
+}
+.final-info {
+margin-top: clamp(58px, 8vh, 92px);
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+border-top: 1px solid rgba(241,236,227,0.12);
+border-bottom: 1px solid rgba(241,236,227,0.12);
+}
+.final-info > div {
+padding: 24px 20px;
+border-right: 1px solid rgba(241,236,227,0.12);
+}
+.final-info > div:last-child {
+border-right: none;
+}
+.final-info span {
+display: block;
+margin-bottom: 8px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.42);
+}
+.final-info strong {
+color: rgba(241,236,227,0.78);
+font-size: 14px;
+font-weight: 500;
+}
+/* ===============================
+FOOTER
+================================ */
+.site-footer {
+position: relative;
+z-index: 12;
+padding: clamp(64px, 10vh, 110px) 0 36px;
+border-top: 1px solid rgba(241,236,227,0.12);
+background: rgba(5,5,6,0.92);
+color: var(--text);
+}
+.footer-top {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 48px;
+}
+.footer-brand {
+font-family: var(--display);
+font-size: clamp(62px, 10vw, 146px);
+font-weight: 400;
+letter-spacing: -0.066em;
+line-height: 0.78;
+color: var(--text);
+}
+.footer-brand em {
+color: var(--silver);
+font-style: italic;
+}
+.footer-columns {
+display: flex;
+gap: clamp(36px, 6vw, 86px);
+flex-wrap: wrap;
+}
+.footer-col h4 {
+margin-bottom: 16px;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.38);
+font-weight: 500;
+}
+.footer-col a {
+display: block;
+margin: 9px 0;
+color: rgba(241,236,227,0.62);
+font-size: 13px;
+transition: color 0.2s ease;
+}
+.footer-col a:hover {
+color: var(--text);
+}
+.footer-bottom {
+margin-top: clamp(54px, 8vh, 86px);
+padding-top: 24px;
+border-top: 1px solid rgba(241,236,227,0.10);
+display: flex;
+justify-content: space-between;
+gap: 20px;
+flex-wrap: wrap;
+font-family: var(--mono);
+font-size: 10px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: rgba(241,236,227,0.38);
+}
+@media (max-width: 820px) {
+.final-info {
+grid-template-columns: 1fr;
+}
+.final-info > div {
+border-right: none;
+border-bottom: 1px solid rgba(241,236,227,0.12);
+}
+.final-info > div:last-child {
+border-bottom: none;
+}
+.footer-top {
+align-items: flex-start;
+flex-direction: column;
+}
+.footer-columns {
+width: 100%;
+justify-content: space-between;
+}
+}
+@media (max-width: 560px) {
+.final-title {
+font-size: clamp(58px, 20vw, 96px);
+}
+.footer-columns {
+flex-direction: column;
+gap: 28px;
+}
+}
+/* ===============================
+RESPONSIVE
+================================ */
+@media (max-width: 760px) {
+.hero {
+padding-top: 112px;
+align-items: flex-start;
+}
+.hero-center {
+align-items: flex-start;
+text-align: left;
+}
+.hero-title {
+font-size: clamp(76px, 24vw, 140px);
+}
+.hero-copy {
+max-width: 34ch;
+}
+.hero-actions {
+justify-content: flex-start;
+}
+.hero-meta {
+position: relative;
+bottom: auto;
+margin-top: 64px;
+grid-template-columns: 1fr;
+}
+.meta-block.right {
+justify-self: start;
+text-align: left;
+}
+.scroll-cue {
+justify-self: start;
+align-items: flex-start;
+}
+.hero-frame {
+display: none;
+}
+}
+@media (prefers-reduced-motion: reduce) {
+*,
+*::before,
+*::after {
+animation: none !important;
+transition-duration: 0.001ms !important;
+scroll-behavior: auto !important;
+}
+.reveal,
+.mask span {
+opacity: 1 !important;
+transform: none !important;
+}
+}
+/* ===============================
+ENHANCEMENT LAYER
+================================ */
+:root {
+/* spectral light-dispersion accents — the signature */
+--spectral-1: #7fb6ff;
+--spectral-2: #b79cff;
+--spectral-3: #ff9ed2;
+--spectral-4: #ffd27f;
+--display-alt: "Fraunces", "Instrument Serif", Georgia, serif;
+}
+/* Real 3D particle field — "matter in motion" */
+#webgl {
+position: fixed;
+inset: 0;
+z-index: 1;
+width: 100vw;
+height: 100vh;
+display: block;
+pointer-events: none;
+}
+/* Official Lenis smooth-scroll rules (required, were missing) */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+/* Richer section headings: substantial optical serif (hero keeps Instrument Serif) */
+.rooms-head h2,
+.installation-text h2,
+.visit-head h2,
+.program-head h2,
+.manifesto-line,
+.final-cta h2 {
+font-family: var(--display-alt);
+font-optical-sizing: auto;
+letter-spacing: -0.018em;
+}
+/* The one colorful moment: spectral dispersion on the hero accent */
+.hero-title em {
+background: linear-gradient(96deg, var(--spectral-1), var(--spectral-2) 38%, var(--spectral-3) 66%, var(--spectral-4));
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+color: transparent;
+font-style: italic;
+}
+/* Real curated imagery inside the rooms (swap seeds for your own art) */
+.room-visual {
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+.room-visual.surface  { background-image: linear-gradient(rgba(6,7,11,0.52), rgba(6,7,11,0.66)), url("https://picsum.photos/seed/mm-surface/1100/1400?grayscale"); }
+.room-visual.body     { background-image: linear-gradient(rgba(6,7,11,0.50), rgba(6,7,11,0.68)), url("https://picsum.photos/seed/mm-body/1100/1400?grayscale"); }
+.room-visual.signal   { background-image: linear-gradient(rgba(6,7,11,0.55), rgba(6,7,11,0.66)), url("https://picsum.photos/seed/mm-signal/1100/1400?grayscale"); }
+.room-visual.archive  { background-image: linear-gradient(rgba(6,7,11,0.54), rgba(6,7,11,0.70)), url("https://picsum.photos/seed/mm-archive/1100/1400?grayscale"); }
+.room-visual.chamber  { background-image: linear-gradient(rgba(6,7,11,0.50), rgba(6,7,11,0.64)), url("https://picsum.photos/seed/mm-chamber/1100/1400?grayscale"); }
+.room-visual.exit     { background-image: linear-gradient(rgba(6,7,11,0.48), rgba(6,7,11,0.66)), url("https://picsum.photos/seed/mm-exit/1100/1400?grayscale"); }
+/* Featured installation imagery */
+.installation-visual {
+background-size: cover !important;
+background-position: center !important;
+background-image: linear-gradient(rgba(5,6,9,0.46), rgba(5,6,9,0.72)), url("https://picsum.photos/seed/mm-install/1600/1100?grayscale") !important;
+}
+/* Custom cursor — minimal, premium */
+.cursor-dot {
+position: fixed;
+top: 0; left: 0;
+width: 8px; height: 8px;
+border-radius: 50%;
+background: var(--spectral-1);
+pointer-events: none;
+z-index: 200;
+mix-blend-mode: screen;
+transform: translate(-50%, -50%);
+transition: width 0.28s var(--ease), height 0.28s var(--ease), background 0.4s ease, opacity 0.3s ease;
+opacity: 0;
+}
+.cursor-dot.is-on { opacity: 0.9; }
+.cursor-dot.is-hover {
+width: 46px; height: 46px;
+background: rgba(183, 156, 255, 0.22);
+}
+@media (hover: none) { .cursor-dot { display: none; } }
+</style>
+<script src="https://cdn.tailwindcss.com"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+<body>
+
+<canvas id="atmosphere"></canvas>
+<canvas id="webgl"></canvas>
+<div class="cursor-dot" id="cursorDot"></div>
+<div id="projection-glow"></div>
+<div id="scrim"></div>
+<div id="grain"></div>
+
+<div id="progress"></div>
+
+<div id="preloader">
+  <div class="pre-count" id="preCount">0</div>
+  <div class="pre-label">Opening<br>Exhibition</div>
+  <div class="pre-bar"><span id="preBar"></span></div>
+</div>
+
+<nav class="nav">
+  <a href="#hero" class="logo">Matter <span>in Motion</span></a>
+
+  <div class="nav-links">
+    <a href="#exhibition">Exhibition</a>
+    <a href="#rooms">Rooms</a>
+    <a href="#program">Program</a>
+    <a href="#visit" class="nav-ticket">Reserve Tickets</a>
+  </div>
+</nav>
+
+<div id="index">
+  <div class="index-item is-active" data-target="hero">
+    <span class="index-label">Arrival</span>
+    <span class="index-line"></span>
+  </div>
+  <div class="index-item" data-target="exhibition">
+    <span class="index-label">Statement</span>
+    <span class="index-line"></span>
+  </div>
+  <div class="index-item" data-target="rooms">
+    <span class="index-label">Rooms</span>
+    <span class="index-line"></span>
+  </div>
+  <div class="index-item" data-target="installation">
+  <span class="index-label">Installation</span>
+  <span class="index-line"></span>
+</div>
+  <div class="index-item" data-target="visit">
+    <span class="index-label">Visit</span>
+    <span class="index-line"></span>
+  </div>
+</div>
+<div class="index-item" data-target="program">
+  <span class="index-label">Program</span>
+  <span class="index-line"></span>
+</div>
+<div class="index-item" data-target="manifesto">
+  <span class="index-label">Manifesto</span>
+  <span class="index-line"></span>
+</div>
+<div class="index-item" data-target="final">
+  <span class="index-label">Final</span>
+  <span class="index-line"></span>
+</div>
+
+<main>
+  <section class="section hero" id="hero" data-index="Arrival">
+    <div class="hero-frame">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+    </div>
+
+    <div class="wrap hero-grid">
+      <div class="hero-center">
+        <div class="eyebrow reveal">Opening Exhibition · Immersive Wing</div>
+
+        <h1 class="hero-title">
+          <span class="mask"><span>Matter</span></span>
+          <span class="mask"><span><em>in Motion</em></span></span>
+        </h1>
+
+        <p class="hero-copy reveal">
+          An exhibition of <strong>living surfaces</strong>, shifting light, and digital matter in quiet motion.
+        </p>
+
+        <div class="hero-actions reveal">
+          <a href="#visit" class="btn btn-primary" data-magnetic=""><span>Reserve Tickets</span></a>
+          <a href="#rooms" class="btn btn-secondary" data-magnetic=""><span>Explore the Rooms</span></a>
+        </div>
+      </div>
+
+      <div class="hero-meta reveal">
+        <div class="meta-block">
+          <div class="meta-label">Dates</div>
+          <div class="meta-value">May 18 — September 14<br>Evening entries available</div>
+        </div>
+
+        <div class="scroll-cue">
+          <span></span>
+          Begin the walk
+        </div>
+
+        <div class="meta-block right">
+          <div class="meta-label">Location</div>
+          <div class="meta-value">Gallery 03 · Immersive Wing<br>Montréal Contemporary Arts Center</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section opening-statement" id="exhibition" data-index="Statement">
+    <div class="statement-sticky">
+      <div class="wrap statement-wrap">
+        <div class="statement-kicker reveal">Curatorial Statement</div>
+  
+        <div class="statement-lines" data-statement-lines="">
+          <div class="statement-line">
+            <span class="muted">What if an image</span>
+          </div>
+          <div class="statement-line">
+            was never still?
+          </div>
+          <div class="statement-line">
+            <span class="muted">What if light could</span>
+          </div>
+          <div class="statement-line">
+            <em>remember movement?</em>
+          </div>
+        </div>
+  
+        <div class="statement-note reveal">
+          Matter in Motion studies the space between image and presence — where light becomes physical, memory becomes
+          visible, and the viewer becomes part of the work.
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="section rooms-section" id="rooms" data-index="Rooms">
+  <div class="rooms-sticky">
+    <div class="rooms-head">
+      <div class="wrap rooms-head-inner">
+        <div>
+          <div class="eyebrow">Exhibition Rooms</div>
+          <h2>Six rooms of<br><em>living light.</em></h2>
+        </div>
+
+        <p>
+          Move through a sequence of installations where projection, sensor input,
+          sound, and memory systems turn the visitor into part of the work.
+        </p>
+      </div>
+    </div>
+
+    <div class="rooms-track" id="roomsTrack">
+      <article class="room-card">
+        <div class="room-number">01</div>
+        <div class="room-visual surface"></div>
+        <div class="room-content">
+          <div class="room-label">The Surface</div>
+          <h3>Light behaves like material.</h3>
+          <p>
+            A field of projected particles reacts to proximity, forming quiet waves
+            across the floor and walls.
+          </p>
+          <div class="room-meta">
+            <span>Reactive projection</span>
+            <span>8 min cycle</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card">
+        <div class="room-number">02</div>
+        <div class="room-visual body"></div>
+        <div class="room-content">
+          <div class="room-label">The Body</div>
+          <h3>Your shadow becomes an instrument.</h3>
+          <p>
+            Motion-tracked silhouettes stretch, dissolve, and return as delayed
+            traces of movement.
+          </p>
+          <div class="room-meta">
+            <span>Body tracking</span>
+            <span>Live response</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card">
+        <div class="room-number">03</div>
+        <div class="room-visual signal"></div>
+        <div class="room-content">
+          <div class="room-label">The Signal</div>
+          <h3>Invisible inputs become visible.</h3>
+          <p>
+            Environmental data is translated into subtle pulses of light, rhythm,
+            and spatial distortion.
+          </p>
+          <div class="room-meta">
+            <span>Data sculpture</span>
+            <span>Generative system</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card">
+        <div class="room-number">04</div>
+        <div class="room-visual archive"></div>
+        <div class="room-content">
+          <div class="room-label">The Archive</div>
+          <h3>The room remembers previous visitors.</h3>
+          <p>
+            Accumulated gestures are stored as faint luminous residue, slowly
+            rewriting the atmosphere throughout the day.
+          </p>
+          <div class="room-meta">
+            <span>Memory layer</span>
+            <span>Evolving archive</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card">
+        <div class="room-number">05</div>
+        <div class="room-visual chamber"></div>
+        <div class="room-content">
+          <div class="room-label">The Chamber</div>
+          <h3>Sound presses against the walls.</h3>
+          <p>
+            Low frequencies move through haze and projection, creating a slow
+            atmospheric composition.
+          </p>
+          <div class="room-meta">
+            <span>Sound reactive</span>
+            <span>Spatial audio</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="room-card final">
+        <div class="room-number">06</div>
+        <div class="room-visual exit"></div>
+        <div class="room-content">
+          <div class="room-label">The Exit</div>
+          <h3>A final image follows you out.</h3>
+          <p>
+            The visitor leaves with a unique generated still, composed from the
+            movement patterns gathered during the exhibition.
+          </p>
+          <div class="room-meta">
+            <span>Generated keepsake</span>
+            <span>Personal output</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="rooms-progress">
+      <span id="roomsProgress"></span>
+    </div>
+  </div>
+</section>
+
+<section class="section featured-installation" id="installation" data-index="Installation">
+  <div class="wrap">
+    <div class="featured-head">
+      <div>
+        <div class="eyebrow reveal">Featured Installation</div>
+        <h2 class="featured-title reveal">
+          A room that keeps<br>
+          <em>its own memory.</em>
+        </h2>
+      </div>
+
+      <p class="featured-intro reveal">
+        The central installation records the movement of visitors as faint traces of light,
+        layering each gesture into a slowly evolving field.
+      </p>
+    </div>
+
+    <div class="installation-stage">
+      <div class="installation-window reveal">
+        <div class="window-top">
+          <div class="window-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="window-label">Gallery 03 · Memory Field</div>
+        </div>
+
+        <div class="installation-visual">
+          <div class="memory-field">
+            <span class="trace trace-1"></span>
+            <span class="trace trace-2"></span>
+            <span class="trace trace-3"></span>
+            <span class="trace trace-4"></span>
+            <span class="trace trace-5"></span>
+            <span class="trace trace-6"></span>
+          </div>
+
+          <div class="installation-grid"></div>
+
+          <div class="installation-mark">
+            Memory<br>Field
+          </div>
+
+          <div class="installation-hud">
+            <span>Live installation · 11 min cycle</span>
+            <span>Sensor input active</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="installation-annotation annotation-artist reveal">
+        <div class="annotation-card">
+          <div class="annotation-label">Artist</div>
+          <div class="annotation-value">
+            Lena Moreau
+            <small>Generative systems, projection, spatial memory</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="installation-annotation annotation-medium reveal">
+        <div class="annotation-card">
+          <div class="annotation-label">Medium</div>
+          <div class="annotation-value">
+            Real-time projection
+            <small>Depth sensors, soft haze, spatial audio</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="installation-annotation annotation-room reveal">
+        <div class="annotation-card">
+          <div class="annotation-label">Room</div>
+          <div class="annotation-value">
+            Gallery 03
+            <small>Immersive Wing · limited evening capacity</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="installation-details reveal">
+      <div>
+        <span class="detail-number">11</span>
+        <span class="detail-label">Minute continuous cycle</span>
+      </div>
+      <div>
+        <span class="detail-number">04</span>
+        <span class="detail-label">Projection surfaces</span>
+      </div>
+      <div>
+        <span class="detail-number">360°</span>
+        <span class="detail-label">Spatial sound field</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section visit-section" id="visit" data-index="Visit">
+  <div class="visit-sticky">
+    <div class="wrap visit-grid">
+      <div class="visit-copy">
+        <div class="eyebrow reveal">Plan Your Visit</div>
+
+        <h2 class="visit-title reveal">
+          Enter slowly.<br>
+          Stay with the <em>light.</em>
+        </h2>
+
+        <p class="visit-text reveal">
+          Matter in Motion is designed as a timed-entry exhibition. Each visit begins
+          in small groups, allowing the rooms to respond quietly to movement, sound,
+          and presence.
+        </p>
+
+        <div class="visit-actions reveal">
+          <a href="#" class="btn btn-primary" data-magnetic=""><span>Reserve Tickets</span></a>
+          <a href="#program" class="btn btn-secondary" data-magnetic=""><span>View Program</span></a>
+        </div>
+      </div>
+
+      <div class="ticket-card reveal">
+        <div class="ticket-top">
+          <div>
+            <div class="ticket-label">Exhibition Pass</div>
+            <h3>Matter in Motion</h3>
+          </div>
+
+          <div class="ticket-price">$24</div>
+        </div>
+
+        <div class="ticket-divider"></div>
+
+        <div class="ticket-row">
+          <span>Dates</span>
+          <strong>May 18 — September 14</strong>
+        </div>
+
+        <div class="ticket-row">
+          <span>Hours</span>
+          <strong>Wed — Sun · 11:00 — 21:00</strong>
+        </div>
+
+        <div class="ticket-row">
+          <span>Location</span>
+          <strong>Gallery 03 · Immersive Wing</strong>
+        </div>
+
+        <div class="ticket-row">
+          <span>Entry</span>
+          <strong>Timed groups · 30 visitors</strong>
+        </div>
+
+        <div class="ticket-divider"></div>
+
+        <div class="ticket-slots">
+          <button class="slot is-active" type="button">
+            <span>Morning</span>
+            <strong>11:00</strong>
+          </button>
+
+          <button class="slot" type="button">
+            <span>Afternoon</span>
+            <strong>14:30</strong>
+          </button>
+
+          <button class="slot" type="button">
+            <span>Evening</span>
+            <strong>19:00</strong>
+          </button>
+        </div>
+
+        <a href="#" class="ticket-button">
+          Continue to reservation
+          <span>→</span>
+        </a>
+
+        <div class="ticket-note">
+          Evening entries include extended access to the sound chamber and artist notes.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section program-section" id="program" data-index="Program">
+  <div class="wrap">
+    <div class="program-head">
+      <div>
+        <div class="program-eyebrow reveal">Public Program</div>
+        <h2 class="program-title reveal">
+          Talks, night sessions,<br>
+          and guided walks.
+        </h2>
+      </div>
+
+      <p class="program-intro reveal">
+        A series of artist conversations, extended evening visits, and small-group
+        tours designed to deepen the experience beyond the exhibition rooms.
+      </p>
+    </div>
+
+    <div class="program-grid">
+      <article class="program-feature reveal">
+        <div class="program-feature-image">
+          <div class="program-orbit">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="program-feature-content">
+          <div class="program-date">June 02 · 18:30</div>
+          <h3>Artist Talk: Memory as Material</h3>
+          <p>
+            Lena Moreau discusses how generative systems can transform visitor
+            movement into evolving visual memory.
+          </p>
+
+          <a href="#" class="program-link">
+            Reserve a seat
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <div class="program-list">
+        <article class="program-item reveal">
+          <div class="program-item-date">
+            <span>Every Friday</span>
+            <strong>20:00</strong>
+          </div>
+
+          <div class="program-item-copy">
+            <h3>Night Session</h3>
+            <p>
+              Extended access to Gallery 03, including the sound chamber at full scale.
+            </p>
+          </div>
+
+          <a href="#">Details</a>
+        </article>
+
+        <article class="program-item reveal">
+          <div class="program-item-date">
+            <span>Sat + Sun</span>
+            <strong>12:30</strong>
+          </div>
+
+          <div class="program-item-copy">
+            <h3>Guided Walk</h3>
+            <p>
+              A small-group route through the six rooms with notes from the curatorial team.
+            </p>
+          </div>
+
+          <a href="#">Details</a>
+        </article>
+
+        <article class="program-item reveal">
+          <div class="program-item-date">
+            <span>Wednesday</span>
+            <strong>17:00</strong>
+          </div>
+
+          <div class="program-item-copy">
+            <h3>Student Evening</h3>
+            <p>
+              Reduced entry for students and emerging artists during late gallery hours.
+            </p>
+          </div>
+
+          <a href="#">Details</a>
+        </article>
+
+        <article class="program-item reveal">
+          <div class="program-item-date">
+            <span>July 14</span>
+            <strong>19:30</strong>
+          </div>
+
+          <div class="program-item-copy">
+            <h3>Sound Chamber Performance</h3>
+            <p>
+              A live spatial audio performance inside Room 05, composed for projection haze.
+            </p>
+          </div>
+
+          <a href="#">Details</a>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section manifesto-section" id="manifesto" data-index="Manifesto">
+  <div class="wrap manifesto-wrap">
+    <div class="manifesto-kicker reveal">Curatorial Note</div>
+
+    <div class="manifesto-lines">
+      <div class="manifesto-line reveal">
+        <span>Images are no longer</span>
+        <em>fixed objects.</em>
+      </div>
+
+      <div class="manifesto-line reveal">
+        <span>They listen, shift,</span>
+        <em>and remember.</em>
+      </div>
+
+      <div class="manifesto-line reveal">
+        <span>In this exhibition,</span>
+        <em>light becomes physical.</em>
+      </div>
+
+      <div class="manifesto-line reveal">
+        <span>The viewer does not simply watch.</span>
+        <em>The viewer completes the work.</em>
+      </div>
+    </div>
+
+    <div class="manifesto-credit reveal">
+      <span>Curated by</span>
+      <strong>Montréal Contemporary Arts Center</strong>
+    </div>
+  </div>
+</section>
+
+<section class="section final-cta" id="final" data-index="Final">
+  <div class="wrap final-wrap">
+    <div class="final-kicker reveal">Timed Entry Now Open</div>
+
+    <h2 class="final-title">
+      <span class="mask"><span>Reserve your</span></span>
+      <span class="mask"><span><em>place in the light.</em></span></span>
+    </h2>
+
+    <p class="final-copy reveal">
+      Matter in Motion runs from May 18 to September 14 at the Montréal Contemporary Arts Center.
+      Evening entries are limited to preserve the quiet atmosphere of the installation rooms.
+    </p>
+
+    <div class="final-actions reveal">
+      <a href="#visit" class="btn btn-primary" data-magnetic=""><span>Reserve Tickets</span></a>
+      <a href="#program" class="btn btn-secondary" data-magnetic=""><span>View Program</span></a>
+    </div>
+
+    <div class="final-info reveal">
+      <div>
+        <span>Dates</span>
+        <strong>May 18 — September 14</strong>
+      </div>
+
+      <div>
+        <span>Location</span>
+        <strong>Gallery 03 · Immersive Wing</strong>
+      </div>
+
+      <div>
+        <span>Hours</span>
+        <strong>Wed — Sun · 11:00 — 21:00</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-wrap">
+    <div class="footer-top">
+      <a href="#hero" class="footer-brand">
+        Matter<br>
+        <em>in Motion</em>
+      </a>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4>Exhibition</h4>
+          <a href="#exhibition">Statement</a>
+          <a href="#rooms">Rooms</a>
+          <a href="#installation">Installation</a>
+          <a href="#manifesto">Curatorial Note</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <a href="#visit">Tickets</a>
+          <a href="#program">Program</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Directions</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Museum</h4>
+          <a href="#">Membership</a>
+          <a href="#">Press</a>
+          <a href="#">Education</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Montréal Contemporary Arts Center</span>
+      <span>Gallery 03 · Immersive Wing</span>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script>
+"use strict";
+
+/* ===============================
+   PRELOADER
+================================ */
+
+const preloader = document.getElementById("preloader");
+const preCount = document.getElementById("preCount");
+const preBar = document.getElementById("preBar");
+
+let preValue = 0;
+
+const preInterval = setInterval(() => {
+  preValue += Math.max(1, Math.floor((100 - preValue) * 0.08));
+  if (preValue >= 100) {
+    preValue = 100;
+    clearInterval(preInterval);
+
+    setTimeout(() => {
+      preloader.classList.add("is-hidden");
+      document.body.classList.add("is-loaded");
+      revealInitial();
+    }, 400);
+  }
+
+  preCount.textContent = preValue;
+  preBar.style.width = preValue + "%";
+}, 28);
+
+/* ===============================
+   SUBTLE LIVE CANVAS BACKGROUND
+   Lightweight atmospheric field
+================================ */
+
+const canvas = document.getElementById("atmosphere");
+const ctx = canvas.getContext("2d", { alpha: true });
+
+let width = 0;
+let height = 0;
+let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+let mouse = {
+  x: 0.5,
+  y: 0.5,
+  tx: 0.5,
+  ty: 0.5,
+  active: false,
+  pulse: 0
+};
+
+const blobs = [
+  { x: 0.28, y: 0.38, r: 0.34, vx: 0.00018, vy: 0.00012, color: "184,199,217", alpha: 0.12 },
+  { x: 0.70, y: 0.28, r: 0.26, vx: -0.00014, vy: 0.00011, color: "213,181,116", alpha: 0.08 },
+  { x: 0.54, y: 0.72, r: 0.38, vx: 0.00010, vy: -0.00015, color: "143,168,197", alpha: 0.09 },
+  { x: 0.18, y: 0.78, r: 0.24, vx: 0.00016, vy: -0.00008, color: "241,236,227", alpha: 0.045 }
+];
+
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+resize();
+window.addEventListener("resize", resize);
+
+window.addEventListener("pointermove", (event) => {
+  mouse.tx = event.clientX / width;
+  mouse.ty = event.clientY / height;
+  mouse.active = true;
+});
+
+window.addEventListener("pointerdown", () => {
+  mouse.pulse = 1;
+});
+
+function drawAtmosphere(time) {
+  const t = time * 0.001;
+
+  mouse.x += (mouse.tx - mouse.x) * 0.035;
+  mouse.y += (mouse.ty - mouse.y) * 0.035;
+  mouse.pulse *= 0.94;
+
+  ctx.clearRect(0, 0, width, height);
+
+  const base = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.42,
+    0,
+    width * 0.5,
+    height * 0.5,
+    Math.max(width, height) * 0.82
+  );
+
+  base.addColorStop(0, "#10141c");
+  base.addColorStop(0.46, "#07080b");
+  base.addColorStop(1, "#050506");
+
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.globalCompositeOperation = "screen";
+
+  for (const blob of blobs) {
+    blob.x += Math.sin(t * 0.18 + blob.r * 4) * blob.vx;
+    blob.y += Math.cos(t * 0.15 + blob.r * 5) * blob.vy;
+
+    const driftX = Math.sin(t * 0.25 + blob.r * 12) * 0.04;
+    const driftY = Math.cos(t * 0.22 + blob.r * 8) * 0.035;
+
+    const x = (blob.x + driftX) * width;
+    const y = (blob.y + driftY) * height;
+    const radius = blob.r * Math.max(width, height);
+
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    gradient.addColorStop(0, `rgba(${blob.color}, ${blob.alpha})`);
+    gradient.addColorStop(0.44, `rgba(${blob.color}, ${blob.alpha * 0.36})`);
+    gradient.addColorStop(1, `rgba(${blob.color}, 0)`);
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const mx = mouse.x * width;
+  const my = mouse.y * height;
+  const mr = Math.max(width, height) * (0.18 + mouse.pulse * 0.18);
+
+  const cursorGlow = ctx.createRadialGradient(mx, my, 0, mx, my, mr);
+  cursorGlow.addColorStop(0, `rgba(184, 199, 217, ${mouse.active ? 0.075 + mouse.pulse * 0.12 : 0.025})`);
+  cursorGlow.addColorStop(0.42, `rgba(213, 181, 116, ${mouse.active ? 0.035 + mouse.pulse * 0.08 : 0.01})`);
+  cursorGlow.addColorStop(1, "rgba(184, 199, 217, 0)");
+
+  ctx.fillStyle = cursorGlow;
+  ctx.beginPath();
+  ctx.arc(mx, my, mr, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.globalCompositeOperation = "source-over";
+
+  requestAnimationFrame(drawAtmosphere);
+}
+
+requestAnimationFrame(drawAtmosphere);
+
+/* ===============================
+   REVEALS
+================================ */
+
+function revealInitial() {
+  document.querySelectorAll(".hero .mask").forEach((el, index) => {
+    setTimeout(() => el.classList.add("is-visible"), 140 + index * 160);
+  });
+
+  document.querySelectorAll(".hero .reveal").forEach((el, index) => {
+    setTimeout(() => el.classList.add("is-visible"), 380 + index * 120);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-visible");
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.18
+});
+
+document.querySelectorAll(".reveal").forEach((el) => {
+  if (!el.closest(".hero")) {
+    revealObserver.observe(el);
+  }
+});
+
+/* ===============================
+   MASK REVEAL ON SCROLL
+================================ */
+
+const maskObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-visible");
+      maskObserver.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.24
+});
+
+document.querySelectorAll(".mask").forEach((mask) => {
+  if (!mask.closest(".hero")) {
+    maskObserver.observe(mask);
+  }
+});
+
+/* ===============================
+   PINNED STATEMENT SCRUB
+================================ */
+
+const statementSection = document.querySelector(".opening-statement");
+const statementLines = document.querySelectorAll("[data-statement-lines] .statement-line");
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function updateStatementScrub() {
+  if (!statementSection || !statementLines.length) return;
+
+  const rect = statementSection.getBoundingClientRect();
+  const total = rect.height - window.innerHeight;
+  const progress = clamp(-rect.top / total, 0, 1);
+
+  const activeIndex = Math.min(
+    statementLines.length - 1,
+    Math.floor(progress * statementLines.length)
+  );
+
+  statementLines.forEach((line, index) => {
+    line.classList.toggle("is-active", index === activeIndex);
+    line.classList.toggle("is-passed", index < activeIndex);
+  });
+}
+
+window.addEventListener("scroll", updateStatementScrub, { passive: true });
+window.addEventListener("resize", updateStatementScrub);
+updateStatementScrub();
+
+/* ===============================
+   HORIZONTAL ROOMS SCRUB
+================================ */
+
+const roomsSection = document.querySelector(".rooms-section");
+const roomsTrack = document.getElementById("roomsTrack");
+const roomsProgress = document.getElementById("roomsProgress");
+
+function updateRoomsScrub() {
+  if (!roomsSection || !roomsTrack) return;
+
+  if (window.innerWidth <= 860) {
+    roomsTrack.style.transform = "translate3d(0, 0, 0)";
+    if (roomsProgress) roomsProgress.style.width = "0%";
+    return;
+  }
+
+  const rect = roomsSection.getBoundingClientRect();
+  const total = rect.height - window.innerHeight;
+  const progress = clamp(-rect.top / total, 0, 1);
+
+  const maxShift = roomsTrack.scrollWidth - window.innerWidth + window.innerWidth * 0.18;
+  const x = -maxShift * progress;
+
+  roomsTrack.style.transform = `translate3d(${x}px, 0, 0)`;
+
+  if (roomsProgress) {
+    roomsProgress.style.width = `${progress * 100}%`;
+  }
+}
+
+window.addEventListener("scroll", updateRoomsScrub, { passive: true });
+window.addEventListener("resize", updateRoomsScrub);
+updateRoomsScrub();
+
+/* ===============================
+   TICKET SLOT SELECTOR
+================================ */
+
+const ticketSlots = document.querySelectorAll(".slot");
+
+ticketSlots.forEach((slot) => {
+  slot.addEventListener("click", () => {
+    ticketSlots.forEach((item) => item.classList.remove("is-active"));
+    slot.classList.add("is-active");
+  });
+});
+
+/* ===============================
+   SOFT MAGNETIC BUTTONS
+================================ */
+
+const magneticButtons = document.querySelectorAll("[data-magnetic]");
+
+magneticButtons.forEach((button) => {
+  button.addEventListener("pointermove", (event) => {
+    const rect = button.getBoundingClientRect();
+    const x = event.clientX - rect.left - rect.width / 2;
+    const y = event.clientY - rect.top - rect.height / 2;
+
+    button.style.transform = `translate(${x * 0.12}px, ${y * 0.18}px)`;
+  });
+
+  button.addEventListener("pointerleave", () => {
+    button.style.transform = "translate(0, 0)";
+  });
+});
+</script>
+
+
+<script>
+/* ===============================
+   ENHANCEMENT: smooth scroll · 3D particle field · custom cursor
+================================ */
+(function () {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- Lenis smooth scroll, synced to GSAP ScrollTrigger ---- */
+  let lenis = null;
+  if (typeof Lenis !== "undefined" && !reduceMotion) {
+    lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true
+    });
+    if (typeof gsap !== "undefined" && gsap.ticker) {
+      lenis.on("scroll", () => { if (window.ScrollTrigger) ScrollTrigger.update(); });
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      const rafLoop = (t) => { lenis.raf(t); requestAnimationFrame(rafLoop); };
+      requestAnimationFrame(rafLoop);
+    }
+    // route anchor links through Lenis so nav stays smooth
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href");
+        if (id && id.length > 1) {
+          const target = document.querySelector(id);
+          if (target) { e.preventDefault(); lenis.scrollTo(target); }
+        }
+      });
+    });
+  }
+
+  /* ---- Three.js particle field: "matter in motion" ---- */
+  if (typeof THREE !== "undefined") {
+    const canvas = document.getElementById("webgl");
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 14;
+
+    const isMobile = window.innerWidth < 720;
+    const COUNT = isMobile ? 1400 : 3600;
+
+    // soft round glow sprite so points aren't hard squares
+    const sprite = (function () {
+      const c = document.createElement("canvas");
+      c.width = c.height = 64;
+      const g = c.getContext("2d");
+      const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, "rgba(255,255,255,1)");
+      grad.addColorStop(0.25, "rgba(255,255,255,0.7)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      g.fillStyle = grad;
+      g.beginPath();
+      g.arc(32, 32, 32, 0, Math.PI * 2);
+      g.fill();
+      const tex = new THREE.Texture(c);
+      tex.needsUpdate = true;
+      return tex;
+    })();
+
+    // mostly silver-blue, with rare warm + spectral sparks (the dispersion signature)
+    const palette = [
+      new THREE.Color("#9fb3cc"),
+      new THREE.Color("#9fb3cc"),
+      new THREE.Color("#9fb3cc"),
+      new THREE.Color("#d5b574"),
+      new THREE.Color("#b79cff"),
+      new THREE.Color("#7fb6ff"),
+      new THREE.Color("#ff9ed2")
+    ];
+
+    const positions = new Float32Array(COUNT * 3);
+    const colors = new Float32Array(COUNT * 3);
+    for (let i = 0; i < COUNT; i++) {
+      const i3 = i * 3;
+      positions[i3] = (Math.random() - 0.5) * 36;
+      positions[i3 + 1] = (Math.random() - 0.5) * 24;
+      positions[i3 + 2] = (Math.random() - 0.5) * 22;
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      colors[i3] = col.r;
+      colors[i3 + 1] = col.g;
+      colors[i3 + 2] = col.b;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+    const mat = new THREE.PointsMaterial({
+      size: isMobile ? 0.10 : 0.085,
+      map: sprite,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true
+    });
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+
+    let mx = 0, my = 0, tmx = 0, tmy = 0;
+    window.addEventListener("pointermove", (e) => {
+      tmx = (e.clientX / window.innerWidth - 0.5);
+      tmy = (e.clientY / window.innerHeight - 0.5);
+    });
+
+    let scrollY = 0;
+    window.addEventListener("scroll", () => {
+      scrollY = window.scrollY || window.pageYOffset;
+    }, { passive: true });
+
+    const clock = new THREE.Clock();
+    function render() {
+      const t = clock.getElapsedTime();
+      mx += (tmx - mx) * 0.04;
+      my += (tmy - my) * 0.04;
+      points.rotation.y = t * 0.02 + mx * 0.4;
+      points.rotation.x = my * 0.25;
+      points.position.y = Math.sin(t * 0.15) * 0.4;
+      camera.position.y = -(scrollY / window.innerHeight) * 1.2;
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+    if (!reduceMotion) { render(); } else { renderer.render(scene, camera); }
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  }
+
+  /* ---- Custom cursor (desktop only) ---- */
+  const dot = document.getElementById("cursorDot");
+  if (dot && window.matchMedia("(hover: hover)").matches) {
+    let cx = window.innerWidth / 2, cy = window.innerHeight / 2, dx = cx, dy = cy;
+    window.addEventListener("pointermove", (e) => {
+      cx = e.clientX; cy = e.clientY;
+      dot.classList.add("is-on");
+    });
+    document.querySelectorAll("a, button, [data-magnetic], .index-item").forEach((el) => {
+      el.addEventListener("pointerenter", () => dot.classList.add("is-hover"));
+      el.addEventListener("pointerleave", () => dot.classList.remove("is-hover"));
+    });
+    (function loop() {
+      dx += (cx - dx) * 0.18;
+      dy += (cy - dy) * 0.18;
+      dot.style.transform = "translate(" + dx + "px, " + dy + "px) translate(-50%, -50%)";
+      requestAnimationFrame(loop);
+    })();
+  }
+})();
+
+</script>
+</body></html>

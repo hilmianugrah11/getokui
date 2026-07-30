@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="utf-8" />
+<title>AI Music Production — Synthara.ai</title>
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link
+href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<style>
+*,
+*::before,
+*::after {
+margin: 0;
+padding: 0;
+box-sizing: border-box
+}
+html {
+font-size: 16px;
+overscroll-behavior: none
+}
+body {
+font-family: 'Inter', sans-serif;
+background: #050505;
+color: #e8e8e8;
+-webkit-font-smoothing: antialiased;
+overflow: hidden
+}
+body.ok {
+overflow: auto
+}
+::selection {
+background: rgba(45, 212, 191, .3)
+}
+a {
+color: inherit;
+text-decoration: none
+}
+:root {
+--t: #2dd4bf;
+--t2: #0d9488;
+--tg: rgba(45, 212, 191, .07);
+--td: rgba(45, 212, 191, .4);
+--a: #f59e0b;
+--g1: #0c0c0c;
+--g2: #111;
+--g3: #181818;
+--tx: #e8e8e8;
+--tx2: rgba(232, 232, 232, .5);
+--tx3: rgba(232, 232, 232, .25);
+--ln: rgba(255, 255, 255, .06);
+--lt: rgba(45, 212, 191, .12);
+--fd: 'Space Grotesk', sans-serif;
+--glow: 0 0 40px rgba(45, 212, 191, .12), 0 0 80px rgba(45, 212, 191, .05);
+--glow-sm: 0 0 20px rgba(45, 212, 191, .1);
+}
+/* Noise texture overlay */
+body::after {
+content: '';
+position: fixed;
+inset: 0;
+z-index: 9998;
+pointer-events: none;
+opacity: .03;
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+}
+/* Preloader */
+.pre {
+position: fixed;
+inset: 0;
+z-index: 9999;
+background: #050505;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: .5rem;
+transition: opacity .4s
+}
+.pre.done {
+opacity: 0;
+pointer-events: none
+}
+.pre b {
+font-family: var(--fd);
+font-size: 4rem;
+font-weight: 300;
+color: var(--t);
+opacity: 0
+}
+.pre small {
+font-size: .75rem;
+letter-spacing: .3em;
+text-transform: uppercase;
+color: var(--tx3);
+opacity: 0
+}
+/* Nav */
+nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 100;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: .75rem 2rem;
+transition: all .3s
+}
+nav.s {
+background: rgba(5, 5, 5, .85);
+backdrop-filter: blur(16px) saturate(1.4);
+border-bottom: 1px solid var(--lt);
+box-shadow: 0 4px 30px rgba(0, 0, 0, .4)
+}
+.logo {
+font-family: var(--fd);
+font-size: 1.15rem;
+font-weight: 700;
+color: var(--t);
+letter-spacing: -.02em;
+text-shadow: 0 0 20px rgba(45, 212, 191, .3)
+}
+.nr {
+display: flex;
+align-items: center;
+gap: 1.25rem
+}
+.nl {
+font-size: .85rem;
+color: var(--tx3);
+transition: all .3s;
+position: relative
+}
+.nl:hover {
+color: var(--t);
+text-shadow: 0 0 12px rgba(45, 212, 191, .4)
+}
+.btn {
+padding: .45rem 1.15rem;
+background: linear-gradient(135deg, var(--t), var(--t2));
+color: #050505;
+border-radius: 100px;
+font-size: .82rem;
+font-weight: 600;
+border: none;
+cursor: pointer;
+transition: all .4s;
+box-shadow: 0 2px 12px rgba(45, 212, 191, .15)
+}
+.btn:hover {
+box-shadow: var(--glow);
+transform: translateY(-2px)
+}
+/* Lines */
+.ln {
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .06) 20%, rgba(255, 255, 255, .06) 80%, transparent)
+}
+.lt {
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(45, 212, 191, .15) 20%, rgba(45, 212, 191, .15) 80%, transparent)
+}
+/* ═══ HERO ═══ */
+.hero {
+height: 100vh;
+display: grid;
+grid-template-rows: auto 1fr auto;
+padding: 3rem 2rem 0;
+gap: 0;
+overflow: hidden;
+background: radial-gradient(ellipse at 15% -10%, rgba(45, 212, 191, .18) 0%, transparent 40%), radial-gradient(ellipse at 85% 95%, rgba(245, 158, 11, .12) 0%, transparent 35%), radial-gradient(circle at 50% 50%, rgba(45, 212, 191, .04) 0%, transparent 60%), #030508
+}
+.hero__main {
+display: flex;
+align-items: flex-end
+}
+.hero__h {
+font-family: var(--fd);
+font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+font-weight: 700;
+line-height: .92;
+letter-spacing: -.05em
+}
+.hero__h em {
+font-style: normal;
+font-weight: 300;
+color: var(--td)
+}
+.hero__meta {
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+gap: .3rem;
+padding-bottom: .8rem
+}
+.hero__tag {
+font-size: .7rem;
+letter-spacing: .35em;
+text-transform: uppercase;
+color: var(--t);
+opacity: .5
+}
+/* (removed hero year/scroll) */
+/* Carousel */
+.car {
+display: flex;
+justify-content: center;
+align-items: center;
+perspective: 1200px;
+flex: 1;
+min-height: 0;
+--tz: 250px
+}
+.car__r {
+width: 500px;
+height: 500px;
+position: relative;
+transform-style: preserve-3d
+}
+.car__c {
+position: absolute;
+width: 190px;
+height: 260px;
+top: 50%;
+left: 50%;
+margin: -130px 0 0 -95px;
+border-radius: .75rem;
+overflow: hidden;
+box-shadow: 0 12px 40px rgba(0, 0, 0, .6), 0 0 1px rgba(45, 212, 191, .2);
+border: 1px solid rgba(45, 212, 191, .08)
+}
+.car__c img {
+width: 100%;
+height: 100%;
+object-fit: cover
+}
+/* Ticker */
+.tk {
+overflow: hidden;
+padding: .6rem 0;
+border-top: 1px solid var(--lt);
+border-bottom: 1px solid var(--lt);
+flex-shrink: 0;
+-webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)
+}
+.tk__r {
+display: flex;
+gap: .5rem;
+animation: tkm 18s linear infinite
+}
+.tk__i {
+flex-shrink: 0;
+padding: .3rem 1rem;
+border: 1px solid var(--ln);
+border-radius: 100px;
+font-size: .78rem;
+color: var(--tx3);
+white-space: nowrap;
+transition: all .3s
+}
+.tk__i:hover {
+border-color: var(--t);
+color: var(--t);
+box-shadow: 0 0 12px var(--tg)
+}
+@keyframes tkm {
+0% {
+transform: translateX(0)
+}
+100% {
+transform: translateX(-25%)
+}
+}
+/* ═══ STATEMENT + FEATURES COMBINED ═══ */
+.block {
+padding: 2rem 2rem 0
+}
+.block-wrap {
+background: radial-gradient(ellipse at 20% 90%, rgba(45, 212, 191, .14) 0%, transparent 40%), radial-gradient(ellipse at 80% 10%, rgba(245, 158, 11, .1) 0%, transparent 35%), radial-gradient(circle at 50% 50%, rgba(30, 60, 80, .15) 0%, transparent 60%), #040609
+}
+.block__top {
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+margin-bottom: 1.5rem;
+gap: 1rem
+}
+.block__tag {
+font-size: .7rem;
+letter-spacing: .3em;
+text-transform: uppercase;
+color: var(--tx3)
+}
+.block__h {
+font-family: var(--fd);
+font-size: clamp(2.2rem, 5vw, 4.2rem);
+font-weight: 700;
+line-height: 1;
+letter-spacing: -.04em;
+text-align: right
+}
+/* Feature Grid — bento-style dense */
+.bento {
+display: grid;
+grid-template-columns: repeat(12, 1fr);
+grid-template-rows: auto auto;
+gap: .5rem;
+padding: 0 2rem 2rem
+}
+.b1 {
+grid-column: 1/8;
+grid-row: 1/2;
+background: linear-gradient(145deg, #0e0e0e, #0a0a0a);
+border: 1px solid rgba(255, 255, 255, .06);
+border-radius: 1rem;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+transition: all .5s;
+box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
+}
+.b2 {
+grid-column: 8/13;
+grid-row: 1/2;
+background: linear-gradient(145deg, #0e0e0e, #0a0a0a);
+border: 1px solid rgba(255, 255, 255, .06);
+border-radius: 1rem;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+transition: all .5s;
+box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
+}
+.b3 {
+grid-column: 1/5;
+grid-row: 2/3;
+background: linear-gradient(145deg, #0e0e0e, #0a0a0a);
+border: 1px solid rgba(255, 255, 255, .06);
+border-radius: 1rem;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+transition: all .5s;
+box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
+}
+.b4 {
+grid-column: 5/13;
+grid-row: 2/3;
+position: relative;
+border-radius: 1rem;
+overflow: hidden;
+min-height: 220px;
+border: 1px solid rgba(255, 255, 255, .06);
+box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
+}
+.b1:hover,
+.b2:hover,
+.b3:hover {
+border-color: rgba(45, 212, 191, .2);
+box-shadow: var(--glow), 0 8px 40px rgba(0, 0, 0, .4);
+transform: translateY(-2px)
+}
+.b4:hover {
+border-color: rgba(45, 212, 191, .15)
+}
+.b__img {
+width: 100%;
+aspect-ratio: 2/1;
+object-fit: cover;
+display: block;
+transition: transform .6s, filter .6s
+}
+.b1:hover .b__img,
+.b2:hover .b__img-tall,
+.b3:hover .b__img-tall {
+transform: scale(1.04);
+filter: brightness(1.1)
+}
+.b__img-tall {
+width: 100%;
+aspect-ratio: 4/3;
+object-fit: cover;
+display: block;
+transition: transform .6s, filter .6s
+}
+.b__body {
+padding: 1.2rem;
+flex: 1;
+display: flex;
+flex-direction: column;
+gap: .4rem
+}
+.b__row {
+display: flex;
+align-items: center;
+gap: .4rem
+}
+.b__dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: var(--t);
+flex-shrink: 0;
+box-shadow: 0 0 8px var(--t), 0 0 16px rgba(45, 212, 191, .3)
+}
+.b__label {
+font-size: .7rem;
+letter-spacing: .12em;
+text-transform: uppercase;
+color: var(--tx3)
+}
+.b__title {
+font-family: var(--fd);
+font-size: 1.25rem;
+font-weight: 600;
+line-height: 1.2
+}
+.b__copy {
+font-size: .85rem;
+color: var(--tx2);
+line-height: 1.5
+}
+.b__btn {
+margin-top: auto;
+padding-top: .5rem
+}
+/* Showcase card */
+.b4 img {
+position: absolute;
+inset: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform .6s
+}
+.b4:hover img {
+transform: scale(1.04)
+}
+.b4::after {
+content: '';
+position: absolute;
+inset: 0;
+background: linear-gradient(0deg, rgba(5, 5, 5, .8), transparent 50%)
+}
+.b4__t {
+position: relative;
+z-index: 1;
+padding: 1.2rem;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+height: 100%
+}
+.b4__tag {
+font-size: .7rem;
+letter-spacing: .3em;
+text-transform: uppercase;
+color: var(--t);
+margin-bottom: .3rem
+}
+.b4__h {
+font-family: var(--fd);
+font-size: 1.35rem;
+font-weight: 600;
+line-height: 1.15
+}
+.b4__p {
+font-size: .82rem;
+color: var(--tx2);
+margin-top: .25rem;
+line-height: 1.45
+}
+/* ═══ HOW IT WORKS ═══ */
+.how-wrap {
+background: radial-gradient(ellipse at 50% -20%, rgba(45, 212, 191, .2) 0%, transparent 45%), radial-gradient(ellipse at 0% 100%, rgba(245, 158, 11, .08) 0%, transparent 35%), linear-gradient(180deg, #050810, #040608, #050810)
+}
+.how {
+padding: 2rem 2rem;
+display: flex;
+flex-direction: column;
+gap: 1rem
+}
+.how__tag {
+font-size: .7rem;
+letter-spacing: .3em;
+text-transform: uppercase;
+color: var(--t)
+}
+.how__row {
+display: flex;
+align-items: center;
+gap: 1.5rem
+}
+.how__ai {
+font-family: var(--fd);
+font-size: clamp(2rem, 4vw, 3.5rem);
+font-weight: 700;
+color: var(--tx3);
+flex-shrink: 0
+}
+.how__col {
+overflow: hidden;
+height: clamp(2.8rem, 5vw, 4.2rem);
+flex: 1;
+-webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%)
+}
+.how__scroll {
+animation: cs 6s ease-in-out infinite
+}
+.how__si {
+font-family: var(--fd);
+font-size: clamp(2rem, 4vw, 3.5rem);
+font-weight: 700;
+height: clamp(2.8rem, 5vw, 4.2rem);
+display: flex;
+align-items: center;
+background: linear-gradient(90deg, var(--t), var(--td));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text
+}
+@keyframes cs {
+0%,
+22% {
+transform: translateY(0)
+}
+28%,
+47% {
+transform: translateY(-25%)
+}
+53%,
+72% {
+transform: translateY(-50%)
+}
+78%,
+100% {
+transform: translateY(-75%)
+}
+}
+/* Trusted */
+.trust {
+padding: .75rem 0;
+overflow: hidden;
+-webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)
+}
+.trust__l {
+font-size: .7rem;
+letter-spacing: .3em;
+text-transform: uppercase;
+color: var(--tx3);
+margin-bottom: .6rem;
+padding: 0 2rem
+}
+.trust__r {
+display: flex;
+gap: 2.5rem;
+animation: tr 25s linear infinite
+}
+.trust__i {
+flex-shrink: 0;
+font-family: var(--fd);
+font-size: .85rem;
+font-weight: 600;
+color: var(--tx3);
+letter-spacing: .05em;
+white-space: nowrap
+}
+@keyframes tr {
+0% {
+transform: translateX(0)
+}
+100% {
+transform: translateX(-25%)
+}
+}
+/* Dots — sound visualizer */
+.dots-wrap {
+background: radial-gradient(ellipse at 50% 50%, rgba(45, 212, 191, .12) 0%, transparent 55%), radial-gradient(ellipse at 20% 50%, rgba(245, 158, 11, .06) 0%, transparent 40%), #030508
+}
+.dots {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 2px;
+padding: 1.5rem 2rem;
+height: 120px;
+width: 100%
+}
+.dots__bar {
+display: flex;
+flex-direction: column-reverse;
+gap: 2px;
+align-items: center;
+flex: 1
+}
+.dot {
+width: 100%;
+max-width: 8px;
+aspect-ratio: 1;
+border-radius: 50%;
+background: var(--t);
+opacity: .06;
+transition: opacity .12s, transform .12s
+}
+.dot.on {
+opacity: .6;
+transform: scale(1.15)
+}
+.dot.mid {
+opacity: .2
+}
+@media(min-width:768px) {
+.dots {
+gap: 3px;
+height: 140px
+}
+}
+/* ═══ STEPS ═══ */
+.steps-wrap {
+background: radial-gradient(ellipse at 90% 20%, rgba(45, 212, 191, .15) 0%, transparent 40%), radial-gradient(ellipse at 10% 80%, rgba(245, 158, 11, .1) 0%, transparent 35%), radial-gradient(circle at 50% 50%, rgba(20, 40, 60, .12) 0%, transparent 50%), #030508
+}
+.steps {
+padding: 2rem 2rem
+}
+.steps__top {
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+margin-bottom: 1.5rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--ln)
+}
+.steps__h {
+font-family: var(--fd);
+font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+font-weight: 700;
+line-height: 1.05;
+letter-spacing: -.03em
+}
+.steps__sub {
+font-size: .7rem;
+letter-spacing: .2em;
+text-transform: uppercase;
+color: var(--tx3);
+text-align: right
+}
+.steps__list {
+display: flex;
+flex-direction: column;
+gap: 0
+}
+.step__slide {
+position: relative
+}
+.step {
+position: relative;
+min-height: 100vh;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+padding: 5rem 2.5rem 0;
+will-change: transform, opacity;
+transform-origin: 50% 0%
+}
+.step:nth-child(1) {
+background: linear-gradient(160deg, #0c1e28, #163848, #1e5060)
+}
+.step:nth-child(2) {
+background: linear-gradient(160deg, #18183a, #1a2850, #143e6e)
+}
+.step:nth-child(3) {
+background: linear-gradient(160deg, #2a1a2e, #3a2040, #4a1850)
+}
+.step:nth-child(4) {
+background: linear-gradient(160deg, #0e2a1a, #1a4030, #126038)
+}
+/* Step top row: title left, number right */
+.step__top {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+flex: 1
+}
+.step__left {
+max-width: 55%
+}
+.step__head {
+display: flex;
+align-items: center;
+gap: .5rem;
+margin-bottom: .3rem
+}
+.step__code {
+font-size: .75rem;
+color: rgba(255, 255, 255, .2);
+letter-spacing: .1em;
+font-family: var(--fd)
+}
+.step__label {
+display: flex;
+align-items: center;
+gap: .4rem;
+margin-bottom: .5rem
+}
+.step__dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: var(--t);
+box-shadow: 0 0 8px var(--t)
+}
+.step__cat {
+font-size: .72rem;
+letter-spacing: .15em;
+text-transform: uppercase;
+color: var(--t);
+opacity: .7
+}
+.step__t {
+font-family: var(--fd);
+font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+font-weight: 700;
+line-height: 1.05;
+margin-bottom: .6rem
+}
+.step__desc {
+font-size: .88rem;
+color: rgba(255, 255, 255, .4);
+line-height: 1.5;
+margin-bottom: 1rem
+}
+/* Giant number with decorative line */
+.step__n-wrap {
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+gap: .5rem
+}
+.step__n {
+font-family: var(--fd);
+font-size: clamp(6rem, 14vw, 12rem);
+font-weight: 800;
+color: rgba(255, 255, 255, .04);
+line-height: .85
+}
+.step__n-line {
+width: 1px;
+height: 60px;
+background: linear-gradient(180deg, var(--t), transparent);
+opacity: .3
+}
+/* Step info row */
+.step__info {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 0;
+border: 1px solid rgba(255, 255, 255, .08);
+border-radius: .6rem;
+background: rgba(255, 255, 255, .03);
+backdrop-filter: blur(4px);
+max-width: 600px
+}
+.step__info-col {
+padding: .6rem .8rem
+}
+.step__info-col+.step__info-col {
+border-left: 1px solid rgba(255, 255, 255, .08)
+}
+.step__tag {
+font-size: .72rem;
+display: flex;
+align-items: center;
+gap: .3rem;
+color: rgba(255, 255, 255, .55);
+margin-bottom: .2rem
+}
+.step__tag::before {
+content: '';
+width: 5px;
+height: 5px;
+border-radius: 50%;
+background: var(--t)
+}
+.step__p {
+font-size: .78rem;
+color: rgba(255, 255, 255, .3);
+line-height: 1.4
+}
+.step__cta {
+margin-top: .5rem
+}
+.step__cta .btn {
+font-size: .78rem;
+padding: .4rem 1.1rem
+}
+/* Divider line before images */
+.step__divider {
+width: 100%;
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1) 20%, rgba(255, 255, 255, .1) 80%, transparent);
+margin: 1.5rem 0 1rem
+}
+/* Step bottom images — with gradient overlays */
+.step__images {
+display: flex;
+gap: .5rem;
+padding-bottom: 2rem
+}
+.step__img-wrap {
+flex: 1;
+position: relative;
+border-radius: .75rem;
+overflow: hidden;
+min-width: 0
+}
+.step__img-wrap::after {
+content: '';
+position: absolute;
+inset: 0;
+background: linear-gradient(0deg, rgba(0, 0, 0, .4) 0%, transparent 40%);
+pointer-events: none
+}
+.step__img-wrap:hover img {
+transform: scale(1.05)
+}
+.step__img {
+width: 100%;
+aspect-ratio: 4/3;
+object-fit: cover;
+display: block;
+transition: transform .5s
+}
+.step__img-label {
+position: absolute;
+bottom: .5rem;
+left: .6rem;
+font-size: .55rem;
+letter-spacing: .1em;
+text-transform: uppercase;
+color: rgba(255, 255, 255, .6);
+z-index: 1
+}
+/* ═══ FAQ ═══ */
+.faq-wrap {
+background: radial-gradient(ellipse at 85% 20%, rgba(45, 212, 191, .16) 0%, transparent 40%), radial-gradient(ellipse at 5% 90%, rgba(245, 158, 11, .1) 0%, transparent 35%), #030508
+}
+.faq {
+padding: 2rem 2rem;
+display: flex;
+gap: 3rem
+}
+.faq__l {
+flex-shrink: 0;
+min-width: 100px
+}
+.faq__tag {
+font-size: .7rem;
+letter-spacing: .3em;
+text-transform: uppercase;
+color: var(--tx3)
+}
+.faq__r {
+flex: 1
+}
+.faq__h {
+font-family: var(--fd);
+font-size: clamp(1.5rem, 2.5vw, 2rem);
+font-weight: 700;
+line-height: 1.15;
+margin-bottom: 1.5rem
+}
+.faq__i {
+border-bottom: 1px solid var(--ln)
+}
+.faq__q {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1rem 0;
+cursor: pointer;
+font-size: .95rem;
+font-weight: 500;
+transition: color .3s;
+gap: 1rem
+}
+.faq__q:hover {
+color: var(--t)
+}
+.faq__ic {
+width: 26px;
+height: 26px;
+border: 1px solid rgba(255, 255, 255, .1);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: .85rem;
+font-weight: 300;
+flex-shrink: 0;
+transition: all .4s
+}
+.faq__i.open .faq__ic {
+transform: rotate(45deg);
+border-color: var(--t);
+color: var(--t);
+box-shadow: 0 0 12px rgba(45, 212, 191, .3)
+}
+.faq__i {
+border-bottom: 1px solid rgba(255, 255, 255, .06);
+transition: all .3s
+}
+.faq__i:hover {
+background: rgba(45, 212, 191, .02);
+border-radius: .5rem;
+padding: 0 .5rem
+}
+.faq__a {
+max-height: 0;
+overflow: hidden;
+transition: max-height .4s cubic-bezier(.16, 1, .3, 1)
+}
+.faq__i.open .faq__a {
+max-height: 200px
+}
+.faq__a p {
+padding-bottom: 1rem;
+font-size: .85rem;
+color: var(--tx2);
+line-height: 1.55
+}
+/* ═══ FOOTER ═══ */
+.foot {
+padding: 2rem 2rem 1rem;
+border-top: 1px solid var(--lt);
+background: radial-gradient(ellipse at 50% -30%, rgba(45, 212, 191, .12) 0%, transparent 50%), #020305
+}
+.foot__top {
+display: grid;
+grid-template-columns: 1fr auto auto auto;
+gap: 3rem;
+margin-bottom: 1.5rem
+}
+.foot__logo {
+font-family: var(--fd);
+font-size: 1.15rem;
+font-weight: 700;
+color: var(--t)
+}
+.foot__ct {
+font-size: .7rem;
+letter-spacing: .15em;
+text-transform: uppercase;
+color: var(--tx3);
+margin-bottom: .5rem
+}
+.foot__col a {
+display: block;
+font-size: .82rem;
+color: var(--tx2);
+margin-bottom: .3rem;
+transition: color .3s
+}
+.foot__col a:hover {
+color: var(--t)
+}
+.foot__bot {
+display: flex;
+justify-content: space-between;
+color: var(--tx3);
+font-size: .72rem;
+padding-top: 1rem;
+border-top: 1px solid var(--ln)
+}
+/* ═══ RESPONSIVE ═══ */
+/* Tablet */
+@media(max-width:991px) {
+/* Hero carousel: scale down whole ring */
+.car__r {
+transform: scale(.72)
+}
+.hero__h {
+font-size: clamp(2rem, 5vw, 3.5rem)
+}
+/* Bento: stack large card, side-by-side small */
+.bento {
+grid-template-columns: 1fr 1fr
+}
+.b1 {
+grid-column: 1/3
+}
+.b2 {
+grid-column: 1/2;
+grid-row: 2
+}
+.b3 {
+grid-column: 2/3;
+grid-row: 2
+}
+.b4 {
+grid-column: 1/3;
+grid-row: 3
+}
+/* Steps: stack title and number, images 2-col */
+.step__top {
+flex-direction: column;
+gap: 1rem
+}
+.step__left {
+max-width: 100%
+}
+.step__n-wrap {
+position: absolute;
+top: 1.5rem;
+right: 1.5rem
+}
+.step__n {
+font-size: 5rem !important
+}
+.step {
+padding: 4rem 2rem 0
+}
+.step__images {
+flex-wrap: wrap
+}
+.step__img-wrap {
+flex: 1 1 45%;
+min-width: 45%
+}
+.step__img-wrap:last-child {
+flex: 1 1 100%
+}
+/* FAQ: stack side-by-side to vertical */
+.faq {
+flex-direction: column;
+gap: 1rem
+}
+.faq__l {
+min-width: auto
+}
+/* Footer: 2-col */
+.foot__top {
+grid-template-columns: 1fr 1fr;
+gap: 1.5rem
+}
+/* How: wrap */
+.how__row {
+flex-wrap: wrap
+}
+}
+/* Mobile */
+@media(max-width:767px) {
+/* Global padding */
+nav {
+padding: .6rem 1rem
+}
+.hero {
+padding: 3rem 1rem 0
+}
+.block,
+.bento,
+.how,
+.steps,
+.faq {
+padding-left: 1rem;
+padding-right: 1rem
+}
+/* Nav: hide links, keep logo + btn */
+.nl {
+display: none
+}
+.nr {
+gap: .75rem
+}
+/* Hero */
+.hero__h {
+font-size: clamp(2.2rem, 10vw, 3.5rem)
+}
+.hero__tag {
+font-size: .6rem
+}
+.car__r {
+transform: scale(.5)
+}
+/* Bento: single column */
+.bento {
+grid-template-columns: 1fr
+}
+.b1,
+.b2,
+.b3,
+.b4 {
+grid-column: 1/-1;
+grid-row: auto
+}
+.b4 {
+min-height: 180px
+}
+/* How It Works */
+.how__row {
+flex-direction: column;
+align-items: flex-start;
+gap: 1rem
+}
+.how__ai {
+font-size: 2rem !important
+}
+.how__si {
+font-size: 1.8rem !important;
+height: 2.5rem !important
+}
+.how__col {
+height: 2.5rem !important
+}
+/* Steps */
+.step {
+padding: 3.5rem 1rem 0;
+min-height: auto
+}
+.step__t {
+font-size: 1.5rem !important
+}
+.step__n {
+font-size: 3rem !important
+}
+.step__n-wrap {
+position: absolute;
+top: 1rem;
+right: 1rem
+}
+.step__info {
+grid-template-columns: 1fr
+}
+.step__info-col+.step__info-col {
+border-left: none;
+border-top: 1px solid rgba(255, 255, 255, .08)
+}
+.step__images {
+flex-direction: column
+}
+.step__img-wrap {
+flex: none;
+width: 100%
+}
+.step__divider {
+margin: 1rem 0 .75rem
+}
+.steps__top {
+flex-direction: column;
+align-items: flex-start;
+gap: .5rem
+}
+.steps__sub {
+text-align: left
+}
+/* Block statement */
+.block__top {
+flex-direction: column;
+align-items: flex-start;
+gap: .5rem
+}
+.block__h {
+text-align: left;
+font-size: clamp(1.8rem, 6vw, 2.5rem)
+}
+/* FAQ */
+.faq__h {
+font-size: 1.3rem !important
+}
+.faq__q {
+font-size: .85rem
+}
+/* Footer */
+.foot__top {
+grid-template-columns: 1fr;
+gap: 1.5rem
+}
+.foot__bot {
+flex-direction: column;
+gap: .3rem
+}
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+<body>
+
+  <div class="pre" id="pre"><b id="pn">0</b><small>synthara</small></div>
+
+  <nav id="nav">
+    <a href="#" class="logo">synthara</a>
+    <div class="nr"><a href="#feat" class="nl">Features</a><a href="#how" class="nl">How it works</a><a href="#faq"
+        class="nl">FAQ</a><button class="btn">Get started</button></div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero__main">
+      <div>
+        <div class="hero__tag">AI Music Production</div>
+        <h1 class="hero__h" data-flash>Your sound, <em>instantly composed.</em></h1>
+      </div>
+    </div>
+    <div class="car">
+      <div class="car__r" id="cr">
+        <div class="car__c" style="transform:rotateY(0deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(45deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(90deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(135deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(180deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(225deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(270deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=320&h=420&fit=crop" alt=""/>
+        </div>
+        <div class="car__c" style="transform:rotateY(315deg) translateZ(250px)"><img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=320&h=420&fit=crop" alt=""/>
+        </div>
+      </div>
+    </div>
+    <div class="tk">
+      <div class="tk__r">
+        <span class="tk__i">Film Scores</span><span class="tk__i">Podcasts</span><span class="tk__i">Lo-fi Beats</span><span class="tk__i">Ambient</span><span class="tk__i">Game Audio</span><span class="tk__i">Jingles</span><span class="tk__i">Sound Effects</span><span class="tk__i">Ad Music</span>
+        <span class="tk__i">Film Scores</span><span class="tk__i">Podcasts</span><span class="tk__i">Lo-fi Beats</span><span class="tk__i">Ambient</span><span class="tk__i">Game Audio</span><span class="tk__i">Jingles</span><span class="tk__i">Sound Effects</span><span class="tk__i">Ad Music</span>
+        <span class="tk__i">Film Scores</span><span class="tk__i">Podcasts</span><span class="tk__i">Lo-fi Beats</span><span class="tk__i">Ambient</span><span class="tk__i">Game Audio</span><span class="tk__i">Jingles</span><span class="tk__i">Sound Effects</span><span class="tk__i">Ad Music</span>
+        <span class="tk__i">Film Scores</span><span class="tk__i">Podcasts</span><span class="tk__i">Lo-fi Beats</span><span class="tk__i">Ambient</span><span class="tk__i">Game Audio</span><span class="tk__i">Jingles</span><span class="tk__i">Sound Effects</span><span class="tk__i">Ad Music</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="lt"></div>
+
+  <!-- Statement + Bento Feature Grid -->
+  <div class="block-wrap">
+    <div class="block" id="feat">
+      <div class="block__top">
+        <div class="block__tag">What you can create</div>
+        <h2 class="block__h" data-flash>Studio-grade audio.<br/>Made by AI.</h2>
+      </div>
+    </div>
+
+    <div class="bento">
+      <div class="b1">
+        <img class="b__img" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=450&fit=crop" alt="Concert"/>
+        <div class="b__body">
+          <div class="b__row">
+            <div class="b__dot"></div>
+            <div class="b__label">AI Track Composition</div>
+          </div>
+          <div class="b__title">Full arrangements, without the session musicians.</div>
+          <p class="b__copy">Describe a mood and get a complete, multi-layered track — strings, drums, synths, all mixed
+            and mastered.</p>
+          <div class="b__btn"><a href="#" class="btn">Get started</a></div>
+        </div>
+      </div>
+      <div class="b2">
+        <img class="b__img-tall" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=500&h=380&fit=crop" alt="Studio monitors"/>
+        <div class="b__body">
+          <div class="b__row">
+            <div class="b__dot"></div>
+            <div class="b__label">AI Sound Design</div>
+          </div>
+          <div class="b__title">Your concept, new soundscapes on demand.</div>
+          <p class="b__copy">Upload a reference track and we build unique textures and ambient layers around your
+            direction.</p>
+        </div>
+      </div>
+      <div class="b3">
+        <img class="b__img-tall" src="https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=500&h=380&fit=crop" alt="Mic"/>
+        <div class="b__body">
+          <div class="b__row">
+            <div class="b__dot"></div>
+            <div class="b__label">AI Audio Production</div>
+          </div>
+          <div class="b__title">Ad-ready audio in minutes.</div>
+          <p class="b__copy">Create on-brand jingles, podcast intros, and campaign tracks for any platform.</p>
+        </div>
+      </div>
+      <div class="b4">
+        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=1000&h=400&fit=crop" alt="Concert"/>
+        <div class="b4__t">
+          <div class="b4__tag">Built for creators</div>
+          <div class="b4__h">From bedroom producers to enterprise teams.</div>
+          <p class="b4__p">Whether you're scoring a film or building a brand playlist, Synthara adapts.</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- /block-wrap -->
+
+  <div class="ln"></div>
+
+  <!-- How It Works -->
+  <div class="how-wrap">
+    <section class="how" id="how">
+      <div class="how__tag">How It Works</div>
+      <div class="how__row">
+        <div class="how__ai" data-flash>AI that</div>
+        <div class="how__col">
+          <div class="how__scroll">
+            <div class="how__si">Composes tracks</div>
+            <div class="how__si">Designs sounds</div>
+            <div class="how__si">Stays on-brand</div>
+            <div class="how__si">Composes tracks</div>
+          </div>
+        </div>
+        <a href="#" class="btn">Get started</a>
+      </div>
+    </section>
+  </div><!-- /how-wrap -->
+
+  <div class="lt"></div>
+
+  <div class="trust">
+    <div class="trust__l">Trusted By</div>
+    <div class="trust__r">
+      <span class="trust__i">LUNAR STUDIOS</span><span class="trust__i">VOXEL MEDIA</span><span class="trust__i">PRISM AUDIO</span><span class="trust__i">ECHO LABS</span><span class="trust__i">DRIFT CREATIVE</span><span class="trust__i">NOVA SOUND</span><span class="trust__i">HELIX MUSIC</span><span class="trust__i">ARCWAVE</span><span class="trust__i">SONIQ</span><span class="trust__i">WAVEFORM CO</span>
+      <span class="trust__i">LUNAR STUDIOS</span><span class="trust__i">VOXEL MEDIA</span><span class="trust__i">PRISM AUDIO</span><span class="trust__i">ECHO LABS</span><span class="trust__i">DRIFT CREATIVE</span><span class="trust__i">NOVA SOUND</span><span class="trust__i">HELIX MUSIC</span><span class="trust__i">ARCWAVE</span><span class="trust__i">SONIQ</span><span class="trust__i">WAVEFORM CO</span>
+      <span class="trust__i">LUNAR STUDIOS</span><span class="trust__i">VOXEL MEDIA</span><span class="trust__i">PRISM AUDIO</span><span class="trust__i">ECHO LABS</span><span class="trust__i">DRIFT CREATIVE</span><span class="trust__i">NOVA SOUND</span><span class="trust__i">HELIX MUSIC</span><span class="trust__i">ARCWAVE</span><span class="trust__i">SONIQ</span><span class="trust__i">WAVEFORM CO</span>
+      <span class="trust__i">LUNAR STUDIOS</span><span class="trust__i">VOXEL MEDIA</span><span class="trust__i">PRISM AUDIO</span><span class="trust__i">ECHO LABS</span><span class="trust__i">DRIFT CREATIVE</span><span class="trust__i">NOVA SOUND</span><span class="trust__i">HELIX MUSIC</span><span class="trust__i">ARCWAVE</span><span class="trust__i">SONIQ</span><span class="trust__i">WAVEFORM CO</span>
+    </div>
+  </div>
+
+  <div class="dots-wrap">
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="lt"></div>
+
+  <!-- Steps -->
+  <div class="steps-wrap">
+    <section class="steps" id="steps">
+      <div class="steps__top">
+        <h2 class="steps__h" data-flash>From concept to tracks<br/>in four steps.</h2>
+        <div class="steps__sub">Sign up free and supercharge<br/>your audio workflow.</div>
+      </div>
+      <div class="steps__list">
+        <div class="step__slide">
+          <div class="step">
+            <div class="step__top">
+              <div class="step__left">
+                <div class="step__head">
+                  <div class="step__code">(SI)</div>
+                </div>
+                <div class="step__label">
+                  <div class="step__dot"></div>
+                  <div class="step__cat">Brand Setup</div>
+                </div>
+                <div class="step__t">Set your sonic<br/>identity.</div>
+                <p class="step__desc">Upload your brand references and let Synthara learn your sound DNA before
+                  generating anything.</p>
+                <div class="step__info">
+                  <div class="step__info-col">
+                    <div class="step__tag">50+ genre presets</div>
+                    <p class="step__p">Store your brand sounds and tonal preferences.</p>
+                  </div>
+                  <div class="step__info-col">
+                    <div class="step__tag">Custom mood controls</div>
+                    <p class="step__p">Define energy, tempo, and emotion for every generation.</p>
+                  </div>
+                </div>
+                <div class="step__cta"><a href="#" class="btn">Get started</a></div>
+              </div>
+              <div class="step__n-wrap">
+                <div class="step__n">01</div>
+                <div class="step__n-line"></div>
+              </div>
+            </div>
+            <div class="step__divider"></div>
+            <div class="step__images">
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1563330232-57114bb0823c?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Presets</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Studio</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Monitors</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step__slide">
+          <div class="step">
+            <div class="step__top">
+              <div class="step__left">
+                <div class="step__head">
+                  <div class="step__code">(GV)</div>
+                </div>
+                <div class="step__label">
+                  <div class="step__dot"></div>
+                  <div class="step__cat">Generation</div>
+                </div>
+                <div class="step__t">AI generates<br/>variations.</div>
+                <p class="step__desc">Describe a direction or let AI surprise you. Multiple takes, different
+                  arrangements, all on-brand.</p>
+                <div class="step__info">
+                  <div class="step__info-col">
+                    <div class="step__tag">Style variations</div>
+                    <p class="step__p">Explore new arrangements and instrumentation.</p>
+                  </div>
+                  <div class="step__info-col">
+                    <div class="step__tag">Mood shifts</div>
+                    <p class="step__p">Shift between energetic, mellow, or dark vibes.</p>
+                  </div>
+                </div>
+                <div class="step__cta"><a href="#" class="btn">Get started</a></div>
+              </div>
+              <div class="step__n-wrap">
+                <div class="step__n">02</div>
+                <div class="step__n-line"></div>
+              </div>
+            </div>
+            <div class="step__divider"></div>
+            <div class="step__images">
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Compose</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Mix</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Master</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step__slide">
+          <div class="step">
+            <div class="step__top">
+              <div class="step__left">
+                <div class="step__head">
+                  <div class="step__code">(BT)</div>
+                </div>
+                <div class="step__label">
+                  <div class="step__dot"></div>
+                  <div class="step__cat">Selection</div>
+                </div>
+                <div class="step__t">Pick the<br/>best take.</div>
+                <p class="step__desc">Listen, compare, and cherry-pick. Every variation is production-ready from the
+                  start.</p>
+                <div class="step__info">
+                  <div class="step__info-col">
+                    <div class="step__tag">A/B comparison</div>
+                    <p class="step__p">Compare versions side by side and select the best.</p>
+                  </div>
+                  <div class="step__info-col">
+                    <div class="step__tag">Instant preview</div>
+                    <p class="step__p">Listen in real-time before committing.</p>
+                  </div>
+                </div>
+                <div class="step__cta"><a href="#" class="btn">Get started</a></div>
+              </div>
+              <div class="step__n-wrap">
+                <div class="step__n">03</div>
+                <div class="step__n-line"></div>
+              </div>
+            </div>
+            <div class="step__divider"></div>
+            <div class="step__images">
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Compare</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Preview</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Select</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step__slide">
+          <div class="step">
+            <div class="step__top">
+              <div class="step__left">
+                <div class="step__head">
+                  <div class="step__code">(EP)</div>
+                </div>
+                <div class="step__label">
+                  <div class="step__dot"></div>
+                  <div class="step__cat">Export</div>
+                </div>
+                <div class="step__t">Export &amp;<br/>publish.</div>
+                <p class="step__desc">One click to download masters, stems, or push live to your platform of choice.</p>
+                <div class="step__info">
+                  <div class="step__info-col">
+                    <div class="step__tag">WAV / MP3 / FLAC</div>
+                    <p class="step__p">Download production-ready files or stems.</p>
+                  </div>
+                  <div class="step__info-col">
+                    <div class="step__tag">Stems included</div>
+                    <p class="step__p">Push directly to your platform of choice.</p>
+                  </div>
+                </div>
+                <div class="step__cta"><a href="#" class="btn">Get started</a></div>
+              </div>
+              <div class="step__n-wrap">
+                <div class="step__n">04</div>
+                <div class="step__n-line"></div>
+              </div>
+            </div>
+            <div class="step__divider"></div>
+            <div class="step__images">
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">WAV</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Stems</div>
+              </div>
+              <div class="step__img-wrap"><img class="step__img" src="https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=500&h=380&fit=crop" alt=""/>
+                <div class="step__img-label">Publish</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /steps-wrap -->
+
+  <div class="lt"></div>
+
+  <!-- FAQ -->
+  <div class="faq-wrap">
+    <section class="faq" id="faq">
+      <div class="faq__l">
+        <div class="faq__tag">FAQs</div>
+      </div>
+      <div class="faq__r">
+        <h2 class="faq__h" data-flash>Not AI-generated answers. Real ones here.</h2>
+        <div class="faq__i">
+          <div class="faq__q"><span>What kind of audio can Synthara create?</span><span class="faq__ic">+</span></div>
+          <div class="faq__a">
+            <p>Full tracks, background music, jingles, soundscapes, podcast intros, and sound effects for ads, games,
+              videos, and social media.</p>
+          </div>
+        </div>
+        <div class="faq__i">
+          <div class="faq__q"><span>What do I need to get started?</span><span class="faq__ic">+</span></div>
+          <div class="faq__a">
+            <p>Just a text description of the mood, genre, or vibe you want. You can also upload a reference track.</p>
+          </div>
+        </div>
+        <div class="faq__i">
+          <div class="faq__q"><span>Will the music match my brand sound?</span><span class="faq__ic">+</span></div>
+          <div class="faq__a">
+            <p>Yes. We learn from your reference audio and keep tempo, tone, and instrumentation consistent.</p>
+          </div>
+        </div>
+        <div class="faq__i">
+          <div class="faq__q"><span>Do I own the tracks you generate?</span><span class="faq__ic">+</span></div>
+          <div class="faq__a">
+            <p>Yes. All generated audio is fully licensed for commercial use across any channel.</p>
+          </div>
+        </div>
+        <div class="faq__i">
+          <div class="faq__q"><span>How fast do I get results?</span><span class="faq__ic">+</span></div>
+          <div class="faq__a">
+            <p>Most tracks generate in under 30 seconds. Longer compositions may take a few minutes.</p>
+          </div>
+        </div>
+        <div class="faq__i">
+          <div class="faq__q"><span>Does this replace my music producer?</span><span class="faq__ic">+</span></div>
+          <div class="faq__a">
+            <p>No. It accelerates production so your team can focus on creative direction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /faq-wrap -->
+
+  <div class="ln"></div>
+
+  <footer class="foot">
+    <div class="foot__top">
+      <div class="foot__logo">synthara</div>
+      <div class="foot__col">
+        <div class="foot__ct">Product</div><a href="#">Tracks</a><a href="#">Sound Design</a><a href="#">Audio
+          Production</a>
+      </div>
+      <div class="foot__col">
+        <div class="foot__ct">Legal</div><a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+      </div>
+      <div class="foot__col">
+        <div class="foot__ct">Social</div><a href="#">Instagram</a><a href="#">Twitter / X</a><a href="#">YouTube</a>
+      </div>
+    </div>
+    <div class="foot__bot"><span>&copy; 2026 Synthara Ltd.</span><span>AI-powered music production.</span></div>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+!function(){const p=document.getElementById('pre'),n=document.getElementById('pn');
+gsap.to('.pre b,.pre small',{opacity:1,duration:.4,stagger:.08,delay:.1});
+let c=0,iv=setInterval(()=>{c+=~~(Math.random()*8)+4;if(c>=100){c=100;clearInterval(iv);
+gsap.to('.pre b,.pre small',{opacity:0,duration:.25,stagger:.04,delay:.25,onComplete(){p.classList.add('done');document.body.classList.add('ok');go()}})}n.textContent=c},25)}();
+
+addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('s',scrollY>40));
+document.querySelectorAll('.faq__q').forEach(q=>q.onclick=()=>{const i=q.parentElement;document.querySelectorAll('.faq__i').forEach(x=>{if(x!==i)x.classList.remove('open')});i.classList.toggle('open')});
+gsap.to('#cr',{rotationY:360,duration:24,ease:'none',repeat:-1,transformStyle:'preserve-3d'});
+
+!function(){const d=document.getElementById('dots');
+const cols=innerWidth>=768?64:32,rows=12;
+const bars=[];
+for(let c=0;c<cols;c++){const bar=document.createElement('div');bar.className='dots__bar';
+const dots=[];for(let r=0;r<rows;r++){const dot=document.createElement('div');dot.className='dot';bar.appendChild(dot);dots.push(dot)}
+d.appendChild(bar);bars.push(dots)}
+// Animate like equalizer
+function pump(){bars.forEach((dots,ci)=>{
+  const level=Math.floor(Math.random()*rows*.8)+1;
+  const wave=Math.sin(ci*.3+Date.now()*.002)*3;
+  const h=Math.max(1,Math.min(rows,Math.floor(level+wave)));
+  dots.forEach((dot,ri)=>{
+    if(ri<h){dot.classList.add('on');dot.classList.toggle('mid',ri<h-2)}
+    else{dot.classList.remove('on','mid')}
+  })});requestAnimationFrame(pump)}pump()}();
+
+function go(){
+  document.querySelectorAll('[data-flash]').forEach(el=>{
+    const w=[];el.childNodes.forEach(n=>{
+      if(n.nodeType===3)n.textContent.trim().split(/\s+/).filter(Boolean).forEach(t=>w.push({t,d:0}));
+      else if(n.tagName==='EM')n.textContent.trim().split(/\s+/).filter(Boolean).forEach(t=>w.push({t,d:1}));
+    });if(!w.length)return;
+    el.innerHTML=w.map(x=>`<span style="display:inline-block;${x.d?'font-weight:300;font-style:normal;':''}opacity:0">${x.t}</span>`).join(' ');
+    ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter(){
+      el.querySelectorAll('span').forEach((s,i)=>{
+        gsap.timeline({delay:i*.12})
+        .to(s,{opacity:1,color:'var(--t)',duration:.3,ease:'power2.out'})
+        .to(s,{color:'var(--a)',duration:.15})
+        .to(s,{color:s.style.fontWeight==='300'?'var(--tx2)':'var(--tx)',duration:.4,ease:'power1.out'})
+      })}});
+  });
+
+  gsap.utils.toArray('.b1,.b2,.b3,.b4').forEach((c,i)=>{
+    gsap.fromTo(c,{y:30,opacity:0},{y:0,opacity:1,duration:.6,delay:i*.1,ease:'power2.out',scrollTrigger:{trigger:c,start:'top 92%',once:true}})});
+  // Scroll-pinned stacking step cards
+  if(window.innerWidth>=768){
+    document.querySelectorAll('.step__slide').forEach((slide,i,all)=>{
+      const step=slide.querySelector('.step');
+      if(i<all.length-1){
+        gsap.to(step,{
+          scale:.9,
+          rotationX:6,
+          opacity:0,
+          ease:'none',
+          scrollTrigger:{trigger:slide,pin:true,start:'top top',end:'+=80%',scrub:1}
+        });
+      } else {
+        // Last card: no pin, just show
+      }
+    });
+  }
+  gsap.utils.toArray('.faq__i').forEach((f,i)=>{
+    gsap.fromTo(f,{y:10,opacity:0},{y:0,opacity:1,duration:.35,delay:i*.05,ease:'power2.out',scrollTrigger:{trigger:f,start:'top 94%',once:true}})});
+  // Ensure anything already in view is visible
+  ScrollTrigger.refresh();
+
+  // 3D tilt on bento cards
+  document.querySelectorAll('.b1,.b2,.b3').forEach(card=>{
+    card.style.transformStyle='preserve-3d';
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      gsap.to(card,{rotateY:x*6,rotateX:-y*4,duration:.3,ease:'power2.out'});
+    });
+    card.addEventListener('mouseleave',()=>{
+      gsap.to(card,{rotateY:0,rotateX:0,duration:.5,ease:'elastic.out(1,.6)'});
+    });
+  });
+
+  // Cursor glow follower
+  const glow=document.createElement('div');
+  glow.style.cssText='position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,.06),transparent 70%);pointer-events:none;z-index:9997;transform:translate(-50%,-50%);transition:opacity .3s';
+  glow.style.opacity='0';
+  document.body.appendChild(glow);
+  document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';glow.style.opacity='1'});
+  document.addEventListener('mouseleave',()=>{glow.style.opacity='0'});
+}
+  </script>
+</body>
+
+</html>

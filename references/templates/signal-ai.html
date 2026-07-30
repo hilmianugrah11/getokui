@@ -1,0 +1,2746 @@
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Sales Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap');
+body {
+font-family: 'Inter', sans-serif;
+}
+</style>
+<style>
+.reveal-item {
+opacity: 0;
+transform: translateY(10px);
+}
+.reveal-item.is-visible {
+opacity: 1;
+transform: translateY(0);
+transition: opacity 700ms ease, transform 700ms ease;
+}
+</style>
+<style>
+@keyframes marquee-left {
+0% {
+transform: translateX(0)
+}
+100% {
+transform: translateX(-50%)
+}
+}
+@keyframes marquee-right {
+0% {
+transform: translateX(-50%)
+}
+100% {
+transform: translateX(0)
+}
+}
+.animate-marquee-left {
+animation: marquee-left 40s linear infinite
+}
+.animate-marquee-right {
+animation: marquee-right 40s linear infinite
+}
+.mask-fade {
+-webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent)
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+  <body class="bg-[#030303] text-zinc-400 antialiased selection:bg-emerald-500/30 overflow-x-hidden relative min-h-screen">
+    <!-- WebGL Starfield Background -->
+    <canvas id="webgl-stars" class="fixed inset-0 z-0 pointer-events-none opacity-60" width="1728" height="949"></canvas>
+
+    <!-- WebGL-style Noise Overlay -->
+    <div class="fixed inset-0 opacity-[0.04] pointer-events-none z-50 mix-blend-overlay" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"></div>
+
+    <!-- Animated Ambient Lights -->
+    <div id="light1" class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-600/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+    <div id="light2" class="fixed bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-amber-600/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
+
+    <div class="z-10 w-full relative">
+      <!-- 1. Top Navigation -->
+      <nav class="sticky top-0 z-50 bg-[#030303]/80 backdrop-blur-sm border-b border-zinc-800/50">
+        <div class="max-w-[1200px] mx-auto px-6 py-5 flex flex-wrap md:flex-nowrap items-center md:gap-4 lg:gap-8 relative">
+          <!-- Logo -->
+          <div class="flex-shrink-0 flex items-center gap-1 text-xl tracking-tight font-normal text-white">
+            Signal
+            <div class="h-7 px-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg flex items-center justify-center">
+              <span class="text-sm font-semibold text-emerald-300 tracking-wide">
+                AI
+              </span>
+            </div>
+          </div>
+
+          <!-- Mobile Actions & Hamburger -->
+          <div class="flex items-center gap-4 ml-auto md:hidden">
+            <a href="#" class="flex items-center justify-center px-4 py-1.5 bg-zinc-800 text-emerald-400 border border-emerald-500/30 rounded-full text-sm font-normal hover:bg-zinc-700 shadow-[0_0_15px_rgba(16,185,129,0.2)] transition-all">
+              Start free
+            </a>
+            <button id="mobile-menu-btn" onclick="const menu = document.getElementById('mobile-menu'); const expanded = this.getAttribute('aria-expanded') === 'true'; this.setAttribute('aria-expanded', !expanded); menu.classList.toggle('opacity-0'); menu.classList.toggle('invisible'); menu.classList.toggle('-translate-y-4'); menu.classList.toggle('opacity-100'); menu.classList.toggle('visible'); menu.classList.toggle('translate-y-0');" class="text-zinc-400 hover:text-white transition-colors flex items-center justify-center p-1 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 rounded-md" aria-expanded="false" aria-label="Toggle navigation">
+              <iconify-icon icon="solar:hamburger-menu-linear" class="text-2xl" stroke-width="1.5"></iconify-icon>
+            </button>
+          </div>
+
+          <!-- Center Links (Desktop & Tablet Row 1) -->
+          <div class="hidden lg:flex flex-1 justify-center items-center gap-6 lg:gap-8 text-base text-zinc-400 font-normal">
+            <a href="#" class="hover:text-emerald-300 transition-colors drop-shadow-[0_0_5px_rgba(52,211,153,0)] hover:drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">
+              Platform
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors drop-shadow-[0_0_5px_rgba(52,211,153,0)] hover:drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">
+              Solutions
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors drop-shadow-[0_0_5px_rgba(52,211,153,0)] hover:drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">
+              Customers
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors drop-shadow-[0_0_5px_rgba(52,211,153,0)] hover:drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">
+              Resources
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors drop-shadow-[0_0_5px_rgba(52,211,153,0)] hover:drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">
+              Pricing
+            </a>
+          </div>
+          <div class="hidden md:flex lg:hidden flex-1 justify-center items-center gap-6 text-base text-zinc-400 font-normal relative">
+            <a href="#" class="hover:text-emerald-300 transition-colors drop-shadow-[0_0_5px_rgba(52,211,153,0)] hover:drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">
+              Platform
+            </a>
+            <button id="tablet-more-btn" onclick="const menu = document.getElementById('tablet-more-menu'); const expanded = this.getAttribute('aria-expanded') === 'true'; this.setAttribute('aria-expanded', !expanded); menu.classList.toggle('opacity-0'); menu.classList.toggle('invisible'); menu.classList.toggle('-translate-y-2'); menu.classList.toggle('opacity-100'); menu.classList.toggle('visible'); menu.classList.toggle('translate-y-0');" class="flex items-center gap-1 hover:text-emerald-300 transition-colors focus:outline-none" aria-expanded="false" aria-controls="tablet-more-menu">
+              More
+              <iconify-icon icon="lucide:chevron-down" class="text-sm"></iconify-icon>
+            </button>
+            <div id="tablet-more-menu" class="absolute top-full mt-4 left-1/2 -translate-x-1/2 w-48 bg-[#030303]/95 backdrop-blur-xl border border-zinc-800/50 rounded-xl px-5 py-5 flex flex-col gap-4 shadow-2xl transition-all duration-300 opacity-0 -translate-y-2 invisible z-50">
+              <a href="#" class="hover:text-emerald-300 transition-colors">
+                Solutions
+              </a>
+              <a href="#" class="hover:text-emerald-300 transition-colors">
+                Customers
+              </a>
+              <a href="#" class="hover:text-emerald-300 transition-colors">
+                Resources
+              </a>
+              <a href="#" class="hover:text-emerald-300 transition-colors">
+                Pricing
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Actions (Desktop & Tablet Row 2) -->
+          <div class="hidden md:flex items-center justify-end flex-shrink-0 gap-4 ml-auto whitespace-nowrap">
+            <a href="#" class="text-base text-zinc-400 hover:text-white font-normal transition-colors">
+              Log in
+            </a>
+            <a href="#" class="flex items-center justify-center px-4 py-2 border border-zinc-700 bg-zinc-900/50 rounded-full text-base font-normal text-zinc-300 hover:bg-zinc-800 transition-colors backdrop-blur-sm">
+              Book a demo
+            </a>
+            <a href="#" class="flex items-center justify-center px-5 py-2 bg-zinc-800 text-emerald-400 border border-emerald-500/30 rounded-full text-base font-normal hover:bg-zinc-700 shadow-[0_0_15px_rgba(16,185,129,0.2)] transition-all hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+              Start free
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="absolute top-full left-0 w-full bg-[#030303]/95 backdrop-blur-xl border-b border-zinc-800/50 px-6 py-6 flex flex-col gap-6 shadow-2xl transition-all duration-300 opacity-0 -translate-y-4 invisible md:hidden z-40">
+          <div class="flex flex-col gap-4 text-base text-zinc-400 font-normal">
+            <a href="#" class="hover:text-emerald-300 transition-colors">
+              Platform
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors">
+              Solutions
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors">
+              Customers
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors">
+              Resources
+            </a>
+            <a href="#" class="hover:text-emerald-300 transition-colors">
+              Pricing
+            </a>
+          </div>
+          <div class="h-px w-full bg-zinc-800/50"></div>
+          <div class="flex flex-col gap-4 text-base text-zinc-400 font-normal">
+            <a href="#" class="hover:text-white transition-colors">Log in</a>
+            <a href="#" class="inline-flex items-center justify-center px-4 py-2 border border-zinc-700 bg-zinc-900/50 rounded-full text-base font-normal text-zinc-300 hover:bg-zinc-800 transition-colors backdrop-blur-sm w-fit">
+              Book a demo
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- 2. Hero Section -->
+      <section class="text-center max-w-[900px] mr-auto ml-auto pt-24 pr-6 pb-16 pl-6">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900/80 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_4px_10px_rgba(0,0,0,0.5)] border border-zinc-700/50 mb-8 backdrop-blur-md mx-auto">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+          </span>
+          <span class="text-xs font-light text-emerald-300 tracking-wide uppercase drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]">
+            AI Sales Engine
+          </span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-extralight tracking-tight leading-[1.1] mb-6 text-white drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+          <span class="block">The AI sales engine for</span>
+          <span class="block text-transparent bg-clip-text bg-gradient-to-b from-emerald-300 to-emerald-600 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)] italic font-light">
+            smarter, faster
+          </span>
+          <span class="block">pipeline growth</span>
+        </h1>
+        <p class="text-xl text-zinc-300/80 mb-10 max-w-2xl mx-auto font-extralight leading-relaxed">
+          SignalAI helps teams find high-intent accounts, generate multi-channel
+          outreach, and turn signals into pipeline.
+        </p>
+
+        <!-- Signup Form -->
+        <div class="max-w-md mx-auto">
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            <a href="#" class="w-full sm:w-auto px-8 py-3 bg-zinc-800 text-emerald-400 border border-emerald-500/30 rounded-full text-base font-light shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:bg-zinc-700 transition-all hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] whitespace-nowrap">
+              Start free
+            </a>
+            <a href="#" class="w-full sm:w-auto px-8 py-3 bg-zinc-900/50 border border-zinc-700/50 text-zinc-200 rounded-full text-base font-light hover:bg-zinc-800 hover:text-white transition-all backdrop-blur-sm whitespace-nowrap">
+              View demo
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. AI Demo Card Section -->
+      <section class="px-6 pb-24">
+        <div class="max-w-[1000px] mx-auto">
+          <div class="p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+            <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></div>
+            <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+
+            <div class="relative rounded-[20px] bg-[#020a02] shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col h-[450px] overflow-hidden">
+              <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background: repeating-linear-gradient(0deg, #000, #000 2px, transparent 2px, transparent 4px);"></div>
+              <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+              <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration: 4s;"></div>
+
+              <!-- Chat Area -->
+              <div class="relative z-30 flex-1 p-8 flex flex-col gap-8 overflow-y-auto">
+                <!-- User Message -->
+                <div class="bg-zinc-900 border border-zinc-700/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)] text-zinc-200 px-6 py-5 rounded-2xl rounded-tr-sm self-end max-w-[85%] text-lg font-light reveal-item">
+                  Create a multi-channel campaign for VP Engineering at Series A
+                  SaaS companies in North America.
+                </div>
+
+                <!-- Bot Response -->
+                <div class="flex flex-col self-start max-w-[90%] w-full">
+                  <p class="text-2xl font-light tracking-tight text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.4)] leading-snug mb-4 reveal-item">
+                    Acknowledged. Initializing VP Engineering sequence.
+                  </p>
+                  <div class="border-l-[1.5px] border-emerald-500/50 pl-4 py-1 mb-4 flex items-center gap-2 reveal-item">
+                    <iconify-icon icon="solar:database-linear" class="text-emerald-400" stroke-width="1.5"></iconify-icon>
+                    <span class="text-base font-extralight text-emerald-400/80">
+                      1,259 verified nodes located. Generating outreach plan.
+                    </span>
+                  </div>
+                  <div class="bg-[#051005] border border-emerald-500/20 shadow-[inset_0_1px_2px_rgba(16,185,129,0.05)] rounded-xl p-4 text-sm font-light w-full reveal-item">
+                    <div class="text-emerald-300 mb-3 text-base">
+                      Subject: Scaling engineering throughput
+                    </div>
+                    <ul class="list-disc pl-4 space-y-1.5 mb-4 text-emerald-400/80">
+                      <li>Reference recent Series A funding</li>
+                      <li>Highlight delivery bottlenecks</li>
+                      <li>Propose API integration</li>
+                    </ul>
+                    <div class="text-emerald-500/90 italic border-t border-emerald-500/20 pt-3 font-extralight">
+                      "Hi {Name}, saw the recent Series A—congrats on the
+                      growth. As you scale the engineering org..."
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input Area -->
+              <div class="relative z-30 p-4 border-t border-zinc-900 bg-black/40 backdrop-blur-md">
+                <div class="flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 rounded-xl p-2 px-4 shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)]">
+                  <input type="text" placeholder="Enter command sequence..." class="flex-1 bg-transparent border-none focus:outline-none text-lg text-emerald-100 placeholder:text-zinc-600 font-light py-2">
+                  <button class="w-8 h-8 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-emerald-500/30 rounded-lg transition-colors shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <iconify-icon icon="solar:alt-arrow-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Wrapper for Sections -->
+      <div class="pt-24 pb-24 bg-black/20 backdrop-blur-sm relative z-10">
+        <!-- 4. Social Proof Logos -->
+        <section class="mb-24 relative">
+          <div class="max-w-[1200px] mx-auto px-6 mb-10 text-center flex flex-col items-center gap-3">
+            <div class="text-base md:text-lg font-light tracking-[0.15em] uppercase text-white">
+              Trusted by leading revenue teams
+            </div>
+            <div class="text-xs md:text-sm font-light tracking-widest text-emerald-400 uppercase drop-shadow-[0_0_2px_rgba(16,185,129,0.5)]">
+              Active in 500,000+ networks
+            </div>
+          </div>
+          <div class="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
+            <div class="absolute top-0 left-0 w-24 md:w-40 h-full bg-gradient-to-r from-[#030303] to-transparent z-20 pointer-events-none"></div>
+            <div class="absolute top-0 right-0 w-24 md:w-40 h-full bg-gradient-to-l from-[#030303] to-transparent z-20 pointer-events-none"></div>
+            <div id="logo-marquee-track" class="flex w-max items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-80 transition-all duration-500 mix-blend-screen text-zinc-300">
+              <div class="flex items-center gap-x-12 pr-12">
+                <span class="text-xl md:text-2xl font-light tracking-tight font-serif italic">
+                  AUTODESK
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tighter flex items-center gap-1">
+                  <iconify-icon icon="solar:soundwave-linear" class="text-xl md:text-2xl" stroke-width="1.5"></iconify-icon>
+                  Dolby
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight flex items-center gap-1">
+                  <iconify-icon icon="solar:global-linear" class="text-xl md:text-2xl" stroke-width="1.5"></iconify-icon>
+                  SMARTLING
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight italic">
+                  Reddit
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-widest">
+                  ANTHROPIC
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  DocuSign
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  Vercel
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  Atlassian
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  HubSpot
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tighter">
+                  Shopify
+                </span>
+              </div>
+              <div class="flex items-center gap-x-12 pr-12" aria-hidden="true">
+                <span class="text-xl md:text-2xl font-light tracking-tight font-serif italic">
+                  AUTODESK
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tighter flex items-center gap-1">
+                  <iconify-icon icon="solar:soundwave-linear" class="text-xl md:text-2xl" stroke-width="1.5"></iconify-icon>
+                  Dolby
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight flex items-center gap-1">
+                  <iconify-icon icon="solar:global-linear" class="text-xl md:text-2xl" stroke-width="1.5"></iconify-icon>
+                  SMARTLING
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight italic">
+                  Reddit
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-widest">
+                  ANTHROPIC
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  DocuSign
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  Vercel
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  Atlassian
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tight">
+                  HubSpot
+                </span>
+                <span class="text-xl md:text-2xl font-light tracking-tighter">
+                  Shopify
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. Testimonial + Stats -->
+        <section class="max-w-[1200px] mx-auto px-6">
+          <div class="flex flex-col lg:flex-row gap-16 mb-16 items-start justify-between">
+            <h2 class="text-3xl md:text-4xl font-light tracking-tight text-white leading-[1.3] max-w-3xl drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+              "SignalAI completely changed how our RevOps team runs outbound. We
+              identify buying signals instantly and launch targeted sequences in
+              minutes. What used to take days of research now happens
+              automatically."
+            </h2>
+            <div class="flex flex-col items-start lg:items-end text-left lg:text-right shrink-0">
+              <div class="text-lg md:text-xl text-white font-light tracking-tight">
+                Daniel Reeves
+              </div>
+              <div class="uppercase text-xs text-zinc-500 tracking-widest">
+                Revenue Ops Lead
+              </div>
+              <div class="text-sm text-emerald-300 font-light tracking-tight mt-2 flex items-center gap-2 drop-shadow-[0_0_8px_rgba(110,231,183,0.5)]">
+                Northstar Labs
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Grid (from template Metrics Row) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl shadow-[inset_0_1px_10px_rgba(0,0,0,1),_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-800 flex flex-col h-56 justify-between relative overflow-hidden group">
+              <div class="absolute top-0 left-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+              <div class="flex flex-col h-full relative z-10 justify-between">
+                <div class="">
+                  <div class="text-7xl font-light tracking-tighter text-emerald-400 leading-none drop-shadow-[0_0_12px_rgba(52,211,153,0.6)] mb-4">
+                    86%
+                  </div>
+                  <h3 class="text-lg text-white font-light leading-tight">
+                    More qualified accounts
+                  </h3>
+                  <p class="text-sm text-zinc-400 font-light mt-1">
+                    Higher intent coverage
+                  </p>
+                </div>
+                <div class="mt-5 flex items-center gap-1.5 text-sm font-light text-zinc-500 group-hover:text-emerald-400 transition-colors">
+                  <iconify-icon icon="solar:chat-square-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                  SignalBase
+                </div>
+              </div>
+            </div>
+            <div class="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl shadow-[inset_0_1px_10px_rgba(0,0,0,1),_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-800 flex flex-col h-56 justify-between relative overflow-hidden group">
+              <div class="absolute top-0 left-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
+              <div class="flex flex-col h-full relative z-10 justify-between">
+                <div>
+                  <div class="text-7xl font-light tracking-tighter text-amber-400 leading-none drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] mb-4">
+                    6×
+                  </div>
+                  <h3 class="text-lg text-white font-light leading-tight">
+                    Faster sequences shipped
+                  </h3>
+                  <p class="text-sm text-zinc-400 font-light mt-1">
+                    Same team, more output
+                  </p>
+                </div>
+                <div class="mt-5 flex items-center gap-1.5 text-sm font-light text-zinc-500 group-hover:text-amber-400 transition-colors">
+                  <iconify-icon icon="lucide:rocket" class="text-lg" stroke-width="1.5"></iconify-icon>
+                  OrbitIQ
+                </div>
+              </div>
+            </div>
+            <div class="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl shadow-[inset_0_1px_10px_rgba(0,0,0,1),_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-800 flex flex-col h-56 justify-between relative overflow-hidden group">
+              <div class="absolute top-0 left-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+              <div class="flex flex-col h-full relative z-10 justify-between">
+                <div>
+                  <div class="text-7xl font-light tracking-tighter text-cyan-400 leading-none drop-shadow-[0_0_12px_rgba(34,211,238,0.6)] mb-4">
+                    72%
+                  </div>
+                  <h3 class="text-lg text-white font-light leading-tight">
+                    Lower wasted outreach
+                  </h3>
+                  <p class="text-sm text-zinc-400 font-light mt-1">
+                    Less spam, more replies
+                  </p>
+                </div>
+                <div class="mt-5 flex items-center gap-1.5 text-sm font-light text-zinc-500 group-hover:text-cyan-400 transition-colors">
+                  <iconify-icon icon="solar:database-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                  VectorLabs
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="w-full h-px relative overflow-hidden">
+        <!-- base faded line -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"></div>
+        <!-- center glow -->
+        <div class="absolute left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent drop-shadow-[0_0_8px_rgba(16,185,129,0.35)]"></div>
+      </div>
+
+      <!-- 6. Product Feature Grid -->
+      <section class="py-24 px-6 max-w-[1200px] mx-auto text-center relative z-10">
+        <h2 class="text-4xl md:text-5xl font-extralight tracking-tight text-white mb-4 drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+          Complete sales architecture,
+
+          <br class="hidden md:block">
+          <span class="block text-zinc-300/70">signal to pipeline</span>
+        </h2>
+        <p class="text-lg text-zinc-400 font-extralight mb-16 max-w-xl mx-auto">
+          Powered by our core framework, one of the
+          <br class="hidden md:block">
+          largest intent networks online.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+          <!-- Feature 1 (Updated: no duplicate "Real-time scoring", better front microline, back fully left-aligned + improved spacing) -->
+          <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center text-center hover:bg-zinc-800/60 transition-colors backdrop-blur-sm group shadow-[inset_0_1px_2px_rgba(255,255,255,0.02)] relative overflow-hidden min-h-[400px]">
+            <!-- Front content (vertically centered) -->
+            <div class="relative z-10 flex flex-col items-center justify-center flex-1 transition-opacity duration-200 md:group-hover:opacity-0">
+              <div class="w-12 h-12 bg-emerald-950 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(16,185,129,0.1)] border border-emerald-500/20 group-hover:border-emerald-500/40 transition-colors">
+                <iconify-icon icon="solar:wi-fi-router-linear" class="text-2xl text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.8)]" stroke-width="1.5"></iconify-icon>
+              </div>
+
+              <h3 class="text-xl font-light tracking-tight text-zinc-200 mb-3 group-hover:text-emerald-300 transition-colors">
+                Signal Capture
+              </h3>
+
+              <p class="text-base text-zinc-500 font-extralight max-w-[26ch]">
+                Detect buying intent across engagement, firmographic changes,
+                and behavioral signals.
+              </p>
+
+              <!-- Front microline (cleaner, no dot, no duplicate "Real-time scoring") -->
+              <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-light text-emerald-300/90 tracking-wide">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/90 shadow-[0_0_10px_rgba(16,185,129,0.35)]"></span>
+                Signal scoring
+              </div>
+            </div>
+
+            <!-- Back panel (desktop only) -->
+            <div class="hidden md:flex absolute inset-0 z-20 flex-col translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out bg-zinc-900/95 backdrop-blur-sm">
+              <!-- subtle top edge + glow -->
+              <div class="absolute top-0 left-0 right-0 h-px bg-emerald-500/25"></div>
+              <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-2/3 h-24 bg-emerald-500/10 blur-2xl"></div>
+
+              <!-- Left-aligned content, spaced properly -->
+              <div class="h-full p-6 flex flex-col text-left">
+                <!-- Header row -->
+                <div class="flex items-start justify-between gap-4">
+                  <div class="text-xs uppercase tracking-widest text-zinc-400">
+                    Deep signal layer
+                  </div>
+                  <!-- keep this only on the back (no duplication with front) -->
+                  <div class="text-xs text-emerald-300/90 font-light tracking-wide whitespace-nowrap">
+                    Real-time scoring
+                  </div>
+                </div>
+
+                <!-- Spacer after header -->
+                <div class="mt-4"></div>
+
+                <!-- Main content -->
+                <div class="flex-1 overflow-auto pr-1">
+                  <p class="text-sm text-zinc-300/80 font-light leading-relaxed mb-5">
+                    Identify intent early, filter noise, and prioritize accounts
+                    that match your ICP.
+                  </p>
+
+                  <ul class="text-sm text-zinc-200/85 space-y-2 list-disc pl-4 marker:text-emerald-500">
+                    <li>Detect intent from 30+ buying signals</li>
+                    <li>Score accounts continuously in real time</li>
+                    <li>Auto-match ICP profiles and segments</li>
+                  </ul>
+                </div>
+
+                <!-- Footer pinned to bottom -->
+                <div class="pt-5 mt-6 border-t border-zinc-800/60 flex items-center justify-between">
+                  <div class="text-xs text-zinc-500 font-light">
+                    Signals → Intent score
+                  </div>
+                  <div class="text-xs text-emerald-300/80 font-light">
+                    View details
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Feature 2 -->
+          <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center text-center hover:bg-zinc-800/60 transition-colors backdrop-blur-sm group shadow-[inset_0_1px_2px_rgba(255,255,255,0.02)] relative overflow-hidden min-h-[400px]">
+            <!-- Front content -->
+            <div class="relative z-10 flex flex-col items-center justify-center flex-1 transition-opacity duration-200 md:group-hover:opacity-0">
+              <div class="w-12 h-12 bg-amber-950 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(251,191,36,0.1)] border border-amber-500/20 group-hover:border-amber-500/40 transition-colors">
+                <iconify-icon icon="solar:inbox-linear" class="text-2xl text-amber-400 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]" stroke-width="1.5"></iconify-icon>
+              </div>
+
+              <h3 class="text-xl font-light tracking-tight text-zinc-200 mb-3 group-hover:text-amber-300 transition-colors">
+                Intent Routing
+              </h3>
+
+              <p class="text-base text-zinc-500 font-extralight max-w-[26ch]">
+                Filter inbound activity, prioritize urgency, and route accounts
+                into the right outreach flow.
+              </p>
+
+              <!-- Front microline -->
+              <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-xs font-light text-amber-300/90 tracking-wide">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400/90 shadow-[0_0_10px_rgba(251,191,36,0.35)]"></span>
+                Automated prioritization
+              </div>
+            </div>
+
+            <!-- Back panel -->
+            <div class="hidden md:flex absolute inset-0 z-20 flex-col translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-[transform,opacity] duration-500 ease-out bg-zinc-900/95 backdrop-blur-sm">
+              <!-- glow edge -->
+              <div class="absolute top-0 left-0 right-0 h-px bg-amber-500/25"></div>
+              <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-2/3 h-24 bg-amber-500/10 blur-2xl"></div>
+
+              <!-- Content -->
+              <div class="h-full p-6 flex flex-col text-left">
+                <!-- Header -->
+                <div class="flex items-start justify-between gap-4">
+                  <div class="text-xs uppercase tracking-widest text-zinc-400">
+                    Routing layer
+                  </div>
+
+                  <div class="text-xs text-amber-300/90 font-light tracking-wide whitespace-nowrap">
+                    Priority engine
+                  </div>
+                </div>
+
+                <div class="mt-4"></div>
+
+                <!-- Description -->
+                <div class="flex-1 overflow-auto pr-1">
+                  <p class="text-sm text-zinc-300/80 font-light leading-relaxed mb-5">
+                    Automatically evaluate incoming signals and route high-value
+                    accounts into the right campaign sequence.
+                  </p>
+
+                  <ul class="text-sm text-zinc-200/85 space-y-2 list-disc pl-4 marker:text-amber-500">
+                    <li>Prioritize accounts based on signal strength</li>
+                    <li>Route leads into targeted campaign sequences</li>
+                    <li>Balance outreach across active pipelines</li>
+                  </ul>
+                </div>
+
+                <!-- Footer -->
+                <div class="pt-5 mt-6 border-t border-zinc-800/60 flex items-center justify-between">
+                  <div class="text-xs text-zinc-500 font-light">
+                    Signals → Campaign entry
+                  </div>
+
+                  <div class="text-xs text-amber-300/80 font-light">
+                    View routing
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Feature 3 -->
+          <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center text-center hover:bg-zinc-800/60 transition-colors backdrop-blur-sm group shadow-[inset_0_1px_2px_rgba(255,255,255,0.02)] relative overflow-hidden min-h-[400px]">
+            <!-- Front content -->
+            <div class="relative z-10 flex flex-col items-center justify-center flex-1 transition-opacity duration-200 md:group-hover:opacity-0">
+              <div class="w-12 h-12 bg-cyan-950 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(34,211,238,0.1)] border border-cyan-500/20 group-hover:border-cyan-500/40 transition-colors">
+                <iconify-icon icon="solar:database-linear" class="text-2xl text-cyan-300 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" stroke-width="1.5"></iconify-icon>
+              </div>
+
+              <h3 class="text-xl font-light tracking-tight text-zinc-200 mb-3 group-hover:text-cyan-200 transition-colors">
+                Context Engine
+              </h3>
+
+              <p class="text-base text-zinc-500 font-extralight max-w-[26ch]">
+                Enrich accounts and contacts with verified context so every
+                message lands with relevance.
+              </p>
+
+              <!-- Front microline -->
+              <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 text-xs font-light text-cyan-200/90 tracking-wide">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-300/90 shadow-[0_0_10px_rgba(34,211,238,0.35)]"></span>
+                Verified context
+              </div>
+            </div>
+
+            <!-- Back panel -->
+            <div class="hidden md:flex absolute inset-0 z-20 flex-col translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-[transform,opacity] duration-500 ease-out bg-zinc-900/95 backdrop-blur-sm">
+              <!-- glow edge -->
+              <div class="absolute top-0 left-0 right-0 h-px bg-cyan-500/25"></div>
+              <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-2/3 h-24 bg-cyan-500/10 blur-2xl"></div>
+
+              <!-- Content -->
+              <div class="h-full p-6 flex flex-col text-left">
+                <!-- Header -->
+                <div class="flex items-start justify-between gap-4">
+                  <div class="text-xs uppercase tracking-widest text-zinc-400">
+                    Context Engine
+                  </div>
+
+                  <div class="text-xs text-cyan-300/90 font-light tracking-wide whitespace-nowrap">
+                    Verified data
+                  </div>
+                </div>
+
+                <div class="mt-4"></div>
+
+                <!-- Description -->
+                <div class="flex-1 overflow-auto pr-1">
+                  <p class="text-sm text-zinc-300/80 font-light leading-relaxed mb-4">
+                    Add role context and firmographics so targeting stays
+                    precise and personalization scales cleanly.
+                  </p>
+
+                  <ul class="text-sm text-zinc-200/85 space-y-2 list-disc pl-4 pb-2 marker:text-cyan-500">
+                    <li>Verify contacts and role accuracy</li>
+                    <li>Append firmographics and company context</li>
+                    <li>Continuously refresh to prevent decay</li>
+                  </ul>
+                </div>
+
+                <!-- Footer -->
+                <div class="pt-5 mt-6 border-t border-zinc-800/60 flex items-center justify-between">
+                  <div class="text-xs text-zinc-500 font-light">
+                    Profile → Target ready
+                  </div>
+
+                  <div class="text-xs text-cyan-300/80 font-light">
+                    View context
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Feature 4 -->
+          <div class="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center text-center hover:bg-zinc-800/60 transition-colors backdrop-blur-sm group shadow-[inset_0_1px_2px_rgba(255,255,255,0.02)] relative overflow-hidden min-h-[400px]">
+            <!-- Front content -->
+            <div class="relative z-10 flex flex-col items-center justify-center flex-1 transition-opacity duration-200 md:group-hover:opacity-0">
+              <div class="w-12 h-12 bg-violet-950 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(168,85,247,0.1)] border border-violet-500/20 group-hover:border-violet-500/40 transition-colors">
+                <iconify-icon icon="solar:rocket-linear" class="text-2xl text-violet-300 drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]" stroke-width="1.5"></iconify-icon>
+              </div>
+
+              <h3 class="text-xl font-light tracking-tight text-zinc-200 mb-3 group-hover:text-violet-300 transition-colors">
+                Outreach Engine
+              </h3>
+
+              <p class="text-base text-zinc-500 font-extralight max-w-[26ch]">
+                Generate personalized sequences and launch multi-channel
+                outreach across your pipeline.
+              </p>
+
+              <!-- Front micro pill -->
+              <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1.5 text-xs font-light text-violet-200/90 tracking-wide">
+                <span class="w-1.5 h-1.5 rounded-full bg-violet-300/90 shadow-[0_0_10px_rgba(168,85,247,0.35)]"></span>
+                Sequence automation
+              </div>
+            </div>
+
+            <!-- Back panel -->
+            <div class="hidden md:flex absolute inset-0 z-20 flex-col translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-[transform,opacity] duration-500 ease-out bg-zinc-900/95 backdrop-blur-sm">
+              <!-- glow edge -->
+              <div class="absolute top-0 left-0 right-0 h-px bg-violet-500/25"></div>
+              <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-2/3 h-24 bg-violet-500/10 blur-2xl"></div>
+
+              <!-- Content -->
+              <div class="h-full p-6 flex flex-col text-left">
+                <!-- Header -->
+                <div class="flex items-start justify-between gap-4">
+                  <div class="text-xs uppercase tracking-widest text-zinc-400">
+                    Outreach layer
+                  </div>
+
+                  <div class="text-xs text-violet-400/90 font-light tracking-wide whitespace-nowrap">
+                    Campaign automation
+                  </div>
+                </div>
+
+                <div class="mt-4"></div>
+
+                <!-- Description -->
+                <div class="flex-1 overflow-auto pr-1">
+                  <p class="text-sm text-zinc-300/80 font-light leading-snug mb-4">
+                    Launch personalized outreach sequences that adapt to signals
+                    and engagement across channels.
+                  </p>
+
+                  <ul class="text-sm text-zinc-200/85 space-y-2 list-disc pl-4 pb-2 marker:text-violet-500">
+                    <li>Generate AI-assisted outreach sequences</li>
+                    <li>Launch multi-channel campaigns instantly</li>
+                    <li>Track engagement across pipeline stages</li>
+                  </ul>
+                </div>
+
+                <!-- Footer -->
+                <div class="pt-5 mt-6 border-t border-zinc-800/60 flex items-center justify-between">
+                  <div class="text-xs text-zinc-500 font-light truncate pr-3">
+                    Sequence → Pipeline
+                  </div>
+
+                  <div class="text-xs text-violet-400/80 font-light shrink-0">
+                    View campaign
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Feature Spotlight Section -->
+      <section class="py-24 px-6 max-w-[1200px] mx-auto relative z-10">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <!-- Left Text Content -->
+          <div class="order-2 lg:order-1">
+            <div class="text-xs uppercase tracking-[0.25em] text-emerald-400/80 mb-4">
+              Signal Processing
+            </div>
+            <h2 class="text-4xl md:text-5xl font-extralight tracking-tight text-white mb-8 leading-[1.1] drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+              Capture buying signals,
+              <br class="hidden md:block">
+              <span class="block text-zinc-300/70">
+                convert them into pipeline
+              </span>
+            </h2>
+
+            <div class="flex flex-col sm:flex-row gap-4 mb-12">
+              <button class="group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-zinc-800 text-emerald-400 rounded-full text-base font-light shadow-[0_0_15px_rgba(16,185,129,0.3),_inset_0_1px_1px_rgba(255,255,255,0.1)] border border-emerald-500/30 transition-all hover:bg-zinc-700 hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+                <span class="drop-shadow-[0_0_5px_rgba(52,211,153,0.8)]">
+                  Launch Sequence
+                </span>
+              </button>
+              <a href="#" class="inline-flex items-center justify-center px-6 py-3.5 bg-zinc-900/50 border border-zinc-700/50 text-zinc-300 rounded-full text-base font-light hover:bg-zinc-800 transition-colors backdrop-blur-sm">
+                Explore workflows
+              </a>
+            </div>
+
+            <ul class="space-y-5">
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:document-text-linear" class="text-xl text-zinc-500 mt-1 shrink-0" stroke-width="1.5"></iconify-icon>
+                <span class="text-lg text-zinc-400 font-extralight">
+                  Detect intent signals before competitors do
+                </span>
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:bolt-linear" class="text-xl text-zinc-500 mt-1 shrink-0" stroke-width="1.5"></iconify-icon>
+                <span class="text-lg text-zinc-400 font-extralight">
+                  Generate multi-channel sequences in seconds
+                </span>
+              </li>
+              <li class="flex items-start gap-3">
+                <iconify-icon icon="solar:target-linear" class="text-xl text-zinc-500 mt-1 shrink-0" stroke-width="1.5"></iconify-icon>
+                <span class="text-lg text-zinc-400 font-extralight">
+                  Route accounts automatically to the right workflow
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right Screenshot Container -->
+          <div class="order-1 lg:order-2 bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 sm:p-10 shadow-[inset_0_1px_10px_rgba(0,0,0,1)] relative overflow-hidden h-[600px] flex items-center justify-center">
+            <div class="absolute inset-0 bg-gradient-to-tr from-emerald-900/20 to-transparent opacity-50"></div>
+
+            <!-- Inner UI Mockup (CRT Styled) -->
+            <div class="relative w-[120%] h-[110%] bg-[#050505] rounded-xl shadow-[0_0_30px_rgba(0,0,0,1)] flex flex-col border border-zinc-800 transform translate-x-12 translate-y-12 overflow-hidden">
+              <div class="absolute inset-0 pointer-events-none z-20 opacity-20 mix-blend-overlay" style="background: repeating-linear-gradient(0deg, #000, #000 2px, transparent 2px, transparent 4px);"></div>
+
+              <!-- Mockup Header -->
+              <div class="h-10 bg-zinc-950 border-b border-zinc-800 flex items-center px-4 gap-2 shrink-0 relative z-30">
+                <div class="flex gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
+                </div>
+                <div class="mx-auto flex items-center gap-1.5 text-xs font-light text-emerald-500 bg-emerald-950/30 border border-emerald-500/20 px-3 py-1 rounded-md drop-shadow-[0_0_5px_rgba(16,185,129,0.3)]">
+                  <iconify-icon icon="solar:stars-linear" class="text-xs" stroke-width="1.5"></iconify-icon>
+                  Signal Console
+                </div>
+              </div>
+
+              <!-- Mockup Body -->
+              <div class="flex-1 flex overflow-hidden relative z-30">
+                <!-- Mockup Sidebar -->
+                <div class="w-1/3 bg-zinc-950/80 border-r border-zinc-800 p-4 opacity-80 flex flex-col gap-3">
+                  <div class="h-4 bg-zinc-800 rounded w-1/2 mb-2"></div>
+                  <div class="h-16 bg-zinc-900 border border-zinc-800 rounded-lg"></div>
+                  <div class="h-16 bg-zinc-900 border border-zinc-800 rounded-lg"></div>
+                  <div class="h-16 bg-zinc-900 border border-zinc-800 rounded-lg"></div>
+                </div>
+
+                <!-- Mockup Main Content -->
+                <div class="flex-1 bg-[#020502] p-6 flex flex-col relative">
+                  <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration: 4s;"></div>
+
+                  <div class="flex items-center gap-2 text-xs font-light text-zinc-500 mb-2 uppercase tracking-wide">
+                    <iconify-icon icon="solar:phone-linear" class="text-sm" stroke-width="1.5"></iconify-icon>
+                    Stream / Acme Connect
+                  </div>
+
+                  <div class="mt-6 flex-1 overflow-hidden flex flex-col gap-6 relative z-20">
+                    <!-- Insight Block 1 -->
+                    <div class="">
+                      <div class="flex items-center gap-2 text-sm font-light text-zinc-300 mb-2">
+                        <iconify-icon icon="solar:users-group-rounded-linear" class="text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.8)]" stroke-width="1.5"></iconify-icon>
+                        Account map
+                      </div>
+                      <p class="text-base text-zinc-400 font-extralight leading-relaxed mb-1">
+                        <strong class="text-zinc-200 font-light">
+                          Root Admin
+                        </strong>
+                        · Core Systems, Acme
+                      </p>
+                      <p class="text-base text-zinc-500 font-extralight leading-relaxed">
+                        Admin handles primary logic for experience layer. IP
+                        localized to US-East.
+                      </p>
+                      <span class="text-sm font-light text-emerald-400 mt-2 inline-block cursor-pointer hover:text-emerald-300">
+                        Reveal context ▾
+                      </span>
+                    </div>
+
+                    <!-- Insight Block 2 -->
+                    <div class="">
+                      <div class="flex items-center gap-2 text-sm font-light text-zinc-300 mb-2">
+                        <iconify-icon icon="solar:lightbulb-minimalistic-linear" class="text-amber-400 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]" stroke-width="1.5"></iconify-icon>
+                        Signal analysis
+                      </div>
+                      <p class="leading-relaxed text-base font-light text-zinc-200 mb-1">
+                        Signal processed &amp; sequence initiated
+                      </p>
+                      <p class="text-base text-zinc-500 font-extralight leading-relaxed">
+                        Acme established handshake and requested payload limits.
+                        Deploy override configs.
+                      </p>
+                      <span class="text-sm font-light text-emerald-400 mt-2 inline-block cursor-pointer hover:text-emerald-300">
+                        Reveal context ▾
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="absolute bottom-6 left-6 right-6 z-20">
+                    <button class="w-full bg-zinc-800/80 border border-emerald-500/30 backdrop-blur-sm py-3 rounded-lg flex items-center justify-center gap-2 text-base font-light text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] hover:bg-zinc-800 transition-colors">
+                      <iconify-icon icon="solar:stars-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                      Query signals
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW SECTION 1 & 2: Customer Proof Marquee -->
+      <div class="w-full h-px relative overflow-hidden">
+        <!-- base faded line -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"></div>
+        <!-- center glow -->
+        <div class="absolute left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent drop-shadow-[0_0_8px_rgba(16,185,129,0.35)]"></div>
+      </div>
+      <section class="w-full py-24 relative z-10 bg-black/30 backdrop-blur-sm overflow-hidden">
+        <!-- Testimonial Section Header -->
+        <div class="max-w-7xl mx-auto px-6 mb-14">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-10 items-start">
+            <!-- LEFT SIDE: Headline + Subtitle -->
+            <div class="max-w-xl">
+              <h2 class="md:text-5xl text-4xl text-white tracking-tight font-extralight mb-4 drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+                The signal network behind
+                <br class="hidden md:block">
+                <span class="block text-zinc-300/70">modern revenue teams</span>
+              </h2>
+
+              <p class="leading-relaxed text-lg font-light text-zinc-400 mt-4">
+                Millions of buying signals processed daily across the SignalAI
+                signal network.
+              </p>
+            </div>
+
+            <!-- RIGHT SIDE: Network Metric -->
+            <div class="lg:text-right">
+              <div class="inline-block text-left">
+                <div class="text-7xl md:text-8xl font-light tracking-[-0.02em] text-white/75 leading-none drop-shadow-[0_0_14px_rgba(16,185,129,0.75)]">
+                  500K+
+                </div>
+
+                <div class="mt-2 text-sm uppercase tracking-wide text-zinc-500">
+                  Accounts analyzed daily
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative w-full max-w-[1200px] mx-auto overflow-hidden mask-fade">
+          <div class="flex w-max gap-4 mb-4 animate-marquee-left hover:pause">
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)] animate-pulse"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#05000a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-violet-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-violet-500/70 uppercase tracking-widest block mb-4">
+                    Revenue Ops
+                  </span>
+                  <p class="text-sm text-violet-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(167,139,250,0.6)]">
+                    “SignalAI surfaces the right accounts before our competitors
+                    even see them.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-violet-950 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b9358e1b572?auto=format&amp;fit=crop&amp;q=80&amp;w=64&amp;h=64" alt="Liam" class="w-10 h-10 rounded-full border-[1.5px] border-violet-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[240deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-violet-300 font-light drop-shadow-[0_0_4px_rgba(196,181,253,0.6)]">
+                      Liam Carter
+                    </div>
+                    <div class="text-[10px] text-violet-500/70 font-extralight uppercase tracking-widest">
+                      Head of RevOps
+                    </div>
+                  </div>
+                  <span class="ml-auto text-violet-400 text-sm font-light drop-shadow-[0_0_6px_rgba(167,139,250,0.8)]">
+                    VectorLabs
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" style="animation-delay:0.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#0a0500] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-amber-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:3s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-amber-500/70 uppercase tracking-widest block mb-4">
+                    GTM Leaders
+                  </span>
+                  <p class="text-sm text-amber-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]">
+                    “We replaced three tools and our pipeline velocity doubled
+                    within two quarters.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-amber-950 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6e825b87-0682-49e3-98c2-dbdab1f8f9c5_320w.webp" alt="Elena" class="w-10 h-10 rounded-full border-[1.5px] border-amber-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[10deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-amber-300 font-light drop-shadow-[0_0_4px_rgba(252,211,77,0.6)]">
+                      Elena Park
+                    </div>
+                    <div class="text-[10px] text-amber-500/70 font-extralight uppercase tracking-widest">
+                      VP Growth
+                    </div>
+                  </div>
+                  <span class="ml-auto text-amber-400 text-sm font-light drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]">
+                    OrbitalIQ
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" style="animation-delay:1s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#00050a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-cyan-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:5s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-cyan-500/70 uppercase tracking-widest block mb-4">
+                    Sales Intelligence
+                  </span>
+                  <p class="text-sm text-cyan-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]">
+                    “The signal scoring is incredibly accurate. Our SDRs focus
+                    only on accounts that matter.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-cyan-950 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/25df7579-09f7-4c8c-bb39-18a974a980d0_320w.webp" alt="Marcus" class="w-10 h-10 rounded-full border-[1.5px] border-cyan-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[180deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-cyan-300 font-light drop-shadow-[0_0_4px_rgba(103,232,249,0.6)]">
+                      Marcus Delaney
+                    </div>
+                    <div class="text-[10px] text-cyan-500/70 font-extralight uppercase tracking-widest">
+                      Director of Sales
+                    </div>
+                  </div>
+                  <span class="ml-auto text-cyan-400 text-sm font-light drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]">
+                    SignalForge
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" style="animation-delay:1.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#020a02] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-emerald-500/70 uppercase tracking-widest block mb-4">
+                    Demand Generation
+                  </span>
+                  <p class="text-sm text-emerald-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]">
+                    “SignalAI turned our outbound into a predictable pipeline
+                    engine.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-emerald-950 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0a04490f-27f4-44a6-b75a-f64e08d7caf2_320w.jpg" alt="Sofia" class="w-10 h-10 rounded-full border-[1.5px] border-emerald-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[90deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-emerald-300 font-light drop-shadow-[0_0_4px_rgba(110,231,183,0.6)]">
+                      Sofia Mendes
+                    </div>
+                    <div class="text-[10px] text-emerald-500/70 font-extralight uppercase tracking-widest">
+                      Head of Demand
+                    </div>
+                  </div>
+                  <span class="ml-auto text-emerald-400 text-sm font-light drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
+                    AtlasGrid
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)] animate-pulse" style="animation-delay:2s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#05000a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-violet-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4.5s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-violet-500/70 uppercase tracking-widest block mb-4">
+                    RevOps
+                  </span>
+                  <p class="text-sm text-violet-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(167,139,250,0.6)]">
+                    “We finally have a system that connects intent data to real
+                    revenue outcomes.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-violet-950 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/71d7ad40-af9f-4af2-baa2-8d7eb0382908_3840w.webp?w=800&amp;q=80" alt="Noah" class="w-10 h-10 rounded-full border-[1.5px] border-violet-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[240deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-violet-300 font-light drop-shadow-[0_0_4px_rgba(196,181,253,0.6)]">
+                      Noah Bennett
+                    </div>
+                    <div class="text-[10px] text-violet-500/70 font-extralight uppercase tracking-widest">
+                      Revenue Operations
+                    </div>
+                  </div>
+                  <span class="ml-auto text-violet-400 text-sm font-light drop-shadow-[0_0_6px_rgba(167,139,250,0.8)]">
+                    NexusStack
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" style="animation-delay:2.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#0a0500] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-amber-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:3.2s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-amber-500/70 uppercase tracking-widest block mb-4">
+                    Sales Leadership
+                  </span>
+                  <p class="text-sm text-amber-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]">
+                    “Pipeline generation became measurable the moment we adopted
+                    SignalAI.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-amber-950 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f4bda977-4e02-4ce3-b6d3-1f8a5d3197db_3840w.jpg?w=800&amp;q=80" alt="Jordan" class="w-10 h-10 rounded-full border-[1.5px] border-amber-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[10deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-amber-300 font-light drop-shadow-[0_0_4px_rgba(252,211,77,0.6)]">
+                      Jordan Malik
+                    </div>
+                    <div class="text-[10px] text-amber-500/70 font-extralight uppercase tracking-widest">
+                      VP Sales
+                    </div>
+                  </div>
+                  <span class="ml-auto text-amber-400 text-sm font-light drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]">
+                    AeroScale
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" style="animation-delay:3s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#00050a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-cyan-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:5.2s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-cyan-500/70 uppercase tracking-widest block mb-4">
+                    Growth Teams
+                  </span>
+                  <p class="text-sm text-cyan-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]">
+                    “Our outbound campaigns now start with signals instead of
+                    guesswork.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-cyan-950 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b5fa796b-5a4e-4746-8463-8e491f896f5c_3840w.jpg?w=800&amp;q=80" alt="Camila" class="w-10 h-10 rounded-full border-[1.5px] border-cyan-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[180deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-cyan-300 font-light drop-shadow-[0_0_4px_rgba(103,232,249,0.6)]">
+                      Camila Ortega
+                    </div>
+                    <div class="text-[10px] text-cyan-500/70 font-extralight uppercase tracking-widest">
+                      Growth Director
+                    </div>
+                  </div>
+                  <span class="ml-auto text-cyan-400 text-sm font-light drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]">
+                    BrightLayer
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)] animate-pulse" style="animation-delay:3.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#05000a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-violet-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4.8s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-violet-500/70 uppercase tracking-widest block mb-4">
+                    Enterprise Sales
+                  </span>
+                  <p class="text-sm text-violet-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(167,139,250,0.6)]">
+                    “The routing and orchestration layers are incredibly
+                    powerful.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-violet-950 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5a8f3649-9a97-4446-955e-d3ced353790f_3840w.jpg?w=800&amp;q=80" alt="Thomas" class="w-10 h-10 rounded-full border-[1.5px] border-violet-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[240deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-violet-300 font-light drop-shadow-[0_0_4px_rgba(196,181,253,0.6)]">
+                      Thomas Reid
+                    </div>
+                    <div class="text-[10px] text-violet-500/70 font-extralight uppercase tracking-widest">
+                      Enterprise Sales Lead
+                    </div>
+                  </div>
+                  <span class="ml-auto text-violet-400 text-sm font-light drop-shadow-[0_0_6px_rgba(167,139,250,0.8)]">
+                    CoreBridge
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex w-max gap-4 animate-marquee-right hover:pause">
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#020a02] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-emerald-500/70 uppercase tracking-widest block mb-4">
+                    RevOps Platform
+                  </span>
+                  <p class="text-sm text-emerald-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]">
+                    “SignalAI replaced our enrichment and intent stack in one
+                    platform.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-emerald-950 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a44deb57-f322-4fc8-9184-d05e21080cb2_3840w.jpg?w=800&amp;q=80" alt="Daniel" class="w-10 h-10 rounded-full border-[1.5px] border-emerald-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[90deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-emerald-300 font-light drop-shadow-[0_0_4px_rgba(110,231,183,0.6)]">
+                      Daniel Foster
+                    </div>
+                    <div class="text-[10px] text-emerald-500/70 font-extralight uppercase tracking-widest">
+                      RevOps Manager
+                    </div>
+                  </div>
+                  <span class="ml-auto text-emerald-400 text-sm font-light drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
+                    PulseNode
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" style="animation-delay:0.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#0a0500] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-amber-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:3s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-amber-500/70 uppercase tracking-widest block mb-4">
+                    GTM Strategy
+                  </span>
+                  <p class="text-sm text-amber-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]">
+                    “The signal intelligence layer changed how we prioritize
+                    accounts.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-amber-950 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/09d49595-2875-4825-b17d-d0945c838877_3840w.webp?w=800&amp;q=80" alt="Natalie" class="w-10 h-10 rounded-full border-[1.5px] border-amber-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[10deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-amber-300 font-light drop-shadow-[0_0_4px_rgba(252,211,77,0.6)]">
+                      Natalie Zhou
+                    </div>
+                    <div class="text-[10px] text-amber-500/70 font-extralight uppercase tracking-widest">
+                      GTM Strategy
+                    </div>
+                  </div>
+                  <span class="ml-auto text-amber-400 text-sm font-light drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]">
+                    HyperField
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" style="animation-delay:1s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#00050a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-cyan-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:5s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-cyan-500/70 uppercase tracking-widest block mb-4">
+                    Outbound Systems
+                  </span>
+                  <p class="text-sm text-cyan-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]">
+                    “Our SDR team now launches sequences based on real buying
+                    intent.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-cyan-950 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/eb93b27a-f6f8-488f-8c32-5ecb690fad2e_3840w.jpg?w=800&amp;q=80" alt="Lucas" class="w-10 h-10 rounded-full border-[1.5px] border-cyan-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[180deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-cyan-300 font-light drop-shadow-[0_0_4px_rgba(103,232,249,0.6)]">
+                      Lucas Romero
+                    </div>
+                    <div class="text-[10px] text-cyan-500/70 font-extralight uppercase tracking-widest">
+                      Sales Systems
+                    </div>
+                  </div>
+                  <span class="ml-auto text-cyan-400 text-sm font-light drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]">
+                    NovaReach
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)] animate-pulse" style="animation-delay:1.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#05000a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-violet-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4.5s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-violet-500/70 uppercase tracking-widest block mb-4">
+                    Revenue Teams
+                  </span>
+                  <p class="text-sm text-violet-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(167,139,250,0.6)]">
+                    “We went from reactive outreach to proactive signal-based
+                    selling.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-violet-950 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7aea9f51-9846-468c-ad86-f2b0c6d00c65_3840w.jpg?w=800&amp;q=80" alt="Arjun" class="w-10 h-10 rounded-full border-[1.5px] border-violet-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[240deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-violet-300 font-light drop-shadow-[0_0_4px_rgba(196,181,253,0.6)]">
+                      Arjun Patel
+                    </div>
+                    <div class="text-[10px] text-violet-500/70 font-extralight uppercase tracking-widest">
+                      Revenue Director
+                    </div>
+                  </div>
+                  <span class="ml-auto text-violet-400 text-sm font-light drop-shadow-[0_0_6px_rgba(167,139,250,0.8)]">
+                    AxisFlow
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" style="animation-delay:2s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#0a0500] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-amber-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:3.2s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-amber-500/70 uppercase tracking-widest block mb-4">
+                    Sales Acceleration
+                  </span>
+                  <p class="text-sm text-amber-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]">
+                    “The orchestration engine is the most advanced we’ve seen.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-amber-950 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8a90d32f-809f-4383-b71f-6a9c50621b69_3840w.jpg?w=800&amp;q=80" alt="Claire" class="w-10 h-10 rounded-full border-[1.5px] border-amber-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[10deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-amber-300 font-light drop-shadow-[0_0_4px_rgba(252,211,77,0.6)]">
+                      Claire Dubois
+                    </div>
+                    <div class="text-[10px] text-amber-500/70 font-extralight uppercase tracking-widest">
+                      Head of Sales Ops
+                    </div>
+                  </div>
+                  <span class="ml-auto text-amber-400 text-sm font-light drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]">
+                    SynapseIQ
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" style="animation-delay:2.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#00050a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-cyan-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:5.2s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-cyan-500/70 uppercase tracking-widest block mb-4">
+                    Pipeline Generation
+                  </span>
+                  <p class="text-sm text-cyan-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]">
+                    “Our pipeline coverage increased dramatically within weeks.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-cyan-950 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/83bdae25-92d0-491a-95ce-8daf7c7d1834_3840w.jpg?w=800&amp;q=80" alt="Ethan" class="w-10 h-10 rounded-full border-[1.5px] border-cyan-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[180deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-cyan-300 font-light drop-shadow-[0_0_4px_rgba(103,232,249,0.6)]">
+                      Ethan Wallace
+                    </div>
+                    <div class="text-[10px] text-cyan-500/70 font-extralight uppercase tracking-widest">
+                      VP Pipeline
+                    </div>
+                  </div>
+                  <span class="ml-auto text-cyan-400 text-sm font-light drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]">
+                    VectorScale
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)] animate-pulse" style="animation-delay:3s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#05000a] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-violet-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:4.8s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-violet-500/70 uppercase tracking-widest block mb-4">
+                    Demand Intelligence
+                  </span>
+                  <p class="text-sm text-violet-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(167,139,250,0.6)]">
+                    “The signal network provides insights we couldn’t get
+                    anywhere else.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-violet-950 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d6d87d18-41f2-4c59-9e4e-3805a4e595d1_3840w.jpg?w=800&amp;q=80" alt="Hannah" class="w-10 h-10 rounded-full border-[1.5px] border-violet-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[240deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-violet-300 font-light drop-shadow-[0_0_4px_rgba(196,181,253,0.6)]">
+                      Hannah Fischer
+                    </div>
+                    <div class="text-[10px] text-violet-500/70 font-extralight uppercase tracking-widest">
+                      Demand Strategy
+                    </div>
+                  </div>
+                  <span class="ml-auto text-violet-400 text-sm font-light drop-shadow-[0_0_6px_rgba(167,139,250,0.8)]">
+                    DataHelix
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="w-[380px] shrink-0 mr-6 p-3 rounded-[32px] bg-zinc-800 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_0_20px_40px_-10px_rgba(0,0,0,0.9),_0_0_0_1px_rgba(0,0,0,1)] flex flex-col relative">
+              <div class="absolute bottom-3 right-6 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" style="animation-delay:3.5s"></div>
+              <div class="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div class="relative h-full rounded-[20px] bg-[#020a02] p-6 shadow-[inset_0_0_40px_rgba(0,0,0,1)] border-[6px] border-zinc-950 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none z-20 opacity-30 mix-blend-overlay" style="background:repeating-linear-gradient(0deg,#000,#000 2px,transparent 2px,transparent 4px)"></div>
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10 rounded-t-[14px]"></div>
+                <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration:3.8s"></div>
+                <div class="relative z-30 mb-6">
+                  <span class="text-xs font-light text-emerald-500/70 uppercase tracking-widest block mb-4">
+                    Revenue Growth
+                  </span>
+                  <p class="text-sm text-emerald-400/90 font-light leading-relaxed drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]">
+                    “SignalAI gave our sales team a real competitive edge.”
+                  </p>
+                </div>
+                <div class="relative z-30 flex items-center gap-4">
+                  <div class="relative p-0.5 rounded-full bg-emerald-950 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/25df7579-09f7-4c8c-bb39-18a974a980d0_3840w.webp?w=800&amp;q=80" alt="Mateo" class="w-10 h-10 rounded-full border-[1.5px] border-emerald-500/50 object-cover opacity-80 mix-blend-luminosity grayscale sepia-[.5] hue-rotate-[90deg]">
+                  </div>
+                  <div>
+                    <div class="text-sm text-emerald-300 font-light drop-shadow-[0_0_4px_rgba(110,231,183,0.6)]">
+                      Mateo Alvarez
+                    </div>
+                    <div class="text-[10px] text-emerald-500/70 font-extralight uppercase tracking-widest">
+                      Chief Revenue Officer
+                    </div>
+                  </div>
+                  <span class="ml-auto text-emerald-400 text-sm font-light drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
+                    StratEdge
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="w-full h-px relative overflow-hidden">
+        <!-- base faded line -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"></div>
+        <!-- center glow -->
+        <div class="absolute left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent drop-shadow-[0_0_8px_rgba(16,185,129,0.35)]"></div>
+      </div>
+
+      <!-- NEW SECTION 3: Security Badges -->
+      <section class="max-w-[1200px] mx-auto px-6 py-24 relative z-10">
+        <!-- Use Case Section Header -->
+        <div class="max-w-2xl mx-auto text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-extralight tracking-tight text-white leading-tight">
+            How revenue teams turn
+            <br class="hidden md:block">
+            <span class="block text-zinc-300/70">signals into pipeline</span>
+          </h2>
+
+          <p class="mt-6 text-lg text-zinc-400 font-light leading-relaxed max-w-xl mx-auto">
+            From intent detection to outbound execution, SignalAI connects
+            buying signals directly to revenue workflows.
+          </p>
+        </div>
+
+        <div class="relative max-w-4xl mx-auto" id="hardware-pipeline">
+          <style>
+            @keyframes text-slide {
+              0% {
+                top: -150px;
+                opacity: 0;
+              }
+
+              10% {
+                opacity: 1;
+              }
+
+              90% {
+                opacity: 1;
+              }
+
+              100% {
+                top: 100%;
+                opacity: 0;
+              }
+            }
+          </style>
+
+          <!-- Center Rail -->
+          <div class="absolute left-1/2 top-10 bottom-10 w-4 -translate-x-1/2 bg-zinc-900/50 backdrop-blur-sm rounded-full z-0 hidden md:flex flex-col justify-between items-center py-0 border border-zinc-800 shadow-[inset_0_2px_10px_rgba(0,0,0,0.7)]">
+            <div class="absolute inset-y-0 w-1 bg-zinc-800 rounded-full overflow-hidden z-0">
+              <div class="absolute -top-32 left-0 w-full h-32 bg-gradient-to-b from-transparent via-emerald-500 to-transparent animate-[text-slide_3s_linear_infinite] shadow-[0_0_15px_rgba(16,185,129,0.8)]"></div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 transition-transform hover:scale-110 -mt-5">
+              <div class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] border border-emerald-900"></div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 transition-transform hover:scale-110">
+              <div class="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)] border border-amber-900"></div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 transition-transform hover:scale-110">
+              <div class="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)] border border-cyan-900"></div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 transition-transform hover:scale-110 -mb-5">
+              <div class="w-3 h-3 rounded-full bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)] border border-violet-900"></div>
+            </div>
+          </div>
+
+          <!-- Row 1: Emerald -->
+          <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-8 mb-16 group">
+            <div class="md:hidden w-full mb-4">
+              <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-light text-emerald-300/90 tracking-widest uppercase mb-3">
+                Signal Detection
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Identify high-intent accounts early
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed">
+                Monitor behavioral and firmographic signals across your market
+                to identify companies actively researching your category.
+              </p>
+            </div>
+
+            <div class="md:w-1/2 md:pr-16 md:text-right hidden md:block">
+              <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-light text-emerald-300/90 tracking-widest uppercase mb-3 text-right">
+                Signal Detection
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Identify high-intent accounts early
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed ml-auto">
+                Monitor behavioral and firmographic signals across your market
+                to identify companies actively researching your category.
+              </p>
+            </div>
+
+            <div class="md:w-1/2 md:pl-16 w-full">
+              <div class="bg-zinc-900/50 backdrop-blur-sm p-5 rounded-2xl border border-zinc-800 shadow-[inset_0_1px_10px_rgba(0,0,0,1)] flex items-center gap-4 hover:bg-zinc-800/60 transition-all duration-300 group-hover:border-emerald-500/30 group-hover:bg-zinc-800/60">
+                <div class="w-12 h-12 rounded-xl bg-emerald-950 flex items-center justify-center text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)] shrink-0">
+                  <iconify-icon icon="solar:radar-2-linear" class="text-2xl"></iconify-icon>
+                </div>
+                <div class="flex-1">
+                  <ul class="text-sm text-zinc-300/80 space-y-1.5 list-disc pl-4 marker:text-emerald-500/70 font-light">
+                    <li>Behavioral signal tracking</li>
+                    <li>Intent spike detection</li>
+                    <li>ICP match filtering</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: Amber -->
+          <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-8 mb-16 group">
+            <div class="md:w-1/2 md:pr-16 w-full order-2 md:order-1 mt-4 md:mt-0">
+              <div class="bg-zinc-900/50 backdrop-blur-sm p-5 rounded-2xl border border-zinc-800 shadow-[inset_0_1px_10px_rgba(0,0,0,1)] flex items-center gap-4 hover:bg-zinc-800/60 transition-all duration-300 justify-end group-hover:border-amber-500/30 group-hover:bg-zinc-800/60 flex-row-reverse md:flex-row">
+                <div class="flex-1 text-left md:text-right md:pr-2">
+                  <ul class="text-sm text-zinc-300/80 space-y-1.5 list-disc md:list-none pl-4 md:pl-0 marker:text-amber-500/70 font-light text-left md:text-right">
+                    <li>AI scoring engine</li>
+                    <li>Account prioritization</li>
+                    <li>Fit &amp; engagement modeling</li>
+                  </ul>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-950 flex items-center justify-center text-amber-400 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)] shrink-0">
+                  <iconify-icon icon="solar:cpu-linear" class="text-2xl"></iconify-icon>
+                </div>
+              </div>
+            </div>
+
+            <div class="md:w-1/2 md:pl-16 order-1 md:order-3 md:hidden">
+              <div class="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[10px] font-light text-amber-300/90 tracking-widest uppercase mb-3">
+                Signal Intelligence
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Score accounts automatically
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed">
+                SignalAI analyzes intent signals in real time and ranks accounts
+                based on engagement, fit, and buying probability.
+              </p>
+            </div>
+
+            <div class="md:w-1/2 md:pl-16 hidden md:block order-3 text-left">
+              <div class="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[10px] font-light text-amber-300/90 tracking-widest uppercase mb-3">
+                Signal Intelligence
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Score accounts automatically
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed">
+                SignalAI analyzes intent signals in real time and ranks accounts
+                based on engagement, fit, and buying probability.
+              </p>
+            </div>
+          </div>
+
+          <!-- Row 3: Cyan -->
+          <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-8 mb-16 group">
+            <div class="md:hidden w-full mb-4">
+              <div class="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 text-[10px] font-light text-cyan-300/90 tracking-widest uppercase mb-3">
+                Workflow Automation
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Trigger outbound sequences
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed">
+                When signals spike, automatically launch multi-channel sequences
+                so your team reaches buyers at the perfect moment.
+              </p>
+            </div>
+
+            <div class="md:w-1/2 md:pr-16 md:text-right hidden md:block">
+              <div class="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 text-[10px] font-light text-cyan-300/90 tracking-widest uppercase mb-3">
+                Workflow Automation
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Trigger outbound sequences
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed ml-auto">
+                When signals spike, automatically launch multi-channel sequences
+                so your team reaches buyers at the perfect moment.
+              </p>
+            </div>
+
+            <div class="md:w-1/2 md:pl-16 w-full">
+              <div class="bg-zinc-900/50 backdrop-blur-sm p-5 rounded-2xl border border-zinc-800 shadow-[inset_0_1px_10px_rgba(0,0,0,1)] flex items-center gap-4 hover:bg-zinc-800/60 transition-all duration-300 group-hover:border-cyan-500/30 group-hover:bg-zinc-800/60">
+                <div class="w-12 h-12 rounded-xl bg-cyan-950 flex items-center justify-center text-cyan-400 border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)] shrink-0">
+                  <iconify-icon icon="solar:send-square-linear" class="text-2xl"></iconify-icon>
+                </div>
+                <div class="flex-1">
+                  <ul class="text-sm text-zinc-300/80 space-y-1.5 list-disc pl-4 marker:text-cyan-500/70 font-light">
+                    <li>Automated sequence triggers</li>
+                    <li>Multi-channel outreach</li>
+                    <li>SDR notifications</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 4: Violet -->
+          <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-8 group">
+            <div class="md:w-1/2 md:pr-16 w-full order-2 md:order-1 mt-4 md:mt-0">
+              <div class="bg-zinc-900/50 backdrop-blur-sm p-5 rounded-2xl border border-zinc-800 shadow-[inset_0_1px_10px_rgba(0,0,0,1)] flex items-center gap-4 hover:bg-zinc-800/60 transition-all duration-300 justify-end group-hover:border-violet-500/30 group-hover:bg-zinc-800/60 flex-row-reverse md:flex-row">
+                <div class="flex-1 text-left md:text-right md:pr-2">
+                  <ul class="text-sm text-zinc-300/80 space-y-1.5 list-disc md:list-none pl-4 md:pl-0 marker:text-violet-500/70 font-light text-left md:text-right">
+                    <li class="">Territory routing</li>
+                    <li>SDR assignment</li>
+                    <li class="">CRM pipeline sync</li>
+                  </ul>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-violet-950 flex items-center justify-center text-violet-400 border border-violet-500/20 shadow-[0_0_15px_rgba(139,92,246,0.1)] shrink-0">
+                  <iconify-icon icon="solar:route-linear" class="text-2xl"></iconify-icon>
+                </div>
+              </div>
+            </div>
+
+            <div class="md:w-1/2 md:pl-16 order-1 md:order-3 md:hidden">
+              <div class="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1.5 text-[10px] font-light text-violet-300/90 tracking-widest uppercase mb-3">
+                Revenue Routing
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Send opportunities to the right team
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed">
+                Accounts are routed automatically to SDRs or account owners
+                based on territory, segment, and deal stage.
+              </p>
+            </div>
+
+            <div class="md:w-1/2 md:pl-16 hidden md:block order-3">
+              <div class="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1.5 text-[10px] font-light text-violet-300/90 tracking-widest uppercase mb-3">
+                Revenue Routing
+              </div>
+              <h3 class="text-xl font-light text-zinc-100">
+                Send opportunities to the right team
+              </h3>
+              <p class="text-sm text-zinc-400 font-extralight mt-2 leading-relaxed">
+                Accounts are routed automatically to SDRs or account owners
+                based on territory, segment, and deal stage.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 text-center">
+          <div class="text-xs uppercase tracking-[0.2em] text-zinc-500 font-light">
+            Signals → Scoring → Outreach → Pipeline
+          </div>
+        </div>
+      </section>
+
+      <section class="max-w-[1200px] mx-auto px-6 py-24 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <!-- Left: Headline + Proof -->
+          <div class="">
+            <div class="text-xs uppercase tracking-[0.25em] text-emerald-400/80 mb-4">
+              Security &amp; Compliance
+            </div>
+
+            <h2 class="text-4xl md:text-5xl font-extralight tracking-tight text-white leading-[1.1] drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+              Deploy with confidence
+              <br class="hidden md:block">
+              <span class="block text-zinc-300/70">
+                encrypted at every layer
+              </span>
+            </h2>
+
+            <p class="leading-relaxed text-lg font-light text-zinc-400 max-w-xl mt-6">
+              SignalAI is built for modern revenue teams operating in regulated
+              environments with encryption, access controls, and auditability
+              designed in from day one.
+            </p>
+
+            <!-- Mini trust line -->
+            <div class="mt-8 flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/50 border border-zinc-800 text-xs text-zinc-400 font-light">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/80 shadow-[0_0_10px_rgba(16,185,129,0.35)]"></span>
+                Encryption in transit &amp; at rest
+              </span>
+              <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/50 border border-zinc-800 text-xs text-zinc-400 font-light">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400/80 shadow-[0_0_10px_rgba(245,158,11,0.35)]"></span>
+                SSO / SCIM ready
+              </span>
+              <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/50 border border-zinc-800 text-xs text-zinc-400 font-light">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400/80 shadow-[0_0_10px_rgba(34,211,238,0.35)]"></span>
+                Audit logs &amp; retention
+              </span>
+            </div>
+          </div>
+
+          <!-- Right: Security stack -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-zinc-800 p-6 hover:bg-zinc-800/50 transition-colors">
+              <!-- Row: icon + title -->
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                  <iconify-icon icon="solar:lock-password-linear" class="text-xl text-emerald-400" stroke-width="1.5"></iconify-icon>
+                </div>
+
+                <div class="text-sm text-white font-light tracking-tight">
+                  Encryption layer
+                </div>
+              </div>
+
+              <!-- Description (full width) -->
+              <p class="mt-4 text-sm text-zinc-400 font-light leading-relaxed">
+                TLS in transit, AES-256 at rest, and optional key rotation for
+                enterprise environments.
+              </p>
+            </div>
+
+            <div class="bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-zinc-800 p-6 hover:bg-zinc-800/50 transition-colors">
+              <!-- Row: icon + title -->
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-amber-950 border border-amber-500/20 flex items-center justify-center shrink-0">
+                  <iconify-icon icon="solar:user-id-linear" class="text-xl text-amber-400" stroke-width="1.5"></iconify-icon>
+                </div>
+
+                <div class="text-sm text-white font-light tracking-tight">
+                  Access controls
+                </div>
+              </div>
+
+              <!-- Description (full width) -->
+              <p class="mt-4 text-sm text-zinc-400 font-light leading-relaxed">
+                SSO/SAML support, SCIM provisioning, and role based permissions
+                for every workflow and team.
+              </p>
+            </div>
+
+            <div class="bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-zinc-800 p-6 hover:bg-zinc-800/50 transition-colors">
+              <!-- Row: icon + title -->
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-cyan-950 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                  <iconify-icon icon="solar:clipboard-check-linear" class="text-xl text-cyan-300" stroke-width="1.5"></iconify-icon>
+                </div>
+
+                <div class="text-sm text-white font-light tracking-tight">
+                  Auditability
+                </div>
+              </div>
+
+              <!-- Description (full width) -->
+              <p class="mt-4 text-sm text-zinc-400 font-light leading-relaxed">
+                Immutable audit logs, configurable retention, and export ready
+                reporting for compliance and review.
+              </p>
+            </div>
+
+            <div class="bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-zinc-800 p-6 hover:bg-zinc-800/50 transition-colors">
+              <!-- Row: icon + title -->
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-violet-950 border border-violet-500/20 flex items-center justify-center shrink-0">
+                  <iconify-icon icon="solar:server-square-linear" class="text-xl text-violet-300" stroke-width="1.5"></iconify-icon>
+                </div>
+
+                <div class="text-sm text-white font-light tracking-tight">
+                  Secure runtime
+                </div>
+              </div>
+
+              <!-- Description (full width) -->
+              <p class="mt-4 text-sm text-zinc-400 font-light leading-relaxed">
+                Hardened infrastructure, least privilege services, and isolated
+                execution designed for scale and safety.
+              </p>
+            </div>
+
+            <!-- Keep your badge grid, but as a “Compliance badges” row -->
+            <div class="sm:col-span-2 mt-2">
+              <div class="text-xs uppercase tracking-[0.2em] text-zinc-500 font-light mb-3">
+                Compliance badges
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <!-- reuse your existing 4 badge tiles exactly (GDPR / SOC2 / CCPA / ISO27001) -->
+                <!-- paste your 4 existing badge divs here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW SECTION 4: Conversion Card -->
+      <div class="w-full h-px relative overflow-hidden">
+        <!-- base faded line -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"></div>
+
+        <!-- center glow -->
+        <div class="absolute left-1/2 -translate-x-1/2 w-96 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent drop-shadow-[0_0_8px_rgba(16,185,129,0.35)]"></div>
+      </div>
+      <section class="max-w-[1200px] mx-auto px-6 py-32 relative z-10">
+        <div class="bg-zinc-900/50 rounded-[2.5rem] shadow-[inset_0_1px_10px_rgba(0,0,0,1)] flex flex-col lg:flex-row overflow-hidden border border-zinc-800 backdrop-blur-sm relative">
+          <!-- Inner glow -->
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/10 via-transparent to-amber-900/10 pointer-events-none"></div>
+
+          <!-- Left Content -->
+          <div class="p-10 lg:p-20 flex-1 flex flex-col justify-center text-center lg:text-left items-center lg:items-start max-w-2xl relative z-10">
+            <!-- Subtle left depth/glow -->
+            <div class="absolute inset-0 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none z-0"></div>
+
+            <h2 class="text-4xl md:text-[2.75rem] tracking-tight text-white mb-6 leading-[1.1] drop-shadow-[0_2px_15px_rgba(16,185,129,0.15)] font-light relative z-10">
+              Turn buying signals
+              <br>
+              into
+              <span class="text-emerald-400 italic">pipeline</span>
+            </h2>
+
+            <p class="text-base text-zinc-400 font-extralight mb-10 max-w-md leading-relaxed relative z-10 mx-auto lg:mx-0">
+              SignalAI captures intent, scores accounts in real time, and
+              launches outreach the moment buyers show interest. Route
+              high-intent accounts directly into your pipeline automatically.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 max-w-[26rem] w-full justify-center lg:justify-start relative z-10">
+              <button class="flex-1 py-3.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-light text-base hover:bg-emerald-500/20 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.1)] px-7 rounded-full">
+                Start free
+              </button>
+
+              <button class="flex-1 py-3.5 bg-zinc-950 border border-zinc-800 text-white font-light text-base hover:bg-zinc-900 transition-colors px-7 rounded-full">
+                Book a demo
+              </button>
+            </div>
+            <p class="text-xs text-zinc-500 mt-4 relative z-10">
+              No credit card • Setup in minutes • Works with your CRM
+            </p>
+          </div>
+
+          <!-- Right Image Container (Darkened with lighter rail) -->
+          <div class="flex-1 min-h-[400px] lg:min-h-[600px] relative bg-zinc-900/30 border-t lg:border-t-0 lg:border-l border-zinc-700/30 flex items-center justify-center pt-8 pb-16 md:pt-12 md:pb-24 lg:pt-0 lg:pb-0">
+            <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none animate-pulse" style="animation-duration: 4s;"></div>
+
+            <!-- Match hero demo scanline gradient background (reduce spacing + remove double rail look) -->
+            <div class="absolute inset-0 pointer-events-none z-20 opacity-20 mix-blend-overlay" style="background: repeating-linear-gradient(0deg, #000, #000 2px, transparent 2px, transparent 4px);"></div>
+            <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-10"></div>
+
+            <div class="w-full max-w-md mx-6 lg:mx-12 bg-[#050505] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-zinc-800 flex flex-col relative z-30 overflow-hidden">
+              <div class="h-10 bg-zinc-950 border-b border-zinc-800 flex items-center px-4 gap-2 shrink-0">
+                <div class="flex gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
+                </div>
+                <div class="mx-auto flex items-center gap-1.5 text-xs font-light text-emerald-500 bg-emerald-950/30 border border-emerald-500/20 px-3 py-1 rounded-md drop-shadow-[0_0_5px_rgba(16,185,129,0.3)]">
+                  <iconify-icon icon="solar:stars-linear" class="text-xs" stroke-width="1.5"></iconify-icon>
+                  Signal Console
+                </div>
+              </div>
+              <div class="flex-1 bg-[#020502] p-5 flex flex-col gap-3 relative">
+                <style>
+                  @keyframes rowHighlight {
+                    0%, 25%, 100% {
+                      background-color: rgba(24, 24, 27, 0.4);
+                      border-color: rgba(39, 39, 42, 0.8);
+                      box-shadow: none;
+                      opacity: 0.7;
+                    }
+                    5%, 20% {
+                      background-color: rgba(24, 24, 27, 0.8);
+                      border-color: var(--highlight-border);
+                      box-shadow: 0 0 15px var(--highlight-shadow);
+                      opacity: 1;
+                    }
+                  }
+                  @keyframes dotGlow {
+                    0%, 25%, 100% {
+                      box-shadow: none;
+                      opacity: 0.8;
+                    }
+                    5%, 20% {
+                      box-shadow: 0 0 10px 2px var(--highlight-border);
+                      opacity: 1;
+                    }
+                  }
+                  .console-row {
+                    animation: rowHighlight 8s infinite ease-in-out;
+                    background-color: rgba(24, 24, 27, 0.4);
+                    border: 1px solid rgba(39, 39, 42, 0.8);
+                    opacity: 0.7;
+                    border-radius: 0.5rem;
+                    padding: 0.875rem;
+                    position: relative;
+                    z-index: 20;
+                  }
+                  .console-row .status-dot {
+                    animation: dotGlow 8s infinite ease-in-out;
+                    border-radius: 9999px;
+                  }
+                  .row-1 {
+                    --highlight-border: rgba(16, 185, 129, 0.4);
+                    --highlight-shadow: rgba(16, 185, 129, 0.15);
+                    animation-delay: 0s;
+                  }
+                  .row-1 .status-dot { animation-delay: 0s; }
+
+                  .row-2 {
+                    --highlight-border: rgba(245, 158, 11, 0.4);
+                    --highlight-shadow: rgba(245, 158, 11, 0.15);
+                    animation-delay: 2s;
+                  }
+                  .row-2 .status-dot { animation-delay: 2s; }
+
+                  .row-3 {
+                    --highlight-border: rgba(6, 182, 212, 0.4);
+                    --highlight-shadow: rgba(6, 182, 212, 0.15);
+                    animation-delay: 4s;
+                  }
+                  .row-3 .status-dot { animation-delay: 4s; }
+
+                  .row-4 {
+                    --highlight-border: rgba(139, 92, 246, 0.4);
+                    --highlight-shadow: rgba(139, 92, 246, 0.15);
+                    animation-delay: 6s;
+                  }
+                  .row-4 .status-dot { animation-delay: 6s; }
+                </style>
+
+                <div class="absolute inset-0 bg-emerald-500/5 mix-blend-screen pointer-events-none z-10 animate-pulse" style="animation-duration: 4s;"></div>
+
+                <div class="console-row row-1">
+                  <div class="flex items-center gap-3 mb-1.5">
+                    <span class="relative flex h-2 w-2 shrink-0 status-dot">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-sm font-light text-zinc-200">
+                      Intent spike detected
+                    </span>
+                    <span class="ml-auto text-[10px] text-emerald-500/70 uppercase tracking-widest">
+                      Live
+                    </span>
+                  </div>
+                  <div class="pl-5 flex flex-col gap-1">
+                    <div class="text-xs text-zinc-400 font-light flex items-center justify-between">
+                      <span>
+                        Account:
+                        <span class="text-zinc-300">Vortex Labs</span>
+                        • Score: 92
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="console-row row-2">
+                  <div class="flex items-center gap-3 mb-1.5">
+                    <span class="h-2 w-2 bg-amber-500/80 shrink-0 status-dot"></span>
+                    <span class="text-sm font-light text-zinc-200">
+                      Account enriched
+                    </span>
+                    <span class="ml-auto text-[10px] text-zinc-600 uppercase tracking-widest">
+                      2m ago
+                    </span>
+                  </div>
+                  <div class="pl-5 flex flex-col gap-1">
+                    <div class="text-xs text-zinc-400 font-light flex items-center justify-between">
+                      <span>Firmographic + technographic match</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="console-row row-3">
+                  <div class="flex items-center gap-3 mb-1.5">
+                    <span class="h-2 w-2 bg-cyan-500/80 shrink-0 status-dot"></span>
+                    <span class="text-sm font-light text-zinc-200">
+                      Sequence launched
+                    </span>
+                    <span class="ml-auto text-[10px] text-zinc-600 uppercase tracking-widest">
+                      5m ago
+                    </span>
+                  </div>
+                  <div class="pl-5 flex flex-col gap-1">
+                    <div class="text-xs text-zinc-400 font-light flex items-center justify-between">
+                      <span>
+                        Channel:
+                        <span class="text-zinc-300">Email + LinkedIn</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="console-row row-4">
+                  <div class="flex items-center gap-3 mb-1.5">
+                    <span class="h-2 w-2 bg-violet-500/80 shrink-0 status-dot"></span>
+                    <span class="text-sm font-light text-zinc-200">
+                      Opportunity created
+                    </span>
+                    <span class="ml-auto text-[10px] text-zinc-600 uppercase tracking-widest">
+                      12m ago
+                    </span>
+                  </div>
+                  <div class="pl-5 flex flex-col gap-1">
+                    <div class="text-xs text-zinc-400 font-light flex items-center justify-between">
+                      <span>
+                        Stage:
+                        <span class="text-zinc-300">Discovery</span>
+                        • Owner assigned
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW SECTION 5: FAQ Section -->
+      <section class="max-w-[1000px] mx-auto px-6 pb-40 relative z-10" id="faq-section">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-extralight tracking-tight text-white mb-4 drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+            Knowledge Base
+          </h2>
+          <p class="text-zinc-400 font-light text-lg leading-relaxed max-w-2xl mx-auto">
+            Everything teams need to launch, secure, and scale SignalAI.
+          </p>
+        </div>
+
+        <!-- Horizontal Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-16">
+          <button onclick="window.switchKbTab('start', this)" class="kb-tab px-6 py-2.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)] text-sm font-light transition-all duration-300 active-tab" data-tab="start">
+            Getting Started
+          </button>
+          <button onclick="window.switchKbTab('security', this)" class="kb-tab px-6 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/30 text-zinc-400 hover:bg-zinc-800 hover:text-white text-sm font-light transition-all duration-300" data-tab="security">
+            Data &amp; Security
+          </button>
+          <button onclick="window.switchKbTab('workflows', this)" class="kb-tab px-6 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/30 text-zinc-400 hover:bg-zinc-800 hover:text-white text-sm font-light transition-all duration-300" data-tab="workflows">
+            Workflows &amp; Integrations
+          </button>
+          <button onclick="window.switchKbTab('pricing', this)" class="kb-tab px-6 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/30 text-zinc-400 hover:bg-zinc-800 hover:text-white text-sm font-light transition-all duration-300" data-tab="pricing">
+            Pricing &amp; Access
+          </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="max-w-3xl mx-auto min-h-[400px]">
+          <!-- Tab 1: Getting Started (Emerald) -->
+          <div id="kb-start" class="kb-content block space-y-1">
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-emerald-300 transition-colors duration-300">
+                  How quickly can we launch SignalAI?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-emerald-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Most teams can connect their CRM, define their ICP, and
+                    start routing signals in under one day.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-emerald-300 transition-colors duration-300">
+                  Do I need a demo before using the platform?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-emerald-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    No. Teams can start free, explore the workflow, and book a
+                    demo later for deeper onboarding.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-emerald-300 transition-colors duration-300">
+                  What systems does SignalAI connect with first?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-emerald-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    SignalAI is designed to plug into modern CRMs and outbound
+                    workflows first, so setup is lightweight.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-emerald-300 transition-colors duration-300">
+                  Can I define my own ideal customer profile?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-emerald-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. You can configure ICP filters, scoring inputs, and
+                    routing logic around your market.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-emerald-300 transition-colors duration-300">
+                  How much setup is required for the first workflow?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-emerald-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Minimal setup. Choose a signal trigger (e.g., website
+                    visit), map it to an email sequence, and activate.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Data & Security (Amber) -->
+          <div id="kb-security" class="kb-content hidden space-y-1">
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-amber-300 transition-colors duration-300">
+                  Is data encrypted in transit and at rest?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-amber-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. SignalAI uses encryption across transport and storage
+                    layers to keep customer data protected.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-amber-300 transition-colors duration-300">
+                  Do you support SSO and SCIM?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-amber-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. Enterprise environments can use identity provisioning
+                    and access controls to manage users securely.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-amber-300 transition-colors duration-300">
+                  Can we review audit logs?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-amber-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. SignalAI provides auditability so teams can review
+                    activity, changes, and operational events.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-amber-300 transition-colors duration-300">
+                  How is access controlled across teams?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-amber-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Permissions can be managed by role so GTM, RevOps, and
+                    admins each see what they need.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-amber-300 transition-colors duration-300">
+                  Can regulated teams use SignalAI securely?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-amber-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Absolutely. We support dedicated instances and custom
+                    retention policies for regulated industries.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Workflows & Integrations (Cyan) -->
+          <div id="kb-workflows" class="kb-content hidden space-y-1">
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-cyan-300 transition-colors duration-300">
+                  Can SignalAI trigger sequences automatically?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-cyan-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. Workflows can launch the moment a qualified signal is
+                    detected.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-cyan-300 transition-colors duration-300">
+                  How does account routing work?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-cyan-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Accounts can be routed by territory, segment, owner, or
+                    stage depending on your operating model.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-cyan-300 transition-colors duration-300">
+                  Does SignalAI sync with our CRM?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-cyan-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. Pipeline actions and qualified accounts can be pushed
+                    into your existing sales workflow.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-cyan-300 transition-colors duration-300">
+                  Can we adapt workflows to different teams?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-cyan-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. SDR, AE, and RevOps teams can each use different
+                    routing logic and activation rules.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-cyan-300 transition-colors duration-300">
+                  What kinds of outbound workflows can we automate?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-cyan-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Anything from intro emails and LinkedIn tasks to Slack
+                    alerts and CRM field updates.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Pricing & Access (Violet) -->
+          <div id="kb-pricing" class="kb-content hidden space-y-1">
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-violet-300 transition-colors duration-300">
+                  Can I start free before committing?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-violet-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. Our free tier allows you to test signal capture and
+                    basic routing for a limited number of accounts.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-violet-300 transition-colors duration-300">
+                  What happens when our team grows?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-violet-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    You can easily upgrade to Pro or Enterprise plans to add
+                    more seats, signals, and integration depth.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-violet-300 transition-colors duration-300">
+                  Is pricing based on seats, usage, or workflows?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-violet-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    We use a hybrid model: platform fee for core features +
+                    usage for signal volume. Unlimited workflows.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-violet-300 transition-colors duration-300">
+                  Can admins control permissions across teams?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-violet-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    Yes. Granular RBAC ensures teams only access the data and
+                    features relevant to their role.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="group border-b border-zinc-800/60 overflow-hidden">
+              <button class="w-full py-5 flex justify-between items-center text-left gap-4" onclick="window.toggleFaq(this)">
+                <span class="text-lg font-light text-zinc-300 group-hover:text-violet-300 transition-colors duration-300">
+                  Do you offer support during onboarding?
+                </span>
+                <iconify-icon icon="solar:add-circle-linear" class="faq-icon text-xl text-zinc-600 group-hover:text-violet-400 transition-all duration-300 shrink-0"></iconify-icon>
+              </button>
+              <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                <div class="min-h-0">
+                  <p class="pb-6 text-zinc-400 font-light leading-relaxed">
+                    All plans include documentation and chat support. Enterprise
+                    plans get a dedicated solutions engineer.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW SECTION 6: Footer -->
+      <footer class="bg-[#000000] border-t border-zinc-900 pt-24 pb-16 relative z-10">
+        <div class="max-w-[1200px] mx-auto px-6">
+          <!-- Top Footer Grid -->
+          <div class="flex flex-col lg:flex-row justify-between gap-20">
+
+  <!-- Brand -->
+  <div class="max-w-[260px]">
+    <div class="text-lg font-medium text-white tracking-tight mb-5">
+      SignalAI
+    </div>
+
+    <p class="text-sm text-zinc-400 font-light leading-relaxed">
+      Turn buying signals into pipeline with automated scoring,
+      routing, and outbound workflows.
+    </p>
+  </div>
+
+
+  <!-- Navigation Columns Container -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-x-20 gap-y-12">
+
+    <!-- Product -->
+    <div>
+      <h4 class="text-xs font-light text-zinc-300 mb-5 uppercase tracking-widest">
+        Product
+      </h4>
+      <ul class="space-y-3 text-sm font-light text-zinc-500">
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Platform</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Solutions</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Pricing</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Book a demo</a></li>
+      </ul>
+    </div>
+
+
+    <!-- Resources -->
+    <div>
+      <h4 class="text-xs font-light text-zinc-300 mb-5 uppercase tracking-widest">
+        Resources
+      </h4>
+      <ul class="space-y-3 text-sm font-light text-zinc-500">
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Customers</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Knowledge Base</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Security</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Contact</a></li>
+      </ul>
+    </div>
+
+
+    <!-- Explore -->
+    <div>
+      <h4 class="text-xs font-light text-zinc-300 mb-5 uppercase tracking-widest">
+        Explore
+      </h4>
+      <ul class="space-y-3 text-sm font-light text-zinc-500">
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Use Cases</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Integrations</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Workflow Engine</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Signal Network</a></li>
+      </ul>
+    </div>
+
+
+    <!-- Company -->
+    <div>
+      <h4 class="text-xs font-light text-zinc-300 mb-5 uppercase tracking-widest">
+        Company
+      </h4>
+      <ul class="space-y-3 text-sm font-light text-zinc-500">
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">About</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Privacy</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Terms</a></li>
+        <li><a href="#" class="hover:text-emerald-400 transition-colors">Login</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+      
+          <!-- Bottom Divider -->
+          <div class="mt-20 pt-10 relative">
+            <div class="w-full h-px relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"></div>
+              <div class="absolute left-1/2 -translate-x-1/2 w-72 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent drop-shadow-[0_0_8px_rgba(16,185,129,0.35)]">
+              </div>
+            </div>
+      
+            <!-- Bottom Bar -->
+            <div class="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-sm font-light text-zinc-500">
+              <div>© 2026 SignalAI</div>
+      
+              <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+                <a href="#" class="hover:text-emerald-400 transition-colors">LinkedIn</a>
+                <a href="#" class="hover:text-emerald-400 transition-colors">X / Twitter</a>
+                <a href="#" class="hover:text-emerald-400 transition-colors">Privacy</a>
+                <a href="#" class="hover:text-emerald-400 transition-colors">Terms</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Scripts from Template -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+                // WebGL Starfield
+                const canvas = document.getElementById('webgl-stars');
+                const gl = canvas.getContext('webgl');
+                if (gl) {
+                    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; gl.viewport(0, 0, canvas.width, canvas.height); };
+                    window.addEventListener('resize', resize);
+                    resize();
+
+                    const vs = gl.createShader(gl.VERTEX_SHADER);
+                    gl.shaderSource(vs, `attribute vec3 position; uniform float time; varying float vAlpha; void main() { float z = mod(position.z - time * 0.1, 1.0); vec2 pos = position.xy / (z * 2.0); gl_Position = vec4(pos, 0.0, 1.0); gl_PointSize = (1.0 - z) * 2.5; vAlpha = (1.0 - z) * 0.8; }`);
+                    gl.compileShader(vs);
+
+                    const fs = gl.createShader(gl.FRAGMENT_SHADER);
+                    gl.shaderSource(fs, `precision mediump float; varying float vAlpha; void main() { gl_FragColor = vec4(0.6, 1.0, 0.8, vAlpha); }`);
+                    gl.compileShader(fs);
+
+                    const prog = gl.createProgram();
+                    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.useProgram(prog);
+
+                    const stars = new Float32Array(3000);
+                    for(let i=0; i<3000; i+=3) { stars[i] = (Math.random() - 0.5) * 4.0; stars[i+1] = (Math.random() - 0.5) * 4.0; stars[i+2] = Math.random(); }
+
+                    const buf = gl.createBuffer();
+                    gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, stars, gl.STATIC_DRAW);
+
+                    const posLoc = gl.getAttribLocation(prog, "position");
+                    gl.enableVertexAttribArray(posLoc); gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+
+                    const timeLoc = gl.getUniformLocation(prog, "time");
+                    let start = performance.now();
+                    const draw = (now) => {
+                        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+                        gl.uniform1f(timeLoc, (now - start) / 1000.0);
+                        gl.drawArrays(gl.POINTS, 0, 1000);
+                        requestAnimationFrame(draw);
+                    };
+                    draw(start);
+                }
+
+                // Infinite Marquee Animation
+                const track = document.getElementById('marquee-track');
+                if(track) {
+                    track.animate([
+                        { transform: 'translateX(0)' },
+                        { transform: 'translateX(-50%)' }
+                    ], { duration: 40000, iterations: Infinity, easing: 'linear' });
+                }
+
+                // Ambient Lights Breathing Animation
+                const light1 = document.getElementById('light1');
+                const light2 = document.getElementById('light2');
+
+                if(light1) {
+                    light1.animate([
+                        { transform: 'translate(-50%, 0) scale(1)', opacity: 0.1 },
+                        { transform: 'translate(-45%, 5%) scale(1.1)', opacity: 0.2 },
+                        { transform: 'translate(-50%, 0) scale(1)', opacity: 0.1 }
+                    ], { duration: 12000, iterations: Infinity, easing: 'ease-in-out' });
+                }
+
+                if(light2) {
+                    light2.animate([
+                        { transform: 'translate(0, 0) scale(1)', opacity: 0.1 },
+                        { transform: 'translate(-5%, -5%) scale(1.2)', opacity: 0.2 },
+                        { transform: 'translate(0, 0) scale(1)', opacity: 0.1 }
+                    ], { duration: 15000, iterations: Infinity, easing: 'ease-in-out', delay: 2000 });
+                }
+            });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+              const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              const revealElements = document.querySelectorAll('.reveal-item');
+
+              if (prefersReducedMotion) {
+                revealElements.forEach(el => {
+                  el.classList.add('is-visible');
+                });
+                return;
+              }
+
+              const delays = [450, 1400, 2350, 3300];
+              revealElements.forEach((el, index) => {
+                setTimeout(() => {
+                  el.classList.add('is-visible');
+                }, delays[index] || 3300);
+              });
+            });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+              const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              const logoTrack = document.getElementById('logo-marquee-track');
+              if (logoTrack && !prefersReducedMotion) {
+                logoTrack.animate([
+                  { transform: 'translateX(0)' },
+                  { transform: 'translateX(-50%)' }
+                ], { duration: 60000, iterations: Infinity, easing: 'linear' });
+              }
+            });
+    </script>
+
+    <script>
+      window.switchKbTab = function(id, btn) {
+          // Hide all content areas
+          document.querySelectorAll('.kb-content').forEach(el => {
+              el.classList.add('hidden');
+              el.classList.remove('block', 'animate-in', 'fade-in', 'slide-in-from-bottom-2');
+          });
+
+          // Show active content
+          const target = document.getElementById('kb-' + id);
+          if(target) {
+              target.classList.remove('hidden');
+              target.classList.add('block', 'animate-in', 'fade-in', 'slide-in-from-bottom-2', 'duration-300');
+          }
+
+          // Reset all tabs to inactive state
+          const allTabs = document.querySelectorAll('.kb-tab');
+          allTabs.forEach(el => {
+              el.className = 'kb-tab px-6 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/30 text-zinc-400 hover:bg-zinc-800 hover:text-white text-sm font-light transition-all duration-300 cursor-pointer';
+          });
+
+          // Set active tab styles based on category
+          if(btn) {
+              let activeClass = '';
+              if(id === 'start') activeClass = 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
+              else if(id === 'security') activeClass = 'border-amber-500/40 bg-amber-500/10 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]';
+              else if(id === 'workflows') activeClass = 'border-cyan-500/40 bg-cyan-500/10 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.2)]';
+              else if(id === 'pricing') activeClass = 'border-violet-500/40 bg-violet-500/10 text-violet-300 shadow-[0_0_15px_rgba(139,92,246,0.2)]';
+
+              btn.className = `kb-tab px-6 py-2.5 rounded-full border text-sm font-light transition-all duration-300 cursor-pointer ${activeClass}`;
+          }
+      };
+
+      window.toggleFaq = function(btn) {
+          const container = btn.closest('.kb-content');
+          const currentGroup = btn.closest('.group');
+          const currentGrid = currentGroup.querySelector('.grid');
+          const currentIcon = btn.querySelector('.faq-icon');
+
+          // Check if currently open
+          const isOpen = currentGrid.classList.contains('grid-rows-[1fr]');
+
+          // Close all in this container
+          container.querySelectorAll('.group').forEach(group => {
+              group.querySelector('.grid').classList.remove('grid-rows-[1fr]');
+              group.querySelector('.grid').classList.add('grid-rows-[0fr]');
+              const icon = group.querySelector('.faq-icon');
+              if(icon) icon.classList.remove('rotate-45', 'text-white');
+          });
+
+          // Toggle current
+          if (!isOpen) {
+              currentGrid.classList.remove('grid-rows-[0fr]');
+              currentGrid.classList.add('grid-rows-[1fr]');
+              currentIcon.classList.add('rotate-45');
+          }
+      };
+    </script>
+  
+</body></html>

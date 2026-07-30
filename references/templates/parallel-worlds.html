@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Designing Parallel Worlds</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Michroma&amp;display=swap"
+rel="stylesheet"
+/>
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #050505;
+color: #F5F7FA;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;x
+}
+.font-display {
+font-family: 'Michroma', sans-serif;
+}
+.text-balance {
+text-wrap: balance;
+}
+::-webkit-scrollbar {
+width: 6px;
+}
+::-webkit-scrollbar-track {
+background: #050505;
+}
+::-webkit-scrollbar-thumb {
+background: #171A1F;
+}
+::-webkit-scrollbar-thumb:hover {
+background: #7D8794;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+  <body
+    class="relative overflow-x-hidden selection:bg-[#9ED8FF]/20 selection:text-[#9ED8FF]"
+  >
+    <!-- Background -->
+    <div
+      class="aura-background-component absolute top-0 -z-10 h-screen w-full brightness-50"
+      data-alpha-mask="80"
+      style="
+      mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent);
+    "
+    >
+      <div class="absolute inset-0 -z-10 h-full w-full">
+        <div
+          data-us-project="vi5SxDwDvEJMwkyTdyH8"
+          class="absolute left-0 top-0 -z-10 h-full w-full"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Background Grid / System Lines -->
+    <div
+      class="fixed inset-0 z-0 flex justify-center overflow-hidden pointer-events-none"
+    >
+      <div
+        class="flex h-full w-full max-w-7xl justify-evenly border-x border-[#171A1F]/50"
+      >
+        <div
+          class="relative hidden h-full w-px overflow-hidden bg-[#171A1F]/30 lg:block"
+        >
+          <div
+            id="beam-0"
+            class="absolute left-0 top-0 h-48 w-full bg-gradient-to-b from-transparent via-[#9ED8FF]/30 to-transparent"
+            style="transform: translateY(-253.585px);"
+          ></div>
+        </div>
+
+        <div
+          class="relative hidden h-full w-px overflow-hidden bg-[#171A1F]/30 md:block"
+        >
+          <div
+            id="beam-1"
+            class="absolute left-0 top-0 h-64 w-full bg-gradient-to-b from-transparent via-[#9ED8FF]/20 to-transparent"
+            style="transform: translateY(-926.002px);"
+          ></div>
+        </div>
+
+        <div
+          class="relative hidden h-full w-px overflow-hidden bg-[#171A1F]/30 sm:block"
+        >
+          <div
+            id="beam-2"
+            class="absolute left-0 top-0 h-32 w-full bg-gradient-to-b from-transparent via-[#9ED8FF]/40 to-transparent"
+            style="transform: translateY(-857.876px);"
+          ></div>
+        </div>
+
+        <div
+          class="relative hidden h-full w-px overflow-hidden bg-[#171A1F]/30 md:block"
+        >
+          <div
+            id="beam-3"
+            class="absolute left-0 top-0 h-56 w-full bg-gradient-to-b from-transparent via-[#9ED8FF]/20 to-transparent"
+            style="transform: translateY(-288.442px);"
+          ></div>
+        </div>
+
+        <div
+          class="relative hidden h-full w-px overflow-hidden bg-[#171A1F]/30 lg:block"
+        >
+          <div
+            id="beam-4"
+            class="absolute left-0 top-0 h-40 w-full bg-gradient-to-b from-transparent via-[#9ED8FF]/30 to-transparent"
+            style="transform: translateY(-30.545px);"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation starts below -->
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 md:px-8 pt-4">
+      <div class="max-w-7xl mx-auto">
+        <div
+          class="flex items-center justify-between border border-[#171A1F]/80 bg-[#050505]/85 backdrop-blur-md px-4 sm:px-5 md:px-6 py-3"
+        >
+          <!-- Logo -->
+          <a href="#" class="flex items-center gap-3 group shrink-0 min-w-0">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#9ED8FF"
+              stroke-width="2.25"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="transition-all duration-300 group-hover:stroke-[#CFAE6E] shrink-0"
+            >
+              <polyline points="5 17 12 12 19 17"></polyline>
+              <polyline points="5 12 12 7 19 12"></polyline>
+              <polyline points="5 7 12 2 19 7"></polyline>
+            </svg>
+
+            <span
+              class="font-display text-[9px] sm:text-[10px] tracking-[0.18em] uppercase text-[#F5F7FA] whitespace-nowrap truncate"
+            >
+              Parallel Worlds
+              <span class="text-[#7D8794]">|| Studio</span>
+            </span>
+          </a>
+
+          <!-- Desktop Center Nav -->
+          <div
+            class="hidden xl:flex items-center border border-[#171A1F]/80 bg-[#0C0D10]/90"
+          >
+            <a
+              href="#thesis"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-6 py-3 border-r border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Thesis
+            </a>
+            <a
+              href="#principles"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-6 py-3 border-r border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Principles
+            </a>
+            <a
+              href="#architecture"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-6 py-3 border-r border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Architecture
+            </a>
+            <a
+              href="#applications"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-6 py-3 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Realities
+            </a>
+          </div>
+
+          <!-- Right Actions Desktop -->
+          <div class="hidden xl:flex items-center">
+            <a
+              href="#thesis"
+              class="group inline-flex items-center gap-3 border border-[#232833] bg-[#111318]/90 px-4 sm:px-5 py-3 font-display text-[10px] tracking-[0.18em] uppercase text-[#F5F7FA] transition-all duration-300 hover:border-[#CFAE6E]/60 hover:text-[#CFAE6E]"
+            >
+              <span
+                class="w-1.5 h-1.5 bg-[#9ED8FF] transition-colors duration-300 group-hover:bg-[#CFAE6E]"
+              ></span>
+              <span>Initialize</span>
+            </a>
+          </div>
+
+          <!-- Tablet Menu Trigger -->
+          <div class="hidden md:flex xl:hidden items-center relative">
+            <button
+              id="tablet-menu-toggle"
+              type="button"
+              aria-label="Open section menu"
+              aria-expanded="false"
+              aria-controls="tablet-menu"
+              class="group inline-flex items-center gap-3 border border-[#232833] bg-[#111318]/90 px-4 py-3 font-display text-[10px] tracking-[0.18em] uppercase text-[#F5F7FA] transition-all duration-300 hover:border-[#CFAE6E]/60 hover:text-[#CFAE6E]"
+            >
+              <span
+                class="w-1.5 h-1.5 bg-[#9ED8FF] transition-colors duration-300 group-hover:bg-[#CFAE6E]"
+              ></span>
+              <span>Menu</span>
+              <svg
+                class="w-3.5 h-3.5 transition-transform duration-300"
+                id="tablet-menu-chevron"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <!-- Tablet Dropdown -->
+            <div
+              id="tablet-menu"
+              class="hidden absolute right-0 top-full mt-2 w-[260px] border border-[#171A1F]/80 bg-[#050505]/95 backdrop-blur-md"
+            >
+              <div class="flex flex-col">
+                <a
+                  href="#thesis"
+                  class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+                >
+                  Thesis
+                </a>
+                <a
+                  href="#principles"
+                  class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+                >
+                  Principles
+                </a>
+                <a
+                  href="#architecture"
+                  class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+                >
+                  Architecture
+                </a>
+                <a
+                  href="#applications"
+                  class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+                >
+                  Realities
+                </a>
+
+                <div class="p-4">
+                  <a
+                    href="#thesis"
+                    class="group inline-flex w-full items-center justify-center gap-3 border border-[#232833] bg-[#111318]/90 px-4 py-3 font-display text-[10px] tracking-[0.18em] uppercase text-[#F5F7FA] transition-all duration-300 hover:border-[#CFAE6E]/60 hover:text-[#CFAE6E]"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 bg-[#9ED8FF] transition-colors duration-300 group-hover:bg-[#CFAE6E]"
+                    ></span>
+                    <span>Initialize</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Toggle -->
+          <button
+            id="menu-toggle"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            class="md:hidden flex items-center justify-center text-[#F5F7FA] transition-colors duration-300 hover:text-[#CFAE6E]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="4" x2="20" y1="7" y2="7"></line>
+              <line x1="4" x2="20" y1="12" y2="12"></line>
+              <line x1="4" x2="20" y1="17" y2="17"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          id="mobile-menu"
+          class="md:hidden hidden mt-2 border border-[#171A1F]/80 bg-[#050505]/95 backdrop-blur-md"
+        >
+          <div class="flex flex-col">
+            <a
+              href="#thesis"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Thesis
+            </a>
+            <a
+              href="#principles"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Principles
+            </a>
+            <a
+              href="#architecture"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Architecture
+            </a>
+            <a
+              href="#applications"
+              class="font-display text-[10px] tracking-[0.18em] uppercase text-[#B8C0CC] px-5 py-4 border-b border-[#171A1F]/80 transition-colors duration-300 hover:text-[#CFAE6E]"
+            >
+              Realities
+            </a>
+
+            <!-- Mobile CTA -->
+            <div class="p-4">
+              <a
+                href="#thesis"
+                class="group inline-flex w-full items-center justify-center gap-3 border border-[#232833] bg-[#111318]/90 px-4 py-3 font-display text-[10px] tracking-[0.18em] uppercase text-[#F5F7FA] transition-all duration-300 hover:border-[#CFAE6E]/60 hover:text-[#CFAE6E]"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-[#9ED8FF] transition-colors duration-300 group-hover:bg-[#CFAE6E]"
+                ></span>
+                <span>Initialize</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <script>
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      const tabletMenuToggle = document.getElementById('tablet-menu-toggle');
+      const tabletMenu = document.getElementById('tablet-menu');
+      const tabletMenuChevron = document.getElementById('tablet-menu-chevron');
+
+      function animateMenu(menu, isOpening) {
+        if (typeof gsap === 'undefined') return;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+        if (isOpening) {
+          gsap.fromTo(menu,
+            { opacity: 0, y: 8 },
+            { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
+          );
+        }
+      }
+
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', () => {
+          const isHidden = mobileMenu.classList.contains('hidden');
+          mobileMenu.classList.toggle('hidden');
+          menuToggle.setAttribute('aria-expanded', String(isHidden));
+          animateMenu(mobileMenu, isHidden);
+        });
+
+        mobileMenu.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      if (tabletMenuToggle && tabletMenu) {
+        tabletMenuToggle.addEventListener('click', () => {
+          const isHidden = tabletMenu.classList.contains('hidden');
+          tabletMenu.classList.toggle('hidden');
+          tabletMenuToggle.setAttribute('aria-expanded', String(isHidden));
+
+          if (tabletMenuChevron) {
+            tabletMenuChevron.classList.toggle('rotate-180', isHidden);
+          }
+          animateMenu(tabletMenu, isHidden);
+        });
+
+        tabletMenu.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            tabletMenu.classList.add('hidden');
+            tabletMenuToggle.setAttribute('aria-expanded', 'false');
+
+            if (tabletMenuChevron) {
+              tabletMenuChevron.classList.remove('rotate-180');
+            }
+          });
+        });
+
+        document.addEventListener('click', (event) => {
+          const clickedInsideTabletMenu =
+            tabletMenu.contains(event.target) || tabletMenuToggle.contains(event.target);
+
+          if (!clickedInsideTabletMenu && !tabletMenu.classList.contains('hidden')) {
+            tabletMenu.classList.add('hidden');
+            tabletMenuToggle.setAttribute('aria-expanded', 'false');
+
+            if (tabletMenuChevron) {
+              tabletMenuChevron.classList.remove('rotate-180');
+            }
+          }
+        });
+      }
+    </script>
+
+    <!-- 1. HERO SECTION -->
+    <section
+      class="min-h-screen flex overflow-hidden z-10 pt-24 pb-12 relative items-center"
+    >
+      <!-- Animated grid background -->
+      <div
+        class="absolute bottom-0 left-0 w-full h-[65vh] flex justify-center items-end overflow-hidden z-0 pointer-events-none"
+      >
+        <canvas
+          id="grid-canvas"
+          class="absolute bottom-0 left-0 w-full h-full"
+          width="3444"
+          height="1234"
+        ></canvas>
+        <div
+          class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+
+        <!-- extra atmospheric glow -->
+        <div
+          class="absolute left-1/2 bottom-[18%] -translate-x-1/2 h-[120px] w-[520px] bg-[#9ED8FF]/8 blur-[80px]"
+        ></div>
+      </div>
+
+      <!-- Oversized background ghost word -->
+      <div
+        class="absolute top-[28%] left-0 w-full overflow-hidden pointer-events-none select-none flex justify-center whitespace-nowrap"
+      >
+        <span
+          class="font-display text-[16vw] leading-none tracking-[-0.08em] text-transparent bg-clip-text bg-gradient-to-r from-[#d7dde8]/[0.025] via-[#9ED8FF]/[0.05] to-[#d7dde8]/[0.02]"
+        >
+          PARALLEL
+        </span>
+      </div>
+
+      <div
+        class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-12 items-end"
+      >
+        <!-- Left content -->
+        <div
+          class="xl:col-span-8 flex flex-col justify-end min-w-0 relative z-20 pt-10 md:pt-16 xl:pt-0"
+        >
+          <!-- Phase label -->
+          <div class="flex items-center gap-4 mb-7 md:mb-9">
+            <span class="w-7 md:w-10 h-px bg-[#9ED8FF] shrink-0"></span>
+            <span
+              class="font-display text-[9px] sm:text-[10px] md:text-[11px] uppercase tracking-[0.16em] md:tracking-[0.18em] text-[#B8C0CC] leading-tight"
+            >
+              Phase 01 — Concept Initialization
+            </span>
+          </div>
+
+          <!-- Headline -->
+          <h1
+            class="font-display uppercase leading-[0.9] tracking-[-0.065em] mb-7 md:mb-8 max-w-full min-w-0"
+          >
+            <span
+              class="block text-[#F5F7FA] text-[2.55rem] sm:text-[3.6rem] md:text-[4.7rem] lg:text-[5.8rem] xl:text-[6.6rem]"
+            >
+              Designing
+            </span>
+            <span
+              class="block text-[2.55rem] sm:text-[3.6rem] md:text-[4.7rem] lg:text-[5.8rem] xl:text-[6.6rem] text-transparent bg-clip-text bg-gradient-to-r from-[#9ED8FF] via-[#74C7FF] to-[#C8EAFF] drop-shadow-[0_0_20px_rgba(158,216,255,0.12)]"
+            >
+              Parallel
+            </span>
+            <span
+              class="block text-[#DCE3EE] text-[2.55rem] sm:text-[3.6rem] md:text-[4.7rem] lg:text-[5.8rem] xl:text-[6.6rem]"
+            >
+              Worlds
+            </span>
+          </h1>
+
+          <!-- Intro -->
+          <p
+            class="text-[#AEB8C6] text-[0.95rem] sm:text-[1rem] md:text-base max-w-[42rem] md:max-w-[34rem] xl:max-w-[42rem] font-light leading-relaxed"
+          >
+            Digital spaces are no longer static screens. They are constructed
+            realities. We design immersive atmospheres, structured systems, and
+            visual worlds that redefine how brands, products, and future-facing
+            ideas are experienced.
+          </p>
+
+          <!-- CTA -->
+          <div class="md:mt-10 z-20 mt-8 relative">
+            <a
+              href="#thesis"
+              class="group inline-flex items-center gap-4 border border-[#232833] bg-[#0C0D10]/90 px-5 md:px-7 py-3.5 md:py-4 font-display text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#F5F7FA] transition-all duration-300 hover:border-[#CFAE6E]/60 hover:text-[#CFAE6E]"
+            >
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="w-1.5 h-1.5 bg-[#9ED8FF] transition-colors duration-300 group-hover:bg-[#CFAE6E]"
+                ></span>
+                <span class="">Enter World</span>
+              </span>
+              <svg
+                class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14"></path>
+                <path d="M13 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right metadata block -->
+        <div
+          class="xl:col-span-4 flex justify-end relative z-10 mt-10 md:mt-0 md:absolute md:right-12 md:bottom-10 xl:static xl:mt-0"
+        >
+          <div
+            class="relative w-full max-w-[25rem] md:max-w-[21rem] xl:max-w-[24.5rem] border border-[#171A1F]/80 bg-[#090B0E]/45 backdrop-blur-[2px] px-5 py-5 md:px-6 md:py-6"
+          >
+            <div
+              class="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-[#9ED8FF]/0 via-[#9ED8FF]/50 to-[#CFAE6E]/0"
+            ></div>
+            <div
+              class="absolute -left-px top-6 bottom-6 w-px bg-gradient-to-b from-[#9ED8FF]/0 via-[#9ED8FF]/55 to-[#CFAE6E]/0"
+            ></div>
+
+            <div class="flex items-center gap-3 mb-5">
+              <span class="w-1.5 h-1.5 bg-[#9ED8FF]"></span>
+              <span
+                class="font-display text-[10px] uppercase tracking-[0.18em] text-[#D7DEE8]"
+              >
+                Active Environment
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              <div
+                class="flex items-start justify-between gap-6 border-b border-[#171A1F]/70 pb-3"
+              >
+                <span
+                  class="font-display text-[9px] uppercase tracking-[0.16em] text-[#7D8794] pt-0.5"
+                >
+                  Coordinates
+                </span>
+                <span
+                  class="text-[12px] md:text-[13px] text-[#E4EBF4] tracking-[0.08em] uppercase text-right leading-[1.45]"
+                >
+                  <span class="block whitespace-nowrap">40.7128° N</span>
+                  <span class="block whitespace-nowrap">74.0060° W</span>
+                </span>
+              </div>
+
+              <div
+                class="flex items-start justify-between gap-6 border-b border-[#171A1F]/70 pb-3"
+              >
+                <span
+                  class="font-display text-[9px] uppercase tracking-[0.16em] text-[#7D8794]"
+                >
+                  Status
+                </span>
+                <span
+                  class="text-[12px] md:text-[13px] text-[#BFD8EE] tracking-[0.08em] uppercase whitespace-nowrap"
+                >
+                  Active
+                </span>
+              </div>
+
+              <div class="flex items-start justify-between gap-6">
+                <span
+                  class="font-display text-[9px] uppercase tracking-[0.16em] text-[#7D8794]"
+                >
+                  Protocol
+                </span>
+                <span
+                  class="text-[12px] md:text-[13px] text-[#E4EBF4] tracking-[0.08em] uppercase whitespace-nowrap"
+                >
+                  Editorial Thesis
+                </span>
+              </div>
+            </div>
+
+            <div class="mt-5 flex items-center gap-2">
+              <span class="w-1 h-1 bg-[#CFAE6E]"></span>
+              <span
+                class="text-[10px] uppercase tracking-[0.18em] text-[#8A93A1]"
+              >
+                Signal Calibrated
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02. THESIS -->
+    <section
+      id="thesis"
+      class="relative z-10 pt-28 pb-28 md:py-32 overflow-hidden"
+    >
+      <!-- Full-bleed glass atmosphere -->
+      <div class="pointer-events-none absolute inset-0">
+        <!-- section top / bottom dividers -->
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+        <div
+          class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+
+        <!-- glass wash -->
+        <div class="absolute inset-0 bg-[#9ED8FF]/22 backdrop-blur-[3px]"></div>
+
+        <!-- faint grid texture -->
+        <div
+          class="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,rgba(158,216,255,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(158,216,255,0.08)_1px,transparent_1px)] [background-size:120px_120px]"
+        ></div>
+
+        <!-- ambient glows -->
+        <div
+          class="absolute left-[18%] top-[18%] h-[180px] w-[180px] rounded-full bg-[#9ED8FF]/[0.03] blur-[90px]"
+        ></div>
+        <div
+          class="absolute right-[12%] bottom-[12%] h-[160px] w-[160px] rounded-full bg-[#CFAE6E]/[0.02] blur-[100px]"
+        ></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-14">
+          <!-- Left eyebrow / label -->
+          <div class="xl:col-span-3">
+            <div class="flex items-center gap-4 xl:pt-2">
+              <span class="w-8 h-px bg-[#CFAE6E]"></span>
+              <span
+                class="text-[10px] md:text-[11px] uppercase text-[#D6C29A] tracking-[0.18em] font-display"
+              >
+                02 / The Thesis
+              </span>
+            </div>
+          </div>
+
+          <!-- Right content -->
+          <div class="xl:col-span-9">
+            <!-- Main thesis statement -->
+            <h2
+              class="font-display leading-[1.08] tracking-[-0.04em] max-w-[19ch] text-[1.25rem] sm:text-[1.5rem] md:text-[1.8rem] lg:text-[2.2rem] text-[#F5F7FA]"
+            >
+              The interface is a boundary.
+              <span class="text-[#9ED8FF]">
+                We are dismantling it to build immersive logic systems
+              </span>
+              <span class="text-[#DCE3EE]">
+                where interaction feels like habitation.
+              </span>
+            </h2>
+
+            <!-- Divider -->
+            <div
+              class="mt-10 md:mt-12 h-px w-full bg-gradient-to-r from-[#171A1F] via-[#232833] to-transparent"
+            ></div>
+
+            <!-- Supporting copy -->
+            <div
+              class="mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 max-w-5xl"
+            >
+              <p
+                class="text-[#9AA6B5] text-[1rem] md:text-[1.05rem] leading-[1.9] font-light"
+              >
+                Historically, we have treated the digital as a flat surface — a
+                canvas for displaying information. But as computational power
+                aligns with spatial awareness, this paradigm shatters. The web
+                is evolving into a series of dimensional spaces.
+              </p>
+
+              <p
+                class="text-[#9AA6B5] text-[1rem] md:text-[1.05rem] leading-[1.9] font-light"
+              >
+                To design a parallel world is to author its physics. It requires
+                moving beyond aesthetic decoration into the realm of
+                architectural behavior. Gravity, resistance, illumination, and
+                memory become our new primitives.
+              </p>
+            </div>
+
+            <!-- Premium note -->
+            <div
+              class="mt-10 md:mt-12 max-w-3xl border-t border-[#171A1F]/80 pt-5"
+            >
+              <div class="flex items-start gap-3">
+                <span class="mt-1.5 w-1.5 h-1.5 bg-[#CFAE6E] shrink-0"></span>
+                <p
+                  class="text-[11px] md:text-[12px] uppercase tracking-[0.18em] text-[#A08E68] leading-relaxed"
+                >
+                  A premium digital world is not defined by style alone, but by
+                  atmosphere, structure, and the way perception is guided
+                  through space.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03. SYSTEM ARCHITECTURE -->
+    <section
+      id="architecture"
+      class="relative z-10 py-28 md:py-32 overflow-hidden border-t border-[#171A1F]"
+    >
+      <!-- Subtle atmosphere -->
+      <div class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+        <div
+          class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+        <div
+          class="absolute left-[14%] top-[22%] h-[180px] w-[180px] rounded-full bg-[#9ED8FF]/[0.025] blur-[90px]"
+        ></div>
+        <div
+          class="absolute right-[12%] bottom-[16%] h-[160px] w-[160px] rounded-full bg-[#CFAE6E]/[0.02] blur-[100px]"
+        ></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center"
+        >
+          <!-- Left: layered schematic -->
+          <div
+            class="overflow-hidden flex bg-[#0C0D10]/50 h-full min-h-[400px] rounded-none p-8 md:p-12 relative items-center border border-[#171A1F]"
+          >
+            <div
+              class="absolute inset-0 pointer-events-none"
+              style="background-image: radial-gradient(circle at 1px 1px, rgba(158,216,255,0.05) 1px, transparent 0); background-size: 24px 24px;"
+            ></div>
+
+            <!-- micro accent lines -->
+            <div
+              class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#9ED8FF]/30 to-transparent"
+            ></div>
+            <div
+              class="absolute right-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-[#CFAE6E]/18 to-transparent"
+            ></div>
+
+            <div class="z-10 relative w-full">
+              <div class="relative mx-auto w-full max-w-md h-72">
+                <!-- Base grids -->
+                <div
+                  class="absolute inset-8 border border-[#171A1F] rotate-[-18deg] transition-transform duration-700 hover:rotate-[-10deg]"
+                ></div>
+                <div
+                  class="absolute inset-4 border border-[#171A1F] rotate-[-12deg] bg-[#050505]/60 backdrop-blur-sm transition-transform duration-700 hover:rotate-[-6deg]"
+                ></div>
+                <div
+                  class="border border-[#171A1F] bg-[#0C0D10] bg-[url('https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/48c10a46-acf9-458b-938a-bb6cfa1120f4_3840w.jpg')] bg-cover bg-center absolute inset-0 rotate-[-6deg] opacity-40 grayscale mix-blend-screen transition-transform duration-700 hover:rotate-0"
+                ></div>
+
+                <!-- Step chips -->
+                <div
+                  class="absolute -left-4 top-6 flex items-center gap-2 transform transition-transform duration-500 hover:translate-x-2"
+                >
+                  <span
+                    class="flex h-8 w-10 items-center justify-center bg-[#050505] border border-[#171A1F] font-display text-[10px] text-[#9ED8FF]"
+                  >
+                    L.01
+                  </span>
+                  <div
+                    class="inline-flex items-center gap-2 bg-[#12141A] border border-[#171A1F] px-3 py-1.5 text-[10px] tracking-widest text-[#F5F7FA] uppercase"
+                  >
+                    Foundation
+                  </div>
+                </div>
+
+                <div
+                  class="absolute right-0 top-24 flex items-center gap-2 transform transition-transform duration-500 hover:-translate-x-2"
+                >
+                  <div
+                    class="inline-flex items-center gap-2 bg-[#12141A] border border-[#171A1F] px-3 py-1.5 text-[10px] tracking-widest text-[#F5F7FA] uppercase"
+                  >
+                    Signal
+                  </div>
+                  <span
+                    class="flex h-8 w-10 items-center justify-center bg-[#050505] border border-[#171A1F] font-display text-[10px] text-[#9ED8FF]"
+                  >
+                    L.02
+                  </span>
+                </div>
+
+                <div
+                  class="absolute left-6 bottom-10 flex items-center gap-2 transform transition-transform duration-500 hover:translate-x-2"
+                >
+                  <span
+                    class="flex h-8 w-10 items-center justify-center bg-[#050505] border border-[#171A1F] font-display text-[10px] text-[#9ED8FF]"
+                  >
+                    L.03
+                  </span>
+                  <div
+                    class="inline-flex items-center gap-2 bg-[#12141A] border border-[#171A1F] px-3 py-1.5 text-[10px] tracking-widest text-[#F5F7FA] uppercase"
+                  >
+                    Behavior
+                  </div>
+                </div>
+
+                <div
+                  class="absolute right-8 bottom-2 flex items-center gap-2 transform transition-transform duration-500 hover:-translate-x-2"
+                >
+                  <div
+                    class="inline-flex items-center gap-2 bg-[#12141A] border border-[#171A1F] px-3 py-1.5 text-[10px] tracking-widest text-[#F5F7FA] uppercase"
+                  >
+                    Perception
+                  </div>
+                  <span
+                    class="flex h-8 w-10 items-center justify-center bg-[#050505] border border-[#171A1F] font-display text-[10px] text-[#CFAE6E]"
+                  >
+                    L.04
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: copy & steps -->
+          <div class="flex flex-col gap-10">
+            <div class="flex flex-col gap-6">
+              <div class="flex items-center gap-4">
+                <span class="w-8 h-px bg-[#CFAE6E]"></span>
+                <p
+                  class="font-display text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#D6C29A]"
+                >
+                  03 / System Architecture
+                </p>
+              </div>
+
+              <h2
+                class="font-display text-[2rem] sm:text-[2.5rem] lg:text-[3.2rem] tracking-[-0.045em] uppercase text-[#F5F7FA] leading-[1.02] max-w-[11ch]"
+              >
+                Built in
+                <span class="text-[#9ED8FF]">layers</span>
+                .
+              </h2>
+
+              <p
+                class="text-[#B8C0CC] text-[1rem] md:text-[1.05rem] font-light max-w-xl leading-[1.85]"
+              >
+                A parallel world is not styled into existence. It is constructed
+                through a sequence of interdependent layers — each one
+                stabilizing the next, each one shaping how the environment is
+                seen, understood, and inhabited.
+              </p>
+            </div>
+
+            <div class="space-y-8">
+              <!-- Step 1 -->
+              <div class="flex gap-6 group cursor-default">
+                <div
+                  class="font-display text-xs text-[#7D8794] mt-1 w-8 group-hover:text-[#9ED8FF] transition-colors"
+                >
+                  L.01
+                </div>
+                <div class="flex-1">
+                  <h3
+                    class="font-display text-lg tracking-tight uppercase text-[#F5F7FA]"
+                  >
+                    Spatial Foundation
+                  </h3>
+                  <p
+                    class="mt-2 text-[#9AA6B5] text-sm md:text-[0.95rem] font-light leading-[1.8]"
+                  >
+                    The underlying geometry of the world — scale, alignment,
+                    depth, containment, and the structural logic that gives
+                    every element a place to exist.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="flex gap-6 group cursor-default">
+                <div
+                  class="font-display text-xs text-[#7D8794] mt-1 w-8 group-hover:text-[#9ED8FF] transition-colors"
+                >
+                  L.02
+                </div>
+                <div class="flex-1">
+                  <h3
+                    class="font-display text-lg tracking-tight uppercase text-[#F5F7FA]"
+                  >
+                    Visual Signal
+                  </h3>
+                  <p
+                    class="mt-2 text-[#9AA6B5] text-sm md:text-[0.95rem] font-light leading-[1.8]"
+                  >
+                    Typography, contrast, material language, and directional
+                    cues transform the structure into something legible,
+                    atmospheric, and emotionally precise.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="flex gap-6 group cursor-default">
+                <div
+                  class="font-display text-xs text-[#7D8794] mt-1 w-8 group-hover:text-[#9ED8FF] transition-colors"
+                >
+                  L.03
+                </div>
+                <div class="flex-1">
+                  <h3
+                    class="font-display text-lg tracking-tight uppercase text-[#F5F7FA]"
+                  >
+                    Behavior Ruleset
+                  </h3>
+                  <p
+                    class="mt-2 text-[#9AA6B5] text-sm md:text-[0.95rem] font-light leading-[1.8]"
+                  >
+                    Motion, response, sequencing, and state change define how
+                    the world behaves over time — not as animation for
+                    decoration, but as a readable system of cause and effect.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="flex gap-6 group cursor-default">
+                <div
+                  class="font-display text-xs text-[#7D8794] mt-1 w-8 group-hover:text-[#CFAE6E] transition-colors"
+                >
+                  L.04
+                </div>
+                <div class="flex-1">
+                  <h3
+                    class="font-display text-lg tracking-tight uppercase text-[#F5F7FA]"
+                  >
+                    Perceptual Tone
+                  </h3>
+                  <p
+                    class="mt-2 text-[#9AA6B5] text-sm md:text-[0.95rem] font-light leading-[1.8]"
+                  >
+                    The final layer: mood, tension, and sensory coherence. This
+                    is where a digital interface stops feeling assembled and
+                    starts feeling inhabited.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium note -->
+            <div class="max-w-2xl border-t border-[#171A1F]/80 pt-5">
+              <div class="flex items-start gap-3">
+                <span class="mt-1.5 w-1.5 h-1.5 bg-[#CFAE6E] shrink-0"></span>
+                <p
+                  class="text-[11px] md:text-[12px] uppercase tracking-[0.18em] text-[#A08E68] leading-relaxed"
+                >
+                  Architecture is not a visual layer. It is the hidden order
+                  that allows immersion to feel inevitable.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04. PROJECTED REALITIES -->
+    <section
+      id="applications"
+      class="relative z-10 py-28 md:py-32 bg-[#0C0D10] border-t border-[#171A1F] overflow-hidden"
+    >
+      <!-- subtle atmosphere -->
+      <div class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+        <div
+          class="absolute left-[12%] top-[16%] h-[180px] w-[180px] rounded-full bg-[#9ED8FF]/[0.025] blur-[90px]"
+        ></div>
+        <div
+          class="absolute right-[10%] bottom-[12%] h-[150px] w-[150px] rounded-full bg-[#CFAE6E]/[0.02] blur-[90px]"
+        ></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div
+          class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-16"
+        >
+          <div>
+            <div class="flex items-center gap-4 mb-4">
+              <span class="w-8 h-px bg-[#CFAE6E]"></span>
+              <h2
+                class="font-display text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#D6C29A]"
+              >
+                04 / Projected Realities
+              </h2>
+            </div>
+
+            <h3
+              class="font-display uppercase leading-[0.98] tracking-[-0.045em] text-[#F5F7FA] text-[2rem] sm:text-[2.5rem] md:text-[3.2rem] max-w-[10ch]"
+            >
+              Constructed
+              <span class="block text-[#9ED8FF]">Environments</span>
+            </h3>
+
+            <p
+              class="text-[0.98rem] md:text-[1.05rem] text-[#B8C0CC] font-light mt-5 max-w-2xl leading-[1.85]"
+            >
+              A premium digital world must translate across formats, surfaces,
+              and contexts. These realities show how the same architectural
+              logic can become editorial, product-driven, spatial, or
+              experiential without losing coherence.
+            </p>
+          </div>
+
+          <div class="hidden md:flex gap-2 pb-2">
+            <div class="w-2 h-2 bg-[#171A1F]"></div>
+            <div class="w-2 h-2 bg-[#171A1F]"></div>
+            <div class="w-2 h-2 bg-[#9ED8FF]"></div>
+            <div class="w-2 h-2 bg-[#CFAE6E]"></div>
+          </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3">
+          <!-- Big feature -->
+          <div
+            class="group relative overflow-hidden bg-[#050505] border border-[#171A1F] md:col-span-2 md:row-span-2 transition-colors duration-500 hover:border-[#9ED8FF]/30"
+          >
+            <div class="relative overflow-hidden">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/889ebd8a-b88e-43e7-82e3-7678d849acc2_3840w.jpg?w=800&amp;q=80"
+                alt="Editorial Environments"
+                class="aspect-video w-full object-cover opacity-60 grayscale mix-blend-screen transition-all duration-700 group-hover:opacity-88 group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:scale-[1.02]"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/55 to-transparent"
+              ></div>
+              <div
+                class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#9ED8FF]/30 to-transparent"
+              ></div>
+            </div>
+
+            <div class="relative z-10 p-6 sm:p-8 -mt-12">
+              <div class="flex items-center gap-3 mb-4">
+                <span
+                  class="inline-flex items-center border border-[#9ED8FF]/30 bg-[#9ED8FF]/10 px-2 py-1 text-[10px] uppercase tracking-widest text-[#9ED8FF]"
+                >
+                  ENV.01
+                </span>
+              </div>
+
+              <h4
+                class="font-display text-[1.2rem] sm:text-[1.4rem] uppercase tracking-[-0.03em] text-[#F5F7FA]"
+              >
+                Editorial Environments
+              </h4>
+
+              <p
+                class="mt-3 text-sm md:text-[0.95rem] text-[#9AA6B5] font-light leading-[1.8] max-w-2xl"
+              >
+                Narrative-first interfaces where typography, image, and pacing
+                turn a brand story into a navigable atmosphere.
+              </p>
+
+              <div
+                class="mt-6 flex items-start gap-3 border-t border-[#171A1F]/80 pt-5 max-w-2xl"
+              >
+                <span class="mt-1.5 w-1.5 h-1.5 bg-[#CFAE6E] shrink-0"></span>
+                <p
+                  class="text-[11px] md:text-[12px] uppercase tracking-[0.18em] text-[#A08E68] leading-relaxed"
+                >
+                  Designed for brands that need presence, not just presentation.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column 1 -->
+          <div
+            class="group relative overflow-hidden bg-[#050505] border border-[#171A1F] transition-all duration-500 hover:border-[#9ED8FF]/30"
+          >
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4
+                  class="font-display text-lg uppercase tracking-tight text-[#F5F7FA]"
+                >
+                  Product Realities
+                </h4>
+                <span
+                  class="inline-flex items-center border border-[#9ED8FF]/30 bg-[#9ED8FF]/10 px-2 py-1 text-[10px] uppercase tracking-widest text-[#9ED8FF]"
+                >
+                  ENV.02
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-[#7D8794] font-light leading-relaxed">
+                Software experiences that feel spatial, focused, and materially
+                intentional.
+              </p>
+              <div class="mt-6 overflow-hidden border border-[#171A1F]">
+                <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dfa9776b-475d-4470-9c26-68e42de7819a_3840w.webp?w=800&amp;q=80"
+                  alt="Product Realities"
+                  class="aspect-video w-full object-cover opacity-60 grayscale mix-blend-screen transition-all duration-700 group-hover:opacity-90 group-hover:grayscale-0 group-hover:mix-blend-normal"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column 2 -->
+          <div
+            class="group relative overflow-hidden bg-[#050505] border border-[#171A1F] transition-all duration-500 hover:border-[#9ED8FF]/30"
+          >
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4
+                  class="font-display text-lg uppercase tracking-tight text-[#F5F7FA]"
+                >
+                  Spatial Brands
+                </h4>
+                <span
+                  class="inline-flex items-center border border-[#9ED8FF]/30 bg-[#9ED8FF]/10 px-2 py-1 text-[10px] uppercase tracking-widest text-[#9ED8FF]"
+                >
+                  ENV.03
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-[#7D8794] font-light leading-relaxed">
+                Identities expressed as environments with mood, hierarchy, and
+                depth.
+              </p>
+              <div class="mt-6 overflow-hidden border border-[#171A1F]">
+                <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/eee1c0ce-00c6-479b-becf-5e5e329874d0_3840w.jpg?w=800&amp;q=80"
+                  alt="Spatial Brands"
+                  class="aspect-video w-full object-cover opacity-60 grayscale mix-blend-screen transition-all duration-700 group-hover:opacity-90 group-hover:grayscale-0 group-hover:mix-blend-normal"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom small 1 -->
+          <div
+            class="group relative overflow-hidden bg-[#050505] border border-[#171A1F] transition-all duration-500 hover:border-[#9ED8FF]/30"
+          >
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4
+                  class="font-display text-lg uppercase tracking-tight text-[#F5F7FA]"
+                >
+                  Future Systems
+                </h4>
+                <span
+                  class="inline-flex items-center border border-[#171A1F] bg-[#12141A] px-2 py-1 text-[10px] uppercase tracking-widest text-[#7D8794]"
+                >
+                  ENV.04
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-[#7D8794] font-light leading-relaxed">
+                Speculative interfaces shaped for post-screen behavior and
+                adaptive perception.
+              </p>
+              <div class="mt-6 overflow-hidden border border-[#171A1F]">
+                <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dde61ef6-b064-4587-a169-35a3c016971f_3840w.webp?w=800&amp;q=80"
+                  alt="Future Systems"
+                  class="aspect-video w-full object-cover opacity-60 grayscale mix-blend-screen transition-all duration-700 group-hover:opacity-90 group-hover:grayscale-0 group-hover:mix-blend-normal"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom small 2 -->
+          <div
+            class="group relative overflow-hidden bg-[#050505] border border-[#171A1F] transition-all duration-500 hover:border-[#CFAE6E]/30"
+          >
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4
+                  class="font-display text-lg uppercase tracking-tight text-[#F5F7FA]"
+                >
+                  Spatial Commerce
+                </h4>
+                <span
+                  class="inline-flex items-center border border-[#171A1F] bg-[#12141A] px-2 py-1 text-[10px] uppercase tracking-widest text-[#7D8794]"
+                >
+                  ENV.05
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-[#7D8794] font-light leading-relaxed">
+                Transactions and decision paths embedded within immersive
+                environments.
+              </p>
+              <div class="mt-6 overflow-hidden border border-[#171A1F]">
+                <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/f5a94d93-6b45-416e-94fe-38c2831ed252/3840w.jpg?w=800&amp;q=80"
+                  alt="Spatial Commerce"
+                  class="aspect-video w-full object-cover opacity-60 grayscale mix-blend-screen transition-all duration-700 group-hover:opacity-90 group-hover:grayscale-0 group-hover:mix-blend-normal"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom small 3 -->
+          <div
+            class="group relative overflow-hidden bg-[#050505] border border-[#171A1F] transition-all duration-500 hover:border-[#9ED8FF]/30"
+          >
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h4
+                  class="font-display text-lg uppercase tracking-tight text-[#F5F7FA]"
+                >
+                  Neural Mapping
+                </h4>
+                <span
+                  class="inline-flex items-center border border-[#171A1F] bg-[#12141A] px-2 py-1 text-[10px] uppercase tracking-widest text-[#7D8794]"
+                >
+                  ENV.06
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-[#7D8794] font-light leading-relaxed">
+                Intent translated directly into environmental response and
+                adaptive states.
+              </p>
+              <div class="mt-6 overflow-hidden border border-[#171A1F]">
+                <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/47f323b4-9880-45f4-aa62-4a5134475d97_3840w.webp?w=800&amp;q=80"
+                  alt="Neural Mapping"
+                  class="aspect-video w-full object-cover opacity-60 grayscale mix-blend-screen transition-all duration-700 group-hover:opacity-90 group-hover:grayscale-0 group-hover:mix-blend-normal"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06. FINAL CTA -->
+    <section
+      id="final-cta"
+      class="relative z-10 py-36 md:py-40 overflow-hidden border-t border-[#171A1F]"
+    >
+      <!-- Unicorn Studio Background -->
+      <div class="absolute inset-0 z-0 pointer-events-none opacity-70">
+        <div
+          data-us-project="FixNvEwvWwbu3QX9qC3F"
+          class="absolute inset-0"
+        ></div>
+      </div>
+
+      <!-- Atmosphere -->
+      <div class="pointer-events-none absolute inset-0 z-[1]">
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+        <div
+          class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+
+        <!-- dark overlay so the Unicorn stays subtle -->
+        <div class="absolute inset-0 bg-[#050505]/60"></div>
+
+        <!-- ambient glows -->
+        <div
+          class="absolute left-1/2 top-[18%] -translate-x-1/2 h-[220px] w-[520px] bg-[#9ED8FF]/[0.05] blur-[120px]"
+        ></div>
+        <div
+          class="absolute right-[18%] bottom-[20%] h-[160px] w-[160px] bg-[#CFAE6E]/[0.03] blur-[90px] rounded-full"
+        ></div>
+
+        <!-- subtle grid texture -->
+        <div
+          class="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(158,216,255,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(158,216,255,0.08)_1px,transparent_1px)] [background-size:120px_120px]"
+        ></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="max-w-4xl mx-auto text-center">
+          <!-- Eyebrow -->
+          <div class="flex items-center justify-center gap-4 mb-8 md:mb-10">
+            <span class="w-8 md:w-10 h-px bg-[#CFAE6E]"></span>
+            <span
+              class="font-display text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#D6C29A]"
+            >
+              06 / Closing Vision
+            </span>
+            <span class="w-8 md:w-10 h-px bg-[#CFAE6E]"></span>
+          </div>
+
+          <!-- Title -->
+          <h2
+            class="font-display uppercase leading-[0.96] tracking-[-0.045em] text-[#F5F7FA] text-[1.9rem] sm:text-[2.5rem] md:text-[3.2rem] lg:text-[4.1rem] max-w-[16ch] mx-auto"
+          >
+            <span class="block">The next interface</span>
+            <span class="block text-[#9ED8FF]">is not a screen.</span>
+            <span class="block text-[#DCE3EE]">It is a reality.</span>
+          </h2>
+
+          <!-- Subtitle -->
+          <p
+            class="mt-8 md:mt-10 max-w-2xl mx-auto text-[1rem] md:text-[1.08rem] text-[#B8C0CC] font-light leading-[1.9]"
+          >
+            Parallel Worlds creates immersive digital environments for brands,
+            products, and future-facing ideas — spaces where atmosphere,
+            structure, and behavior become part of the story itself.
+          </p>
+
+          <!-- Premium note -->
+          <div
+            class="mt-8 md:mt-10 flex items-start justify-center gap-3 max-w-2xl mx-auto border-t border-[#171A1F]/80 pt-5"
+          >
+            <span class="mt-1.5 w-1.5 h-1.5 bg-[#CFAE6E] shrink-0"></span>
+            <p
+              class="text-[11px] md:text-[12px] uppercase tracking-[0.18em] text-[#A08E68] leading-relaxed text-left"
+            >
+              Built for brands that want to be entered, not merely viewed.
+            </p>
+          </div>
+
+          <!-- CTA buttons -->
+          <div
+            class="mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <a
+              href="#"
+              class="group inline-flex items-center gap-4 border border-[#232833] bg-[#0C0D10]/90 px-6 md:px-7 py-4 font-display text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#F5F7FA] transition-all duration-300 hover:border-[#CFAE6E]/60 hover:text-[#CFAE6E]"
+            >
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="w-1.5 h-1.5 bg-[#9ED8FF] transition-colors duration-300 group-hover:bg-[#CFAE6E]"
+                ></span>
+                <span>Initialize Contact</span>
+              </span>
+              <svg
+                class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14"></path>
+                <path d="M13 5l7 7-7 7"></path>
+              </svg>
+            </a>
+
+            <a
+              href="#applications"
+              class="inline-flex items-center gap-3 border border-[#171A1F] bg-transparent px-6 md:px-7 py-4 font-display text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#B8C0CC] transition-all duration-300 hover:border-[#9ED8FF]/40 hover:text-[#9ED8FF]"
+            >
+              <span>View Realities</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer
+      class="relative z-10 border-t border-[#171A1F] bg-[#050505] overflow-hidden"
+    >
+      <!-- Atmosphere -->
+      <div class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#171A1F] to-transparent"
+        ></div>
+        <div
+          class="absolute left-[10%] top-[18%] h-[180px] w-[180px] rounded-full bg-[#9ED8FF]/[0.025] blur-[90px]"
+        ></div>
+        <div
+          class="absolute right-[12%] bottom-[14%] h-[150px] w-[150px] rounded-full bg-[#CFAE6E]/[0.02] blur-[90px]"
+        ></div>
+        <div
+          class="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(to_right,rgba(158,216,255,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(158,216,255,0.08)_1px,transparent_1px)] [background-size:120px_120px]"
+        ></div>
+      </div>
+
+      <div
+        class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-24"
+      >
+        <!-- Top footer row -->
+        <div
+          class="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between"
+        >
+          <!-- Brand -->
+          <div class="max-w-md">
+            <div class="flex items-center gap-3 text-[#F5F7FA]">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9ED8FF"
+                stroke-width="2.25"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="shrink-0"
+              >
+                <polyline points="5 17 12 12 19 17"></polyline>
+                <polyline points="5 12 12 7 19 12"></polyline>
+                <polyline points="5 7 12 2 19 7"></polyline>
+              </svg>
+
+              <span
+                class="font-display text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-[#F5F7FA]"
+              >
+                Parallel Worlds
+                <span class="text-[#7D8794]">|| Studio</span>
+              </span>
+            </div>
+
+            <p
+              class="mt-5 text-[0.98rem] text-[#9AA6B5] font-light leading-[1.85] max-w-sm"
+            >
+              We design immersive digital environments for brands, products, and
+              future-facing ideas — worlds shaped by atmosphere, structure, and
+              perceptual clarity.
+            </p>
+
+            <div
+              class="mt-6 flex items-start gap-3 border-t border-[#171A1F]/80 pt-5 max-w-sm"
+            >
+              <span class="mt-1.5 w-1.5 h-1.5 bg-[#CFAE6E] shrink-0"></span>
+              <p
+                class="text-[11px] md:text-[12px] uppercase tracking-[0.18em] text-[#A08E68] leading-relaxed"
+              >
+                Built for clients who want to be remembered as spaces, not
+                pages.
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer nav columns -->
+          <div class="grid gap-10 sm:grid-cols-3 lg:gap-14">
+            <div>
+              <p
+                class="font-display text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-[#D6C29A]"
+              >
+                Explore
+              </p>
+              <ul class="mt-5 space-y-3">
+                <li>
+                  <a
+                    href="#thesis"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-all duration-300 hover:translate-x-[2px] inline-block"
+                  >
+                    Thesis
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#architecture"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Architecture
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#applications"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Realities
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p
+                class="font-display text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-[#D6C29A]"
+              >
+                Studio
+              </p>
+              <ul class="mt-5 space-y-3">
+                <li>
+                  <a
+                    href="#"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Method
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Process
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p
+                class="font-display text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-[#D6C29A]"
+              >
+                Connect
+              </p>
+              <ul class="mt-5 space-y-3">
+                <li>
+                  <a
+                    href="#"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Instagram
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    LinkedIn
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-[#7D8794] hover:text-[#9ED8FF] transition-colors"
+                  >
+                    Are.na
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom legal -->
+        <div
+          class="mt-16 border-t border-[#171A1F] pt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p
+            class="text-[10px] md:text-[11px] uppercase tracking-[0.16em] text-[#4A505C]"
+          >
+            Sys.Rev.01 ©
+            <span class="font-display text-[#7D8794]">MMXXVI</span>
+            Parallel Worlds || Studio
+          </p>
+
+          <div class="flex flex-wrap items-center gap-6">
+            <a
+              href="#"
+              class="text-[10px] md:text-[11px] uppercase tracking-[0.16em] text-[#4A505C] hover:text-[#9ED8FF] transition-colors"
+            >
+              Imprint
+            </a>
+            <a
+              href="#"
+              class="text-[10px] md:text-[11px] uppercase tracking-[0.16em] text-[#4A505C] hover:text-[#9ED8FF] transition-colors"
+            >
+              Privacy
+            </a>
+            <a
+              href="#"
+              class="text-[10px] md:text-[11px] uppercase tracking-[0.16em] text-[#4A505C] hover:text-[#9ED8FF] transition-colors"
+            >
+              Terms
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const canvas = document.getElementById('grid-canvas');
+      if(canvas) {
+          const ctx = canvas.getContext('2d');
+
+          let cx, cy;
+          const focalLength = 300;
+          const cameraZ = -100;
+
+          let cameraX = 0;
+          let cameraY = -70;
+          let targetCameraX = 0;
+          let targetCameraY = -70;
+
+          window.addEventListener('mousemove', (e) => {
+              const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+              const mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+              targetCameraX = mouseX * 600;
+              targetCameraY = -70 + mouseY * 40;
+          });
+
+          function resizeCanvas() {
+              const container = canvas.parentElement;
+              const width = container.clientWidth;
+              const height = container.clientHeight;
+
+              const dpr = window.devicePixelRatio || 1;
+              canvas.width = width * dpr;
+              canvas.height = height * dpr;
+              ctx.scale(dpr, dpr);
+
+              cx = width / 2;
+              cy = height * 0.35;
+          }
+
+          window.addEventListener('resize', resizeCanvas);
+          resizeCanvas();
+
+          function project(x, y, z) {
+              const dz = z - cameraZ;
+              if (dz <= 0) return null;
+              const scale = focalLength / dz;
+              return {
+                  x: cx + (x - cameraX) * scale,
+                  y: cy + (y - cameraY) * scale
+              };
+          }
+
+          const gridZMin = 0;
+          const gridZMax = 3000;
+          const gridXMin = -4000;
+          const gridXMax = 4000;
+          const spacing = 90;
+
+          let zOffset = 0;
+          const speed = 2;
+
+          const streams = [
+              { x: -600, z: 500, length: 500, speed: 7, color: '#9ED8FF' },
+              { x: -200, z: 1200, length: 350, speed: 10, color: '#B8C0CC' },
+              { x: 300, z: 200, length: 600, speed: 12, color: '#9ED8FF' },
+              { x: 700, z: 800, length: 450, speed: 8, color: '#7D8794' },
+              { x: 0, z: 1800, length: 700, speed: 14, color: '#9ED8FF' },
+              { x: -1200, z: 900, length: 400, speed: 9, color: '#B8C0CC' },
+              { x: 1100, z: 1500, length: 550, speed: 11, color: '#7D8794' }
+          ];
+
+          const beams = [0, 1, 2, 3, 4].map(id => document.getElementById(`beam-${id}`)).filter(Boolean);
+          const beamStates = beams.map(() => ({
+              y: Math.random() * -1000,
+              speed: 1.5 + Math.random() * 2
+          }));
+
+          function animate() {
+              const w = canvas.width / (window.devicePixelRatio || 1);
+              const h = canvas.height / (window.devicePixelRatio || 1);
+              ctx.clearRect(0, 0, w, h);
+
+              cameraX += (targetCameraX - cameraX) * 0.03;
+              cameraY += (targetCameraY - cameraY) * 0.03;
+
+              beams.forEach((beam, i) => {
+                  beamStates[i].y += beamStates[i].speed;
+                  if (beamStates[i].y > window.innerHeight) {
+                      beamStates[i].y = -300;
+                  }
+                  beam.style.transform = `translateY(${beamStates[i].y}px)`;
+              });
+
+              zOffset = (zOffset + speed) % spacing;
+              ctx.lineWidth = 1;
+
+              for (let x = gridXMin; x <= gridXMax; x += spacing) {
+                  const p1 = project(x, 0, gridZMin);
+                  const p2 = project(x, 0, gridZMax);
+                  if (p1 && p2) {
+                      const grad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+                      grad.addColorStop(0, 'rgba(158, 216, 255, 0.15)');
+                      grad.addColorStop(1, 'rgba(158, 216, 255, 0)');
+                      ctx.strokeStyle = grad;
+                      ctx.beginPath();
+                      ctx.moveTo(p1.x, p1.y);
+                      ctx.lineTo(p2.x, p2.y);
+                      ctx.stroke();
+                  }
+              }
+
+              for (let z = gridZMin; z <= gridZMax; z += spacing) {
+                  const actualZ = z - zOffset;
+                  if (actualZ < gridZMin) continue;
+
+                  const p1 = project(gridXMin, 0, actualZ);
+                  const p2 = project(gridXMax, 0, actualZ);
+
+                  if (p1 && p2) {
+                      const alpha = Math.max(0, 1 - (actualZ / gridZMax));
+                      ctx.strokeStyle = `rgba(158, 216, 255, ${0.15 * alpha})`;
+                      ctx.beginPath();
+                      ctx.moveTo(p1.x, p1.y);
+                      ctx.lineTo(p2.x, p2.y);
+                      ctx.stroke();
+                  }
+              }
+
+              streams.forEach(s => {
+                  s.z -= s.speed;
+                  if (s.z < gridZMin - s.length) {
+                      s.z = gridZMax;
+                  }
+
+                  const startZ = Math.max(gridZMin, s.z);
+                  const endZ = Math.min(gridZMax, s.z + s.length);
+
+                  if (startZ < endZ) {
+                      const p1 = project(s.x, 0, startZ);
+                      const p2 = project(s.x, 0, endZ);
+
+                      if (p1 && p2) {
+                          const grad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+                          grad.addColorStop(0, s.color);
+                          grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+                          ctx.beginPath();
+                          ctx.moveTo(p1.x, p1.y);
+                          ctx.lineTo(p2.x, p2.y);
+                          ctx.strokeStyle = grad;
+                          ctx.lineWidth = 2;
+                          ctx.shadowBlur = 12;
+                          ctx.shadowColor = s.color;
+                          ctx.stroke();
+                          ctx.shadowBlur = 0;
+                      }
+                  }
+              });
+
+              requestAnimationFrame(animate);
+          }
+
+          animate();
+      }
+    </script>
+
+    <script>
+      !function () {
+        if (!window.UnicornStudio) {
+          window.UnicornStudio = { isInitialized: false };
+          var script = document.createElement("script");
+          script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js";
+          script.onload = function () {
+            if (!window.UnicornStudio.isInitialized) {
+              UnicornStudio.init();
+              window.UnicornStudio.isInitialized = true;
+            }
+          };
+          (document.head || document.body).appendChild(script);
+        }
+      }();
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        const navItems = [
+          document.querySelector('nav .max-w-7xl > div > a.group'),
+          document.querySelector('nav .max-w-7xl > div > div:nth-of-type(1)'),
+          document.querySelector('nav .max-w-7xl > div > div:nth-of-type(2)'),
+          document.getElementById('tablet-menu-toggle'),
+          document.getElementById('menu-toggle')
+        ].filter(Boolean);
+
+        if (navItems.length) {
+          gsap.from(navItems, {
+            y: 24,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: 'power3.out',
+            delay: 0.1
+          });
+        }
+
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        const heroPhase = document.querySelector('section.min-h-screen .max-w-7xl > div:nth-child(1) > div:nth-child(1)');
+        const heroLines = document.querySelectorAll('section.min-h-screen h1 > span');
+        const heroPara = document.querySelector('section.min-h-screen h1 + p');
+        const heroCta = document.querySelector('section.min-h-screen p + div');
+        const heroMeta = document.querySelector('section.min-h-screen .max-w-7xl > div:nth-child(2) > div');
+        const heroGhost = document.querySelector('section.min-h-screen > div.whitespace-nowrap');
+
+        if (heroGhost) {
+          gsap.from(heroGhost, { opacity: 0, duration: 2, ease: 'power2.out' });
+          gsap.to(heroGhost, {
+            y: -60,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: 'section.min-h-screen',
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true
+            }
+          });
+        }
+
+        if (heroPhase) {
+          heroTl.from(heroPhase, { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0);
+        }
+
+        if (heroLines.length) {
+          heroTl.from(heroLines, {
+            y: 40,
+            opacity: 0,
+            filter: 'blur(6px)',
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out'
+          }, 0.2);
+        }
+
+        if (heroPara) {
+          heroTl.from(heroPara, { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+        }
+
+        if (heroCta) {
+          heroTl.from(heroCta, { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.8);
+        }
+
+        if (heroMeta) {
+          const isDesktop = window.innerWidth >= 1280;
+          heroTl.from(heroMeta, {
+            x: isDesktop ? 24 : 0,
+            y: isDesktop ? 0 : 24,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out'
+          }, 1.0);
+
+          gsap.to(heroMeta, {
+            y: 40,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: 'section.min-h-screen',
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true
+            }
+          });
+        }
+
+        const thesis = document.getElementById('thesis');
+        if (thesis) {
+          const thesisEyebrow = thesis.querySelector('.max-w-7xl .grid > div:nth-child(1) > div');
+          const thesisStatement = thesis.querySelector('h2');
+          const thesisDivider = thesis.querySelector('h2 + div');
+          const thesisParas = thesis.querySelectorAll('h2 ~ div.grid > p');
+          const thesisNote = thesis.querySelector('h2 ~ div.max-w-3xl');
+
+          const thesisTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: thesis,
+              start: 'top 75%',
+            }
+          });
+
+          if (thesisEyebrow) thesisTl.from(thesisEyebrow, { x: -18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0);
+          if (thesisStatement) thesisTl.from(thesisStatement, { y: 24, opacity: 0, duration: 1, ease: 'power3.out' }, 0.2);
+          if (thesisDivider) thesisTl.from(thesisDivider, { scaleX: 0, opacity: 0, transformOrigin: 'left center', duration: 0.8, ease: 'power3.out' }, 0.4);
+          if (thesisParas.length) thesisTl.from(thesisParas, { y: 18, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out' }, 0.6);
+          if (thesisNote) thesisTl.from(thesisNote, { y: 14, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.9);
+        }
+
+        const arch = document.getElementById('architecture');
+        if (arch) {
+          const archEyebrow = arch.querySelector('.gap-6 > div.flex');
+          const archTitle = arch.querySelector('h2');
+          const archSub = arch.querySelector('h2 + p');
+
+          const archSchematic = arch.querySelector('.relative.mx-auto.w-full.max-w-md.h-72');
+          const actualBases = archSchematic ? Array.from(archSchematic.children).filter(el => !el.classList.contains('flex')) : [];
+          const archChips = archSchematic ? Array.from(archSchematic.children).filter(el => el.classList.contains('flex')) : [];
+
+          const archSteps = arch.querySelectorAll('.space-y-8 > div');
+
+          const archTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: arch,
+              start: 'top 75%'
+            }
+          });
+
+          if (archEyebrow) archTl.from(archEyebrow, { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0);
+          if (archTitle) archTl.from(archTitle, { y: 24, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+          if (archSub) archTl.from(archSub, { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+
+          if (actualBases.length) {
+            actualBases.forEach((base, i) => {
+              archTl.from(base, {
+                opacity: 0,
+                y: 20,
+                rotation: '-=6',
+                duration: 1,
+                ease: 'power3.out'
+              }, 0.4 + i * 0.1);
+            });
+          }
+
+          if (archChips.length) {
+            archTl.from(archChips, {
+              opacity: 0,
+              y: 10,
+              x: (i) => i % 2 === 0 ? -10 : 10,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: 'power3.out'
+            }, 0.8);
+          }
+
+          if (archSteps.length) {
+            archTl.from(archSteps, {
+              opacity: 0,
+              y: 18,
+              duration: 0.8,
+              stagger: 0.15,
+              ease: 'power3.out'
+            }, 0.6);
+          }
+        }
+
+        const apps = document.getElementById('applications');
+        if (apps) {
+          const appsEyebrow = apps.querySelector('.mb-16 .flex.items-center.gap-4');
+          const appsTitle = apps.querySelector('h3');
+          const appsSub = apps.querySelector('h3 + p');
+          const largeCard = apps.querySelector('.grid > div:first-child');
+          const smallCards = apps.querySelectorAll('.grid > div:not(:first-child)');
+
+          const appsTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: apps,
+              start: 'top 82%'
+            }
+          });
+
+          if (appsEyebrow) appsTl.from(appsEyebrow, { x: -18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0);
+          if (appsTitle) appsTl.from(appsTitle, { y: 28, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+          if (appsSub) appsTl.from(appsSub, { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+
+          if (largeCard) {
+            appsTl.fromTo(largeCard,
+              { y: 30, opacity: 0, scale: 0.985 },
+              { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' },
+              0.5
+            );
+
+            const largeImg = largeCard.querySelector('img');
+            if(largeImg) {
+              appsTl.fromTo(largeImg,
+                { clipPath: 'inset(4% 0 0 0)' },
+                { clipPath: 'inset(0% 0 0 0)', duration: 1.2, ease: 'power3.out' },
+                0.5
+              );
+            }
+          }
+
+          if (smallCards.length) {
+            appsTl.fromTo(smallCards,
+              { y: 24, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', clearProps: 'opacity,transform' },
+              0.7
+            );
+          }
+        }
+
+        const finalCta = document.getElementById('final-cta');
+        if (finalCta) {
+          const ctaEyebrow = finalCta.querySelector('.mb-8, .mb-10');
+          const ctaLines = finalCta.querySelectorAll('h2 span.block');
+          const ctaSub = finalCta.querySelector('h2 + p');
+          const ctaNote = finalCta.querySelector('p + div.border-t');
+          const ctaBtns = finalCta.querySelectorAll('.mt-10 a, .mt-12 a');
+          const ctaBg = finalCta.querySelector('.absolute.inset-0.z-0');
+
+          const ctaTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: finalCta,
+              start: 'top 82%'
+            }
+          });
+
+          if (ctaBg) ctaTl.fromTo(ctaBg, { opacity: 0 }, { opacity: 0.7, duration: 2, ease: 'power2.out' }, 0);
+          if (ctaEyebrow) ctaTl.from(ctaEyebrow, { y: 14, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.2);
+          if (ctaLines.length) ctaTl.from(ctaLines, { y: 30, opacity: 0, filter: 'blur(4px)', duration: 1, stagger: 0.15, ease: 'power3.out' }, 0.4);
+          if (ctaSub) ctaTl.from(ctaSub, { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.8);
+          if (ctaNote) ctaTl.from(ctaNote, { y: 14, opacity: 0, duration: 0.8, ease: 'power3.out' }, 1.0);
+          if (ctaBtns.length) ctaTl.from(ctaBtns, { y: 18, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out' }, 1.2);
+        }
+
+        const footer = document.querySelector('footer');
+        if (footer) {
+          const fBrand = footer.querySelector('.max-w-md > div:nth-child(1)');
+          const fDesc = footer.querySelector('.max-w-md > p');
+          const fNote = footer.querySelector('.max-w-md > div.border-t');
+          const fCols = footer.querySelectorAll('.grid.gap-10 > div');
+          const fLegal = footer.querySelector('.mt-16');
+
+          const fTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: footer,
+              start: 'top 85%'
+            }
+          });
+
+          if (fBrand) fTl.from(fBrand, { y: 16, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0);
+          if (fDesc) fTl.from(fDesc, { y: 14, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+          if (fNote) fTl.from(fNote, { y: 14, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+          if (fCols.length) fTl.from(fCols, { y: 16, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out' }, 0.2);
+          if (fLegal) fTl.from(fLegal, { y: 12, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+        }
+      });
+    </script>
+  </body>
+</html>

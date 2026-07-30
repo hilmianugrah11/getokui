@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Intelligent Automation Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz@9..40&family=DM+Sans:opsz,wght@9..40,500&family=DM+Sans:opsz,wght@9..40,600&family=DM+Sans:opsz,wght@9..40,700&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<style>
+@property --glow-angle {
+syntax: '<angle>';
+initial-value: 0deg;
+inherits: false;
+}
+:root {
+--bg: #060a09;
+--bg-elevated: #0c1210;
+--bg-card: #0a0f0d;
+--text: #e4ece8;
+--text-muted: #6a7d73;
+--text-soft: #9fb5aa;
+--accent: #10b981;
+--accent-light: #34d399;
+--accent-dark: #052e20;
+--border: #14201a;
+--font-heading: 'Syne', sans-serif;
+--font-body: 'DM Sans', sans-serif;
+--container: 1200px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+::selection { background: var(--accent); color: var(--bg); }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--accent-dark) var(--bg); }
+body {
+font-family: var(--font-body); background: var(--bg); color: var(--text);
+overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; color: inherit; cursor: pointer; font-family: inherit; }
+.container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+/* ── Loader ──────────────────────────── */
+.loader {
+position: fixed; inset: 0; z-index: 9999; background: var(--bg);
+display: flex; align-items: center; justify-content: center;
+transition: opacity 0.5s ease, visibility 0.5s;
+}
+.loader.is-loaded { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader__brand {
+font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700;
+letter-spacing: 0.2em; color: var(--accent); position: relative;
+}
+.loader__brand::after {
+content: ''; position: absolute; bottom: -6px; left: 0;
+width: 100%; height: 2px; background: var(--accent);
+animation: pulse 1s ease-in-out infinite alternate;
+}
+@keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
+/* ── Canvas ──────────────────────────── */
+#webgl { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+/* ── Nav ─────────────────────────────── */
+.nav {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 0;
+transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+}
+.nav.is-scrolled {
+background: rgba(6,10,9,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+padding: 0.8rem 0; border-bottom: 1px solid var(--border);
+}
+.nav__inner { display: flex; align-items: center; justify-content: space-between; }
+.nav__logo {
+font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800;
+letter-spacing: 0.12em; color: var(--accent);
+}
+.nav__links { display: flex; gap: 2.2rem; }
+.nav__links a {
+font-size: 0.8rem; font-weight: 500; color: var(--text-muted);
+transition: color 0.3s; position: relative;
+}
+.nav__links a::after {
+content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px;
+background: var(--accent); transition: width 0.3s;
+}
+.nav__links a:hover { color: var(--text); }
+.nav__links a:hover::after { width: 100%; }
+.nav__cta {
+font-family: var(--font-heading); font-size: 0.78rem; font-weight: 600;
+padding: 0.55rem 1.3rem; background: var(--accent); color: var(--bg);
+border-radius: 8px; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.nav__cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+.nav__toggle { display: none; font-size: 1.4rem; }
+/* ── Mobile Menu ─────────────────────── */
+.mobile-menu {
+position: fixed; inset: 0; z-index: 200; background: var(--bg);
+display: flex; flex-direction: column; padding: 1.2rem clamp(1.25rem, 4vw, 2.5rem);
+transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.mobile-menu.is-open { transform: translateX(0); }
+.mobile-menu__header { display: flex; align-items: center; justify-content: space-between; }
+.mobile-menu__close { font-size: 1.4rem; color: var(--text-muted); }
+.mobile-menu__nav { display: flex; flex-direction: column; margin-top: 3rem; }
+.mobile-menu__nav a {
+font-family: var(--font-heading); font-size: clamp(1.8rem, 7vw, 3rem); font-weight: 700;
+letter-spacing: -0.02em; padding: 0.5rem 0; color: var(--text-muted);
+border-bottom: 1px solid var(--border); transition: color 0.3s;
+}
+.mobile-menu__nav a:hover { color: var(--accent); }
+/* ── Hero ────────────────────────────── */
+.hero {
+position: relative; z-index: 2; min-height: 100vh; min-height: 100svh;
+display: flex; align-items: center; justify-content: center;
+padding: 8rem 0 5rem; text-align: center;
+background: transparent;
+}
+.hero::before {
+content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+background: radial-gradient(ellipse 55% 50% at 50% 48%, rgba(6,10,9,0.95) 0%, rgba(6,10,9,0.65) 45%, transparent 75%);
+}
+.hero::after {
+content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 160px;
+z-index: -1; pointer-events: none;
+background: linear-gradient(to bottom, transparent, var(--bg));
+}
+.hero__inner {
+max-width: 780px; margin: 0 auto;
+display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.hero__badge {
+display: inline-flex; align-items: center; gap: 0.5rem;
+font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+color: var(--accent-light); padding: 0.45rem 1.1rem;
+border: 1px solid rgba(16,185,129,0.3);
+border-radius: 100px; margin-bottom: 2rem;
+background: rgba(6,10,9,0.55);
+backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.hero__badge-dot {
+width: 6px; height: 6px; border-radius: 50%;
+background: var(--accent-light); animation: pulse 1.5s infinite alternate;
+}
+.hero__title {
+font-family: var(--font-heading); font-size: clamp(2.8rem, 7.5vw, 5.5rem);
+font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.5rem;
+color: var(--text); text-align: center;
+text-shadow: 0 4px 50px rgba(6,10,9,1), 0 2px 15px rgba(6,10,9,0.9);
+}
+.hero__title-accent { color: var(--accent-light); }
+.hero__desc {
+font-size: clamp(0.95rem, 1.3vw, 1.1rem); line-height: 1.7;
+color: var(--text); max-width: 520px; margin: 0 auto 2.5rem;
+text-shadow: 0 2px 25px rgba(6,10,9,1), 0 1px 8px rgba(6,10,9,0.9);
+}
+.hero__actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn {
+display: inline-flex; align-items: center; gap: 0.5rem;
+font-family: var(--font-heading); font-size: 0.85rem; font-weight: 600;
+padding: 0.85rem 1.8rem; border-radius: 10px; transition: all 0.35s;
+}
+.btn--primary { background: var(--accent); color: var(--bg); }
+.btn--primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16,185,129,0.2); }
+.btn--ghost {
+border: 1px solid rgba(228,236,232,0.15); color: var(--text);
+backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn--large { padding: 1rem 2.2rem; font-size: 0.95rem; }
+/* ── Sections ────────────────────────── */
+.section {
+position: relative; z-index: 2;
+padding: clamp(5rem, 10vw, 8rem) 0;
+}
+.section--solid { background: var(--bg); }
+.section--dots {
+background-color: var(--bg);
+background-image: radial-gradient(rgba(16,185,129,0.035) 1px, transparent 1px);
+background-size: 28px 28px;
+}
+.section--grid {
+background-color: var(--bg-elevated);
+background-image:
+linear-gradient(rgba(16,185,129,0.025) 1px, transparent 1px),
+linear-gradient(90deg, rgba(16,185,129,0.025) 1px, transparent 1px);
+background-size: 56px 56px;
+}
+.section--visible {
+background: rgba(6,10,9,0.75);
+backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+}
+.section-label {
+font-family: var(--font-heading); font-size: 0.68rem; font-weight: 700;
+letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+margin-bottom: 1rem;
+}
+.section-title {
+font-family: var(--font-heading); font-size: clamp(2rem, 4.5vw, 3.2rem);
+font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; margin-bottom: 1.2rem;
+}
+.section-desc {
+font-size: clamp(0.9rem, 1.1vw, 1rem); color: var(--text-muted);
+line-height: 1.7; max-width: 520px;
+}
+.section-header { text-align: center; max-width: 640px; margin: 0 auto clamp(3rem, 6vw, 4.5rem); }
+.section-header .section-desc { margin: 0 auto; }
+/* ── Logos Marquee ───────────────────── */
+.logos {
+position: relative; z-index: 2; background: var(--bg);
+padding: clamp(2.5rem, 5vw, 4rem) 0; border-bottom: 1px solid var(--border);
+overflow: hidden;
+}
+.logos::before {
+content: ''; position: absolute; top: -80px; left: 0; right: 0; height: 80px;
+background: linear-gradient(to top, var(--bg), transparent);
+pointer-events: none; z-index: 1;
+}
+.logos__label {
+font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em;
+text-transform: uppercase; color: var(--text-muted); text-align: center; margin-bottom: 2rem;
+}
+.logos__track {
+display: flex; width: max-content;
+animation: logoScroll 30s linear infinite;
+}
+.logos__track:hover { animation-play-state: paused; }
+.logos__item {
+font-family: var(--font-heading); font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+font-weight: 700; letter-spacing: -0.01em; color: var(--text); opacity: 0.18;
+padding: 0 clamp(1.5rem, 3vw, 2.5rem); white-space: nowrap;
+transition: opacity 0.3s;
+}
+.logos__item:hover { opacity: 0.5; }
+@keyframes logoScroll { to { transform: translateX(-50%); } }
+.logos__mask {
+mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+-webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+/* ── Features ────────────────────────── */
+.features__grid {
+display: grid; grid-template-columns: repeat(3, 1fr);
+gap: 1.2rem;
+}
+.feature-card {
+position: relative;
+padding: clamp(1.5rem, 2.5vw, 2rem); border: 1px solid var(--border);
+border-radius: 14px; background: var(--bg-card);
+transition: border-color 0.4s, box-shadow 0.4s;
+cursor: default; overflow: hidden;
+transform-style: preserve-3d;
+}
+.feature-card::before {
+content: ''; position: absolute; inset: 0; border-radius: 14px;
+background: radial-gradient(350px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+rgba(16,185,129,0.1), rgba(52,211,153,0.03) 40%, transparent 65%);
+opacity: 0; transition: opacity 0.5s; pointer-events: none;
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover { border-color: rgba(16,185,129,0.3); box-shadow: 0 8px 30px rgba(16,185,129,0.06); }
+.feature-card__icon {
+width: 44px; height: 44px; border-radius: 10px;
+background: var(--accent-dark); color: var(--accent);
+display: flex; align-items: center; justify-content: center;
+font-size: 1.2rem; margin-bottom: 1.2rem;
+transition: transform 0.4s, background 0.4s;
+}
+.feature-card:hover .feature-card__icon { transform: scale(1.1) rotate(4deg); background: rgba(16,185,129,0.15); }
+.feature-card__title {
+font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700;
+letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.feature-card__desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; }
+/* ── Steps ───────────────────────────── */
+.steps__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.step { position: relative; text-align: center; }
+.step__number {
+font-family: var(--font-heading); font-size: clamp(3rem, 5vw, 4rem);
+font-weight: 800; color: var(--accent); opacity: 0.1; line-height: 1; margin-bottom: 1rem;
+}
+.step__icon {
+width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border);
+display: flex; align-items: center; justify-content: center;
+font-size: 1.2rem; color: var(--accent); margin: 0 auto 1.2rem;
+background: var(--bg-card); transition: all 0.4s;
+}
+.step:hover .step__icon {
+border-color: var(--accent); background: var(--accent-dark);
+transform: rotate(10deg) scale(1.08); box-shadow: 0 0 20px rgba(16,185,129,0.15);
+}
+.step__title {
+font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700;
+letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.step__desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; max-width: 280px; margin: 0 auto; }
+.step__connector {
+position: absolute; top: 4.8rem; left: calc(50% + 40px); width: calc(100% - 80px);
+height: 1px; background: var(--border);
+}
+.step__connector-fill {
+width: 0; height: 100%; background: var(--accent);
+transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+.step.is-visible .step__connector-fill { width: 100%; }
+/* ── Metrics ─────────────────────────── */
+.metrics__grid {
+display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+text-align: center;
+}
+.metric { position: relative; }
+.metric::after {
+content: ''; position: absolute; right: 0; top: 15%; height: 70%; width: 1px;
+background: rgba(16,185,129,0.15);
+}
+.metric:last-child::after { display: none; }
+.metric__value {
+font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 3.5rem);
+font-weight: 800; letter-spacing: -0.04em; color: var(--accent-light); margin-bottom: 0.3rem;
+text-shadow: 0 0 40px rgba(16,185,129,0.3);
+}
+.metric__label {
+font-size: 0.8rem; color: var(--text-soft); line-height: 1.5;
+text-shadow: 0 1px 10px rgba(6,10,9,0.8);
+}
+/* ── CTA ─────────────────────────────── */
+.cta {
+position: relative; z-index: 2; background: transparent;
+padding: clamp(7rem, 14vw, 12rem) 0; text-align: center;
+}
+.cta::before {
+content: ''; position: absolute; top: 0; left: 0; right: 0; height: 140px;
+background: linear-gradient(to bottom, var(--bg), transparent);
+pointer-events: none; z-index: 0;
+}
+.cta__inner {
+position: relative; z-index: 1;
+max-width: 640px; margin: 0 auto;
+}
+.cta__title {
+font-family: var(--font-heading); font-size: clamp(2.5rem, 7vw, 5rem);
+font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.5rem;
+text-shadow: 0 4px 50px rgba(6,10,9,1), 0 2px 15px rgba(6,10,9,0.95), 0 0 80px rgba(6,10,9,0.7);
+}
+.cta__title span { display: block; }
+.cta__title-accent { color: var(--accent-light); }
+.cta__desc {
+font-size: clamp(0.95rem, 1.2vw, 1.1rem); color: var(--text-soft);
+line-height: 1.7; max-width: 420px; margin: 0 auto 2.5rem;
+text-shadow: 0 2px 30px rgba(6,10,9,1), 0 1px 8px rgba(6,10,9,0.9);
+}
+.cta .btn--primary {
+position: relative; overflow: visible;
+background: transparent; color: var(--accent-light);
+border: 1px solid rgba(16,185,129,0.4);
+box-shadow: 0 0 30px rgba(16,185,129,0.12);
+z-index: 1;
+}
+.cta .btn--primary::before {
+content: ''; position: absolute; inset: -2px; border-radius: inherit;
+background: conic-gradient(from var(--glow-angle), transparent 30%, var(--accent) 50%, transparent 70%);
+z-index: -2; opacity: 0.6;
+animation: glowSpin 4s linear infinite;
+}
+.cta .btn--primary::after {
+content: ''; position: absolute; inset: 0; border-radius: inherit;
+background: var(--bg-card); z-index: -1;
+}
+.cta .btn--primary:hover { color: var(--text); border-color: var(--accent); }
+.cta .btn--primary:hover::before { opacity: 1; }
+@keyframes glowSpin { to { --glow-angle: 360deg; } }
+/* ── Footer ──────────────────────────── */
+.footer {
+position: relative; z-index: 2; background: var(--bg);
+border-top: 1px solid var(--border); padding: clamp(3rem, 6vw, 4.5rem) 0 1.5rem;
+}
+.footer::before {
+content: ''; position: absolute; top: -100px; left: 0; right: 0; height: 100px;
+background: linear-gradient(to top, var(--bg), transparent);
+pointer-events: none; z-index: 1;
+}
+.footer__grid {
+display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+gap: clamp(2rem, 4vw, 3.5rem); margin-bottom: clamp(2.5rem, 4vw, 3.5rem);
+}
+.footer__brand {
+font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800;
+letter-spacing: 0.12em; margin-bottom: 0.8rem; display: block; color: var(--accent);
+}
+.footer__tagline { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; max-width: 260px; }
+.footer__col h4 {
+font-family: var(--font-heading); font-size: 0.68rem; font-weight: 700;
+letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem;
+}
+.footer__col a { display: block; font-size: 0.82rem; color: var(--text-muted); padding: 0.3rem 0; transition: color 0.3s; }
+.footer__col a:hover { color: var(--accent); }
+.footer__bottom {
+display: flex; justify-content: space-between; align-items: center;
+padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--text-muted);
+}
+/* ── Responsive ──────────────────────── */
+@media (max-width: 1024px) {
+.features__grid { grid-template-columns: repeat(2, 1fr); }
+.footer__grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+}
+@media (max-width: 768px) {
+.nav__links, .nav__cta { display: none; }
+.nav__toggle { display: block; }
+.hero { padding: 7rem 0 3rem; }
+.hero__title { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+.hero__actions { flex-direction: column; align-items: center; }
+.hero__actions .btn { width: 100%; max-width: 320px; justify-content: center; }
+.features__grid { grid-template-columns: 1fr; }
+.steps__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+.step__connector { display: none; }
+.metrics__grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.metric::after { display: none; }
+.footer__grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+@media (max-width: 480px) {
+.hero__title { font-size: clamp(2rem, 11vw, 3rem); }
+.hero__desc { font-size: 0.88rem; }
+.section-title { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+.cta__title { font-size: clamp(2rem, 10vw, 3rem); }
+.btn--large { width: 100%; justify-content: center; }
+.metrics__grid { grid-template-columns: 1fr 1fr; }
+.metric__value { font-size: clamp(2rem, 8vw, 2.8rem); }
+.logos__item { font-size: 0.78rem; }
+.feature-card { padding: 1.2rem; }
+.footer__bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+@media (hover: none) {
+.feature-card:hover { border-color: var(--border); box-shadow: none; }
+.feature-card::before { display: none; }
+.nav__cta:hover { background: var(--accent); transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+*, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body>
+
+    <div class="loader" id="loader"><div class="loader__brand">NEXUS</div></div>
+    <canvas id="webgl"></canvas>
+
+    <!-- Nav -->
+    <nav class="nav" id="nav">
+        <div class="container nav__inner">
+            <a href="#" class="nav__logo">NEXUS</a>
+            <div class="nav__links">
+                <a href="#features">Features</a>
+                <a href="#how">How It Works</a>
+                <a href="#metrics">Results</a>
+                <a href="#contact">Pricing</a>
+            </div>
+            <a href="#contact" class="nav__cta">
+                Get Started
+                <span class="iconify" data-icon="solar:arrow-right-linear" data-width="13"></span>
+            </a>
+            <button class="nav__toggle" id="navToggle" aria-label="Menu">
+                <span class="iconify" data-icon="solar:hamburger-menu-linear" data-width="24"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu__header">
+            <span class="nav__logo">NEXUS</span>
+            <button class="mobile-menu__close" id="mobileClose" aria-label="Close">
+                <span class="iconify" data-icon="solar:close-circle-linear" data-width="26"></span>
+            </button>
+        </div>
+        <nav class="mobile-menu__nav">
+            <a href="#features" data-mobile-link>Features</a>
+            <a href="#how" data-mobile-link>How It Works</a>
+            <a href="#metrics" data-mobile-link>Results</a>
+            <a href="#contact" data-mobile-link>Pricing</a>
+        </nav>
+    </div>
+
+    <!-- Hero — particles visible through transparent bg -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero__inner">
+                <div class="hero__badge">
+                    <span class="hero__badge-dot"></span>
+                    Now in Public Beta
+                </div>
+                <h1 class="hero__title">
+                    THE FUTURE OF<br>
+                    <span class="hero__title-accent">INTELLIGENT</span><br>
+                    AUTOMATION
+                </h1>
+                <p class="hero__desc">Harness AI-powered workflows that adapt, learn, and scale with your business. Deploy in minutes, not months.</p>
+                <div class="hero__actions">
+                    <a href="#contact" class="btn btn--primary">
+                        Start Free Trial
+                        <span class="iconify" data-icon="solar:arrow-right-linear" data-width="15"></span>
+                    </a>
+                    <a href="#how" class="btn btn--ghost">
+                        <span class="iconify" data-icon="solar:play-linear" data-width="15"></span>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logos — solid bg, infinite marquee -->
+    <section class="logos">
+        <div class="container">
+            <div class="logos__label">Trusted by 2,000+ teams worldwide</div>
+            <div class="logos__mask">
+                <div class="logos__track">
+                    <span class="logos__item">Stripe</span>
+                    <span class="logos__item">Vercel</span>
+                    <span class="logos__item">Linear</span>
+                    <span class="logos__item">Notion</span>
+                    <span class="logos__item">Figma</span>
+                    <span class="logos__item">Ramp</span>
+                    <span class="logos__item">Deel</span>
+                    <span class="logos__item">Loom</span>
+                    <span class="logos__item">Stripe</span>
+                    <span class="logos__item">Vercel</span>
+                    <span class="logos__item">Linear</span>
+                    <span class="logos__item">Notion</span>
+                    <span class="logos__item">Figma</span>
+                    <span class="logos__item">Ramp</span>
+                    <span class="logos__item">Deel</span>
+                    <span class="logos__item">Loom</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features — dot-pattern bg, card tilt + spotlight -->
+    <section class="section section--dots" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Features</div>
+                <h2 class="section-title">Everything you need to automate at scale</h2>
+                <p class="section-desc">Purpose-built tools that eliminate manual work and surface insights your team would otherwise miss.</p>
+            </div>
+            <div class="features__grid">
+                <div class="feature-card">
+                    <div class="feature-card__icon"><span class="iconify" data-icon="solar:routing-2-linear" data-width="22"></span></div>
+                    <h3 class="feature-card__title">Adaptive Workflows</h3>
+                    <p class="feature-card__desc">AI that learns your processes and optimizes routing, approvals, and handoffs automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon"><span class="iconify" data-icon="solar:chart-square-linear" data-width="22"></span></div>
+                    <h3 class="feature-card__title">Real-time Analytics</h3>
+                    <p class="feature-card__desc">Live dashboards with predictive modeling and anomaly detection built into every view.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon"><span class="iconify" data-icon="solar:plug-circle-linear" data-width="22"></span></div>
+                    <h3 class="feature-card__title">Smart Integrations</h3>
+                    <p class="feature-card__desc">Connect 200+ tools with one-click setup. Data syncs bidirectionally in real time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon"><span class="iconify" data-icon="solar:lightbulb-bolt-linear" data-width="22"></span></div>
+                    <h3 class="feature-card__title">Predictive Insights</h3>
+                    <p class="feature-card__desc">Forecast trends, flag risks, and surface opportunities before they become obvious.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon"><span class="iconify" data-icon="solar:users-group-rounded-linear" data-width="22"></span></div>
+                    <h3 class="feature-card__title">Team Collaboration</h3>
+                    <p class="feature-card__desc">Shared workspaces with role-based access, live editing, and built-in review flows.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon"><span class="iconify" data-icon="solar:shield-check-linear" data-width="22"></span></div>
+                    <h3 class="feature-card__title">Enterprise Security</h3>
+                    <p class="feature-card__desc">SOC 2 Type II, end-to-end encryption, SSO, and granular audit logging as standard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works — grid-pattern bg -->
+    <section class="section section--grid" id="how">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">How It Works</div>
+                <h2 class="section-title">Three steps to transform your operations</h2>
+                <p class="section-desc">Go from setup to production-ready automation in under fifteen minutes.</p>
+            </div>
+            <div class="steps__grid">
+                <div class="step">
+                    <div class="step__number">01</div>
+                    <div class="step__icon"><span class="iconify" data-icon="solar:link-round-linear" data-width="22"></span></div>
+                    <h3 class="step__title">Connect</h3>
+                    <p class="step__desc">Link your existing data sources, APIs, and tools. Our connectors handle auth and schema mapping.</p>
+                    <div class="step__connector"><div class="step__connector-fill"></div></div>
+                </div>
+                <div class="step">
+                    <div class="step__number">02</div>
+                    <div class="step__icon"><span class="iconify" data-icon="solar:settings-linear" data-width="22"></span></div>
+                    <h3 class="step__title">Configure</h3>
+                    <p class="step__desc">Build intelligent workflows with our visual editor. Define triggers, conditions, and actions without code.</p>
+                    <div class="step__connector"><div class="step__connector-fill"></div></div>
+                </div>
+                <div class="step">
+                    <div class="step__number">03</div>
+                    <div class="step__icon"><span class="iconify" data-icon="solar:rocket-2-linear" data-width="22"></span></div>
+                    <h3 class="step__title">Scale</h3>
+                    <p class="step__desc">Deploy and watch your operations transform. The AI learns and improves continuously from your data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics — particles visible through semi-transparent bg -->
+    <section class="section section--visible" id="metrics">
+        <div class="container">
+            <div class="metrics__grid">
+                <div class="metric">
+                    <div class="metric__value" data-count="10" data-suffix="x">0x</div>
+                    <div class="metric__label">Faster<br>deployment</div>
+                </div>
+                <div class="metric">
+                    <div class="metric__value" data-count="99.9" data-suffix="%" data-decimals="1">0%</div>
+                    <div class="metric__label">Uptime<br>SLA</div>
+                </div>
+                <div class="metric">
+                    <div class="metric__value" data-count="50" data-suffix="M+">0M+</div>
+                    <div class="metric__label">Daily API<br>calls</div>
+                </div>
+                <div class="metric">
+                    <div class="metric__value" data-count="2000" data-suffix="+" data-separator>0+</div>
+                    <div class="metric__label">Teams<br>worldwide</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA — particles are the star, text floats over them -->
+    <section class="cta" id="contact">
+        <div class="container">
+            <div class="cta__inner">
+                <h2 class="cta__title">
+                    <span>READY TO BUILD</span>
+                    <span class="cta__title-accent">THE FUTURE?</span>
+                </h2>
+                <p class="cta__desc">Join thousands of teams already using NEXUS to automate their most complex workflows. Free for 14 days.</p>
+                <a href="#" class="btn btn--primary btn--large">
+                    Start Free Trial
+                    <span class="iconify" data-icon="solar:arrow-right-linear" data-width="16"></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer — solid bg -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <span class="footer__brand">NEXUS</span>
+                    <p class="footer__tagline">AI-powered automation for modern teams. Built for speed, designed for scale.</p>
+                </div>
+                <div class="footer__col">
+                    <h4>Product</h4>
+                    <a href="#">Features</a><a href="#">Integrations</a><a href="#">Pricing</a><a href="#">Changelog</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Company</h4>
+                    <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Contact</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">DPA</a>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <span>2026 NEXUS. All rights reserved.</span>
+                <span>SOC 2 Type II Certified</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── Shaders ───────────────────────────── -->
+    <script id="particleVertex" type="x-shader/x-vertex">
+        attribute float aSize;
+        attribute float aColorMix;
+        uniform float uPixelRatio;
+        uniform float uTime;
+        varying float vColorMix;
+        varying float vDepth;
+        void main() {
+            vColorMix = aColorMix;
+            vec3 pos = position;
+            float id = pos.x * 13.7 + pos.y * 7.3 + pos.z * 23.1;
+            pos.x += sin(uTime * 0.35 + id) * 0.07;
+            pos.y += cos(uTime * 0.28 + id * 1.3) * 0.09;
+            pos.z += sin(uTime * 0.32 + id * 0.7) * 0.05;
+            vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+            vDepth = -mv.z;
+            gl_PointSize = aSize * uPixelRatio * (150.0 / -mv.z);
+            gl_Position = projectionMatrix * mv;
+        }
+    </script>
+    <script id="particleFragment" type="x-shader/x-fragment">
+        precision highp float;
+        uniform vec3 uColor1;
+        uniform vec3 uColor2;
+        uniform float uOpacity;
+        varying float vColorMix;
+        varying float vDepth;
+        void main() {
+            float d = length(gl_PointCoord - vec2(0.5));
+            if (d > 0.5) discard;
+            float a = smoothstep(0.5, 0.2, d) * uOpacity;
+            float depthFade = clamp(1.0 - (vDepth - 3.0) / 10.0, 0.2, 1.0);
+            a *= depthFade;
+            vec3 col = mix(uColor1, uColor2, vColorMix);
+            gl_FragColor = vec4(col, a);
+        }
+    </script>
+
+    <!-- ── Scripts ───────────────────────────── -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+    (() => {
+        'use strict';
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ── Scroll-Traveling Particle Scene ─────
+
+        class NexusScene {
+            constructor() {
+                this.canvas = document.getElementById('webgl');
+                this.w = window.innerWidth;
+                this.h = window.innerHeight;
+                this.mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+                this.scroll = { current: 0, target: 0 };
+                this.count = 1800;
+                this.maxConn = 2800;
+
+                /* Keyframes: particle group position at different scroll points
+                   Particles appear in hero, drift behind solid sections, reappear at metrics+CTA */
+                this.keyframes = [
+                    { scroll: 0,    x: 0,   y: 0,    s: 1    },
+                    { scroll: 0.12, x: 0,   y: 0.3,  s: 0.95 },
+                    { scroll: 0.28, x: 2.2, y: 0.2,  s: 0.85 },
+                    { scroll: 0.48, x: -2,  y: -0.3, s: 0.8  },
+                    { scroll: 0.65, x: 0,   y: 0,    s: 1.15 },
+                    { scroll: 0.82, x: 0,   y: -0.3, s: 1    },
+                    { scroll: 1,    x: 0,   y: -0.8, s: 0.85 },
+                ];
+
+                this.init();
+                this.generateShapes();
+                this.findConnections();
+                this.createParticles();
+                this.createLines();
+                this.positions = new Float32Array(this.count * 3);
+                this.setupEvents();
+                this.animate();
+            }
+
+            init() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(50, this.w / this.h, 0.1, 100);
+                this.camera.position.z = 5.5;
+                this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: true });
+                this.renderer.setSize(this.w, this.h);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.clock = new THREE.Clock();
+                this.group = new THREE.Group();
+                this.scene.add(this.group);
+            }
+
+            generateShapes() {
+                const n = this.count;
+                this.shapes = {
+                    sphere: new Float32Array(n * 3),
+                    torus: new Float32Array(n * 3),
+                    grid: new Float32Array(n * 3),
+                    helix: new Float32Array(n * 3),
+                };
+
+                for (let i = 0; i < n; i++) {
+                    const i3 = i * 3;
+
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos(2 * Math.random() - 1);
+                    const r = 1.8 + (Math.random() - 0.5) * 0.2;
+                    this.shapes.sphere[i3]     = r * Math.sin(phi) * Math.cos(theta);
+                    this.shapes.sphere[i3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                    this.shapes.sphere[i3 + 2] = r * Math.cos(phi);
+
+                    const u = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+                    const v = Math.random() * Math.PI * 2;
+                    const R = 1.8, rr = 0.65;
+                    this.shapes.torus[i3]     = (R + rr * Math.cos(v)) * Math.cos(u);
+                    this.shapes.torus[i3 + 1] = rr * Math.sin(v);
+                    this.shapes.torus[i3 + 2] = (R + rr * Math.cos(v)) * Math.sin(u);
+
+                    const cols = Math.ceil(Math.sqrt(n));
+                    const row = Math.floor(i / cols);
+                    const col = i % cols;
+                    this.shapes.grid[i3]     = (col / cols - 0.5) * 4.5;
+                    this.shapes.grid[i3 + 1] = (row / cols - 0.5) * 4.5;
+                    this.shapes.grid[i3 + 2] = (Math.random() - 0.5) * 0.25;
+
+                    const t = (i / n) * Math.PI * 10;
+                    const strand = i % 2;
+                    const hr = 1.1;
+                    this.shapes.helix[i3]     = hr * Math.cos(t + strand * Math.PI);
+                    this.shapes.helix[i3 + 1] = ((i / n) - 0.5) * 5.5;
+                    this.shapes.helix[i3 + 2] = hr * Math.sin(t + strand * Math.PI);
+                }
+            }
+
+            findConnections() {
+                this.connPairs = [];
+                const s = this.shapes.sphere;
+                const threshSq = 0.55 * 0.55;
+                for (let i = 0; i < this.count && this.connPairs.length < this.maxConn * 2; i++) {
+                    for (let j = i + 1; j < this.count && this.connPairs.length < this.maxConn * 2; j++) {
+                        const dx = s[i*3]-s[j*3], dy = s[i*3+1]-s[j*3+1], dz = s[i*3+2]-s[j*3+2];
+                        if (dx*dx+dy*dy+dz*dz < threshSq) this.connPairs.push(i, j);
+                    }
+                }
+                this.numConn = this.connPairs.length / 2;
+            }
+
+            createParticles() {
+                const geo = new THREE.BufferGeometry();
+                const pos = new Float32Array(this.count * 3);
+                const sizes = new Float32Array(this.count);
+                const colorMix = new Float32Array(this.count);
+                for (let i = 0; i < this.count; i++) {
+                    pos[i*3]   = this.shapes.sphere[i*3];
+                    pos[i*3+1] = this.shapes.sphere[i*3+1];
+                    pos[i*3+2] = this.shapes.sphere[i*3+2];
+                    sizes[i] = Math.random() * 1.5 + 0.5;
+                    colorMix[i] = Math.random();
+                }
+                geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+                geo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+                geo.setAttribute('aColorMix', new THREE.BufferAttribute(colorMix, 1));
+
+                this.particleMat = new THREE.ShaderMaterial({
+                    vertexShader: document.getElementById('particleVertex').textContent,
+                    fragmentShader: document.getElementById('particleFragment').textContent,
+                    uniforms: {
+                        uColor1: { value: new THREE.Color('#10b981') },
+                        uColor2: { value: new THREE.Color('#34d399') },
+                        uOpacity: { value: 0.38 },
+                        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+                        uTime: { value: 0 },
+                    },
+                    transparent: true, depthWrite: false,
+                    blending: THREE.AdditiveBlending,
+                });
+
+                this.particleMesh = new THREE.Points(geo, this.particleMat);
+                this.group.add(this.particleMesh);
+            }
+
+            createLines() {
+                const geo = new THREE.BufferGeometry();
+                const pos = new Float32Array(this.numConn * 6);
+                geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+                this.lineMat = new THREE.LineBasicMaterial({
+                    color: new THREE.Color('#10b981'),
+                    transparent: true, opacity: 0.035, depthWrite: false,
+                });
+                this.lineMesh = new THREE.LineSegments(geo, this.lineMat);
+                this.group.add(this.lineMesh);
+            }
+
+            lerpKeyframes(progress) {
+                const kf = this.keyframes;
+                let i = 0;
+                while (i < kf.length - 1 && kf[i + 1].scroll <= progress) i++;
+                if (i >= kf.length - 1) return kf[kf.length - 1];
+                const a = kf[i], b = kf[i + 1];
+                const t = (progress - a.scroll) / (b.scroll - a.scroll);
+                const e = t * t * (3 - 2 * t);
+                return {
+                    x: a.x + (b.x - a.x) * e,
+                    y: a.y + (b.y - a.y) * e,
+                    s: a.s + (b.s - a.s) * e,
+                };
+            }
+
+            updateMorph(progress) {
+                const keys = ['sphere', 'torus', 'grid', 'helix'];
+                const seg = Math.min(progress, 2.999);
+                const idx = Math.floor(seg);
+                let t = seg - idx;
+                t = t * t * (3 - 2 * t);
+                const from = this.shapes[keys[idx]];
+                const to = this.shapes[keys[Math.min(idx + 1, 3)]];
+                for (let i = 0; i < this.count * 3; i++) {
+                    this.positions[i] = from[i] + (to[i] - from[i]) * t;
+                }
+            }
+
+            applyMouse() {
+                const mx = this.mouse.x * 3, my = this.mouse.y * 2;
+                for (let i = 0; i < this.count; i++) {
+                    const i3 = i * 3;
+                    const dx = this.positions[i3] - mx;
+                    const dy = this.positions[i3+1] - my;
+                    const dz = this.positions[i3+2];
+                    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+                    if (dist < 1.2 && dist > 0.01) {
+                        const force = (1.2 - dist) * 0.015;
+                        this.positions[i3]   += (dx/dist) * force;
+                        this.positions[i3+1] += (dy/dist) * force;
+                        this.positions[i3+2] += (dz/dist) * force;
+                    }
+                }
+            }
+
+            syncBuffers() {
+                const pAttr = this.particleMesh.geometry.attributes.position;
+                pAttr.array.set(this.positions);
+                pAttr.needsUpdate = true;
+                const lAttr = this.lineMesh.geometry.attributes.position;
+                const lArr = lAttr.array;
+                for (let k = 0; k < this.connPairs.length; k += 2) {
+                    const a = this.connPairs[k], b = this.connPairs[k+1];
+                    const o = k * 3;
+                    lArr[o]   = this.positions[a*3];   lArr[o+1] = this.positions[a*3+1]; lArr[o+2] = this.positions[a*3+2];
+                    lArr[o+3] = this.positions[b*3];   lArr[o+4] = this.positions[b*3+1]; lArr[o+5] = this.positions[b*3+2];
+                }
+                lAttr.needsUpdate = true;
+            }
+
+            setupEvents() {
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.tx = (e.clientX / this.w) * 2 - 1;
+                    this.mouse.ty = -(e.clientY / this.h) * 2 + 1;
+                });
+                window.addEventListener('resize', () => {
+                    this.w = window.innerWidth; this.h = window.innerHeight;
+                    this.camera.aspect = this.w / this.h;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(this.w, this.h);
+                    this.particleMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2);
+                });
+                ScrollTrigger.create({
+                    trigger: document.body, start: 'top top', end: 'bottom bottom',
+                    onUpdate: (s) => { this.scroll.target = s.progress; },
+                });
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                const t = this.clock.getElapsedTime();
+
+                this.mouse.x += (this.mouse.tx - this.mouse.x) * 0.05;
+                this.mouse.y += (this.mouse.ty - this.mouse.y) * 0.05;
+                this.scroll.current += (this.scroll.target - this.scroll.current) * 0.04;
+
+                const sp = this.scroll.current;
+                this.particleMat.uniforms.uTime.value = t;
+
+                /* Scroll-driven group position — particles travel across screen */
+                const kf = this.lerpKeyframes(sp);
+                const breathe = 1.0 + Math.sin(t * 0.4) * 0.02;
+                this.group.position.x += (kf.x - this.group.position.x) * 0.04;
+                this.group.position.y += (kf.y - this.group.position.y) * 0.04;
+                this.group.scale.setScalar(kf.s * breathe);
+
+                /* Morph shapes on scroll */
+                this.updateMorph(sp * 3);
+                this.applyMouse();
+                this.syncBuffers();
+
+                /* Continuous rotation + mouse influence */
+                this.group.rotation.y = t * 0.055 + this.mouse.x * 0.2;
+                this.group.rotation.x = Math.sin(t * 0.025) * 0.1 + this.mouse.y * 0.15;
+
+                const lineOp = 0.03 + Math.sin(t * 0.35) * 0.01 + Math.sin(sp * Math.PI) * 0.012;
+                this.lineMat.opacity = lineOp;
+
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // ── Card Tilt + Spotlight ────────────────
+
+        function initCardEffects() {
+            if (matchMedia('(hover: none)').matches) return;
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    gsap.to(card, {
+                        rotateX: -y * 8, rotateY: x * 8,
+                        transformPerspective: 600,
+                        duration: 0.4, ease: 'power2.out',
+                    });
+                    card.style.setProperty('--spot-x', (e.clientX - rect.left) + 'px');
+                    card.style.setProperty('--spot-y', (e.clientY - rect.top) + 'px');
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: 'elastic.out(1,0.4)' });
+                });
+            });
+        }
+
+        // ── Metric Counter Animation ────────────
+
+        function initCounters() {
+            const els = document.querySelectorAll('[data-count]');
+            const observed = new Set();
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting || observed.has(entry.target)) return;
+                    observed.add(entry.target);
+                    const el = entry.target;
+                    const target = parseFloat(el.dataset.count);
+                    const suffix = el.dataset.suffix || '';
+                    const decimals = parseInt(el.dataset.decimals) || 0;
+                    const hasSep = el.hasAttribute('data-separator');
+                    const dur = 1800, start = performance.now();
+                    function tick(now) {
+                        const p = Math.min((now - start) / dur, 1);
+                        const e = 1 - Math.pow(1 - p, 3);
+                        let val = target * e;
+                        if (decimals > 0) { val = val.toFixed(decimals); }
+                        else { val = Math.round(val); if (hasSep) val = val.toLocaleString(); }
+                        el.textContent = val + suffix;
+                        if (p < 1) requestAnimationFrame(tick);
+                    }
+                    requestAnimationFrame(tick);
+                });
+            }, { threshold: 0.5 });
+            els.forEach(el => observer.observe(el));
+        }
+
+        // ── GSAP Scroll Animations ──────────────
+
+        function initAnimations() {
+            /* Hero — staggered entrance */
+            const heroTl = gsap.timeline({ delay: 0.7 });
+            heroTl
+                .from('.hero__badge', { y: 15, opacity: 0, duration: 0.6, ease: 'power3.out' })
+                .from('.hero__title', { y: 50, opacity: 0, clipPath: 'inset(100% 0 0 0)', duration: 1.1, ease: 'power4.out' }, '-=0.25')
+                .from('.hero__desc', { y: 25, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+                .from('.hero__actions .btn', { y: 15, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' }, '-=0.4');
+
+            /* Logos — fade */
+            gsap.from('.logos__label', {
+                y: 10, opacity: 0, duration: 0.5, ease: 'power2.out',
+                scrollTrigger: { trigger: '.logos', start: 'top 92%' },
+            });
+
+            /* Features — scale + rotate in from different origins */
+            gsap.utils.toArray('.feature-card').forEach((card, i) => {
+                const fromX = i % 3 === 0 ? -30 : i % 3 === 2 ? 30 : 0;
+                gsap.from(card, {
+                    x: fromX, y: 50, opacity: 0, scale: 0.9,
+                    rotation: (Math.random() - 0.5) * 4,
+                    duration: 0.8, ease: 'power3.out',
+                    scrollTrigger: { trigger: card, start: 'top 85%' },
+                    delay: (i % 3) * 0.08,
+                });
+            });
+
+            /* Steps — progressive reveal with connector fills */
+            document.querySelectorAll('.step').forEach((step, i) => {
+                gsap.from(step, {
+                    y: 40, opacity: 0, duration: 0.9, ease: 'power3.out',
+                    scrollTrigger: { trigger: step, start: 'top 82%' },
+                    onComplete: () => step.classList.add('is-visible'),
+                    delay: i * 0.15,
+                });
+            });
+
+            /* Metrics — pop with elastic ease */
+            gsap.from('.metric', {
+                scale: 0.6, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'back.out(2)',
+                scrollTrigger: { trigger: '#metrics', start: 'top 78%' },
+            });
+
+            /* CTA — text rises over particles */
+            gsap.from('.cta__title span', {
+                y: 60, opacity: 0, duration: 1, stagger: 0.15, ease: 'power4.out',
+                scrollTrigger: { trigger: '.cta', start: 'top 72%' },
+            });
+            gsap.from('.cta__desc', {
+                y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
+                scrollTrigger: { trigger: '.cta', start: 'top 65%' },
+            });
+            gsap.from('.cta .btn', {
+                y: 20, opacity: 0, scale: 0.9, duration: 0.7, ease: 'back.out(1.5)',
+                scrollTrigger: { trigger: '.cta', start: 'top 58%' },
+            });
+
+            /* Footer stagger */
+            gsap.from('.footer__grid > *', {
+                y: 20, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out',
+                scrollTrigger: { trigger: '.footer', start: 'top 90%' },
+            });
+
+            /* Section headers */
+            gsap.utils.toArray('.section-header').forEach(h => {
+                gsap.from(h.children, {
+                    y: 25, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
+                    scrollTrigger: { trigger: h, start: 'top 82%' },
+                });
+            });
+        }
+
+        // ── Nav ─────────────────────────────────
+
+        function initNav() {
+            const nav = document.getElementById('nav');
+            const toggle = document.getElementById('navToggle');
+            const menu = document.getElementById('mobileMenu');
+            const close = document.getElementById('mobileClose');
+            const links = document.querySelectorAll('[data-mobile-link]');
+            window.addEventListener('scroll', () => {
+                nav.classList.toggle('is-scrolled', window.scrollY > 60);
+            }, { passive: true });
+            toggle.addEventListener('click', () => menu.classList.add('is-open'));
+            close.addEventListener('click', () => menu.classList.remove('is-open'));
+            links.forEach(l => l.addEventListener('click', () => menu.classList.remove('is-open')));
+        }
+
+        // ── Magnetic Buttons ────────────────────
+
+        function initMagnetic() {
+            if (matchMedia('(hover: none)').matches) return;
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousemove', e => {
+                    const r = btn.getBoundingClientRect();
+                    gsap.to(btn, { x: (e.clientX - r.left - r.width/2) * 0.15, y: (e.clientY - r.top - r.height/2) * 0.15, duration: 0.3, ease: 'power2.out' });
+                });
+                btn.addEventListener('mouseleave', () => {
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1,0.4)' });
+                });
+            });
+        }
+
+        // ── Boot ────────────────────────────────
+
+        const loader = document.getElementById('loader');
+        window.addEventListener('load', () => setTimeout(() => loader.classList.add('is-loaded'), 500));
+
+        initNav();
+        if (typeof THREE !== 'undefined') new NexusScene();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            requestAnimationFrame(() => {
+                initAnimations();
+                initMagnetic();
+                initCardEffects();
+                initCounters();
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

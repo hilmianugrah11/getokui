@@ -1,0 +1,789 @@
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern CMS Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>
+/* Custom scrollbar for a cleaner feel */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2D2B3B; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4B4860; }
+.grid-bg {
+background-size: 40px 40px;
+background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">.font-newsreader { font-family: 'Newsreader', serif !important; }</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">.font-oswald { font-family: 'Oswald', sans-serif !important; }</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }</style>  <style>
+/* 3D Transform utilities */
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script></head>
+  <body class="antialiased selection:bg-rose-500/30 selection:text-rose-200 text-slate-400 bg-[#000000]">
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component fixed -z-10 w-full h-screen top-0 hue-rotate-180" data-alpha-mask="80" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 80%, transparent);"><div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+  <div data-us-project="ILgOO23w4wEyPQOKyLO4" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+    <!-- Hero Section -->
+    <header class="overflow-hidden lg:pb-32 text-white pb-20 relative">
+      <!-- Background Grid -->
+      <div class="grid-bg pointer-events-none absolute top-0 right-0 bottom-0 left-0" style=""></div>
+
+      <!-- Navbar -->
+      <nav class="relative z-20 container mx-auto px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-8">
+          <a href="#" class="flex items-center gap-2 hover:opacity-90 transition">
+            
+            <span class="font-serif text-xl tracking-tight leading-none pt-1">
+              ModernPress
+            </span>
+          </a>
+          <div class="hidden md:flex items-center gap-6 text-sm font-medium text-white/80">
+            <a href="#" class="hover:text-white transition flex items-center gap-1 text-slate-400">
+              Products
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="alt-arrow-down-linear"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19 9l-7 6l-7-6"></path></svg>
+            </a>
+            <a href="#" class="hover:text-white transition flex items-center gap-1">
+              Features
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="alt-arrow-down-linear"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19 9l-7 6l-7-6"></path></svg>
+            </a>
+            <a href="#" class="hover:text-white transition flex items-center gap-1">
+              Resources
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="alt-arrow-down-linear"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19 9l-7 6l-7-6"></path></svg>
+            </a>
+            <a href="#" class="hover:text-white transition">
+              Plans &amp; Pricing
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 text-sm font-medium">
+          <a href="#" class="hidden md:block text-slate-400 hover:text-white transition">
+            Log in
+          </a>
+          <a href="#" class="bg-white/5 text-white border border-white/10 px-4 py-2 rounded shadow-sm hover:bg-white/10 transition">
+            Get started
+          </a>
+        </div>
+      </nav>
+
+      <!-- Hero Content -->
+      <div class="container mx-auto px-6 mt-12 lg:mt-20 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+        <!-- Text -->
+        <div class="max-w-xl">
+          <div class="flex items-center gap-2 mb-6">
+            <div class="rounded-full p-1 flex items-center justify-center ring-1 ring-inset bg-emerald-500/10 text-emerald-400 ring-emerald-500/20">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="star-fall-linear"><g fill="none"><path fill="currentColor" d="m9.963 5.72l.278.696zm1.087-1.133l.704.26zM9.115 9.26l.484-.573zm.495-3.4l-.279-.696zm.515 5.084l-.749.046zM9.41 9.51l-.484.573zm.58.6l-.67.334zm3.128 2.804l.416.624zm-2.97-1.576l.748-.046zm4.817 1.119l.2-.723zm-1.53.245l-.415-.624zm4.228-2.568l.726-.19zm-2.33 2.425l-.2.723zm2.462-4.393l-.639-.393zm-.231 1.587l-.726.19zM16.469 4.76l-.047.748zM18 7.835l.639.393zm-3.295-3.833l.588-.466zm1.386.735l.047-.748zM14.46 3.696l-.588.465zm-3.276.525l-.704-.26zM7.89 7.846a.75.75 0 1 0-.885-1.21zM4.25 18l-.741.118a.75.75 0 0 0 1.45.123zm6.282-4.561a.75.75 0 0 0-.48-1.422zm3.342-9.278l.243.306l1.176-.93l-.243-.307zm2.17 1.325l.38.023l.093-1.497l-.38-.023zm1.317 1.956l-.203.33l1.277.787l.204-.33zm-.52 2.5l.099.38l1.451-.379l-.1-.381zm-1.306 1.893l-.368-.102l-.4 1.446l.367.102zm-2.513.242l-.318.212l.832 1.248l.318-.212zm-2.124-.786l-.024-.393l-1.497.092l.024.393zM9.895 8.937l-.296-.25l-.968 1.145l.296.25zm-.007-2.38l.353-.141l-.557-1.393l-.353.14zm1.866-1.71l.135-.367l-1.408-.518l-.134.366zm-1.513 1.569c.327-.13.706-.266.986-.557l-1.082-1.04c.009-.008.005.002-.063.036a6 6 0 0 1-.398.168zm.106-2.088a7 7 0 0 1-.162.417c-.035.075-.047.082-.04.074l1.082 1.04c.277-.288.402-.673.527-1.013zm-.748 4.358c-.591-.5-.968-.82-1.199-1.082a1 1 0 0 1-.17-.239q-.01-.024-.007-.02v.006l-1.484-.216c-.09.61.21 1.091.536 1.462c.321.363.802.767 1.356 1.235zM9.33 5.164c-.658.263-1.234.49-1.647.734c-.425.25-.855.62-.945 1.237l1.484.216l-.003.01l.007-.009a.9.9 0 0 1 .218-.162c.29-.17.737-.351 1.443-.633zm1.542 5.734c-.022-.369-.033-.768-.21-1.123l-1.343.668l.005.015q.007.018.015.08c.014.096.022.225.036.452zm-1.946-.816c.17.145.266.226.333.293q.043.043.053.057l.007.011l1.343-.668c-.178-.358-.49-.604-.768-.838zm3.776 2.207c-.636.424-1.04.69-1.344.833c-.296.138-.292.06-.225.095l-.703 1.325c.562.298 1.12.145 1.562-.06c.433-.203.95-.55 1.542-.945zM9.4 11.383c.045.736.083 1.37.181 1.849c.099.48.3 1.019.85 1.31l.703-1.325c.056.03-.013.057-.084-.288c-.072-.348-.104-.853-.153-1.638zm5.766.35c-.338-.093-.726-.218-1.125-.154l.238 1.481c-.016.003-.009-.004.067.01c.088.018.206.05.42.109zm-1.313 1.592c.184-.123.286-.19.365-.234c.067-.037.076-.033.06-.03l-.237-1.482c-.399.064-.728.303-1.02.498zm3.086-3.002c.198.76.325 1.25.365 1.603c.04.35-.034.345.01.3l1.081 1.04c.431-.449.455-1.024.4-1.51c-.056-.485-.219-1.1-.405-1.813zm-1.806 2.958c.686.19 1.286.358 1.76.415c.485.058 1.062.028 1.502-.43l-1.081-1.04c.052-.054.08.019-.243-.02c-.334-.04-.8-.167-1.537-.37zm2.024-5.509c-.19.31-.41.64-.468 1.036l1.484.217l.004-.014l.032-.07a6 6 0 0 1 .226-.382zm1.133 1.79a7 7 0 0 1-.107-.44l-.01-.082v-.015l-1.484-.217c-.058.393.057.776.15 1.133zm-1.867-4.053c.759.048 1.24.08 1.568.151a.9.9 0 0 1 .257.086q.016.011.01.006l-.006-.009l1.342-.668c-.278-.559-.802-.775-1.284-.88c-.468-.102-1.087-.139-1.794-.183zm2.215 2.72c.38-.618.71-1.152.902-1.598c.195-.454.33-1.003.054-1.556l-1.343.668l-.001-.005v.021a1 1 0 0 1-.088.28c-.138.32-.396.744-.802 1.403zm-4.522-3.762c.224.284.464.61.816.798l.703-1.325c.01.005-.003.002-.06-.058a7 7 0 0 1-.283-.346zm2.02-.478a6 6 0 0 1-.43-.035c-.074-.011-.081-.02-.07-.014l-.703 1.325c.357.19.76.199 1.11.22zM15.05 3.23c-.452-.572-.843-1.069-1.195-1.4c-.353-.333-.835-.662-1.461-.562l.237 1.481c-.08.013-.056-.065.195.173c.253.238.564.628 1.048 1.24zm-3.16 1.25c.27-.732.444-1.2.61-1.506c.165-.304.212-.238.131-.225l-.237-1.481c-.626.1-.981.564-1.213.99c-.23.425-.447 1.02-.699 1.704zM7.004 6.635c-2.607 1.907-4.456 5.48-3.496 11.483l1.481-.236c-.89-5.566.837-8.527 2.9-10.036zM4.959 18.241c.716-2.11 2.943-3.916 5.572-4.802l-.48-1.422c-2.884.973-5.592 3.03-6.513 5.742z"></path><path stroke="currentColor" stroke-linejoin="round" d="M10.28 16s.634 1.39 1.414 1.87c.78.477 2.306.41 2.306.41s-1.39.633-1.87 1.413c-.478.78-.41 2.307-.41 2.307s-.634-1.39-1.414-1.87C9.527 19.654 8 19.72 8 19.72s1.39-.633 1.87-1.413c.478-.78.41-2.307.41-2.307Zm8.2-1s-.422.927-.942 1.246S16 16.52 16 16.52s.927.422 1.246.942S17.52 19 17.52 19s.422-.927.942-1.246S20 17.48 20 17.48s-.927-.422-1.246-.942S18.48 15 18.48 15Z"></path></g></svg>
+            </div>
+            <span class="text-sm font-medium text-white/90">
+              4.9 stars • 5,000+ reviews
+            </span>
+          </div>
+          <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.9] tracking-tight mb-8 text-white">
+            Publishing,
+            
+            done brilliantly.
+          </h1>
+          <p class="text-lg md:text-xl text-slate-400 leading-relaxed mb-10 max-w-lg font-light">
+            Join the creators who know best. Unmetered bandwidth, automatic site
+            recovery, advanced dev tools, and 24/7 expert support built-in.
+          </p>
+          <a href="#" class="inline-block bg-gradient-to-r text-white text-base font-medium px-6 py-3 rounded shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition duration-200 from-emerald-500 shadow-emerald-500/20 hover:shadow-emerald-500/30 to-green-400">
+            Start your site
+          </a>
+        </div>
+
+        <!-- UI Visuals -->
+        <div class="relative hidden lg:block h-[500px] w-full perspective-[1000px]">
+          <!-- Main Dashboard Card -->
+          <div class="absolute top-12 left-0 right-0 bg-[#14121D] rounded-xl shadow-2xl border border-white/5 overflow-hidden transform rotate-y-[-5deg] rotate-x-[5deg] translate-x-4">
+            <div class="border-b border-white/5 bg-[#0D0C12] px-4 py-3 flex items-center gap-2">
+              <div class="flex gap-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-[#FF5F57]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[#28C840]"></div>
+              </div>
+              <div class="mx-auto bg-[#1F1D2B] px-3 py-1 rounded text-[10px] text-slate-500 font-mono w-48 text-center">
+                dashboard.wp.com
+              </div>
+            </div>
+            <div class="p-6 grid grid-cols-12 gap-6 min-h-[300px]">
+              <!-- Sidebar -->
+              <div class="col-span-3 space-y-3 border-r border-white/5 pr-4">
+                <div class="h-2 w-12 bg-white/10 rounded mb-4"></div>
+                <div class="flex items-center gap-2 text-slate-600">
+                  <div class="w-4 h-4 bg-white/5 rounded"></div>
+                  <div class="h-1.5 w-16 bg-white/5 rounded"></div>
+                </div>
+                <div class="flex items-center gap-2 text-slate-600">
+                  <div class="w-4 h-4 bg-white/5 rounded"></div>
+                  <div class="h-1.5 w-12 bg-white/5 rounded"></div>
+                </div>
+                <div class="flex items-center gap-2 text-slate-600">
+                  <div class="w-4 h-4 bg-white/5 rounded"></div>
+                  <div class="h-1.5 w-14 bg-white/5 rounded"></div>
+                </div>
+              </div>
+              <!-- Content -->
+              <div class="col-span-9">
+                <div class="flex justify-between items-center mb-6">
+                  <h3 class="font-serif text-xl text-white">Site Settings</h3>
+                  <div class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded-full font-medium border border-emerald-500/20 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="check-circle-linear"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path stroke-linecap="round" stroke-linejoin="round" d="m8.5 12.5l2 2l5-5"></path></g></svg>
+                    All Systems Go
+                  </div>
+                </div>
+                <div class="space-y-3">
+                  <div class="p-3 border border-white/5 bg-[#1A1823] rounded flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="text-slate-500" style="" data-icon-set="solar" data-solar="server-linear"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 17c0-1.886 0-2.828.586-3.414S4.114 13 6 13h12c1.886 0 2.828 0 3.414.586S22 15.114 22 17s0 2.828-.586 3.414S19.886 21 18 21H6c-1.886 0-2.828 0-3.414-.586S2 18.886 2 17ZM2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2h12c1.886 0 2.828 0 3.414.586S22 4.114 22 6s0 2.828-.586 3.414S19.886 10 18 10H6c-1.886 0-2.828 0-3.414-.586S2 7.886 2 6Z"></path><path stroke-linecap="round" d="M11 6h7M6 6h2m3 11h7M6 17h2"></path></g></svg>
+                      <div class="">
+                        <div class="text-xs font-medium text-slate-200">
+                          SFTP/SSH Access
+                        </div>
+                        <div class="text-[10px] text-slate-500">
+                          Manage files securely
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-8 h-4 bg-emerald-500 rounded-full relative">
+                      <div class="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full shadow"></div>
+                    </div>
+                  </div>
+                  <div class="p-3 border border-white/5 bg-[#1A1823] rounded flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="text-slate-500" style="" data-icon-set="solar" data-solar="shield-check-linear"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10.417c0-3.198 0-4.797.378-5.335c.377-.537 1.88-1.052 4.887-2.081l.573-.196C10.405 2.268 11.188 2 12 2s1.595.268 3.162.805l.573.196c3.007 1.029 4.51 1.544 4.887 2.081C21 5.62 21 7.22 21 10.417v1.574c0 5.638-4.239 8.375-6.899 9.536C13.38 21.842 13.02 22 12 22s-1.38-.158-2.101-.473C7.239 20.365 3 17.63 3 11.991z"></path><path stroke-linecap="round" stroke-linejoin="round" d="m9.5 12.4l1.429 1.6l3.571-4"></path></g></svg>
+                      <div class="">
+                        <div class="text-xs font-medium text-slate-200">
+                          DDoS Protection
+                        </div>
+                        <div class="text-[10px] text-slate-500">
+                          Enterprise grade firewall
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-[10px] text-emerald-400 font-medium">
+                      Active
+                    </div>
+                  </div>
+                  <div class="p-3 border border-white/5 bg-[#1A1823] rounded flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="text-slate-500" style="" data-icon-set="solar" data-solar="database-linear"><g fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" d="M4 18V6m16 0v12"></path><path d="M12 10c4.418 0 8-1.79 8-4s-3.582-4-8-4s-8 1.79-8 4s3.582 4 8 4Zm8 2c0 2.21-3.582 4-8 4s-8-1.79-8-4m16 6c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></g></svg>
+                      <div>
+                        <div class="text-xs font-medium text-slate-200">
+                          Database Optimizer
+                        </div>
+                        <div class="text-[10px] text-slate-500">
+                          Auto-indexing enabled
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-8 h-4 bg-white/10 rounded-full relative">
+                      <div class="absolute left-0.5 top-0.5 w-3 h-3 bg-white/50 rounded-full shadow"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Stats Card (Top Right) -->
+          <div class="absolute top-0 right-4 bg-[#14121D] p-4 rounded-lg shadow-xl w-48 border border-white/5 animate-[bounce_4s_infinite]">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                Last Backup
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="text-slate-600" style="" data-icon-set="solar" data-solar="clock-circle-linear"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l2.5 2.5"></path></g></svg>
+            </div>
+            <div class="text-lg font-semibold text-white mb-1">12 mins ago</div>
+            <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+              <div class="bg-blue-500 w-3/4 h-full" style=""></div>
+            </div>
+          </div>
+
+          <!-- Floating Uptime Card (Bottom Left) -->
+          <div class="absolute bottom-16 left-[-20px] bg-[#14121D] p-4 rounded-lg shadow-xl w-56 border border-white/5">
+            <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              Reliable Uptime
+            </div>
+            <div class="text-2xl font-semibold text-emerald-400 tracking-tight mb-2">
+              99.999%
+            </div>
+            <div class="flex items-end gap-1 h-8">
+              <div class="flex-1 bg-emerald-500/20 rounded-sm h-[80%]"></div>
+              <div class="flex-1 bg-emerald-500/30 rounded-sm h-[60%]"></div>
+              <div class="flex-1 bg-emerald-500/40 rounded-sm h-[90%]"></div>
+              <div class="flex-1 bg-emerald-500/60 rounded-sm h-[70%]"></div>
+              <div class="flex-1 bg-emerald-500/80 rounded-sm h-[100%]"></div>
+              <div class="flex-1 bg-emerald-500 rounded-sm h-[95%]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="py-24 relative overflow-hidden">
+      <!-- Decoration mimicking the globe wireframe -->
+      <div class="absolute top-0 right-0 w-[800px] h-[800px] border border-white/5 rounded-full translate-x-1/3 -translate-y-1/4 opacity-50 pointer-events-none"></div>
+      <div class="absolute top-10 right-10 w-[600px] h-[600px] border border-slate-100 rounded-full translate-x-1/3 -translate-y-1/4 opacity-50 pointer-events-none"></div>
+      <div class="absolute top-20 right-20 w-[400px] h-[400px] border border-slate-100 rounded-full translate-x-1/3 -translate-y-1/4 opacity-50 pointer-events-none"></div>
+
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-3xl mb-16">
+          <h2 class="font-serif text-4xl md:text-5xl text-white tracking-tight mb-6">
+            Host with the absolute best.
+          </h2>
+          <p class="text-lg text-slate-400 leading-relaxed">
+            When you create a site with our platform, you unlock the power of
+            lightning-fast, secure managed hosting without the technical
+            headaches.
+          </p>
+          <div class="mt-8">
+            <a href="#" class="bg-[#1F1D2B] border px-5 py-2.5 rounded text-sm font-medium transition text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10">
+              Explore hosting features
+            </a>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Feature 1 -->
+          <div class="group p-6 bg-[#14121D] rounded-2xl border border-white/5 shadow-sm hover:shadow-md transition duration-300 hover:border-white/10">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition ring-1 ring-inset bg-emerald-500/10 text-emerald-400 ring-emerald-500/20">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="rocket-linear"><path fill="currentColor" d="m7.58 15.008l.53-.531zm0-5.477L7.05 9zm6.867 6.846l-.53-.531zm-5.494 0l-.53.531zm2.747 1.936v.75zm8.593-7.765l.53.53zM13.427 3.7l.53.532zm-2.571 10.47a.75.75 0 1 0-1.059-1.063zm-5.283-2.64l.53-.53zM9.92 7.422a.75.75 0 0 0 .811-1.261zm-.224-1.036l.406-.63zm-2.57-1.318l.11-.742zm-4.9 2.955l.529.531zm3.113-2.727l.288.693zm-2.476 4.13l-.276.697zm.123.05l.286-.694zm1.627 1.097l.53-.53zm-.095-.093l-.522.538zM2.484 9.276l.277-.697zM12.5 18.5l-.53.53l.036.034zm5.324-5.268a.75.75 0 1 0-1.26.815zm-.224 1.035l-.63.408zm1.323 2.562l.742-.11zm-2.964 4.886l.53.532zm2.735-3.104l.692.288zm-3.945 2.964l.697-.278zm-.474-1.092l.657-.36zm-1.252-1.525l.53-.53l-.018-.018l-.018-.015zm.818.867l.59-.463zm2.034 1.974l-.53-.53zM5.75 11.708l.695.28zm14.014-1.691l-5.847 5.829l1.06 1.062l5.846-5.83zM9.483 15.846l-1.374-1.37L7.05 15.54l1.374 1.37zm-1.374-5.784l5.847-5.83l-1.059-1.062L7.05 9zm9.438-7.312h.569v-1.5h-.57zm3.703 3.123v.567h1.5v-.567zM18.116 2.75c.936 0 1.564.002 2.031.064c.446.06.633.163.755.284l1.059-1.062c-.447-.446-1.003-.626-1.615-.708c-.59-.08-1.336-.078-2.23-.078zm4.634 3.123c0-.892.002-1.636-.078-2.225c-.082-.611-.264-1.166-.711-1.612L20.9 3.098c.122.121.225.307.285.75c.062.466.064 1.09.064 2.025zM8.11 14.477c-.663-.66-1.105-1.104-1.391-1.478c-.273-.356-.331-.56-.331-.73h-1.5c0 .632.265 1.152.64 1.642c.361.472.89.997 1.522 1.628zm.314 2.431c.632.63 1.159 1.158 1.632 1.518c.491.374 1.012.637 1.644.637v-1.5c-.173 0-.378-.059-.736-.33c-.374-.286-.819-.727-1.481-1.387zm12.399-5.83c.799-.795 1.355-1.332 1.648-2.036l-1.385-.575c-.151.364-.437.667-1.322 1.55zm.427-4.638c0 1.249-.013 1.663-.164 2.027l1.385.575c.292-.704.279-1.476.279-2.602zm-7.294-2.207c.885-.883 1.19-1.168 1.555-1.319l-.572-1.386c-.705.291-1.243.846-2.042 1.642zm3.59-2.983c-1.13 0-1.902-.013-2.607.278l.572 1.386c.366-.15.784-.164 2.036-.164zm-8.75 14.973l2.06-2.053l-1.059-1.063l-2.06 2.054zm1.935-10.062l-.629-.405l-.812 1.261l.63.405zm-.629-.405c-.621-.4-1.123-.724-1.554-.956c-.442-.238-.855-.407-1.312-.474L7.017 5.81c.22.032.46.117.819.31c.368.199.814.485 1.454.897zM2.755 8.554a57 57 0 0 1 1.71-1.658a12 12 0 0 1 .73-.623c.223-.172.365-.256.432-.284l-.575-1.386c-.257.107-.527.292-.773.482c-.258.199-.54.442-.826.703c-.572.522-1.2 1.149-1.757 1.704zm4.481-4.228a4.13 4.13 0 0 0-2.184.277l.575 1.386a2.63 2.63 0 0 1 1.39-.18zM2.208 9.973l.379.15l.552-1.394l-.378-.15zm1.875 1.131l.96.958L6.104 11l-.96-.958zm-1.496-.98l.114.045l.571-1.387l-.133-.053zm2.555-.082l-.101-.1l-1.045 1.076l.087.086zm-2.441.127c.482.198.921.487 1.295.85l1.045-1.077a5.6 5.6 0 0 0-1.769-1.16zM1.696 7.492a1.514 1.514 0 0 0 .512 2.481l.553-1.394l-.007-.004l-.003-.008V8.56l.004-.006zm14.869 6.555l.406.627l1.259-.815l-.406-.627zm-1.136 7.137l-.084.084l1.06 1.062l.083-.083zm1.542-6.51c.414.64.7 1.083.9 1.45c.193.358.278.597.31.815l1.484-.22c-.068-.457-.238-.87-.476-1.31c-.233-.43-.558-.93-.959-1.55zm-.483 7.573c.557-.556 1.186-1.183 1.71-1.753c.261-.285.505-.566.705-.823c.19-.245.376-.514.483-.771l-1.384-.578a2.3 2.3 0 0 1-.285.43a12 12 0 0 1-.624.728a57 57 0 0 1-1.664 1.704zm1.693-5.308c.068.456.008.934-.18 1.383l1.385.578a4.1 4.1 0 0 0 .279-2.182zm-4.664 1.456l-.523-.459l-.988 1.128l.522.458zm1.929 2.902c-.215-.539-.344-.866-.514-1.175l-1.315.721c.116.21.208.438.435 1.01zm-2.953-1.807c.436.434.61.609.758.798l1.18-.926c-.217-.277-.467-.525-.879-.935zm2.44.632a5.6 5.6 0 0 0-.502-.76l-1.18.926q.206.262.366.555zM16.662 9a1.196 1.196 0 0 1-1.687 0l-1.059 1.062a2.696 2.696 0 0 0 3.806 0zm-1.687 0a1.18 1.18 0 0 1 0-1.677l-1.059-1.062a2.68 2.68 0 0 0 0 3.8zm0-1.677a1.196 1.196 0 0 1 1.688 0l1.059-1.062a2.696 2.696 0 0 0-3.806 0zm1.688 0a1.18 1.18 0 0 1 0 1.677l1.059 1.062a2.68 2.68 0 0 0 0-3.8zm-1.319 13.945a.1.1 0 0 1 .028-.016l.023-.001l.024.012q.018.015.026.034l-1.394.555c.384.963 1.632 1.196 2.352.478zm-1.428-5.422c-.511.51-.896.893-1.227 1.178c-.331.287-.555.426-.73.491l.518 1.408c.428-.158.814-.436 1.193-.764s.808-.755 1.305-1.25zm-1.957 1.669a.7.7 0 0 1-.26.048v1.5q.404-.001.778-.14zm1.07.455l-.28-.281l-1.062 1.06l.282.281zM7.05 9c-.485.484-.904.901-1.23 1.272c-.324.37-.601.745-.766 1.156l1.391.56c.071-.177.217-.4.503-.727c.285-.325.663-.702 1.161-1.2zm-1.996 2.428a2.2 2.2 0 0 0-.166.841h1.5c0-.09.016-.179.057-.282zm-.011.634l.176.176l1.06-1.06L6.105 11z" class=""></path></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-3">Room to grow</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Scale as you go with unmetered bandwidth on all commercial plans.
+              Zero downtime during traffic spikes.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="group hover:shadow-md transition duration-300 bg-white border-slate-100 border rounded-2xl pt-6 pr-6 pb-6 pl-6 shadow-sm">
+            <div class="text-brand-blue flex group-hover:scale-110 transition bg-blue-50 w-12 h-12 rounded-full mb-6 items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="shield-warning-linear"><g fill="none" class=""><path stroke="currentColor" stroke-width="1.5" d="M3 10.417c0-3.198 0-4.797.378-5.335c.377-.537 1.88-1.052 4.887-2.081l.573-.196C10.405 2.268 11.188 2 12 2s1.595.268 3.162.805l.573.196c3.007 1.029 4.51 1.544 4.887 2.081C21 5.62 21 7.22 21 10.417v1.574c0 5.638-4.239 8.375-6.899 9.536C13.38 21.842 13.02 22 12 22s-1.38-.158-2.101-.473C7.239 20.365 3 17.63 3 11.991z" class=""></path><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M12 8v4" class=""></path><circle cx="12" cy="15" r="1" fill="currentColor" class=""></circle></g></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-3">
+              Seriously secure
+            </h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Firewalls, encryption, brute force protection, and DDoS
+              mitigation. Security is handled for you.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="group p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition duration-300">
+            <div class="text-brand-blue flex group-hover:scale-110 transition bg-blue-50 w-12 h-12 rounded-full mb-6 items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="color: rgb(148, 163, 184); width: 24px; height: 24px" class="w-[24px] h-[24px]" data-solar="iphone-linear" data-icon-set="solar" data-icon-replaced="true" stroke-width="2"><g fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M4 10c0-3.771 0-5.657 1.172-6.828S8.229 2 12 2s5.657 0 6.828 1.172S20 6.229 20 10v4c0 3.771 0 5.657-1.172 6.828S15.771 22 12 22s-5.657 0-6.828-1.172S4 17.771 4 14z"></path><path stroke-linecap="round" d="M15 19H9m7.748-16.622l-.084.126c-.756 1.134-1.134 1.701-1.686 2.044q-.165.103-.341.183c-.592.27-1.274.27-2.637.27s-2.044 0-2.636-.27a3 3 0 0 1-.342-.183c-.552-.343-.93-.91-1.686-2.044l-.084-.126"></path></g></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-3">
+              Bring it with you
+            </h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Fast data transfer and performance come as standard with our
+              global CDN—wherever visitors are.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="group p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition duration-300">
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-brand-blue flex items-center justify-center mb-6 group-hover:scale-110 transition" style="">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="cloud-storage-linear"><g fill="none" stroke="currentColor" stroke-width="1.5" class=""><path stroke-linecap="round" d="M6.286 18C3.919 18 2 16.104 2 13.765s1.919-4.236 4.286-4.236q.427.001.83.08m7.265-2.582a5.8 5.8 0 0 1 1.905-.321c.654 0 1.283.109 1.87.309M7.115 9.609a5.6 5.6 0 0 1-.354-1.962C6.762 4.528 9.32 2 12.476 2c2.94 0 5.361 2.194 5.68 5.015M7.115 9.609a4.3 4.3 0 0 1 1.55.634m9.49-3.228C20.392 7.78 22 9.881 22 12.353c0 2.707-1.927 4.97-4.5 5.52" class=""></path><path d="M8.5 17c0-1.414 0-2.121.44-2.56c.439-.44 1.146-.44 2.56-.44h1c1.414 0 2.121 0 2.56.44c.44.439.44 1.146.44 2.56v2c0 1.414 0 2.121-.44 2.56c-.439.44-1.146.44-2.56.44h-1c-1.414 0-2.121 0-2.56-.44c-.44-.439-.44-1.146-.44-2.56z" class=""></path><path stroke-linecap="round" stroke-linejoin="round" d="M11 18h2"></path></g></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-3">
+              Flexible storage
+            </h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              You'll never run out of storage with our scalable plans. Photos,
+              audio, 4K videos—all in one place.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Domain Search Section -->
+    <section class="py-20 bg-[#0D0C12] border-y border-white/5">
+      <div class="container mx-auto px-6 text-center max-w-4xl">
+        <h2 class="font-serif text-4xl md:text-5xl text-white tracking-tight mb-6">
+          Claim your corner of the web
+        </h2>
+        <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
+          Grab the perfect domain—with or without a website—for an unbeatable
+          price. The popular .com, .org, and .net extensions start at just $12
+          per year.
+        </p>
+
+        <div class="bg-[#1A1823] p-2 rounded-lg shadow-sm border border-white/10 flex flex-col sm:flex-row gap-2 max-w-2xl mx-auto">
+          <div class="flex-grow flex items-center px-4 bg-transparent">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="text-slate-400 mr-3" style="" data-icon-set="solar" data-solar="magnifer-linear"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11.5" cy="11.5" r="9.5"></circle><path stroke-linecap="round" d="M18.5 18.5L22 22"></path></g></svg>
+            <input type="text" placeholder="example.com" class="w-full py-3 bg-transparent outline-none text-white placeholder-slate-500 font-medium">
+          </div>
+          <button class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-3 rounded font-medium hover:shadow-lg hover:shadow-cyan-500/20 transition whitespace-nowrap" style="">
+            Find your domain
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Themes Section -->
+    <section class="py-24">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div class="max-w-2xl">
+            <h2 class="font-serif text-4xl md:text-5xl text-white tracking-tight mb-6">
+              Drag, drop, set it apart.
+            </h2>
+            <p class="text-lg text-slate-400">
+              Seamlessly define a one-of-a-kind design with a range of beautiful
+              themes and patterns. No code required.
+            </p>
+          </div>
+          <div class="mb-1">
+            <a href="#" class="bg-[#1F1D2B] border px-5 py-2.5 rounded text-sm font-medium transition text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10">
+              Explore themes
+            </a>
+          </div>
+        </div>
+
+        <!-- Fake Masonry Grid using Columns -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Item 1 -->
+          <div class="space-y-4">
+            <div class="relative group cursor-pointer overflow-hidden rounded border border-white/5 shadow-sm hover:shadow-lg transition-all duration-300">
+              <!-- Browser Header -->
+              <div class="bg-[#1F1D2B] border-b border-white/5 px-3 py-2 flex gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+                <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                <div class="w-2 h-2 rounded-full bg-green-400"></div>
+              </div>
+              <div class="aspect-[4/3] bg-indigo-50 relative overflow-hidden" style="">
+                <!-- Abstract geometric art mimicking a theme -->
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
+                  <h4 class="font-serif text-3xl text-indigo-900 italic mb-2" style="">
+                    Self-Wellbeing
+                  </h4>
+                  <div class="w-16 h-1 bg-indigo-900 mb-4" style=""></div>
+                  <div class="w-full h-32 bg-indigo-200/50 rounded mix-blend-multiply" style=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="space-y-4 lg:pt-12">
+            <div class="relative group cursor-pointer overflow-hidden rounded border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300">
+              <div class="bg-white border-b border-slate-100 px-3 py-2 flex gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+              </div>
+              <div class="aspect-[3/4] bg-[#F5F5F0] relative overflow-hidden p-6">
+                <!-- Classical theme -->
+                <div class="border border-slate-800 h-full p-4 flex flex-col">
+                  <div class="flex justify-between text-[10px] uppercase tracking-widest text-slate-500 mb-8">
+                    <span>Lineup</span>
+                    <span>Index</span>
+                  </div>
+                  <div class="space-y-2 font-mono text-xs text-slate-800">
+                    <div class="flex justify-between">
+                      <span>Minor Threat</span>
+                      <span class="">1980-1983</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Black Flag</span>
+                      <span>1976-1986</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="">Bad Brains</span>
+                      <span>1977-1995</span>
+                    </div>
+                    <div class="flex justify-between text-emerald-600">
+                      <span>Fugazi</span>
+                      <span class="">1987-2003</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="space-y-4">
+            <div class="relative group cursor-pointer overflow-hidden rounded border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300">
+              <div class="bg-white border-b border-slate-100 px-3 py-2 flex gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+              </div>
+              <div class="aspect-[4/3] bg-stone-200 relative overflow-hidden p-8 flex items-center justify-center">
+                <div class="bg-white p-6 shadow-xl rotate-3">
+                  <h4 class="font-serif text-2xl mb-2 text-stone-800">
+                    Thoughts
+                  </h4>
+                  <p class="text-[10px] text-stone-500 leading-tight">
+                    A collection of essays on design, architecture and the
+                    spaces in between.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="relative group cursor-pointer overflow-hidden rounded border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 mt-8">
+              <div class="bg-white border-b border-slate-100 px-3 py-2 flex gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+              </div>
+              <div class="aspect-square overflow-hidden text-white bg-blue-900 pt-6 pr-6 pb-6 pl-6 relative">
+                <h4 class="font-serif text-3xl mb-4">Botticelli &amp; Light</h4>
+                <div class="text-xs font-light opacity-70 space-y-1">
+                  <p class="">Interplay of Color</p>
+                  <p class="">Saturn's Glow</p>
+                  <p class="">Underwater Relationship</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enterprise Section -->
+    <section class="bg-[#0D0C12] py-24 border-t border-white/5">
+      <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-16 items-start">
+          <div class="">
+            <div class="flex items-center gap-2 mb-6 font-bold tracking-tight text-xl text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="wordpress"><path fill="currentColor" d="M21.469 6.825c.84 1.537 1.318 3.3 1.318 5.175c0 3.979-2.156 7.456-5.363 9.325l3.295-9.527c.615-1.54.82-2.771.82-3.864c0-.405-.026-.78-.07-1.11m-7.981.105c.647-.03 1.232-.105 1.232-.105c.582-.075.514-.93-.067-.899c0 0-1.755.135-2.88.135c-1.064 0-2.85-.15-2.85-.15c-.585-.03-.661.855-.075.885c0 0 .54.061 1.125.09l1.68 4.605l-2.37 7.08L5.354 6.9c.649-.03 1.234-.1 1.234-.1c.585-.075.516-.93-.065-.896c0 0-1.746.138-2.874.138c-.2 0-.438-.008-.69-.015C4.911 3.15 8.235 1.215 12 1.215c2.809 0 5.365 1.072 7.286 2.833c-.046-.003-.091-.009-.141-.009c-1.06 0-1.812.923-1.812 1.914c0 .89.513 1.643 1.06 2.531c.411.72.89 1.643.89 2.977c0 .915-.354 1.994-.821 3.479l-1.075 3.585l-3.9-11.61zM12 22.784c-1.059 0-2.081-.153-3.048-.437l3.237-9.406l3.315 9.087q.036.078.078.149c-1.12.393-2.325.609-3.582.609M1.211 12c0-1.564.336-3.05.935-4.39L7.29 21.709A10.79 10.79 0 0 1 1.211 12M12 0C5.385 0 0 5.385 0 12s5.385 12 12 12s12-5.385 12-12S18.615 0 12 0"></path></svg>
+              VIP
+            </div>
+            <h2 class="leading-[1.1] md:text-5xl text-4xl text-slate-50 tracking-tight font-serif mb-6">
+              Think WordPress isn't for the enterprise? Think again.
+            </h2>
+            <p class="text-base text-slate-400 mb-8 leading-relaxed">
+              What do Salesforce, Al Jazeera, Capgemini, and Facebook have in
+              common?
+            </p>
+            <p class="text-base text-slate-500 mb-8 leading-relaxed">
+              They trust WordPress VIP—the agile enterprise platform built on
+              WordPress—to deliver performance at scale while meeting the
+              highest security standards. Starting at $25,000/year.
+            </p>
+            <a href="#" class="inline-block bg-white text-black px-6 py-3 rounded font-medium hover:bg-slate-200 transition">
+              Get a demo
+            </a>
+          </div>
+
+          <!-- Logos Grid -->
+          <div class="grid grid-cols-3 opacity-40 grayscale invert gap-x-8 gap-y-12">
+            <div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" class="text-slate-600" style="" data-icon-set="simple-icons" data-simple-icons="slack"><path fill="currentColor" d="M5.042 15.165a2.53 2.53 0 0 1-2.52 2.523A2.53 2.53 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52a2.527 2.527 0 0 1 2.521 2.52v6.313A2.53 2.53 0 0 1 8.834 24a2.53 2.53 0 0 1-2.521-2.522zM8.834 5.042a2.53 2.53 0 0 1-2.521-2.52A2.53 2.53 0 0 1 8.834 0a2.53 2.53 0 0 1 2.521 2.522v2.52zm0 1.271a2.53 2.53 0 0 1 2.521 2.521a2.53 2.53 0 0 1-2.521 2.521H2.522A2.53 2.53 0 0 1 0 8.834a2.53 2.53 0 0 1 2.522-2.521zm10.122 2.521a2.53 2.53 0 0 1 2.522-2.521A2.53 2.53 0 0 1 24 8.834a2.53 2.53 0 0 1-2.522 2.521h-2.522zm-1.268 0a2.53 2.53 0 0 1-2.523 2.521a2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.53 2.53 0 0 1 2.523 2.522zm-2.523 10.122a2.53 2.53 0 0 1 2.523 2.522A2.53 2.53 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522zm0-1.268a2.527 2.527 0 0 1-2.52-2.523a2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.53 2.53 0 0 1-2.522 2.523z" class=""></path></svg>
+            </div>
+            <div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" style="color: rgb(71, 85, 105); width: 96px; height: 36px" class="text-slate-600 w-[96px] h-[36px]" data-simple-icons="adidas" data-icon-set="simple-icons" data-icon-replaced="true" stroke-width="2"><path fill="#475569" d="m24 19.535l-8.697-15.07l-4.659 2.687l7.145 12.383Zm-8.287 0L9.969 9.59L5.31 12.277l4.192 7.258ZM4.658 14.723l2.776 4.812H1.223L0 17.41Z"></path></svg>
+            </div>
+            <div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" class="text-slate-600" style="" data-icon-set="simple-icons" data-simple-icons="techcrunch"><path fill="currentColor" d="M0 6v4h4v8h4v-8h4V6Zm12 4v8h12v-4h-8v-4zm4 0h8V6h-8z" class=""></path></svg>
+            </div>
+            <div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" class="text-slate-600" style="" data-icon-set="simple-icons" data-simple-icons="meta"><path fill="currentColor" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a7 7 0 0 0 .265.86a5.3 5.3 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927c1.497 0 2.633-.671 3.965-2.444c.76-1.012 1.144-1.626 2.663-4.32l.756-1.339l.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314c1.046.987 1.992 1.22 3.06 1.22c1.075 0 1.876-.355 2.455-.843a3.7 3.7 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745c0-2.72-.681-5.357-2.084-7.45c-1.282-1.912-2.957-2.93-4.716-2.93c-1.047 0-2.088.467-3.053 1.308c-.652.57-1.257 1.29-1.82 2.05c-.69-.875-1.335-1.547-1.958-2.056c-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999c1.132 1.748 1.647 4.195 1.647 6.4c0 1.548-.368 2.9-1.839 2.9c-.58 0-1.027-.23-1.664-1.004c-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a45 45 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327c1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446c.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338c-1.191 1.649-1.81 1.817-2.486 1.817c-.524 0-1.038-.237-1.383-.794c-.263-.426-.464-1.13-.464-2.046c0-2.221.63-4.535 1.66-6.088c.454-.687.964-1.226 1.533-1.533a2.26 2.26 0 0 1 1.088-.285" class=""></path></svg>
+            </div><div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" style="color: rgb(71, 85, 105); width: 96px; height: 36px" class="w-[96px] h-[36px]" data-simple-icons="4chan" data-icon-set="simple-icons" data-icon-replaced="true" stroke-width="2"><path fill="#475569" d="M11.07 8.82S9.803 1.079 5.145 1.097C2.006 1.109.78 4.124 3.055 4.802c0 0-2.698.973-2.698 2.697s4.274 3.54 10.713 1.32zm1.931 5.924s.904 7.791 5.558 7.991c3.136.135 4.503-2.82 2.262-3.604c0 0 2.74-.845 2.82-2.567s-4.105-3.737-10.64-1.82m-3.672-1.55s-7.532 2.19-6.952 6.813c.39 3.114 3.53 3.969 3.93 1.63c0 0 1.29 2.559 3.002 2.351s3-4.67.02-10.794m5.623-2.467s7.727-1.35 7.66-6.008c-.046-3.138-3.074-4.333-3.728-2.051c0 0-1-2.686-2.726-2.668c-1.724.018-3.494 4.312-1.206 10.727" class=""></path></svg>
+            </div><div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" style="color: rgb(71, 85, 105); width: 96px; height: 36px" class="w-[96px] h-[36px]" data-simple-icons="abb" data-icon-set="simple-icons" data-icon-replaced="true" stroke-width="2"><path fill="#475569" d="M13.086 16.594v-4.427h3.035c.25.418.362.947.362 1.476c0 1.559-1.17 2.867-2.84 2.951zm-.279-4.455v4.455h-2.784v-4.455zm3.147-.278h-2.868V7.406h.668c1.086 0 1.949.863 1.949 1.949c0 .64-.334 1.225-.835 1.587c.417.223.807.529 1.086.919m-3.147-4.455v4.455h-2.784V7.406zm7.796 9.188v-4.427h3.035c.251.418.362.947.362 1.476c0 1.559-1.169 2.867-2.84 2.951zm-.278-4.455v4.455h-2.784v-4.455zm3.146-.278h-2.868V7.406h.668c1.086 0 1.949.863 1.949 1.949c0 .64-.334 1.225-.835 1.587c.418.223.808.529 1.086.919m-3.146-4.455v4.455h-2.784V7.406zM1.587 12.139h2.868v2.506H2.979l-.668 1.949H0zm2.868-4.733v4.455H1.671l1.587-4.455zm.278 7.239v-2.506h2.868l1.587 4.455H6.877l-.668-1.949zm2.784-2.784H4.733V7.406H5.93z" class=""></path></svg>
+            </div>
+            
+            <div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="36" viewBox="0 0 24 24" class="text-slate-600" style="" data-icon-set="simple-icons" data-simple-icons="intuit"><path fill="currentColor" d="M12.32 12.38c0 1.174.974 2.033 2.211 2.033s2.212-.859 2.212-2.033v-2.7h-1.198v2.56c0 .633-.44 1.06-1.017 1.06s-1.017-.424-1.017-1.06V9.68h-1.198l.008 2.699zm7.624-1.619h1.429v3.563h1.198V10.76H24V9.68h-4.056v1.082zM19.17 9.68h-1.198v4.645h1.198zM7.482 10.761h1.43v3.563h1.197V10.76h1.428V9.68H7.482v1.082zM1.198 9.68H0v4.645h1.198zm5.653 1.94c0-1.174-.974-2.032-2.212-2.032s-2.212.858-2.212 2.032v2.705h1.198v-2.56c0-.633.44-1.06 1.017-1.06s1.018.425 1.018 1.06v2.56h1.197L6.85 11.62z" class=""></path></svg>
+            </div>
+            
+            
+            
+            
+            
+            <div class="flex items-center justify-center text-xl font-serif text-slate-800">
+              VOGUE
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0D0C12] text-slate-400 py-16 text-sm border-t border-white/5">
+      <div class="container mx-auto px-6">
+        <div class="mb-12">
+          <a href="#" class="flex items-center gap-2 text-white mb-6">
+            
+            <span class="font-serif text-lg tracking-tight pt-1">
+              ModernPress
+            </span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
+          <!-- Column 1 -->
+          <div class="space-y-4">
+            <h5 class="text-white font-medium mb-2">Products</h5>
+            <a href="#" class="block hover:text-white transition">
+              WordPress Hosting
+            </a>
+            <a href="#" class="block hover:text-white transition">Agencies</a>
+            <a href="#" class="block hover:text-white transition">
+              Become an Affiliate
+            </a>
+            <a href="#" class="block hover:text-white transition">
+              Domain Names
+            </a>
+            <a href="#" class="block hover:text-white transition">
+              AI Website Builder
+            </a>
+          </div>
+          <!-- Column 2 -->
+          <div class="space-y-4">
+            <h5 class="text-white font-medium mb-2">Features</h5>
+            <a href="#" class="block hover:text-white transition">Overview</a>
+            <a href="#" class="block hover:text-white transition">Themes</a>
+            <a href="#" class="block hover:text-white transition">Plugins</a>
+            <a href="#" class="block hover:text-white transition">Patterns</a>
+            <a href="#" class="block hover:text-white transition">
+              Google Apps
+            </a>
+          </div>
+          <!-- Column 3 -->
+          <div class="space-y-4">
+            <h5 class="text-white font-medium mb-2">Resources</h5>
+            <a href="#" class="block hover:text-white transition">Blog</a>
+            <a href="#" class="block hover:text-white transition">
+              Business Name Generator
+            </a>
+            <a href="#" class="block hover:text-white transition">Logo Maker</a>
+            <a href="#" class="block hover:text-white transition">Reader</a>
+            <a href="#" class="block hover:text-white transition">
+              Accessibility
+            </a>
+          </div>
+          <!-- Column 4 -->
+          <div class="space-y-4">
+            <h5 class="text-white font-medium mb-2">Help</h5>
+            <a href="#" class="block hover:text-white transition">
+              Support Center
+            </a>
+            <a href="#" class="block hover:text-white transition">Guides</a>
+            <a href="#" class="block hover:text-white transition">Courses</a>
+            <a href="#" class="block hover:text-white transition">Forums</a>
+            <a href="#" class="block hover:text-white transition">Contact</a>
+          </div>
+          <!-- Column 5 -->
+          <div class="space-y-4">
+            <h5 class="text-white font-medium mb-2">Company</h5>
+            <a href="#" class="block hover:text-white transition">About</a>
+            <a href="#" class="block hover:text-white transition">
+              Press
+              <span class="align-top text-[10px]">↗</span>
+            </a>
+            <a href="#" class="block hover:text-white transition">
+              Terms of Service
+            </a>
+            <a href="#" class="block hover:text-white transition">
+              Privacy Policy
+              <span class="align-top text-[10px]">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t gap-6 border-white/5">
+          <div class="flex gap-4">
+            <button class="flex items-center gap-2 bg-white/10 hover:bg-white/20 transition px-4 py-2 rounded text-white text-xs border border-white/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="apple"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04c-2.04.027-3.91 1.183-4.961 3.014c-2.117 3.675-.546 9.103 1.519 12.09c1.013 1.454 2.208 3.09 3.792 3.039c1.52-.065 2.09-.987 3.935-.987c1.831 0 2.35.987 3.96.948c1.637-.026 2.676-1.48 3.676-2.948c1.156-1.688 1.636-3.325 1.662-3.415c-.039-.013-3.182-1.221-3.22-4.857c-.026-3.04 2.48-4.494 2.597-4.559c-1.429-2.09-3.623-2.324-4.39-2.376c-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83c-1.207.052-2.662.805-3.532 1.818c-.78.896-1.454 2.338-1.273 3.714c1.338.104 2.715-.688 3.559-1.701"></path></svg>
+              <div class="text-left">
+                <div class="text-[8px] leading-none opacity-70">
+                  Download on the
+                </div>
+                <div class="font-semibold leading-none">App Store</div>
+              </div>
+            </button>
+            <button class="flex items-center gap-2 bg-white/10 hover:bg-white/20 transition px-4 py-2 rounded text-white text-xs border border-white/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="googleplay"><path fill="currentColor" d="m22.018 13.298l-3.919 2.218l-3.515-3.493l3.543-3.521l3.891 2.202a1.49 1.49 0 0 1 0 2.594M1.337.924a1.5 1.5 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087zm12.207 10.065l3.258-3.238L3.45.195a1.47 1.47 0 0 0-.946-.179zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54z"></path></svg>
+              <div class="text-left">
+                <div class="text-[8px] leading-none opacity-70">GET IT ON</div>
+                <div class="font-semibold leading-none">Google Play</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-6">
+            <a href="#" class="text-slate-400 hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="facebook"><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978c.401 0 .955.042 1.468.103a9 9 0 0 1 1.141.195v3.325a9 9 0 0 0-.653-.036a27 27 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.7 1.7 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103l-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647"></path></svg>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="x"><path fill="currentColor" d="M14.234 10.162L22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299l-.929-1.329L3.076 1.56h3.182l5.965 8.532l.929 1.329l7.754 11.09h-3.182z"></path></svg>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="instagram"><path fill="currentColor" d="M7.03.084c-1.277.06-2.149.264-2.91.563a5.9 5.9 0 0 0-2.124 1.388a5.9 5.9 0 0 0-1.38 2.127C.321 4.926.12 5.8.064 7.076s-.069 1.688-.063 4.947s.021 3.667.083 4.947c.061 1.277.264 2.149.563 2.911c.308.789.72 1.457 1.388 2.123a5.9 5.9 0 0 0 2.129 1.38c.763.295 1.636.496 2.913.552c1.278.056 1.689.069 4.947.063s3.668-.021 4.947-.082c1.28-.06 2.147-.265 2.91-.563a5.9 5.9 0 0 0 2.123-1.388a5.9 5.9 0 0 0 1.38-2.129c.295-.763.496-1.636.551-2.912c.056-1.28.07-1.69.063-4.948c-.006-3.258-.02-3.667-.081-4.947c-.06-1.28-.264-2.148-.564-2.911a5.9 5.9 0 0 0-1.387-2.123a5.9 5.9 0 0 0-2.128-1.38c-.764-.294-1.636-.496-2.914-.55C15.647.009 15.236-.006 11.977 0S8.31.021 7.03.084m.14 21.693c-1.17-.05-1.805-.245-2.228-.408a3.7 3.7 0 0 1-1.382-.895a3.7 3.7 0 0 1-.9-1.378c-.165-.423-.363-1.058-.417-2.228c-.06-1.264-.072-1.644-.08-4.848c-.006-3.204.006-3.583.061-4.848c.05-1.169.246-1.805.408-2.228c.216-.561.477-.96.895-1.382a3.7 3.7 0 0 1 1.379-.9c.423-.165 1.057-.361 2.227-.417c1.265-.06 1.644-.072 4.848-.08c3.203-.006 3.583.006 4.85.062c1.168.05 1.804.244 2.227.408c.56.216.96.475 1.382.895s.681.817.9 1.378c.165.422.362 1.056.417 2.227c.06 1.265.074 1.645.08 4.848c.005 3.203-.006 3.583-.061 4.848c-.051 1.17-.245 1.805-.408 2.23c-.216.56-.477.96-.896 1.38a3.7 3.7 0 0 1-1.378.9c-.422.165-1.058.362-2.226.418c-1.266.06-1.645.072-4.85.079s-3.582-.006-4.848-.06m9.783-16.192a1.44 1.44 0 1 0 1.437-1.442a1.44 1.44 0 0 0-1.437 1.442M5.839 12.012a6.161 6.161 0 1 0 12.323-.024a6.162 6.162 0 0 0-12.323.024M8 12.008A4 4 0 1 1 12.008 16A4 4 0 0 1 8 12.008"></path></svg>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="" style="" data-icon-set="simple-icons" data-simple-icons="youtube"><path fill="currentColor" d="M23.498 6.186a3.02 3.02 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.02 3.02 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.02 3.02 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.02 3.02 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814M9.545 15.568V8.432L15.818 12z"></path></svg>
+            </a>
+          </div>
+
+          <div class="flex items-center gap-2 border border-white/20 px-3 py-1.5 rounded hover:border-white/40 transition cursor-pointer">
+            <iconify-icon icon="solar:globe-linear" width="16"></iconify-icon>
+            <span class="text-xs text-white">English</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" class="" style="" data-icon-set="solar" data-solar="alt-arrow-down-linear"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19 9l-7 6l-7-6"></path></svg>
+          </div>
+        </div>
+
+        <div class="mt-12 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs opacity-60">
+          <div class="flex items-center gap-1">
+            An
+            <span class="font-serif font-bold tracking-widest text-slate-300">
+              AUTOMATTIC
+            </span>
+            joint
+          </div>
+          <a href="#" class="mt-2 md:mt-0 hover:text-white transition">
+            Work With Us ↗
+          </a>
+        </div>
+      </div>
+    </footer>
+  
+</body></html>

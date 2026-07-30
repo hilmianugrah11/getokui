@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subline — Subscription OS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #08090a;
+color: #ffffff;
+}
+</style>
+<meta name="disabled-font-classes" content="font-roboto,font-montserrat,font-poppins,font-playfair,font-instrument-serif,font-merriweather,font-bricolage,font-jakarta,font-manrope,font-space-grotesk,font-work-sans,font-pt-serif,font-geist-mono,font-space-mono,font-quicksand,font-nunito,font-newsreader,font-google-sans-flex,font-oswald,font-dm-sans,font-cormorant"><meta name="aura-font-heading-class" content="font-geist"><meta name="aura-font-body-class" content="font-geist"><meta name="aura-font-heading-label" content="Geist"><meta name="aura-font-body-label" content="Geist"><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><style id="border-gradient-shared-style">
+[style*="--border-gradient"]::before {
+content: "";
+position: absolute;
+inset: 0;
+padding: 1px;
+border-radius: var(--border-radius-before, inherit);
+-webkit-mask: linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
+background: var(--border-gradient);
+pointer-events: none;
+}</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="selection:bg-white/20 selection:text-white">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component top-0 w-full h-screen -z-10 hue-rotate-15 saturate-150 absolute" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div class="aura-background-component top-0 w-full h-screen -z-10 absolute saturate-150" data-alpha-mask="80" style="mask-image: linear-gradient(transparent, black 0%, black 80%, transparent);">
+  <div data-us-project="vi5SxDwDvEJMwkyTdyH8" class="absolute top-0 left-0 -z-10 w-full h-full"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+
+    <!-- Navbar -->
+    <nav class="fixed z-50 flex w-full border-[#2e2e32] border-b pt-4 pr-6 pb-4 pl-6 top-0 items-center justify-between" style="background: rgba(15, 17, 21, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px)">
+        <div class="flex items-center gap-2">
+            <iconify-icon icon="solar:layers-linear" width="20" height="20" class="text-white" style="stroke-width: 1.5;"></iconify-icon>
+            <span class="font-normal text-base tracking-tight font-geist">Subline</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-sm text-[#b0b3b8]">
+            <a href="#" class="hover:text-white transition-colors font-geist">Product</a>
+            <a href="#" class="hover:text-white transition-colors font-geist">Integrations</a>
+            <a href="#" class="hover:text-white transition-colors font-geist">Customers</a>
+            <a href="#" class="hover:text-white transition-colors font-geist">Pricing</a>
+            <a href="#" class="hover:text-white transition-colors flex items-center gap-1 font-geist">Billing <span class="bg-[#2e2e32] text-xs px-1.5 rounded-sm text-white font-geist">New</span></a>
+            <a href="#" class="hover:text-white transition-colors font-geist">Contact</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <a href="#" class="text-sm font-normal hover:text-white text-[#b0b3b8] transition-colors font-geist">Log in</a>
+            <a href="#" class="bg-white text-black text-sm font-normal px-4 py-2 rounded-full hover:bg-gray-200 transition-colors font-geist">Sign up</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="flex flex-col max-w-[1400px] mr-auto ml-auto pt-40 pr-6 pb-20 pl-6 items-center">
+        <h1 class="text-5xl md:text-7xl tracking-tight text-center leading-[1.1] max-w-4xl font-geist font-light">
+            The subscription operating<br>system for modern scaling
+        </h1>
+        <p class="text-lg md:text-xl text-[#b0b3b8] mt-6 text-center max-w-2xl font-geist font-light">
+            Purpose-built for managing recurring revenue and reducing churn. Designed for the AI era.
+        </p>
+
+        <!-- Hero Mockup Container -->
+        <div class="flex overflow-hidden bg-gradient-to-br from-[#0c0d0f] to-[#050505] w-full h-[650px] border border-[#2e2e32] rounded-xl mt-16 shadow-[0_24px_80px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
+
+    <div class="flex flex-col bg-[#0a0c10]/80 backdrop-blur-xl w-64 border-r border-[#2e2e32] pt-4 pr-4 pb-4 pl-4 z-20">
+        <div class="flex items-center justify-between mb-8 group cursor-pointer hover:bg-white/[0.02] p-1.5 -ml-1.5 rounded-lg transition-colors">
+            <div class="flex items-center gap-3 text-sm font-medium text-white font-geist">
+                <div class="w-6 h-6 rounded-md bg-gradient-to-b from-[#2a2c31] to-[#1c1d21] border border-[#3e3e42] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_2px_4px_rgba(0,0,0,0.4)] flex items-center justify-center text-xs text-white font-geist">S</div>
+                Subline
+            </div>
+            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-[#7e828a] group-hover:text-white transition-colors"></iconify-icon>
+        </div>
+
+        <div class="space-y-0.5 text-[13px] text-[#7e828a] font-medium">
+            <div class="flex items-center gap-2 p-1.5 rounded-md bg-white/[0.04] text-white shadow-[inset_2px_0_0_#3b82f6] relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-50 rounded-md pointer-events-none"></div>
+                <iconify-icon icon="solar:inbox-linear" width="16" class="text-blue-400 drop-shadow-md z-10"></iconify-icon> <span class="z-10 font-geist">Inbox</span>
+            </div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-[#b0b3b8] transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:card-linear" width="16"></iconify-icon> Subscriptions</div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-[#b0b3b8] transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:document-text-linear" width="16"></iconify-icon> Invoices</div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-[#b0b3b8] transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:pulse-linear" width="16"></iconify-icon> Metrics</div>
+        </div>
+
+        <div class="mt-8 mb-2 text-[11px] uppercase tracking-wider font-semibold text-[#7e828a] px-1.5 font-geist">Workspace</div>
+        <div class="space-y-0.5 text-[13px] text-[#7e828a] font-medium">
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-[#b0b3b8] transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:box-linear" width="16"></iconify-icon> Products</div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-[#b0b3b8] transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:ticket-linear" width="16"></iconify-icon> Coupons</div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-[#b0b3b8] transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:menu-dots-bold" width="16"></iconify-icon> More</div>
+        </div>
+
+        <div class="mt-8 mb-2 text-[11px] uppercase tracking-wider font-semibold text-[#7e828a] px-1.5 flex justify-between items-center group cursor-pointer hover:text-[#b0b3b8] transition-colors font-geist">
+            Favorites 
+            <iconify-icon icon="solar:add-circle-linear" width="14" class="opacity-0 group-hover:opacity-100 transition-opacity"></iconify-icon>
+        </div>
+        <div class="space-y-0.5 text-[13px] text-[#7e828a] font-medium">
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-white transition-colors cursor-pointer font-geist">
+                <span class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]"></span> Enterprise Upgrade
+            </div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-white transition-colors cursor-pointer font-geist"><iconify-icon icon="solar:robot-linear" width="16"></iconify-icon> Dunning Tasks</div>
+            <div class="flex items-center gap-2 p-1.5 rounded-md hover:bg-white/[0.02] hover:text-white transition-colors cursor-pointer font-geist">
+                <span class="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></span> Q3 Pricing
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-[#0c0d0f] relative z-10 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+        
+        <div class="h-12 border-b border-[#2e2e32] bg-[#0a0c10] flex items-center justify-between px-5 text-sm text-[#b0b3b8] shrink-0">
+            <div class="flex items-center gap-3">
+                <span class="text-white font-medium font-geist">Enterprise Upgrade</span>
+                <div class="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/20 px-2 py-0.5 rounded-full text-[11px] font-medium text-yellow-500 font-geist">
+                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_5px_rgba(234,179,8,0.8)] animate-pulse"></span>
+                    Pending Approval
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <span class="font-mono text-[#7e828a] font-geist">02 / 145</span>
+                <div class="flex gap-1">
+                    <button class="w-6 h-6 flex items-center justify-center bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 rounded shadow-sm hover:bg-white/10 active:scale-95 transition-all text-[#b0b3b8] hover:text-white">
+                        <iconify-icon icon="solar:alt-arrow-up-linear" width="14"></iconify-icon>
+                    </button>
+                    <button class="w-6 h-6 flex items-center justify-center bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 rounded shadow-sm hover:bg-white/10 active:scale-95 transition-all text-[#b0b3b8] hover:text-white">
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="14"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex overflow-hidden">
+            
+            <div class="flex-1 p-8 overflow-y-auto" style="-ms-overflow-style: none; scrollbar-width: none;">
+                <div class="max-w-2xl">
+                    <h2 class="text-2xl tracking-tight text-white mb-4 font-geist font-light">Enterprise Upgrade - Acme Corp</h2>
+                    <p class="text-[15px] leading-relaxed text-[#b0b3b8] mb-12 font-geist">
+                        Negotiated custom pricing for Acme Corp. Need to apply a 
+                        <code class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded text-[13px] font-mono shadow-sm font-geist">15% discount</code> 
+                        on top of usage tiers and set net-60 invoice terms.
+                    </p>
+
+                    <div class="text-xs uppercase tracking-wider font-semibold text-[#7e828a] border-b border-[#2e2e32] pb-2 mb-8 font-geist">Activity</div>
+
+                    <div class="space-y-8">
+                        
+                        <div class="flex gap-4 group">
+                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white shadow-sm shrink-0 font-geist">S</div>
+                            <div class="text-[13px] leading-relaxed pt-1">
+                                <span class="text-white font-medium font-geist">Subline</span>
+                                <span class="text-[#7e828a] font-geist">created the record via Salesforce integration</span>
+                                <span class="text-[#7e828a] text-[11px] ml-2 opacity-0 group-hover:opacity-100 transition-opacity font-geist">2min ago</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 group">
+                            <div class="w-7 h-7 flex items-center justify-center shrink-0">
+                                <iconify-icon icon="solar:stars-bold" width="18" class="text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]"></iconify-icon>
+                            </div>
+                            <div class="text-[13px] leading-relaxed pt-0.5">
+                                <span class="text-white font-medium font-geist">Billing Intelligence</span>
+                                <span class="text-[#7e828a] font-geist">added tags Enterprise and Custom Terms</span>
+                                <span class="text-[#7e828a] text-[11px] ml-2 opacity-0 group-hover:opacity-100 transition-opacity font-geist">2min ago</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 group">
+                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white shadow-sm shrink-0 font-geist">K</div>
+                            <div class="pt-0.5">
+                                <div class="text-[13px] mb-1">
+                                    <span class="text-white font-medium font-geist">kant</span>
+                                    <span class="text-[#7e828a] text-[11px] ml-2 opacity-0 group-hover:opacity-100 transition-opacity font-geist">4 min ago</span>
+                                </div>
+                                <p class="text-[14px] leading-relaxed text-[#b0b3b8] font-geist">The contract is signed. Can we automate the discount application for their upcoming cycle?</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 relative group">
+                            <div class="absolute left-3.5 top-8 bottom-0 w-px bg-gradient-to-b from-[#2e2e32] to-transparent"></div>
+                            
+                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-900 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white shadow-sm shrink-0 z-10 font-geist">J</div>
+                            <div class="w-full pt-0.5">
+                                <div class="text-[13px] mb-1">
+                                    <span class="text-white font-medium font-geist">jori</span>
+                                    <span class="text-[#7e828a] text-[11px] ml-2 font-geist">just now</span>
+                                </div>
+                                <p class="text-[14px] text-white mb-4 font-geist"><span class="text-blue-400 font-medium bg-blue-500/10 px-1 rounded cursor-pointer font-geist">@Subline Agent</span> can you draft this pricing update?</p>
+
+                                <div class="bg-gradient-to-br from-white/[0.03] to-transparent backdrop-blur-md border border-white/5 ring-1 ring-white/5 rounded-xl p-4 mb-4 shadow-[0_8px_30px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <iconify-icon icon="solar:server-square-bold" width="16" class="text-blue-400"></iconify-icon>
+                                        <span class="text-[13px] font-medium text-white font-geist">Subline Agent</span>
+                                    </div>
+                                    <div class="text-[13px] text-[#b0b3b8] flex items-center gap-2 font-geist">
+                                        <iconify-icon icon="solar:refresh-circle-linear" width="14" class="animate-spin text-blue-500"></iconify-icon> 
+                                        Formulating plan <span class="font-mono text-xs bg-white/5 px-1 py-0.5 rounded text-white border border-white/5 font-geist">SUB-2703</span>
+                                        <span class="w-1 h-3 bg-blue-500 animate-pulse ml-1"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2 text-[12px] text-[#7e828a] mt-2 font-geist">
+                                    <iconify-icon icon="solar:robot-linear" width="14"></iconify-icon> 
+                                    Subline Agent moved from Todo to <span class="text-white font-geist">Pending Approval</span> · just now
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-80 border-l border-[#2e2e32] bg-[#08090b] flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.2)] z-10">
+                
+                <div class="p-5 border-b border-[#2e2e32] bg-[#0c0d0f]/50">
+                    <div class="text-[11px] font-mono text-[#7e828a] tracking-wider mb-2 font-geist">SUB-2703</div>
+                    <div class="space-y-4 mt-6">
+                        <div class="flex justify-between items-center text-[13px]">
+                            <span class="text-[#7e828a] font-geist">Value</span>
+                            <span class="text-white font-medium flex items-center gap-1.5 font-geist"><iconify-icon icon="solar:chart-square-linear" class="text-green-500"></iconify-icon> $125k ARR</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[13px]">
+                            <span class="text-[#7e828a] font-geist">Owner</span>
+                            <span class="text-white flex items-center gap-1.5 font-geist">
+                                <div class="w-4 h-4 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center text-[8px] text-white font-geist">J</div> jori
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center text-[13px]">
+                            <span class="text-[#7e828a] font-geist">Agent</span>
+                            <span class="text-white flex items-center gap-1.5 font-geist"><iconify-icon icon="solar:server-square-bold" class="text-blue-400"></iconify-icon> Subline</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 p-5 flex flex-col bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.02),transparent_50%)]">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-2 text-[13px] font-medium text-white font-geist">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                            </span>
+                            Active Session
+                        </div>
+                        <iconify-icon icon="solar:close-circle-linear" width="16" class="text-[#7e828a] hover:text-white cursor-pointer transition-colors"></iconify-icon>
+                    </div>
+
+                    <div class="flex-1 space-y-5 text-[13px] leading-relaxed text-[#b0b3b8] overflow-y-auto pr-2" style="-ms-overflow-style: none; scrollbar-width: none;">
+                        <p class="text-white font-geist">I received your request and will draft the pricing schedule.</p>
+                        
+                        <div class="space-y-2 border-l-2 border-[#2e2e32] pl-3 ml-1">
+                            <p class="flex items-center gap-2 font-geist">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-green-500"></iconify-icon>
+                                Load <code class="text-[11px] font-mono bg-[#15171b] border border-[#2e2e32] px-1.5 py-0.5 rounded text-white font-geist">acme_corp</code> profile
+                            </p>
+                            <p class="flex items-center gap-2 font-geist">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-green-500"></iconify-icon>
+                                Load <code class="text-[11px] font-mono bg-[#15171b] border border-[#2e2e32] px-1.5 py-0.5 rounded text-white font-geist">enterprise_base</code> tier
+                            </p>
+                        </div>
+
+                        <p class="font-geist">I'll start by applying a flat 15% discount override to the existing structure and adjusting the payment terms to <code class="text-[11px] font-mono text-blue-400 font-geist">net_60</code>.</p>
+                        
+                        <div class="bg-[#050505] p-3 rounded-lg border border-[#2e2e32] shadow-inner font-mono text-[11px] relative overflow-hidden font-geist">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+                            <span class="text-blue-400 font-geist">API &gt;</span> Calculating projected invoice totals...
+                        </div>
+                        
+                        <div class="text-[12px] text-[#7e828a] hover:text-white cursor-pointer transition-colors inline-flex items-center gap-1.5 font-geist">
+                            <iconify-icon icon="solar:eye-linear"></iconify-icon> View draft diff
+                        </div>
+
+                        <div class="flex items-center gap-2 text-blue-400 font-medium mt-4 font-geist">
+                            <iconify-icon icon="solar:refresh-circle-line-duotone" width="18" class="animate-spin"></iconify-icon> Processing payload
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-[#0a0c10] border border-[#2e2e32] rounded-xl p-1.5 flex items-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] focus-within:ring-1 focus-within:ring-blue-500/30 transition-all">
+                        <input type="text" placeholder="Message Subline Agent..." class="bg-transparent border-none outline-none text-[13px] text-white w-full px-2 placeholder-[#7e828a]">
+                        <div class="flex gap-1 shrink-0">
+                            <button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/5 text-[#7e828a] transition-colors">
+                                <iconify-icon icon="solar:paperclip-linear" width="16"></iconify-icon>
+                            </button>
+                            <button class="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-b from-blue-500 to-blue-600 border border-blue-400/50 text-white shadow-sm hover:brightness-110 active:scale-95 transition-all">
+                                <iconify-icon icon="solar:arrow-up-linear" width="14" stroke-width="2"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+
+    <!-- Logos Section -->
+    <section class="border-y border-[#2e2e32] py-8 overflow-hidden flex relative w-full" style="-webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);">
+    <style class="">
+        @keyframes marquee-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee-infinite {
+            animation: marquee-scroll 40s linear infinite;
+        }
+        .animate-marquee-infinite:hover {
+            animation-play-state: paused;
+        }
+    </style>
+    <div class="flex opacity-60 grayscale gap-x-16 pr-16 items-center w-max animate-marquee-infinite">
+        <iconify-icon icon="simple-icons:nasa" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:spacex" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:uber" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:visa" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:grab" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:bose" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:discover" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:dji" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:nikon" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:craftsman" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:sony" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        
+        <!-- Duplicated set for seamless infinite loop -->
+        <iconify-icon icon="simple-icons:nasa" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:spacex" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:uber" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:visa" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:grab" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:bose" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:discover" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:dji" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:nikon" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:craftsman" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+        <iconify-icon icon="simple-icons:sony" width="64" height="64" class="text-[#b0b3b8] hover:text-white transition-colors duration-300"></iconify-icon>
+    </div>
+</section>
+
+    <!-- Value Props (Wireframes) -->
+    <section class="py-32 px-6 max-w-[1200px] mx-auto">
+        <h2 class="text-4xl md:text-5xl tracking-tight mb-20 max-w-4xl font-geist font-light">
+            A new species of revenue tool. <span class="text-[#7e828a] font-geist font-light">Purpose-built for modern businesses with AI workflows at its core, Subline sets a new standard for subscription management.</span>
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-12 gap-x-12 gap-y-12">
+    <div class="flex flex-col gap-6 group">
+        <div class="aspect-square flex overflow-hidden [perspective:1500px] bg-gradient-to-br from-white/10 to-white/0 rounded-xl relative items-center justify-center" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 12px">
+            
+
+            <div class="relative w-48 h-48 [transform-style:preserve-3d] [transform:rotateX(60deg)_rotateZ(45deg)] transition-transform duration-700 group-hover:[transform:rotateX(50deg)_rotateZ(45deg)_scale(1.05)]">
+                <div class="absolute inset-0 border border-[#2e2e32] bg-[#0c0d0f] [transform:translateZ(-48px)]"></div>
+                <div class="absolute inset-0 border border-[#2e2e32] bg-[#0c0d0f] [transform:translateZ(-24px)]"></div>
+                <div class="absolute inset-0 border border-[#2e2e32] bg-[#0c0d0f] [transform:translateZ(0px)]"></div>
+                <div class="absolute inset-0 border-2 border-white bg-[#0c0d0f] shadow-[0_0_20px_rgba(255,255,255,0.15)] [transform:translateZ(24px)]">
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <h3 class="text-base font-normal text-white mb-2 font-geist">Built for revenue</h3>
+            <p class="text-sm text-[#b0b3b8] font-geist">Subline is shaped by the financial practices of world-class SaaS teams.
+            </p>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-6 group">
+        <div class="aspect-square flex overflow-hidden [perspective:1500px] bg-gradient-to-br from-white/10 to-white/0 rounded-xl relative items-center justify-center" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 12px">
+            
+
+            <div class="relative grid grid-cols-2 gap-2 transform rotate-[45deg] scale-90 transition-transform duration-700 group-hover:scale-100">
+                <div class="w-24 h-24 border border-[#2e2e32]"></div>
+                <div class="w-24 h-24 border-2 border-white shadow-[0_0_25px_rgba(255,255,255,0.2)] relative z-10 bg-[#0c0d0f]">
+                </div>
+                <div class="w-24 h-24 border border-[#2e2e32]"></div>
+                <div class="w-24 h-24 border border-[#2e2e32]"></div>
+            </div>
+        </div>
+        <div class="">
+            <h3 class="text-base font-normal text-white mb-2 font-geist">Powered by AI agents</h3>
+            <p class="text-sm text-[#b0b3b8] font-geist">Designed for complex workflows, from smart retries to custom invoicing.
+            </p>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-6 group">
+        <div class="aspect-square flex overflow-hidden [perspective:1500px] bg-gradient-to-br from-white/10 to-white/0 rounded-xl relative items-center justify-center" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 12px">
+            
+
+            <div class="aspect-square flex overflow-hidden [perspective:1500px] bg-gradient-to-br from-white/10 to-white/0 border-[#2e2e32] border rounded-xl relative items-center justify-center">
+            </div>
+
+            <div class="relative w-64 h-64 border border-[#2e2e32] rounded-full flex justify-center items-center shadow-[inset_0_0_40px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-105">
+
+                <div class="absolute w-[35%] h-full border border-[#2e2e32] rounded-[50%] opacity-40"></div>
+                <div class="absolute w-[75%] h-full border border-[#2e2e32] rounded-[50%] opacity-20"></div>
+                <div class="absolute h-full border-l border-[#2e2e32] opacity-50"></div>
+
+                <div class="absolute w-[85%] h-[25%] border border-[#2e2e32] rounded-[50%] -translate-y-16 opacity-40">
+                </div>
+                <div class="absolute w-[85%] h-[25%] border border-[#2e2e32] rounded-[50%] translate-y-16 opacity-40">
+                </div>
+
+
+                <div class="absolute w-[100%] h-[35%] border-2 border-white shadow-[0_0_20px_rgba(255,255,255,0.15)] rounded-[50%] top-1/2 -translate-y-1/2 z-5">
+                </div>
+
+
+                <div class="absolute top-1/2 left-1/2 flex items-center justify-center -translate-x-1/2 -translate-y-1/2 z-20">
+                    
+                    
+                </div>
+
+
+                
+                
+
+
+            </div>
+        </div>
+        <div class="">
+            <h3 class="text-base font-normal text-white mb-2 font-geist">Designed for scale</h3>
+            <p class="text-sm text-[#b0b3b8] font-geist">Process millions of transactions reliably with high velocity and focus.
+            </p>
+        </div>
+    </div>
+</div>
+    </section>
+
+    <!-- Feature 1 -->
+    <section class="max-w-[1200px] mr-auto ml-auto pt-24 pr-6 pb-24 pl-6">
+    <div class="grid md:grid-cols-2 gap-12 mb-16 items-center">
+        <h2 class="text-4xl md:text-5xl tracking-tight text-white leading-tight font-geist font-light">Make revenue recovery self-driving</h2>
+        <div class="">
+            <p class="text-lg text-[#b0b3b8] leading-relaxed font-geist">Turn failed payments and churn risks into automated workflows that route
+                to the right sequence, reducing involuntary churn silently.</p>
+            <a href="#" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-blue-400 transition-colors group font-geist">
+                1.0 Recovery 
+                <iconify-icon icon="solar:arrow-right-linear" width="16" height="16" class="transform transition-transform group-hover:translate-x-1"></iconify-icon>
+            </a>
+        </div>
+    </div>
+
+    <div class="flex overflow-hidden shadow-black/50 bg-[#0c0d0f] w-full h-[500px] border-[#2e2e32] border ring-white/5 ring-1 rounded-xl relative shadow-2xl">
+        <style>
+            @keyframes slideInMsg1 {
+                0%, 5% { opacity: 0; transform: translateY(20px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+                10% { max-height: 150px; margin-top: 1.5rem; opacity: 0; transform: translateY(10px); }
+                15%, 85% { opacity: 1; transform: translateY(0); max-height: 150px; margin-top: 1.5rem; }
+                90% { opacity: 0; transform: translateY(-10px); max-height: 150px; margin-top: 1.5rem; }
+                95%, 100% { opacity: 0; transform: translateY(-20px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+            }
+
+            @keyframes slideInMsg2 {
+                0%, 18% { opacity: 0; transform: translateY(20px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+                23% { max-height: 150px; margin-top: 1.5rem; opacity: 0; transform: translateY(10px); }
+                28%, 85% { opacity: 1; transform: translateY(0); max-height: 150px; margin-top: 1.5rem; }
+                90% { opacity: 0; transform: translateY(-10px); max-height: 150px; margin-top: 1.5rem; }
+                95%, 100% { opacity: 0; transform: translateY(-20px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+            }
+
+            @keyframes slideInMsg3 {
+                0%, 32% { opacity: 0; transform: translateY(20px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+                37% { max-height: 150px; margin-top: 1.5rem; opacity: 0; transform: translateY(10px); }
+                42%, 85% { opacity: 1; transform: translateY(0); max-height: 150px; margin-top: 1.5rem; }
+                90% { opacity: 0; transform: translateY(-10px); max-height: 150px; margin-top: 1.5rem; }
+                95%, 100% { opacity: 0; transform: translateY(-20px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+            }
+
+            .animate-msg-1 {
+                opacity: 0; max-height: 0; margin-top: 0; overflow: hidden;
+                animation: slideInMsg1 10s ease-in-out infinite;
+            }
+            .animate-msg-2 {
+                opacity: 0; max-height: 0; margin-top: 0; overflow: hidden;
+                animation: slideInMsg2 10s ease-in-out infinite;
+            }
+            .animate-msg-3 {
+                opacity: 0; max-height: 0; margin-top: 0; overflow: hidden;
+                animation: slideInMsg3 10s ease-in-out infinite;
+            }
+            
+            @keyframes pulseBorder {
+                0%, 100% { border-color: #2e2e32; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05); }
+                50% { border-color: rgba(59, 130, 246, 0.4); box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05), 0 0 10px rgba(59, 130, 246, 0.1); }
+            }
+            .animate-typing { animation: pulseBorder 2.5s ease-in-out infinite; }
+
+            @keyframes typewriter {
+                0%, 45% { max-width: 0; opacity: 1; }
+                55%, 85% { max-width: 300px; opacity: 1; }
+                86%, 100% { max-width: 0; opacity: 0; }
+            }
+            .animate-typewriter {
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+                animation: typewriter 10s linear infinite;
+                vertical-align: bottom;
+            }
+
+            @keyframes marqueeUp {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-50%); }
+            }
+            .animate-marquee-1 { animation: marqueeUp 25s linear infinite; }
+            .animate-marquee-2 { animation: marqueeUp 32s linear infinite; }
+            .right-panel:hover .marquee-track { animation-play-state: paused; }
+        </style>
+        
+        <div class="flex flex-col z-10 bg-gradient-to-b from-[#0a0c10] to-[#0c0d0f] w-1/2 border-[#2e2e32] border-r pt-6 pr-6 pb-6 pl-6">
+            <div class="flex items-center justify-between mb-8 text-sm text-[#b0b3b8] border-b border-[#2e2e32] pb-4">
+                <div class="flex items-center gap-2 font-medium font-geist">
+                    <iconify-icon icon="solar:hashtag-linear" width="16" height="16"></iconify-icon> 
+                    Thread in <span class="text-white font-geist">#billing-alerts</span>
+                </div>
+                <button class="hover:text-white transition-colors">
+                    <iconify-icon icon="solar:menu-dots-circle-linear" width="18" height="18"></iconify-icon>
+                </button>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-end overflow-hidden relative pb-2">
+                <div class="flex gap-4 group animate-msg-1">
+                    <div class="w-8 h-8 rounded-full overflow-hidden ring-1 ring-white/10 shrink-0">
+                        <img src="https://webassets.linear.app/images/ornj730p/production/f79251b06e9edeeacbf2875384defe629e000b3c-352x352.png?w=72&q=95&auto=format&dpr=2" alt="lena" class="w-full h-full object-cover">
+                    </div>
+                    <div class="">
+                        <div class="text-sm flex items-baseline gap-2">
+                            <span class="font-medium text-white font-geist">lena</span>
+                            <span class="text-[#7e828a] text-xs font-geist">1:27 PM</span>
+                        </div>
+                        <p class="text-sm text-[#b0b3b8] mt-1 leading-relaxed font-geist">Acme Corp's primary card just failed on their annual renewal. Risk is <span class="text-red-400 font-medium font-geist">$125k ARR</span>.</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 group animate-msg-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-700 to-blue-900 flex items-center justify-center text-sm font-medium text-white ring-1 ring-white/10 shrink-0 font-geist">d</div>
+                    <div class="">
+                        <div class="text-sm flex items-baseline gap-2">
+                            <span class="font-medium text-white font-geist">didier</span>
+                            <span class="text-[#7e828a] text-xs font-geist">1:27 PM</span>
+                        </div>
+                        <p class="text-sm text-[#b0b3b8] mt-1 leading-relaxed font-geist">Looks like an expired card issue. We shouldn't pause their account yet.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 group animate-msg-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center text-sm font-medium text-white ring-1 ring-white/10 shrink-0 font-geist">a</div>
+                    <div class="">
+                        <div class="text-sm flex items-baseline gap-2">
+                            <span class="font-medium text-white font-geist">andreas</span>
+                            <span class="text-[#7e828a] text-xs font-geist">1:27 PM</span>
+                        </div>
+                        <p class="text-sm text-[#b0b3b8] mt-1 leading-relaxed font-geist">I'll have Subline trigger the grace-period sequence and email their billing contact.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-[#15171b] border border-[#2e2e32] focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/20 transition-all rounded-xl p-3 flex flex-col gap-3 shadow-inner animate-typing">
+                <div class="text-sm text-white flex items-center gap-1">
+                    <span class="text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded font-medium shadow-[0_0_8px_rgba(96,165,250,0.2)] font-geist">@Subline</span>
+                    <span class="animate-typewriter font-geist">initialize dunning sequence for Acme</span>
+                    <span class="w-0.5 h-4 bg-blue-500 animate-pulse ml-0.5"></span>
+                </div>
+                <div class="flex justify-between items-center text-[#7e828a]">
+                    <div class="flex gap-3">
+                        <button class="hover:text-white transition-colors"><iconify-icon icon="solar:add-circle-linear" width="18" height="18"></iconify-icon></button>
+                        <button class="hover:text-white transition-colors"><iconify-icon icon="solar:smile-circle-linear" width="18" height="18"></iconify-icon></button>
+                        <button class="hover:text-white transition-colors"><iconify-icon icon="solar:mention-circle-linear" width="18" height="18"></iconify-icon></button>
+                    </div>
+                    <button class="text-blue-500 hover:text-blue-400 transition-colors bg-blue-500/10 p-1.5 rounded-md">
+                        <iconify-icon icon="solar:plain-2-bold" width="16" height="16" class="transform -rotate-45"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-1/2 p-6 bg-[#0c0d0f] flex gap-5 overflow-hidden relative right-panel">
+            <div class="opacity-10 absolute top-0 right-0 bottom-0 left-0"></div>
+            <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0c0d0f] to-transparent pointer-events-none z-20"></div>
+
+            <div class="flex-1 flex flex-col gap-3 min-w-[200px] z-10">
+                <div class="text-sm font-medium text-white flex items-center justify-between mb-2 z-20 relative">
+                    <div class="flex items-center gap-2 font-geist">
+                        <span class="w-2 h-2 rounded-full border-2 border-[#7e828a]"></span> Failed
+                    </div>
+                    <span class="text-[#7e828a] text-xs bg-white/5 px-2 py-0.5 rounded-full font-geist">12</span>
+                </div>
+
+                <div class="flex-1 flex flex-col bg-white/[0.01] rounded-xl border border-white/[0.02] overflow-hidden relative px-2 py-2">
+                    <div class="marquee-track animate-marquee-1">
+                        <div class="flex flex-col gap-3 pb-3">
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-826</div>
+                                <div class="text-sm text-white font-medium font-geist">Startup Plan - TechFlow</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-geist">Insufficient Funds</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-b from-[#1c1f26] to-[#15171b] border border-blue-500/30 rounded-lg p-3 flex flex-col gap-2.5 relative shadow-[0_4px_20px_rgba(59,130,246,0.1)] transform scale-[1.02] transition-transform">
+                                <div class="flex justify-between items-center">
+                                <div class="text-xs text-blue-400 font-mono font-geist">INV-508</div>
+                                <img src="https://webassets.linear.app/images/ornj730p/production/f79251b06e9edeeacbf2875384defe629e000b3c-352x352.png?w=72&q=95&auto=format&dpr=2" alt="" class="w-5 h-5 rounded-full ring-1 ring-white/10 opacity-50">
+                                </div>
+                                <div class="text-sm text-white font-medium font-geist">Enterprise - Acme Corp</div>
+                                <div class="flex gap-2 mt-1">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded flex items-center gap-1 font-geist">
+                                    <iconify-icon icon="solar:magic-stick-3-linear" class=""></iconify-icon> AI Recovery
+                                </span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-992</div>
+                                <div class="text-sm text-white font-medium font-geist">Agency Tier - CreativeBox</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded font-geist">Card Expired</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-1104</div>
+                                <div class="text-sm text-white font-medium font-geist">Usage Overage - CloudFlow</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-geist">Do Not Honor</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3 pb-3">
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-826</div>
+                                <div class="text-sm text-white font-medium font-geist">Startup Plan - TechFlow</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-geist">Insufficient Funds</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-b from-[#1c1f26] to-[#15171b] border border-blue-500/30 rounded-lg p-3 flex flex-col gap-2.5 relative shadow-[0_4px_20px_rgba(59,130,246,0.1)] transform scale-[1.02] transition-transform">
+                                <div class="flex justify-between items-center">
+                                <div class="text-xs text-blue-400 font-mono font-geist">INV-508</div>
+                                <img src="https://webassets.linear.app/images/ornj730p/production/f79251b06e9edeeacbf2875384defe629e000b3c-352x352.png?w=72&q=95&auto=format&dpr=2" alt="" class="w-5 h-5 rounded-full ring-1 ring-white/10 opacity-50">
+                                </div>
+                                <div class="text-sm text-white font-medium font-geist">Enterprise - Acme Corp</div>
+                                <div class="flex gap-2 mt-1">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded flex items-center gap-1 font-geist">
+                                    <iconify-icon icon="solar:magic-stick-3-linear" class=""></iconify-icon> AI Recovery
+                                </span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-992</div>
+                                <div class="text-sm text-white font-medium font-geist">Agency Tier - CreativeBox</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded font-geist">Card Expired</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-1104</div>
+                                <div class="text-sm text-white font-medium font-geist">Usage Overage - CloudFlow</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-geist">Do Not Honor</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col gap-3 min-w-[200px] z-10">
+                <div class="text-sm font-medium text-white flex items-center justify-between mb-2 z-20 relative">
+                    <div class="flex items-center gap-2 font-geist">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]"></span> In Recovery
+                    </div>
+                    <span class="text-[#7e828a] text-xs bg-white/5 px-2 py-0.5 rounded-full font-geist">8</span>
+                </div>
+
+                <div class="flex-1 flex flex-col bg-white/[0.01] rounded-xl border border-white/[0.02] overflow-hidden relative px-2 py-2">
+                    <div class="marquee-track animate-marquee-2">
+                        <div class="flex flex-col gap-3 pb-3">
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-1487</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Pro Plan - DesignCo</div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-1028</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Basic Plan - WebDev</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-geist">Retrying</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-902</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Enterprise - Zenith Corp</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-teal-500/10 text-teal-400 border border-teal-500/20 px-2 py-0.5 rounded font-geist">Grace Period</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-775</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Team Plan - DataSync</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded font-geist">Dunning Day 3</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-612</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Starter Plan - NeoUI</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-3 pb-3">
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-1487</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Pro Plan - DesignCo</div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-1028</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Basic Plan - WebDev</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-geist">Retrying</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-902</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Enterprise - Zenith Corp</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-teal-500/10 text-teal-400 border border-teal-500/20 px-2 py-0.5 rounded font-geist">Grace Period</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-775</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Team Plan - DataSync</div>
+                                <div class="flex gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded font-geist">Dunning Day 3</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#15171b] border border-[#2e2e32] rounded-lg p-3 flex flex-col gap-2.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="text-xs text-[#7e828a] font-mono font-geist">INV-612</div>
+                                <div class="text-sm text-[#b0b3b8] font-medium font-geist">Starter Plan - NeoUI</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0c0d0f] to-transparent pointer-events-none z-20"></div>
+        </div>
+    </div>
+</section>
+
+    <!-- Feature 2 -->
+    <section class="py-24 px-6 max-w-[1200px] mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 mb-16">
+            <h2 class="text-4xl md:text-5xl tracking-tight font-geist font-light">Define pricing and packaging</h2>
+            <div class="">
+                <p class="text-lg text-[#b0b3b8] font-geist">Plan and navigate pricing changes effortlessly. Align your team on tier structures, usage limits, and seamless grandfathering.</p>
+                <a href="#" class="mt-6 inline-flex items-center gap-2 text-sm font-normal text-[#b0b3b8] hover:text-white transition-colors font-geist">2.0 Plans <iconify-icon icon="solar:arrow-right-linear" width="16" height="16"></iconify-icon></a>
+            </div>
+        </div>
+
+        <!-- Mockup: Timeline -->
+        <div class="flex flex-col overflow-hidden bg-[#0c0d0f] w-full h-[400px] border-[#2e2e32] border rounded-xl">
+            <style>
+                @keyframes sweep-flow {
+                    0% { transform: translateX(-150%); opacity: 0; }
+                    15% { opacity: 1; }
+                    85% { opacity: 1; }
+                    100% { transform: translateX(250%); opacity: 0; }
+                }
+                .data-sweep {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 60%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+                    filter: blur(2px);
+                    animation: sweep-flow 7s infinite ease-in-out;
+                    pointer-events: none;
+                    z-index: 10;
+                }
+                .delay-1 { animation-delay: 0s; }
+                .delay-2 { animation-delay: 2.5s; }
+                .delay-3 { animation-delay: 5s; }
+
+                @keyframes build-seq-1 {
+                    0%, 5% { opacity: 0; transform: translateX(-15px) scale(0.98); }
+                    15% { opacity: 1; transform: translateX(0) scale(1); }
+                    85% { opacity: 1; transform: translateX(0) scale(1); }
+                    90%, 100% { opacity: 0; transform: translateX(15px) scale(0.98); }
+                }
+                @keyframes build-seq-2 {
+                    0%, 30% { opacity: 0; transform: translateX(-15px) scale(0.98); }
+                    40% { opacity: 1; transform: translateX(0) scale(1); }
+                    85% { opacity: 1; transform: translateX(0) scale(1); }
+                    90%, 100% { opacity: 0; transform: translateX(15px) scale(0.98); }
+                }
+                @keyframes build-seq-3 {
+                    0%, 55% { opacity: 0; transform: translateX(-15px) scale(0.98); }
+                    65% { opacity: 1; transform: translateX(0) scale(1); }
+                    85% { opacity: 1; transform: translateX(0) scale(1); }
+                    90%, 100% { opacity: 0; transform: translateX(15px) scale(0.98); }
+                }
+                .animate-bar-1 { animation: build-seq-1 12s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+                .animate-bar-2 { animation: build-seq-2 12s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+                .animate-bar-3 { animation: build-seq-3 12s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+            </style>
+
+            <!-- Timeline Header -->
+            <div class="flex bg-[#0a0c10] border-[#2e2e32] border-b">
+                <div class="flex text-sm font-normal text-white font-geist w-64 border-[#2e2e32] border-r pt-4 pr-4 pb-4 pl-4 items-center">Pricing Rollouts</div>
+                <div class="flex-1 flex text-xs text-[#7e828a] overflow-hidden">
+                    <div class="flex-1 flex flex-col border-r border-[#2e2e32]">
+                        <div class="text-center py-2 border-b border-[#2e2e32] font-geist">MAR</div>
+                        <div class="flex justify-around py-1"><span class="opacity-50 font-geist">16</span><span class="font-geist">23</span><span class="font-geist">2</span><span class="font-geist">9</span><span class="font-geist">16</span><span class="font-geist">23</span><span class="font-geist">30</span></div>
+                    </div>
+                     <div class="flex-1 flex flex-col border-r border-[#2e2e32]">
+                        <div class="text-center py-2 border-b border-[#2e2e32] text-white font-geist">APR</div>
+                        <div class="flex justify-around py-1"><span class="font-geist">6</span><span class="font-geist">13</span><span class="font-geist">20</span><span class="font-geist">27</span><span class="text-white font-geist">4</span><span class="font-geist">11</span></div>
+                    </div>
+                    <div class="flex-1 flex flex-col border-r border-[#2e2e32]">
+                        <div class="text-center py-2 border-b border-[#2e2e32] font-geist">MAY</div>
+                        <div class="flex justify-around py-1"><span class="font-geist">18</span><span class="font-geist">25</span><span class="font-geist">1</span><span class="font-geist">8</span><span class="font-geist">15</span></div>
+                    </div>
+                    <div class="flex-1 flex flex-col border-r border-[#2e2e32]">
+                        <div class="text-center py-2 border-b border-[#2e2e32] font-geist">JUN</div>
+                        <div class="flex justify-around py-1"><span class="font-geist">22</span><span class="font-geist">29</span><span class="font-geist">6</span><span class="font-geist">13</span><span class="font-geist">20</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Body -->
+            <div class="flex-1 flex">
+                <!-- Sidebar List -->
+                <div class="w-64 border-r border-[#2e2e32] bg-[#0a0c10] p-2 space-y-1">
+                    <div class="flex items-center justify-between p-2 rounded bg-white/5">
+                        <div class="flex items-center gap-2 text-sm text-white font-geist"><span class="w-2 h-2 rounded bg-blue-500"></span> V2 Pricing</div>
+                    </div>
+                    <div class="flex items-center justify-between p-2 pl-6">
+                        <div class="flex items-center gap-2 text-sm text-[#b0b3b8] font-geist"><iconify-icon icon="solar:layers-linear" width="16" height="16" class="text-blue-400"></iconify-icon> Base Tiers</div>
+                    </div>
+                     <div class="flex items-center justify-between p-2 pl-6">
+                        <div class="flex items-center gap-2 text-sm text-[#b0b3b8] font-geist"><iconify-icon icon="solar:bolt-linear" width="16" height="16" class="text-purple-400"></iconify-icon> Usage Add-ons</div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-2 mt-4">
+                        <div class="flex items-center gap-2 text-sm text-white font-geist"><span class="w-2 h-2 rounded bg-red-500"></span> Legacy Migration</div>
+                    </div>
+                    <div class="flex items-center justify-between p-2 pl-6">
+                        <div class="flex items-center gap-2 text-sm text-[#b0b3b8] font-geist"><span class="w-4 h-4 rounded-full bg-red-900 flex items-center justify-center text-xs text-red-300 font-geist">G</span> Grandfathering</div>
+                    </div>
+                </div>
+
+                <!-- Grid Area -->
+                <div class="flex-1 relative bg-[radial-gradient(#2e2e32_1px,transparent_1px)] [background-size:24px_24px] opacity-80 overflow-hidden">
+                    <div class="absolute inset-y-0 left-[25%] w-px bg-[#2e2e32]"></div>
+                    <div class="absolute inset-y-0 left-[50%] w-px bg-[#2e2e32]"></div>
+                    <div class="absolute inset-y-0 left-[75%] w-px bg-[#2e2e32]"></div>
+                    
+                    <!-- Today line -->
+                    <div class="absolute inset-y-0 left-[35%] w-px bg-blue-500/50 shadow-[0_0_8px_rgba(59,130,246,0.5)] z-0"></div>
+
+                    <!-- Timeline Bars -->
+                    <div class="absolute top-[50px] left-[15%] w-[40%] h-6 bg-purple-500/20 border border-purple-500/50 rounded flex items-center px-2 text-xs text-white z-10 shadow-[0_0_15px_rgba(168,85,247,0.15)] font-geist overflow-hidden animate-bar-1 opacity-0">
+                        <span class="relative z-20">New Pro Tier</span> <span class="ml-1 w-1.5 h-1.5 rounded-full bg-yellow-500 relative z-20"></span>
+                        <div class="data-sweep delay-1"></div>
+                    </div>
+                    
+                    <div class="absolute top-[90px] left-[5%] w-[30%] h-6 bg-green-500/20 border border-green-500/50 rounded flex items-center px-2 text-xs text-white z-10 font-geist overflow-hidden animate-bar-2 opacity-0">
+                        <span class="relative z-20">Overage Billing</span> <span class="ml-1 w-1.5 h-1.5 rounded-full bg-green-500 relative z-20"></span>
+                        <div class="data-sweep delay-2"></div>
+                    </div>
+                    
+                    <div class="absolute top-[170px] left-[60%] w-[25%] h-6 bg-red-500/20 border border-red-500/50 rounded flex items-center px-2 text-xs text-white z-10 font-geist overflow-hidden animate-bar-3 opacity-0">
+                        <span class="relative z-20">Cohort Migration</span> <span class="ml-1 w-1.5 h-1.5 rounded-full bg-gray-500 relative z-20"></span>
+                        <div class="data-sweep delay-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         
+    </section>
+
+    <!-- Feature 3 -->
+    <section class="py-24 px-6 max-w-[1200px] mx-auto">
+    <div class="grid md:grid-cols-2 gap-12 mb-16">
+        <h2 class="text-4xl md:text-5xl tracking-tight font-geist font-light">Automate complex billing workflows</h2>
+        <div class="">
+            <p class="text-lg text-[#b0b3b8] font-geist">Build and deploy billing logic that works alongside your team. Automate
+                custom invoice generation, tax handling, and bespoke terms easily.</p>
+            <a href="#" class="mt-6 inline-flex items-center gap-2 text-sm font-normal text-[#b0b3b8] hover:text-white transition-colors font-geist">3.0
+                Automate <iconify-icon icon="solar:arrow-right-linear" width="16" height="16"></iconify-icon></a>
+        </div>
+    </div>
+
+    <div class="flex overflow-hidden bg-gradient-to-br from-[#0c0d0f] to-[#050505] w-full h-[450px] border-[#2e2e32] border rounded-xl ring-white/5 ring-1 shadow-2xl">
+    
+    <div class="flex flex-col z-10 font-mono bg-[#050505] w-1/2 border-[#2e2e32] border-r relative shadow-[8px_0_24px_rgba(0,0,0,0.2)]">
+    <style>
+        @keyframes scaleRight {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+    </style>
+    
+    <div class="flex shrink-0 bg-[#0a0c10] h-12 pr-4 pl-4 items-center justify-between relative">
+        <div class="absolute bottom-0 left-0 w-full h-px bg-[#2e2e32] origin-left" style="animation: scaleRight 0.5s ease-out forwards;"></div>
+        <div class="flex gap-2 relative z-10">
+            <div class="w-3 h-3 rounded-full bg-[#ed6a5e] border border-[#d24f46]/50"></div>
+            <div class="w-3 h-3 rounded-full bg-[#f4bf4f] border border-[#d2a336]/50"></div>
+            <div class="w-3 h-3 rounded-full bg-[#61c554] border border-[#4a9f3e]/50"></div>
+        </div>
+        <div class="text-[11px] text-[#7e828a] flex items-center gap-2 bg-[#15171b] px-3 py-1 rounded-md border border-[#2e2e32] shadow-inner font-geist relative z-10">
+            <span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse"></span>
+            webhook-listener.sh
+        </div>
+    </div>
+
+    <div class="text-[13px] leading-relaxed flex-1 overflow-y-auto text-[#b0b3b8] pt-6 pr-6 pb-6 pl-6 relative">
+        <div class="absolute left-0 top-0 bottom-0 w-8 bg-[#0a0c10]/50 border-r border-[#2e2e32]/50 pointer-events-none"></div>
+        
+        <div class="pl-6 space-y-3">
+            <div class="flex items-start">
+                <span class="text-[#7e828a] select-none mr-4 font-geist">1</span>
+                <p><span class="text-blue-400 font-medium font-geist">POST</span> <span class="text-white font-geist">/v1/webhooks/invoice.created</span> <span class="text-[#7e828a] font-geist">200 OK</span></p>
+            </div>
+            <div class="flex items-start">
+                <span class="text-[#7e828a] select-none mr-4 font-geist">2</span>
+                <p class="text-[#7e828a] font-geist">// Executing custom routing logic...</p>
+            </div>
+            <div class="flex items-start">
+                <span class="text-[#7e828a] select-none mr-4 font-geist">3</span>
+                <p class="font-geist">Evaluating customer tags for <span class="text-purple-400 bg-purple-500/10 px-1 rounded font-geist">cus_9x12</span></p>
+            </div>
+            <div class="flex items-start">
+                <span class="text-[#7e828a] select-none mr-4 font-geist">4</span>
+                <p class="text-emerald-400 font-geist">Match found: <span class="text-white font-geist">['enterprise', 'net_60']</span></p>
+            </div>
+            <div class="flex items-start">
+                <span class="text-[#7e828a] select-none mr-4 font-geist">5</span>
+                <p class="font-geist">Applying standard enterprise overrides...</p>
+            </div>
+            <div class="flex items-start mt-4 pt-2 relative">
+                <div class="absolute top-0 left-0 w-full h-px bg-[#2e2e32]/50 origin-left" style="animation: scaleRight 0.5s ease-out forwards;"></div>
+                <span class="text-[#7e828a] select-none mr-4 font-geist relative z-10">6</span>
+                <div class="flex items-center gap-2 text-white font-geist relative z-10">
+                    <iconify-icon icon="solar:refresh-circle-line-duotone" width="16" height="16" class="animate-spin text-blue-500"></iconify-icon> 
+                    Processing routing assignment
+                    <span class="w-1.5 h-4 bg-blue-500 animate-pulse ml-0.5"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="flex overflow-hidden bg-[#0c0d0f] w-1/2 pt-6 pr-6 pb-6 pl-6 relative items-center justify-center">
+        
+        <div class="[background-size:20px_20px] opacity-40 absolute top-0 right-0 bottom-0 left-0"></div>
+        
+        <div class="w-full max-w-[340px] bg-[#121316]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden relative z-10 flex flex-col">
+            
+            <div class="p-3 border-b border-white/5 flex items-center gap-3 bg-white/[0.02]">
+                <iconify-icon icon="solar:magnifer-linear" class="text-[#7e828a]" width="18"></iconify-icon>
+                <input type="text" placeholder="Route action to..." class="bg-transparent border-none outline-none text-white w-full text-sm placeholder-[#7e828a]" value="Subline Agent">
+                <div class="text-[10px] font-mono text-[#7e828a] border border-[#2e2e32] px-1.5 py-0.5 rounded bg-[#0c0d0f] font-geist">⌘K</div>
+            </div>
+
+            <div class="p-2 space-y-0.5">
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 text-white text-sm cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.4)]">
+                            <iconify-icon icon="solar:magic-stick-3-bold" class="text-white" width="14"></iconify-icon>
+                        </div>
+                        <span class="font-medium font-geist">Subline Agent</span>
+                        <span class="bg-blue-500/20 border border-blue-500/30 text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded text-blue-400 font-geist">Auto</span>
+                    </div>
+                    <iconify-icon icon="solar:check-circle-bold" width="18" height="18" class="text-blue-500"></iconify-icon>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-lg hover:bg-white/5 text-[#b0b3b8] text-sm cursor-pointer transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white text-xs font-medium border border-white/10 group-hover:border-white/20 font-geist">S</div>
+                        <span class="group-hover:text-white transition-colors font-geist">Steven <span class="text-[#7e828a] font-geist">(Finance)</span></span>
+                    </div>
+                    <span class="text-[10px] font-mono text-[#7e828a] opacity-0 group-hover:opacity-100 transition-opacity font-geist">↵</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-lg hover:bg-white/5 text-[#b0b3b8] text-sm cursor-pointer transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white text-xs font-medium border border-white/10 group-hover:border-white/20 font-geist">E</div>
+                        <span class="group-hover:text-white transition-colors font-geist">Ema <span class="text-[#7e828a] font-geist">(Sales)</span></span>
+                    </div>
+                    <span class="text-[10px] font-mono text-[#7e828a] opacity-0 group-hover:opacity-100 transition-opacity font-geist">⌘1</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-lg hover:bg-white/5 text-[#b0b3b8] text-sm cursor-pointer transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-md bg-[#15171b] border border-[#2e2e32] flex items-center justify-center text-[#7e828a] group-hover:text-blue-400 group-hover:border-blue-500/30 transition-colors">
+                            <iconify-icon icon="solar:server-square-linear" width="14"></iconify-icon>
+                        </div>
+                        <span class="group-hover:text-white transition-colors font-geist">Salesforce Sync</span>
+                    </div>
+                    <span class="bg-[#2e2e32] text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded text-[#7e828a] font-geist">Integration</span>
+                </div>
+            </div>
+            
+            <div class="p-2 border-t border-white/5 bg-white/[0.01] flex justify-between items-center text-[#7e828a] text-xs">
+                <span class="font-geist">Select routing rule</span>
+                <div class="flex gap-1">
+                    <iconify-icon icon="solar:alt-arrow-up-linear"></iconify-icon>
+                    <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+</section>
+
+    <!-- Feature 4 -->
+    <section class="py-24 px-6 max-w-[1200px] mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 mb-16">
+            <h2 class="text-4xl md:text-5xl tracking-tight font-geist font-light">Review pricing and API changes</h2>
+            <div class="">
+                <p class="text-lg text-[#b0b3b8] font-geist">Understand billing configurations at a glance with structural diffs. Safely preview how pricing changes will affect your MRR before going live.</p>
+                <a href="#" class="mt-6 inline-flex items-center gap-2 text-sm font-normal text-[#b0b3b8] hover:text-white transition-colors font-geist">4.0 Previews <iconify-icon icon="solar:arrow-right-linear" width="16" height="16"></iconify-icon></a>
+            </div>
+        </div>
+
+        <!-- Mockup: Diffs -->
+        <div class="flex flex-col overflow-hidden text-[13px] font-mono bg-gradient-to-br from-[#0c0d0f] to-[#050505] w-full border border-[#2e2e32] rounded-xl shadow-2xl ring-1 ring-white/5">
+    
+    <div class="flex items-center justify-between bg-[#0a0c10] border-b border-[#2e2e32]">
+        <div class="flex items-center">
+            <div class="flex items-center gap-2 px-4 py-2.5 bg-[#0c0d0f] border-r border-[#2e2e32] relative shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>
+                <iconify-icon icon="solar:document-text-bold" class="text-blue-400" width="15"></iconify-icon>
+                <span class="text-[#e2e8f0] font-medium tracking-wide font-geist">create.js</span>
+            </div>
+            <div class="px-4 py-2 text-[#7e828a] text-xs flex items-center gap-1.5 cursor-pointer hover:text-[#b0b3b8] transition-colors font-geist">
+                <iconify-icon icon="solar:folder-linear"></iconify-icon> api / subscriptions
+            </div>
+        </div>
+        <div class="pr-4 flex gap-1">
+            <button class="bg-[#2e2e32] text-white text-[10px] px-2.5 py-1 rounded shadow-sm transition-colors uppercase tracking-wider font-medium font-geist">Split</button>
+            <button class="bg-transparent hover:bg-white/5 text-[#7e828a] text-[10px] px-2.5 py-1 rounded transition-colors uppercase tracking-wider font-medium font-geist">Unified</button>
+        </div>
+    </div>
+
+    <div class="flex flex-1 relative">
+        
+        <div class="flex-1 border-r border-[#2e2e32] bg-[#0c0d0f] overflow-x-auto py-4">
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">1</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist"><span class="text-[#c678dd] font-geist">const</span> subline <span class="text-[#56b6c2] font-geist">=</span> <span class="text-[#61afef] font-geist">require</span>(<span class="text-[#98c379] font-geist">'subline-node'</span>)</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">2</div>
+                <div class="text-[#b0b3b8] whitespace-pre"></div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">3</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist"><span class="text-[#c678dd] font-geist">const</span> subscription <span class="text-[#56b6c2] font-geist">=</span> <span class="text-[#c678dd] font-geist">await</span> subline.subscriptions.<span class="text-[#61afef] font-geist">create</span>({</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">4</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  customer<span class="text-[#56b6c2] font-geist">:</span> <span class="text-[#98c379] font-geist">'cus_9x12'</span>,</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">5</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  items<span class="text-[#56b6c2] font-geist">:</span> [</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">6</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">    { price<span class="text-[#56b6c2] font-geist">:</span> <span class="text-[#98c379] font-geist">'price_enterprise_base'</span> },</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">7</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  ],</div>
+            </div>
+
+            <div class="flex items-center bg-red-500/[0.08] relative group h-6 px-2 border-y border-red-500/[0.15]">
+                <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-red-500"></div>
+                <div class="w-8 text-right pr-4 text-red-500/60 select-none text-xs font-geist">8</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  collection_method<span class="text-[#56b6c2] font-geist">:</span> <span class="bg-red-500/20 text-red-300 px-0.5 rounded font-geist">'charge_automatically'</span>,</div>
+            </div>
+
+            <div class="flex items-center h-6 px-2 bg-[#1a1c20]/40 relative border-b border-[#2e2e32]/30">
+                <div class="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_4px,rgba(255,255,255,0.03)_4px,rgba(255,255,255,0.03)_8px)] pointer-events-none"></div>
+                <div class="w-8 text-right pr-4 text-[#4a4d54]/30 select-none text-xs font-geist">-</div>
+                <div class="text-transparent whitespace-pre"></div>
+            </div>
+            <div class="flex items-center h-6 px-2 bg-[#1a1c20]/40 relative border-b border-[#2e2e32]/30">
+                <div class="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_4px,rgba(255,255,255,0.03)_4px,rgba(255,255,255,0.03)_8px)] pointer-events-none"></div>
+                <div class="w-8 text-right pr-4 text-[#4a4d54]/30 select-none text-xs font-geist">-</div>
+                <div class="text-transparent whitespace-pre"></div>
+            </div>
+
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">9</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">})</div>
+            </div>
+        </div>
+
+        <div class="flex-1 bg-[#0c0d0f] overflow-x-auto py-4">
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">1</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist"><span class="text-[#c678dd] font-geist">const</span> subline <span class="text-[#56b6c2] font-geist">=</span> <span class="text-[#61afef] font-geist">require</span>(<span class="text-[#98c379] font-geist">'subline-node'</span>)</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">2</div>
+                <div class="text-[#b0b3b8] whitespace-pre"></div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">3</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist"><span class="text-[#c678dd] font-geist">const</span> subscription <span class="text-[#56b6c2] font-geist">=</span> <span class="text-[#c678dd] font-geist">await</span> subline.subscriptions.<span class="text-[#61afef] font-geist">create</span>({</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">4</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  customer<span class="text-[#56b6c2] font-geist">:</span> <span class="text-[#98c379] font-geist">'cus_9x12'</span>,</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">5</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  items<span class="text-[#56b6c2] font-geist">:</span> [</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">6</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">    { price<span class="text-[#56b6c2] font-geist">:</span> <span class="text-[#98c379] font-geist">'price_enterprise_base'</span> },</div>
+            </div>
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">7</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  ],</div>
+            </div>
+
+            <div class="flex items-center bg-green-500/[0.08] relative group h-6 px-2 border-t border-green-500/[0.15]">
+                <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-green-500"></div>
+                <div class="w-8 text-right pr-4 text-green-500/60 select-none text-xs font-geist">8</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  collection_method<span class="text-[#56b6c2] font-geist">:</span> <span class="bg-green-500/20 text-green-300 px-0.5 rounded font-geist">'send_invoice'</span>,</div>
+            </div>
+            <div class="flex items-center bg-green-500/[0.08] relative group h-6 px-2">
+                <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-green-500"></div>
+                <div class="w-8 text-right pr-4 text-green-500/60 select-none text-xs font-geist">9</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  <span class="bg-green-500/20 text-green-100 px-0.5 rounded font-geist">days_until_due<span class="text-[#56b6c2] font-geist">:</span> 60</span>,</div>
+            </div>
+            <div class="flex items-center bg-green-500/[0.08] relative group h-6 px-2 border-b border-green-500/[0.15]">
+                <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-green-500"></div>
+                <div class="w-8 text-right pr-4 text-green-500/60 select-none text-xs font-geist">10</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">  <span class="bg-green-500/20 text-green-100 px-0.5 rounded font-geist">discounts<span class="text-[#56b6c2] font-geist">:</span> [{ coupon<span class="text-[#56b6c2] font-geist">:</span> <span class="text-[#98c379] font-geist">'15_OFF_CUSTOM'</span> }]</span>,</div>
+            </div>
+
+            <div class="flex items-center hover:bg-white/[0.02] h-6 px-2">
+                <div class="w-8 text-right pr-4 text-[#4a4d54] select-none text-xs font-geist">11</div>
+                <div class="text-[#b0b3b8] whitespace-pre font-geist">})</div>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+
+    <!-- Feature 5 -->
+    <section class="max-w-[1200px] mr-auto ml-auto pt-24 pr-6 pb-24 pl-6">
+        <div class="grid md:grid-cols-2 gap-12 mb-16">
+            <h2 class="text-4xl md:text-5xl tracking-tight font-geist font-light">Understand revenue at scale</h2>
+            <div class="">
+                <p class="text-lg text-[#b0b3b8] font-geist">Take the guesswork out of your metrics with real-time analytics, cohort tracking, and dashboards that surface critical revenue insights.</p>
+                <a href="#" class="mt-6 inline-flex items-center gap-2 text-sm font-normal text-[#b0b3b8] hover:text-white transition-colors font-geist">5.0 Analytics <iconify-icon icon="solar:arrow-right-linear" width="16" height="16"></iconify-icon></a>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 h-[500px]">
+    <div class="rounded-xl border border-[#2e2e32] bg-gradient-to-br from-[#121316] to-[#0c0d0f] shadow-2xl flex flex-col p-6 overflow-hidden ring-1 ring-white/5 relative group">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-[80px] pointer-events-none transition-opacity duration-700 group-hover:opacity-100 opacity-50"></div>
+
+        <div class="flex justify-between items-center mb-6 relative z-10">
+            <h3 class="text-lg font-medium text-white font-geist">Weekly Revenue Pulse</h3>
+            <button class="flex items-center gap-2 bg-gradient-to-b from-[#2a2c31] to-[#1c1d21] border border-[#3e3e42] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_2px_4px_rgba(0,0,0,0.4)] px-3 py-1.5 rounded-full text-xs font-medium text-white hover:brightness-110 transition-all active:scale-95 cursor-pointer font-geist">
+                <iconify-icon icon="solar:play-circle-bold" width="14" height="14" class="text-blue-400"></iconify-icon>
+                Listen <span class="text-[#7e828a] ml-1 font-mono font-geist">1.0x</span>
+            </button>
+        </div>
+
+        <div class="flex items-center gap-3 text-sm font-medium border-b border-[#2e2e32] pb-3 mb-4 text-[#b0b3b8] relative z-10">
+            <span class="text-white relative font-geist">
+                Insights
+                <div class="absolute -bottom-[13px] left-0 right-0 h-0.5 bg-blue-500 rounded-t-full shadow-[0_-2px_8px_rgba(59,130,246,0.5)]"></div>
+            </span>
+            <span class="hover:text-white cursor-pointer transition-colors font-geist">Transcript</span>
+        </div>
+
+        <div class="space-y-4 overflow-y-auto relative z-10 pr-2" style="-ms-overflow-style: none; scrollbar-width: none;">
+            
+            <div class="bg-[#15171b]/80 backdrop-blur-sm border border-[#2e2e32] p-4 rounded-lg shadow-sm hover:border-blue-500/30 transition-colors">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-medium text-white font-geist">MRR Growth</div>
+                    <div class="text-[10px] font-bold uppercase tracking-wider bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded flex items-center gap-1 font-geist">
+                        <iconify-icon icon="solar:trend-up-bold"></iconify-icon> Up 12%
+                    </div>
+                </div>
+                <div class="text-xs text-[#7e828a] flex items-center gap-2 mb-3 font-geist">
+                    <iconify-icon icon="solar:magic-stick-3-linear" class="text-purple-400"></iconify-icon> AI Engine · 1 day ago
+                </div>
+                <div class="text-sm text-[#b0b3b8] space-y-2">
+                    <div class="flex items-start gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0"></div>
+                        <p class="font-geist">Enterprise upgrades accounted for <span class="text-white font-medium font-geist">60% of new MRR</span>.</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0"></div>
+                        <p class="font-geist">Dunning automation recovered <span class="text-white font-medium font-geist">$14,000</span> this week.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#15171b]/80 backdrop-blur-sm border border-[#2e2e32] p-4 rounded-lg shadow-sm hover:border-yellow-500/30 transition-colors">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-medium text-white font-geist">Churn Risk</div>
+                    <div class="text-[10px] font-bold uppercase tracking-wider bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 px-2 py-0.5 rounded flex items-center gap-1 font-geist">
+                        <iconify-icon icon="solar:danger-triangle-bold"></iconify-icon> Monitor
+                    </div>
+                </div>
+                <div class="text-xs text-[#7e828a] flex items-center gap-2 mb-3 font-geist">
+                    <iconify-icon icon="solar:magic-stick-3-linear" class="text-purple-400"></iconify-icon> AI Engine · 3 hours ago
+                </div>
+                <div class="text-sm text-[#b0b3b8] space-y-2">
+                    <div class="flex items-start gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(234,179,8,0.6)] animate-pulse"></div>
+                        <p class="font-geist">Slight uptick in basic tier cancellations detected in the last 48 hours.</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-[#4a4d54] mt-1.5 shrink-0"></div>
+                        <p class="font-geist">Consider adjusting onboarding flow for self-serve users.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col overflow-hidden bg-gradient-to-br from-[#121316] to-[#0c0d0f] border-[#2e2e32] border ring-white/5 ring-1 rounded-xl p-6 relative shadow-lg group hover:ring-2 hover:ring-blue-500/30 transition-shadow duration-300 cursor-pointer">
+    <h3 class="text-sm font-medium text-white mb-6 font-geist">Churn rate by cohort</h3>
+
+    <div class="flex-1 relative flex">
+        <div class="w-10 flex flex-col justify-between text-[11px] font-mono text-[#7e828a] pb-8 relative z-10">
+            <span class="font-geist">5.0%</span><span class="font-geist">4.0%</span><span class="font-geist">3.0%</span><span class="font-geist">2.0%</span><span class="font-geist">1.0%</span><span class="font-geist">0.0%</span>
+        </div>
+
+        <div class="flex-1 relative flex justify-between items-end pb-8">
+            
+            <div class="absolute inset-0 bottom-8 flex flex-col justify-between z-0">
+                <div class="w-full h-px bg-[#2e2e32]/30"></div>
+                <div class="w-full h-px bg-[#2e2e32]/30"></div>
+                <div class="w-full h-px bg-[#2e2e32]/30"></div>
+                <div class="w-full h-px bg-[#2e2e32]/30"></div>
+                <div class="w-full h-px bg-[#2e2e32]/30"></div>
+                <div class="w-full h-px bg-[#2e2e32]/30"></div>
+            </div>
+
+            <div class="absolute inset-0 bottom-8 z-10">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full overflow-visible">
+                    <defs>
+                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="rgba(168, 85, 247, 0.2)"></stop>
+                            <stop offset="100%" stop-color="rgba(168, 85, 247, 0)"></stop>
+                        </linearGradient>
+                        <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#3b82f6"></stop>
+                            <stop offset="50%" stop-color="#a855f7"></stop>
+                            <stop offset="100%" stop-color="#ec4899"></stop>
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,80 C20,75 30,30 50,40 C70,50 80,85 100,75 L100,100 L0,100 Z" fill="url(#chartGradient)" class="">
+                    </path>
+                    <path d="M0,80 C20,75 30,30 50,40 C70,50 80,85 100,75" fill="none" stroke="url(#lineGradient)" stroke-width="1" class="drop-shadow-[0_1px_3px_rgba(168,85,247,0.3)]"></path>
+                </svg>
+            </div>
+
+            <div class="absolute top-0 bottom-8 left-1/2 -translate-x-1/2 w-32 bg-gradient-to-b from-white/[0.03] to-transparent border-x border-white/[0.05] z-0">
+            </div>
+
+            <div class="absolute top-[40%] bottom-8 left-1/2 w-px bg-white/10 z-0">
+            </div>
+
+            <div class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                <div class="w-4 h-4 rounded-full bg-purple-500/10 flex items-center justify-center animate-pulse">
+                    <div class="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.7)]"></div>
+                </div>
+
+                <div class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-[#1c1f26]/90 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col items-center">
+                    <span class="text-white font-medium text-sm drop-shadow-md font-geist">2.1%</span>
+                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1c1f26] border-b border-r border-white/10 transform rotate-45">
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 w-full flex justify-between text-[11px] font-medium text-[#7e828a] px-4">
+                <span class="text-blue-400 font-geist">Q1</span>
+                <span class="text-white relative bg-white/10 px-2 py-0.5 rounded font-geist">Q2</span>
+                <span class="font-geist">Q3</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 text-sm text-[#7e828a]">
+            <div class="font-geist">5.1 <span class="ml-2 text-white font-geist">MRR</span></div>
+            <div class="font-geist">5.2 <span class="ml-2 font-geist">Cohorts</span></div>
+            <div class="font-geist">5.3 <span class="ml-2 font-geist">LTV/CAC</span></div>
+        </div>
+    </section><section class="max-w-[1200px] border-[#2e2e32] border-t mx-auto pt-24 pr-6 pb-24 pl-6">
+    <div class="grid md:grid-cols-2 gap-12 mb-16 items-center">
+        <h2 class="text-4xl md:text-5xl tracking-tight text-white leading-tight font-geist font-light">Simple, transparent pricing</h2>
+        <div class="">
+            <p class="text-lg text-[#b0b3b8] leading-relaxed font-geist">Start scaling your revenue operations with predictable pricing. No hidden fees, percentage cuts, or surprise overages as you grow.</p>
+            <div class="mt-6 flex items-center gap-4">
+                <span class="inline-flex items-center gap-2 text-sm font-medium text-[#7e828a] font-geist">
+                    <iconify-icon icon="solar:bill-check-bold" width="16" class="text-white/40"></iconify-icon> Billed annually
+                </span>
+                <div class="w-px h-4 bg-[#2e2e32]"></div>
+                <span class="inline-flex items-center gap-2 text-sm font-medium text-[#7e828a] font-geist">
+                    <iconify-icon icon="solar:shield-check-bold" width="16" class="text-white/40"></iconify-icon> 14-day free trial
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+        <div class="flex flex-col overflow-hidden group transition-transform duration-300 hover:-translate-y-1 bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 px-10 py-10 relative shadow-2xl" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+
+            <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1)_0%,transparent_50%)] opacity-40 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none z-0"></div>
+
+            <div class="relative z-10 flex-1">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl text-white tracking-tight font-geist font-light">Growth</h3>
+                    <span class="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[11px] font-bold uppercase tracking-wider text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.1)] font-geist">Most Popular</span>
+                </div>
+                
+                <div class="flex items-baseline gap-1 mb-2">
+                    <span class="text-4xl text-white tracking-tight font-geist font-light">$499</span>
+                    <span class="text-[#7e828a] text-sm font-geist">/mo</span>
+                </div>
+                <p class="text-sm text-[#b0b3b8] mb-8 font-geist">Essential tools to automate complex billing and scale revenue recovery effortlessly.</p>
+
+                <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-all shadow-sm mb-8 font-geist">Start 14-day trial</button>
+
+                <div class="h-px w-full bg-gradient-to-r from-[#2e2e32] via-[#2e2e32]/50 to-transparent mb-8"></div>
+
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-blue-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        <span class="text-white font-medium font-geist">Up to $1M</span> tracked MRR
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-blue-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Unlimited automated dunning workflows
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-blue-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Real-time cohort &amp; revenue analytics
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-blue-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Standard API access &amp; webhooks
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-blue-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Email and chat support
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex flex-col overflow-hidden group transition-transform duration-300 hover:-translate-y-1 bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 px-10 py-10 relative shadow-2xl" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+
+            <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.1)_0%,transparent_50%)] opacity-40 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none z-0"></div>
+
+            <div class="relative z-10 flex-1">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl text-white tracking-tight font-geist font-light">Scale</h3>
+                </div>
+                
+                <div class="flex items-baseline gap-1 mb-2">
+                    <span class="text-4xl text-white tracking-tight font-geist font-light">Custom</span>
+                </div>
+                <p class="text-sm text-[#b0b3b8] mb-8 font-geist">Advanced features, bespoke integrations, and dedicated support for global enterprises.</p>
+
+                <button class="w-full py-2.5 bg-white hover:bg-[#e2e8f0] border border-transparent rounded-lg text-sm font-medium text-black transition-all shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-8 font-geist">Contact Sales</button>
+
+                <div class="h-px w-full bg-gradient-to-r from-[#2e2e32] via-[#2e2e32]/50 to-transparent mb-8"></div>
+
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-purple-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Everything in Growth, plus:
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-purple-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        <span class="text-white font-medium font-geist">Unlimited</span> tracked MRR
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-purple-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Custom Multi-currency entities
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-purple-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        Dedicated AI Billing Agent models
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-[#b0b3b8] font-geist">
+                        <iconify-icon icon="solar:check-circle-bold" class="text-purple-500 mt-0.5 drop-shadow-md" width="16"></iconify-icon> 
+                        SLA and dedicated success manager
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section><section class="max-w-[1200px] border-[#2e2e32] border-t mr-auto ml-auto pt-24 pr-6 pb-24 pl-6">
+    <div class="grid md:grid-cols-2 gap-12 mb-16 items-center">
+        <h2 class="text-4xl md:text-5xl tracking-tight text-white leading-tight font-geist font-light">Trusted by world-class
+            teams</h2>
+        <div class="">
+            <p class="text-lg text-[#b0b3b8] leading-relaxed font-geist">See why top high-growth startups and global enterprises
+                rely on Subline to power their billing and automate revenue recovery.</p>
+            <a href="#" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-blue-400 transition-colors group font-geist">
+                Read customer stories
+                <iconify-icon icon="solar:arrow-right-linear" width="16" height="16" class="transform transition-transform group-hover:translate-x-1"></iconify-icon>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+
+    <div class="flex flex-col aspect-square overflow-hidden group cursor-pointer md:p-10 md:aspect-auto md:h-[300px] bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 pt-8 pr-8 pb-8 pl-8 relative shadow-2xl justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+  <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.08)_0%,transparent_50%)] opacity-50 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none">
+  </div>
+  <h3 class="leading-relaxed md:text-lg z-10 text-xl font-normal text-white tracking-tight relative font-geist">
+    "Subline feels less like a billing tool and more like a true operating system for our revenue. The automated
+    recovery workflows are simply unmatched."
+  </h3>
+  <div class="flex items-center gap-4 z-10 relative mt-8">
+    <div class="flex shrink-0 bg-center bg-[#15171b] w-12 h-12 bg-cover border-white/10 border rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] items-center justify-center bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5dd5462d-f090-44eb-9c08-2056c6d4df7f_320w.webp)]">
+      
+    </div>
+    <div class="">
+      <div class="text-white font-normal text-sm font-geist">Sarah Chen</div>
+      <div class="text-[#7e828a] text-sm font-geist">VP Finance, Nexus</div>
+    </div>
+  </div>
+</div>
+
+    <div class="flex flex-col aspect-square overflow-hidden group cursor-pointer md:p-10 md:aspect-auto md:h-[300px] bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-0 pt-8 pr-8 pb-8 pl-8 relative shadow-2xl justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+        <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.08)_0%,transparent_50%)] opacity-50 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none">
+        </div>
+        <h3 class="leading-relaxed md:text-lg z-10 text-xl font-normal text-white tracking-tight relative font-geist">
+            "Transitioning to Subline was the best financial decision we made this year. It handles our complex usage-based billing with absolute elegance."
+        </h3>
+        <div class="flex items-center gap-4 z-10 relative mt-8">
+            <div class="flex shrink-0 bg-center bg-[#15171b] w-12 h-12 bg-cover border-white/10 border rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] items-center justify-center bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/cc3d2108-b362-49c8-be76-9151dbe6bb4f/320w.png)]">
+      
+    </div>
+            <div class="">
+                <div class="text-white font-normal text-sm font-geist">Marcus Vance</div>
+                <div class="text-[#7e828a] text-sm font-geist">Head of Revenue, Orbit</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col aspect-square overflow-hidden group cursor-pointer md:p-10 md:aspect-auto md:h-[300px] bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 pt-8 pr-8 pb-8 pl-8 relative shadow-2xl justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)); --border-radius-before: 16px">
+        <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.08)_0%,transparent_50%)] opacity-50 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none">
+        </div>
+        <h3 class="leading-relaxed md:text-lg z-10 text-xl font-normal text-white tracking-tight relative font-geist">
+            "Subline completely transformed how we model pricing. We tested three new tiers in a week without writing a single line of billing code."
+        </h3>
+        <div class="flex items-center gap-4 z-10 relative mt-8">
+            <div class="flex shrink-0 bg-center bg-[#15171b] w-12 h-12 bg-cover border-white/10 border rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] items-center justify-center bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/584a3903-7bb3-47c9-aa47-c055c370d0b6_320w.webp)]">
+      
+    </div>
+            <div class="">
+                <div class="text-white font-normal text-sm font-geist">Emily Rostova</div>
+                <div class="text-[#7e828a] text-sm font-geist">Founder &amp; CEO, Koda</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col aspect-square overflow-hidden group cursor-pointer md:p-10 md:aspect-auto md:h-[300px] bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 pt-8 pr-8 pb-8 pl-8 relative shadow-2xl justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+        <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.08)_0%,transparent_50%)] opacity-50 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none">
+        </div>
+        <h3 class="leading-relaxed md:text-lg z-10 text-xl font-normal text-white tracking-tight relative font-geist">
+            "The API is an absolute joy to work with. The Webhooks are reliable, and the developer experience is leagues ahead of legacy solutions."
+        </h3>
+        <div class="flex items-center gap-4 z-10 relative mt-8">
+            <div class="flex shrink-0 bg-center bg-[#15171b] w-12 h-12 bg-cover border-white/10 border rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] items-center justify-center bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1e8dcc2a-cfdf-4807-888e-d6488bf7387d_320w.webp)]">
+      
+    </div>
+            <div>
+                <div class="text-white font-normal text-sm font-geist">David Kim</div>
+                <div class="text-[#7e828a] text-sm font-geist">CTO, FlowState</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col aspect-square overflow-hidden group cursor-pointer md:p-10 md:aspect-auto md:h-[300px] bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 pt-8 pr-8 pb-8 pl-8 relative shadow-2xl justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+        <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(244,63,94,0.08)_0%,transparent_50%)] opacity-50 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none">
+        </div>
+        <h3 class="leading-relaxed md:text-lg z-10 text-xl font-normal text-white tracking-tight relative font-geist">
+            "Our involuntary churn dropped by 42% in the first month. The automated dunning agents literally pay for themselves ten times over."
+        </h3>
+        <div class="flex items-center gap-4 z-10 relative mt-8">
+            <div class="flex shrink-0 bg-center bg-[#15171b] w-12 h-12 bg-cover border-white/10 border rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] items-center justify-center bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bf728e3d-89a4-468d-96e5-d2d55f70e406_320w.webp)]">
+      
+    </div>
+            <div>
+                <div class="text-white font-normal text-sm font-geist">Alicia Thorne</div>
+                <div class="text-[#7e828a] text-sm font-geist">RevOps Manager, Vertex</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col aspect-square overflow-hidden group cursor-pointer md:p-10 md:aspect-auto md:h-[300px] bg-gradient-to-br from-white/10 to-white/0 rounded-2xl ring-white/5 ring-1 pt-8 pr-8 pb-8 pl-8 relative shadow-2xl justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); --border-radius-before: 16px">
+        <div class="absolute top-0 right-0 w-[120%] h-[120%] bg-[radial-gradient(circle_at_top_right,rgba(6,182,212,0.08)_0%,transparent_50%)] opacity-50 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none">
+        </div>
+        <h3 class="leading-relaxed md:text-lg z-10 text-xl font-normal text-white tracking-tight relative font-geist">
+            "Finally, a platform that gives both our engineering and finance teams exactly what they need. It's the single source of truth we've always wanted."
+        </h3>
+        <div class="flex items-center gap-4 z-10 relative mt-8">
+            <div class="flex shrink-0 bg-center bg-[#15171b] w-12 h-12 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5866f61c-e537-452b-9d35-053e985d625b_320w.webp)] bg-cover border-white/10 border rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] items-center justify-center">
+      
+    </div>
+            <div>
+                <div class="text-white font-normal text-sm font-geist">James Halpert</div>
+                <div class="text-[#7e828a] text-sm font-geist">Director of Product, PaperCo</div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+    <!-- Changelog Section -->
+    
+
+    <!-- Testimonials -->
+    
+
+    <!-- Bottom CTA -->
+    <section class="py-32 px-6 flex flex-col items-center text-center max-w-[800px] mx-auto">
+        <h2 class="text-5xl md:text-7xl tracking-tight mb-10 leading-[1.1] font-geist font-light">
+            Built for the future.<br>Available today.
+        </h2>
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+            <a href="#" class="bg-white text-black px-6 py-3 rounded-full font-normal text-sm hover:bg-gray-200 transition-colors font-geist">Start optimizing</a>
+            <a href="#" class="bg-transparent border border-[#2e2e32] px-6 py-3 rounded-full font-normal text-sm hover:bg-white/5 transition-colors font-geist">Contact sales</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="max-w-[1200px] mx-auto pt-20 pb-12 px-6 relative mt-24">
+    <div class="absolute top-0 left-0 right-0 h-px bg-[#2e2e32]"></div>
+    <div class="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-7 gap-x-8 gap-y-12 mb-16">
+        
+        <div class="col-span-2 flex flex-col justify-between items-start">
+            <div>
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-b from-[#2a2c31] to-[#1c1d21] border border-[#3e3e42] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_2px_4px_rgba(0,0,0,0.4)] flex items-center justify-center">
+                        <iconify-icon icon="solar:layers-bold" width="18" height="18" class="text-white"></iconify-icon>
+                    </div>
+                    <span class="text-white font-medium text-lg tracking-tight font-geist">Subline</span>
+                </div>
+                <p class="text-sm text-[#7e828a] max-w-[220px] leading-relaxed font-geist">
+                    The subscription operating system for modern, high-velocity software companies.
+                </p>
+            </div>
+            
+            <a href="#" class="mt-8 flex items-center gap-2 text-xs font-medium text-[#b0b3b8] bg-white/[0.02] border border-white/[0.05] px-3 py-1.5 rounded-full hover:bg-white/[0.05] hover:text-white transition-all cursor-pointer group font-geist">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                </span>
+                All systems operational
+            </a>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <h4 class="text-white font-medium text-sm mb-1 font-geist">Product</h4>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Subscriptions</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Invoices</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Workflows</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Pricing Tests</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Analytics</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Pricing</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Security</a>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <h4 class="text-white font-medium text-sm mb-1 font-geist">Features</h4>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Smart Retries</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Agents</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Customer Portals</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Insights</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">API</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Integrations</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Changelog</a>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <h4 class="text-white font-medium text-sm mb-1 font-geist">Company</h4>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">About</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Customers</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 flex items-center gap-2 font-geist">
+                Careers 
+                <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded font-geist">Hiring</span>
+            </a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Blog</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Method</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Quality</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Brand</a>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <h4 class="text-white font-medium text-sm mb-1 font-geist">Resources</h4>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Switch from Stripe</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Webhooks</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Documentation</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Developers</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Status</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Enterprise</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Startups</a>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <h4 class="text-white font-medium text-sm mb-1 font-geist">Connect</h4>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Contact us</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">Community</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">X (Twitter)</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">GitHub</a>
+            <a href="#" class="text-sm text-[#7e828a] hover:text-white transition-colors duration-200 font-geist">YouTube</a>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-[#2e2e32]/50">
+        <p class="text-xs text-[#7e828a] font-geist">© 2026 Nord Systems. Cognitive Precision.</p>
+        
+        <div class="flex items-center gap-6 text-xs text-[#7e828a]">
+            <a href="#" class="hover:text-white transition-colors font-geist">Privacy Policy</a>
+            <a href="#" class="hover:text-white transition-colors font-geist">Terms of Service</a>
+            <a href="#" class="hover:text-white transition-colors font-geist">DPA</a>
+        </div>
+    </div>
+</footer>
+
+</body></html>

@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spatial Design Atelier — Shaping Space &amp; Light</title>
+<script>
+document.documentElement.classList.add('js');
+</script>
+<style>
+/* Prevents FOUC and creates a premium soft fade-in on initial load */
+.js body {
+opacity: 0;
+transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.js body.is-loaded {
+opacity: 1;
+}
+</style>
+<noscript>
+<style>
+body {
+opacity: 1 !important;
+}
+</style>
+</noscript>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link
+href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+rel="stylesheet" />
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+.font-serif {
+font-family: 'Instrument Serif', serif;
+}
+.font-sans {
+font-family: 'Plus Jakarta Sans', sans-serif;
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+
+<body class="antialiased selection:bg-neutral-200 selection:text-neutral-900 text-neutral-900 font-sans bg-neutral-50">
+  <!-- Navigation -->
+  <header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-5">
+    <div class="max-w-[1380px] mx-auto">
+      <div
+        class="relative flex items-center justify-between h-[72px] px-1.5 sm:px-2.5 lg:px-3 rounded-full border border-[#d8d1c6]/75 bg-[rgba(242,238,231,0.82)] backdrop-blur-xl shadow-[0_10px_30px_rgba(25,20,16,0.06)]"
+        id="main-nav-inner">
+        <!-- subtle inner highlight -->
+        <div
+          class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent">
+        </div>
+
+        <!-- Brand -->
+        <a href="#" class="flex items-center gap-2.5 shrink-0 group relative z-20 min-w-0">
+          <div
+            class="h-11 w-11 rounded-full border border-[#cbc2b5] bg-white/70 flex items-center justify-center text-[11px] text-[#2F5D50] font-medium tracking-[0.16em] uppercase font-sans shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+            SA
+          </div>
+
+          <div class="flex flex-col leading-[0.9] pt-[1px] min-w-0">
+            <span
+                class="text-[0.70rem] uppercase tracking-[0.22em] text-[#7c7368] font-sans whitespace-nowrap"
+              >
+                Spatial Design
+              </span>
+            <span
+                class="text-[1.05rem] tracking-[-0.03em] text-[#181512] font-serif italic whitespace-nowrap"
+              >
+                Atelier
+              </span>
+          </div>
+        </a>
+
+        <!-- CENTER NAV : Desktop XL -->
+        <nav class="hidden xl:flex items-center gap-8 absolute left-[40%] -translate-x-1/2">
+          <a href="#showcase"
+            class="text-[11px] uppercase tracking-[0.22em] text-[#6c645a] hover:text-[#181512] transition-colors font-sans whitespace-nowrap">
+            Projects
+          </a>
+          <a href="#philosophy"
+            class="text-[11px] uppercase tracking-[0.22em] text-[#6c645a] hover:text-[#181512] transition-colors font-sans whitespace-nowrap">
+            Philosophy
+          </a>
+          <a href="#methodology"
+            class="text-[11px] uppercase tracking-[0.22em] text-[#6c645a] hover:text-[#181512] transition-colors font-sans whitespace-nowrap">
+            Method
+          </a>
+          <a href="#contact"
+            class="text-[11px] uppercase tracking-[0.22em] text-[#6c645a] hover:text-[#181512] transition-colors font-sans whitespace-nowrap">
+            Contact
+          </a>
+        </nav>
+
+        <!-- CENTER NAV : Tablet -->
+        <div class="hidden md:flex xl:hidden items-center gap-8 absolute left-[40%] -translate-x-1/2 z-10">
+          <a href="#showcase"
+            class="inline-flex items-center h-10 text-[11px] uppercase tracking-[0.22em] text-[#6c645a] hover:text-[#181512] transition-colors font-sans whitespace-nowrap leading-none">
+            Projects
+          </a>
+
+          <div class="relative flex items-center h-10">
+            <button
+                id="tablet-menu-toggle"
+                class="inline-flex items-center h-10 gap-2 text-[11px] uppercase tracking-[0.22em] text-[#6c645a] hover:text-[#181512] transition-colors font-sans whitespace-nowrap leading-none"
+                aria-expanded="false"
+                aria-controls="desktop-tablet-menu"
+              >
+                <span class="leading-none">Explore</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3.5 w-3.5 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+
+            <!-- TABLET DROPDOWN -->
+            <div id="desktop-tablet-menu"
+              class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[240px] rounded-[24px] border border-[#d8d1c6]/80 bg-[rgba(242,238,231,0.96)] backdrop-blur-xl shadow-[0_20px_50px_rgba(25,20,16,0.10)] p-3">
+              <div class="flex flex-col">
+                <a href="#philosophy"
+                  class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+                  Philosophy
+                </a>
+                <a href="#methodology"
+                  class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+                  Method
+                </a>
+                <a href="#contact"
+                  class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+                  Contact
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="hidden md:flex items-center gap-3 shrink-0 relative z-20 pl-3">
+          <div
+            class="hidden lg:flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#7d756b] font-sans whitespace-nowrap">
+            <span class="h-2 w-2 rounded-full bg-[#2F5D50]"></span>
+            Private commissions
+          </div>
+
+          <a href="#contact"
+            class="inline-flex items-center justify-center h-[54px] px-6 rounded-full border border-[#1d1a17] bg-[#1d1a17] text-[#f5f1ea] hover:bg-[#2F5D50] hover:border-[#2F5D50] transition-all duration-300 font-sans text-[11px] uppercase tracking-[0.22em] whitespace-nowrap">
+            Start a Conversation
+          </a>
+        </div>
+
+        <!-- MOBILE TOGGLE -->
+        <button
+            id="mobile-menu-toggle"
+            class="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-full border border-[#cbc2b5] bg-white/50 text-[#181512] hover:bg-white/80 transition-colors relative z-20"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-[18px] w-[18px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            >
+              <path d="M4 7h16"></path>
+              <path d="M4 12h16"></path>
+              <path d="M4 17h16"></path>
+            </svg>
+          </button>
+      </div>
+
+      <!-- TABLET DROPDOWN -->
+      <div id="tablet-menu"
+        class="hidden md:hidden xl:hidden absolute left-1/2 -translate-x-1/2 mt-3 w-[260px] rounded-[28px] border border-[#d8d1c6]/80 bg-[rgba(242,238,231,0.94)] backdrop-blur-xl shadow-[0_20px_50px_rgba(25,20,16,0.10)] p-3">
+        <div class="flex flex-col">
+          <a href="#philosophy"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Philosophy
+          </a>
+          <a href="#methodology"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Method
+          </a>
+          <a href="#contact"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Contact
+          </a>
+        </div>
+      </div>
+
+      <!-- MOBILE MENU -->
+      <div id="mobile-menu"
+        class="hidden md:hidden mt-3 rounded-[32px] border border-[#d8d1c6]/80 bg-[rgba(242,238,231,0.95)] backdrop-blur-xl shadow-[0_20px_50px_rgba(25,20,16,0.10)] p-4">
+        <div class="flex flex-col gap-2">
+          <a href="#showcase"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Projects
+          </a>
+          <a href="#philosophy"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Philosophy
+          </a>
+          <a href="#methodology"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Method
+          </a>
+          <a href="#contact"
+            class="px-4 py-3 rounded-2xl text-[11px] uppercase tracking-[0.22em] text-[#181512] font-sans hover:bg-white/70 transition-colors">
+            Contact
+          </a>
+
+          <div class="h-px bg-[#d8d1c6] my-2"></div>
+
+          <div class="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#7d756b] font-sans">
+            <span class="inline-flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-[#2F5D50]"></span>
+            Private commissions
+            </span>
+          </div>
+
+          <a href="#contact"
+            class="mt-1 inline-flex items-center justify-center h-12 px-5 rounded-full border border-[#1d1a17] bg-[#1d1a17] text-[#f5f1ea] hover:bg-[#2F5D50] hover:border-[#2F5D50] transition-all duration-300 font-sans text-[11px] uppercase tracking-[0.22em]">
+            Start a Conversation
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. Hero Section -->
+  <section id="hero" class="relative overflow-hidden border-b border-[#d9d1c5] bg-[#f3efe8]">
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(47,93,80,0.09),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(24,21,18,0.05),transparent_28%)]">
+      </div>
+      <div class="absolute inset-y-0 left-1/2 hidden lg:block w-px bg-[#d9d1c5]"></div>
+    </div>
+
+    <div class="relative max-w-[1380px] mx-auto grid lg:grid-cols-[1.05fr_0.95fr] min-h-[100svh]">
+      <!-- Left Content -->
+      <div
+        class="relative flex flex-col justify-between px-6 sm:px-8 lg:px-14 pt-36 sm:pt-40 lg:pt-44 pb-10 lg:pb-12 border-b lg:border-b-0 border-[#d9d1c5]">
+        <div class="mb-12 lg:mb-16 hero-label">
+          <div
+            class="inline-flex items-center gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans">
+            <span
+                class="inline-block h-[6px] w-[6px] rounded-full bg-[#2F5D50]"
+              ></span>
+            Spatial Design Atelier
+          </div>
+        </div>
+
+        <div class="max-w-[820px]">
+          <h1
+            class="font-serif text-[#181512] tracking-[-0.045em] leading-[0.88] text-[3.1rem] sm:text-[3.9rem] md:text-[4.5rem] lg:text-[5.1rem] xl:text-[5.7rem] hero-headline">
+            <span class="block">Spaces shaped</span>
+            <span class="block italic text-[#2F5D50]">through light,</span>
+            <span class="block">restraint, and</span>
+            <span class="block">material clarity.</span>
+          </h1>
+
+          <p
+            class="mt-8 sm:mt-10 max-w-[34rem] text-[15px] sm:text-[17px] leading-8 text-[#5f5851] font-sans font-light hero-copy">
+            A curated spatial design practice creating residential interiors
+            that feel calm, architectural, and deeply lived-in — where every
+            proportion, texture, and transition is considered with quiet
+            precision.
+          </p>
+
+          <div
+            class="mt-10 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 hero-btn-group relative z-30">
+            <a href="#showcase"
+              class="inline-flex items-center justify-center gap-3 h-14 sm:h-12 px-8 rounded-full bg-[#1d1a17] text-[#f3efe8] border border-[#1d1a17] hover:bg-[#2F5D50] hover:border-[#2F5D50] duration-300 font-sans text-[12px] sm:text-[11px] uppercase tracking-[0.18em] shadow-md transition-colors"
+              style="opacity: 1;">
+              View Selected Works
+              <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+            </a>
+            <a href="#contact"
+              class="inline-flex items-center justify-center gap-2 h-14 sm:h-12 px-6 rounded-full border border-[#d2c9bc] bg-white/80 text-[#181512] hover:bg-white transition-colors duration-300 font-sans text-[12px] sm:text-[11px] uppercase tracking-[0.18em] shadow-sm">
+              Start a Conversation
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-14 lg:mt-16 pt-6 border-t border-[#d9d1c5] grid grid-cols-1 sm:grid-cols-3 gap-6 hero-meta">
+          <div>
+            <p class="text-[10px] uppercase tracking-[0.16em] text-[#8a8178] font-sans mb-2">
+              Location
+            </p>
+            <p class="text-[13px] text-[#1f1b18] font-sans">
+              London — Milan — Remote
+            </p>
+          </div>
+          <div>
+            <p class="text-[10px] uppercase tracking-[0.16em] text-[#8a8178] font-sans mb-2">
+              Focus
+            </p>
+            <p class="text-[13px] text-[#1f1b18] font-sans">
+              Residential Interiors / Spatial Direction
+            </p>
+          </div>
+          <div>
+            <p class="text-[10px] uppercase tracking-[0.16em] text-[#8a8178] font-sans mb-2">
+              Established
+            </p>
+            <p class="text-[13px] text-[#1f1b18] font-sans">2014</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Visual -->
+      <div class="group relative min-h-[56vh] lg:min-h-full overflow-hidden hero-img-wrap">
+        <div class="absolute inset-0 overflow-hidden">
+          <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b8abbd2e-1b0b-4edc-935e-d85e1ff93bd9_3840w.webp?w=800&q=80"
+              alt="Architectural interior"
+              data-anim="parallax"
+              class="w-full h-full object-cover grayscale-[18%] contrast-[1.03] brightness-[0.93] transition-transform duration-700 ease-out group-hover:scale-[1.03] group-hover:grayscale-[8%] group-hover:brightness-[0.97]"
+            />
+        </div>
+
+        <div
+          class="absolute inset-0 bg-[linear-gradient(to_top,rgba(18,15,13,0.22),rgba(18,15,13,0.03))] transition-opacity duration-500 group-hover:opacity-90">
+        </div>
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.18),transparent_24%)] mix-blend-screen opacity-60 transition-opacity duration-500 group-hover:opacity-80">
+        </div>
+        <div
+          class="absolute inset-5 sm:inset-6 lg:inset-8 border border-[rgba(255,255,255,0.42)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.62)]">
+        </div>
+
+        <div
+          class="absolute left-5 right-5 bottom-5 sm:left-6 sm:right-auto sm:bottom-6 lg:left-8 lg:bottom-8 lg:max-w-[360px] hero-plaque">
+          <div
+            class="border border-white/45 bg-[rgba(243,239,232,0.72)] backdrop-blur-md p-4 sm:p-5 shadow-[0_14px_40px_rgba(23,18,14,0.12)] transition-all duration-500 group-hover:bg-[rgba(243,239,232,0.84)] group-hover:border-white/65 group-hover:shadow-[0_20px_54px_rgba(23,18,14,0.18)]">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p
+                  class="text-[10px] uppercase tracking-[0.16em] text-[#7d7469] font-sans mb-2 transition-colors duration-300 group-hover:text-[#2F5D50]">
+                  Featured Project
+                </p>
+                <h3
+                  class="font-serif text-[1.6rem] leading-[1] tracking-[-0.04em] text-[#181512] transition-colors duration-300 group-hover:text-[#1d2d28]">
+                  Mayfair Townhouse
+                </h3>
+                <p class="mt-3 text-[13px] leading-6 text-[#5f5851] font-sans font-light">
+                  A pared-back residential transformation built around
+                  softened light, tactile stone, and custom joinery.
+                </p>
+              </div>
+              <div
+                class="shrink-0 h-10 w-10 rounded-full border border-[#d1c8bb] bg-white/70 flex items-center justify-center text-[#2F5D50] transition-all duration-300 group-hover:bg-[#2F5D50] group-hover:border-[#2F5D50] group-hover:text-white group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute top-5 right-5 sm:top-6 sm:right-6 lg:top-8 lg:right-8 hero-vol">
+          <div
+            class="px-3 py-2 border border-white/35 bg-[rgba(24,21,18,0.18)] backdrop-blur-sm text-white transition-all duration-300 group-hover:bg-[rgba(24,21,18,0.28)] group-hover:border-white/50">
+            <p class="text-[10px] uppercase tracking-[0.16em] font-sans">
+              Vol. 01
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Philosophy -->
+  <section id="philosophy" class="relative border-b border-[#d9d1c5] bg-[#f5f1ea] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(47,93,80,0.05),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(24,21,18,0.03),transparent_26%)]">
+      </div>
+    </div>
+
+    <div class="relative max-w-[1380px] mx-auto grid lg:grid-cols-[0.34fr_1fr]">
+      <!-- Left Rail -->
+      <div class="border-b lg:border-b-0 lg:border-r border-[#d9d1c5] px-6 sm:px-8 lg:px-10 py-12 lg:py-16">
+        <div class="lg:sticky lg:top-32" data-anim="stagger">
+          <div data-anim-child=""
+            class="inline-flex items-center gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans mb-8">
+            <span
+                class="inline-block h-[6px] w-[6px] rounded-full bg-[#2F5D50]"
+              ></span>
+            Philosophy
+          </div>
+          <p data-anim-child="" class="max-w-[14rem] text-[13px] leading-7 text-[#7a7268] font-sans font-light">
+            A spatial language shaped by proportion, atmosphere, and materials
+            that soften beautifully over time.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Content -->
+      <div class="px-6 sm:px-8 lg:px-14 py-14 sm:py-16 lg:py-20">
+        <div class="max-w-[980px]">
+          <h2 data-anim="up"
+            class="font-serif text-[#181512] tracking-[-0.04em] leading-[1.04] text-[2.2rem] sm:text-[2.8rem] md:text-[3.4rem] lg:text-[4.2rem]">
+            We believe in spaces that
+            <span class="italic text-[#2F5D50]">breathe</span>
+            — interiors that remove the unnecessary and reveal the emotional
+            clarity of a room.
+          </h2>
+
+          <div
+            class="mt-10 lg:mt-12 grid md:grid-cols-[1fr_0.9fr] gap-10 lg:gap-14 items-start pt-8 border-t border-[#d9d1c5]">
+            <!-- Copy -->
+            <div class="space-y-6">
+              <div data-anim="stagger" data-delay="0.1">
+                <p data-anim-child=""
+                  class="mb-6 text-[15px] sm:text-[16px] leading-8 text-[#5f5851] font-sans font-light">
+                  Every commission begins with a close reading of context —
+                  how light enters, where volume compresses or opens, and
+                  which materials can bring stillness to everyday life. We
+                  design with restraint, allowing tone, texture, and
+                  proportion to create depth rather than ornament.
+                </p>
+                <p data-anim-child="" class="text-[15px] sm:text-[16px] leading-8 text-[#5f5851] font-sans font-light">
+                  The result is not minimalism for its own sake, but a quieter
+                  form of luxury: spaces that feel composed, deeply tactile,
+                  and enduringly personal.
+                </p>
+              </div>
+
+              <div class="pt-4 grid sm:grid-cols-3 gap-5" data-anim="stagger" data-delay="0.2">
+                <div data-anim-child="" class="border-t border-[#d9d1c5] pt-4">
+                  <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                    01
+                  </p>
+                  <p class="text-[13px] leading-6 text-[#1f1b18] font-sans">
+                    Light as structure
+                  </p>
+                </div>
+                <div data-anim-child="" class="border-t border-[#d9d1c5] pt-4">
+                  <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                    02
+                  </p>
+                  <p class="text-[13px] leading-6 text-[#1f1b18] font-sans">
+                    Materials with memory
+                  </p>
+                </div>
+                <div data-anim-child="" class="border-t border-[#d9d1c5] pt-4">
+                  <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                    03
+                  </p>
+                  <p class="text-[13px] leading-6 text-[#1f1b18] font-sans">
+                    Restraint over excess
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Block -->
+            <div class="group relative">
+              <div data-anim="scale" class="relative overflow-hidden bg-[#ebe5dc] min-h-[420px] lg:min-h-[500px]">
+                <img
+                    src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/64bcde1c-ffbf-4b24-8a5e-d34d34f4a9aa_3840w.jpg?w=900&q=80"
+                    alt="Warm interior material palette"
+                    class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                  />
+                <div
+                  class="absolute inset-5 sm:inset-6 border border-[rgba(255,255,255,0.55)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.78)]">
+                </div>
+
+                <div data-anim="up" data-delay="0.3"
+                  class="absolute left-5 right-5 bottom-5 sm:left-6 sm:right-6 sm:bottom-6">
+                  <div
+                    class="border border-white/45 bg-[rgba(243,239,232,0.78)] backdrop-blur-md px-4 py-4 shadow-[0_14px_36px_rgba(23,18,14,0.10)] transition-all duration-500 group-hover:bg-[rgba(243,239,232,0.88)] group-hover:shadow-[0_18px_42px_rgba(23,18,14,0.14)]">
+                    <p
+                      class="text-[10px] uppercase tracking-[0.14em] text-[#7d7469] font-sans mb-2 group-hover:text-[#2F5D50] transition-colors duration-300">
+                      Material Study
+                    </p>
+                    <p class="font-serif text-[1.35rem] leading-[1.05] tracking-[-0.03em] text-[#181512]">
+                      Soft oak, mineral plaster, and muted natural light
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Selected Works -->
+  <section class="overflow-hidden bg-[#f3efe8] border-[#d9d1c5] border-b relative" id="showcase">
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(47,93,80,0.05),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(24,21,18,0.03),transparent_24%)]">
+      </div>
+    </div>
+
+    <div class="relative max-w-[1380px] mx-auto px-6 sm:px-8 lg:px-14 py-16 sm:py-20 lg:py-24">
+      <div class="grid lg:grid-cols-[0.36fr_1fr] gap-10 lg:gap-16 items-end mb-12 lg:mb-14">
+        <div data-anim="stagger">
+          <div data-anim-child=""
+            class="inline-flex items-center gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans mb-6">
+            <span
+                class="inline-block h-[6px] w-[6px] rounded-full bg-[#2F5D50]"
+              ></span>
+            Selected Works
+          </div>
+          <p data-anim-child="" class="max-w-[15rem] text-[13px] leading-7 text-[#7a7268] font-sans font-light">
+            A curated index of residential commissions shaped through
+            atmosphere, material quietness, and architectural clarity.
+          </p>
+        </div>
+
+        <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6 xl:gap-10">
+          <h2 data-anim="stagger" data-delay="0.1"
+            class="font-serif text-[#181512] tracking-[-0.04em] leading-[0.98] text-[2.5rem] sm:text-[3.2rem] md:text-[3.7rem] lg:text-[4rem] xl:text-[4.5rem] max-w-[14ch] xl:max-w-[15.5ch]">
+            <span data-anim-child="" class="block">Spaces designed</span>
+            <span data-anim-child="" class="block">
+    to feel
+    <span class="italic text-[#2F5D50]">lived-in</span>,
+            </span>
+            <span data-anim-child="" class="block">
+    <span class="italic text-[#2F5D50]">calm</span>, and
+            <span class="italic text-[#2F5D50]">enduring</span>.
+            </span>
+          </h2>
+
+          <a data-anim="fade" data-delay="0.3" href="#contact"
+            class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[#6f675f] hover:text-[#181512] transition-colors font-sans whitespace-nowrap">
+            Explore Selected Works
+            <iconify-icon icon="solar:arrow-right-up-linear" class="text-base" stroke-width="1.5"></iconify-icon>
+          </a>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10">
+        <!-- Featured Project -->
+        <a href="#contact" data-anim="scale"
+          class="group relative block min-h-[380px] sm:min-h-[460px] lg:min-h-[560px] overflow-hidden bg-[#e9e2d8]">
+          <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b8abbd2e-1b0b-4edc-935e-d85e1ff93bd9_3840w.webp?w=1400&q=80"
+              alt="Mayfair Townhouse interior"
+              data-anim="parallax"
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+            />
+
+          <div
+            class="absolute inset-0 bg-[linear-gradient(to_top,rgba(18,15,13,0.24),rgba(18,15,13,0.02)_42%,transparent)]">
+          </div>
+          <div
+            class="absolute inset-5 sm:inset-6 lg:inset-8 border border-[rgba(255,255,255,0.46)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.68)]">
+          </div>
+
+          <div data-anim="fade" data-delay="0.2" class="absolute top-5 right-5 sm:top-6 sm:right-6 lg:top-8 lg:right-8">
+            <div
+              class="px-3 py-2 border border-white/35 bg-[rgba(24,21,18,0.18)] backdrop-blur-sm text-white transition-all duration-300 group-hover:bg-[rgba(24,21,18,0.28)] group-hover:border-white/50">
+              <p class="text-[10px] uppercase tracking-[0.16em] font-sans">
+                Residence 01
+              </p>
+            </div>
+          </div>
+
+          <div data-anim="up" data-delay="0.3"
+            class="absolute left-5 right-5 bottom-5 sm:left-6 sm:right-6 sm:bottom-6 lg:left-8 lg:bottom-8 lg:max-w-[390px]">
+            <div
+              class="border border-white/45 bg-[rgba(243,239,232,0.78)] backdrop-blur-md p-5 sm:p-6 shadow-[0_14px_40px_rgba(23,18,14,0.12)] transition-all duration-500 group-hover:bg-[rgba(243,239,232,0.88)] group-hover:border-white/65 group-hover:shadow-[0_20px_54px_rgba(23,18,14,0.18)]">
+              <div class="flex items-start justify-between gap-5">
+                <div>
+                  <p
+                    class="text-[10px] uppercase tracking-[0.14em] text-[#7d7469] font-sans mb-2 transition-colors duration-300 group-hover:text-[#2F5D50]">
+                    Featured Project
+                  </p>
+                  <h3
+                    class="font-serif text-[1.7rem] sm:text-[1.95rem] leading-[0.98] tracking-[-0.04em] text-[#181512] transition-colors duration-300 group-hover:text-[#1d2d28]">
+                    Mayfair Townhouse
+                  </h3>
+                  <p class="mt-3 text-[14px] leading-7 text-[#5f5851] font-sans font-light max-w-[30ch]">
+                    A London residence balancing warm oak, quiet spatial
+                    transitions, and a calmer material palette.
+                  </p>
+                </div>
+                <div
+                  class="shrink-0 h-11 w-11 rounded-full border border-[#d1c8bb] bg-white/70 flex items-center justify-center text-[#2F5D50] transition-all duration-300 group-hover:bg-[#2F5D50] group-hover:border-[#2F5D50] group-hover:text-white group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                  <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Supporting Stack -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-1 gap-8 lg:gap-10" data-anim="stagger" data-delay="0.1">
+          <!-- Project 02 -->
+          <a href="#contact" data-anim-child="" class="group block">
+            <div class="relative overflow-hidden bg-[#e9e2d8] min-h-[300px] sm:min-h-[330px] lg:min-h-[270px]">
+              <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3fae8a4f-dbea-4b69-b5f9-b0afdeda5fc3_3840w.webp?w=800&q=80"
+                  alt="Belgravia Apartment interior"
+                  class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
+              <div
+                class="absolute inset-4 sm:inset-5 border border-[rgba(255,255,255,0.44)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.64)]">
+              </div>
+            </div>
+            <div class="pt-5 border-b border-[#d9d1c5] pb-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                    Residence 02
+                  </p>
+                  <h3
+                    class="font-serif text-[1.55rem] leading-[1] tracking-[-0.03em] text-[#181512] transition-colors duration-300 group-hover:text-[#2F5D50]">
+                    Belgravia Apartment
+                  </h3>
+                  <p class="mt-3 text-[14px] leading-7 text-[#5f5851] font-sans font-light max-w-[32ch]">
+                    Warm timber, gallery-like display, and softened autumnal
+                    light composed for slower living.
+                  </p>
+                </div>
+                <div
+                  class="mt-1 text-[#8a8178] transition-all duration-300 group-hover:text-[#2F5D50] group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                  <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Project 03 -->
+          <a href="#contact" data-anim-child="" class="group block">
+            <div class="relative overflow-hidden bg-[#e9e2d8] min-h-[300px] sm:min-h-[330px] lg:min-h-[270px]">
+              <img
+                  src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f1ae9fc1-b5ab-4ff7-8d36-b8162141fd52_3840w.jpg?w=800&q=80"
+                  alt="Hampstead Sitting Room interior"
+                  class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
+              <div
+                class="absolute inset-4 sm:inset-5 border border-[rgba(255,255,255,0.44)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.64)]">
+              </div>
+            </div>
+            <div class="pt-5 border-b border-[#d9d1c5] pb-2">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                    Residence 03
+                  </p>
+                  <h3
+                    class="font-serif text-[1.55rem] leading-[1] tracking-[-0.03em] text-[#181512] transition-colors duration-300 group-hover:text-[#2F5D50]">
+                    Hampstead Sitting Room
+                  </h3>
+                  <p class="mt-3 text-[14px] leading-7 text-[#5f5851] font-sans font-light max-w-[32ch]">
+                    Plaster walls, linen drapery, and a quieter tonal palette
+                    shaped around comfort and stillness.
+                  </p>
+                </div>
+                <div
+                  class="mt-1 text-[#8a8178] transition-all duration-300 group-hover:text-[#2F5D50] group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                  <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Methodology -->
+  <section id="methodology" class="relative border-b border-[#d9d1c5] bg-[#f4f0e9] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(47,93,80,0.05),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(24,21,18,0.03),transparent_22%)]">
+      </div>
+    </div>
+
+    <div class="relative max-w-[1380px] mx-auto px-6 sm:px-8 lg:px-14 py-16 sm:py-20 lg:py-24">
+      <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16 items-end mb-14 lg:mb-16">
+        <div data-anim="stagger">
+          <div data-anim-child=""
+            class="inline-flex items-center gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans mb-6">
+            <span
+                class="inline-block h-[6px] w-[6px] rounded-full bg-[#2F5D50]"
+              ></span>
+            Methodology
+          </div>
+          <p data-anim-child="" class="max-w-[15rem] text-[13px] leading-7 text-[#7a7268] font-sans font-light">
+            A quieter framework for shaping residential interiors through
+            proportion, atmosphere, and material precision.
+          </p>
+        </div>
+
+        <div>
+          <h2 data-anim="stagger" data-delay="0.1"
+            class="font-serif text-[#181512] tracking-[-0.04em] leading-[0.94] text-[2.2rem] sm:text-[3rem] md:text-[3.7rem] lg:text-[4rem] xl:text-[4.5rem] max-w-[13ch] sm:max-w-[15ch] xl:max-w-[16ch]">
+            <span data-anim-child="" class="block">
+                Three disciplines that guide every
+                <span class="italic text-[#2F5D50]">residential</span>
+            </span>
+            <span data-anim-child="" class="block italic text-[#2F5D50]">
+                commission.
+              </span>
+          </h2>
+          <p data-anim="up" data-delay="0.3"
+            class="mt-6 max-w-[42rem] text-[15px] sm:text-[16px] leading-8 text-[#5f5851] font-sans font-light">
+            Our process is designed to bring clarity early — refining how a
+            space flows, how materials speak to one another, and how the final
+            atmosphere feels both composed and deeply personal.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10" data-anim="stagger" data-delay="0.2">
+        <!-- Card 1 -->
+        <div data-anim-child="" class="group">
+          <div class="relative overflow-hidden bg-[#e9e2d8] min-h-[320px] sm:min-h-[360px] lg:min-h-[420px]">
+            <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/8b504780-eb86-496a-8705-a914493c5b66_3840w.jpg?w=900&q=80"
+                alt="Spatial Strategy interior"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            <div
+              class="absolute inset-4 sm:inset-5 border border-[rgba(255,255,255,0.48)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.68)]">
+            </div>
+            <div class="absolute top-4 left-4 sm:top-5 sm:left-5">
+              <div
+                class="h-11 w-11 rounded-full border border-white/45 bg-[rgba(243,239,232,0.72)] backdrop-blur-sm flex items-center justify-center text-[#2F5D50] shadow-[0_10px_24px_rgba(23,18,14,0.10)]">
+                <iconify-icon icon="solar:ruler-cross-pen-linear" class="text-[20px]" stroke-width="1.5"></iconify-icon>
+              </div>
+            </div>
+          </div>
+          <div class="pt-5 border-b border-[#d9d1c5] pb-6">
+            <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+              01 — Spatial Strategy
+            </p>
+            <h3
+              class="font-serif text-[1.55rem] leading-[1] tracking-[-0.03em] text-[#181512] mb-4 transition-colors duration-300 group-hover:text-[#2F5D50]">
+              Planning flow before form.
+            </h3>
+            <p class="text-[14px] leading-7 text-[#5f5851] font-sans font-light">
+              We study how rooms connect, how light moves through the plan,
+              and where a home needs openness or compression. The goal is a
+              layout that feels intuitive long before it feels styled.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div data-anim-child="" class="group">
+          <div class="relative overflow-hidden bg-[#e9e2d8] min-h-[320px] sm:min-h-[360px] lg:min-h-[420px]">
+            <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/09553c82-8142-4fb1-9e4f-f8d521755506_3840w.jpg?w=900&q=80"
+                alt="Material Curation interior"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            <div
+              class="absolute inset-4 sm:inset-5 border border-[rgba(255,255,255,0.48)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.68)]">
+            </div>
+            <div class="absolute top-4 left-4 sm:top-5 sm:left-5">
+              <div
+                class="h-11 w-11 rounded-full border border-white/45 bg-[rgba(243,239,232,0.72)] backdrop-blur-sm flex items-center justify-center text-[#2F5D50] shadow-[0_10px_24px_rgba(23,18,14,0.10)]">
+                <iconify-icon icon="solar:palette-round-linear" class="text-[20px]" stroke-width="1.5"></iconify-icon>
+              </div>
+            </div>
+          </div>
+          <div class="pt-5 border-b border-[#d9d1c5] pb-6">
+            <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+              02 — Material Curation
+            </p>
+            <h3
+              class="font-serif text-[1.55rem] leading-[1] tracking-[-0.03em] text-[#181512] mb-4 transition-colors duration-300 group-hover:text-[#2F5D50]">
+              Building warmth through restraint.
+            </h3>
+            <p class="text-[14px] leading-7 text-[#5f5851] font-sans font-light">
+              We pair oak, stone, plaster, linen, and metal with care, letting
+              each surface bring tone and tactility without excess. Materials
+              are selected for how they age, soften, and hold light over time.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div data-anim-child="" class="group">
+          <div class="relative overflow-hidden bg-[#e9e2d8] min-h-[320px] sm:min-h-[360px] lg:min-h-[420px]">
+            <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a7f3cac8-5609-4ac0-8baf-38048221f3f6_3840w.jpg?w=900&q=80"
+                alt="Atmosphere Direction interior"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            <div
+              class="absolute inset-4 sm:inset-5 border border-[rgba(255,255,255,0.48)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.68)]">
+            </div>
+            <div class="absolute top-4 left-4 sm:top-5 sm:left-5">
+              <div
+                class="h-11 w-11 rounded-full border border-white/45 bg-[rgba(243,239,232,0.72)] backdrop-blur-sm flex items-center justify-center text-[#2F5D50] shadow-[0_10px_24px_rgba(23,18,14,0.10)]">
+                <iconify-icon icon="solar:eye-linear" class="text-[20px]" stroke-width="1.5"></iconify-icon>
+              </div>
+            </div>
+          </div>
+          <div class="pt-5 border-b border-[#d9d1c5] pb-6">
+            <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+              03 — Atmosphere Direction
+            </p>
+            <h3
+              class="font-serif text-[1.55rem] leading-[1] tracking-[-0.03em] text-[#181512] mb-4 transition-colors duration-300 group-hover:text-[#2F5D50]">
+              Composing how a room feels.
+            </h3>
+            <p class="text-[14px] leading-7 text-[#5f5851] font-sans font-light">
+              Beyond layout and finishes, we shape stillness, contrast, and
+              visual rhythm. Lighting, shadow, object placement, and
+              proportion are used to create interiors that feel calm,
+              grounded, and quietly memorable.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Proof / Testimonial -->
+  <section id="proof" class="relative overflow-hidden border-b border-[#d9d1c5] bg-[#f3efe8]">
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(47,93,80,0.05),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(24,21,18,0.03),transparent_22%)]">
+      </div>
+    </div>
+
+    <div class="relative max-w-[1380px] mx-auto px-6 sm:px-8 lg:px-14 py-16 sm:py-20 lg:py-24">
+      <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16 items-end mb-14 lg:mb-16">
+        <div data-anim="stagger">
+          <div data-anim-child=""
+            class="inline-flex items-center gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans mb-6">
+            <span
+                class="inline-block h-[6px] w-[6px] rounded-full bg-[#2F5D50]"
+              ></span>
+            Client Reflection
+          </div>
+          <p data-anim-child="" class="max-w-[15rem] text-[13px] leading-7 text-[#7a7268] font-sans font-light">
+            A quieter measure of success — how a home feels once it is lived
+            in, not simply how it photographs on completion.
+          </p>
+        </div>
+
+        <h2 data-anim="stagger" data-delay="0.1"
+          class="font-serif text-[#181512] tracking-[-0.04em] leading-[0.98] text-[2.4rem] sm:text-[3rem] md:text-[3.7rem] lg:text-[4.3rem] max-w-[18ch] lg:max-w-[18ch]">
+          <span data-anim-child="" class="block">Shaped with restraint,</span>
+          <span data-anim-child="" class="block">remembered for how</span>
+          <span data-anim-child="" class="block italic text-[#2F5D50]">
+              it lives.
+            </span>
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10">
+        <!-- Main Quote + Trust -->
+        <div data-anim="up"
+          class="border border-[#d9d1c5] bg-[rgba(255,255,255,0.28)] backdrop-blur-sm p-6 sm:p-8 lg:p-10 flex flex-col">
+          <div>
+            <div class="mb-8 flex items-center gap-3">
+              <span
+                  class="h-10 w-10 rounded-full border border-[#d5ccbf] bg-white/50 flex items-center justify-center text-[#2F5D50]"
+                >
+                  <iconify-icon
+                    icon="solar:chat-round-linear"
+                    class="text-[18px]"
+                    stroke-width="1.5"
+                  ></iconify-icon>
+                </span>
+              <p class="text-[10px] uppercase tracking-[0.14em] text-[#7d7469] font-sans">
+                Private Residential Commission
+              </p>
+            </div>
+            <blockquote
+              class="font-serif text-[#181512] tracking-[-0.03em] leading-[1.06] text-[2rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[3.2rem] max-w-[15ch]">
+              “The house feels calmer, warmer, and more intentional in every
+              room. Nothing is loud, but everything feels considered.”
+            </blockquote>
+          </div>
+
+          <div class="pt-8 mt-8 border-t border-[#d9d1c5] grid sm:grid-cols-[auto_1fr] gap-5 items-start">
+            <div class="h-14 w-14 rounded-full overflow-hidden bg-[#e7dfd4] border border-[#d5ccbf]">
+              <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=300"
+                  alt="Client portrait"
+                  class="w-full h-full object-cover grayscale-[12%]"
+                />
+            </div>
+            <div>
+              <p class="text-[13px] text-[#1f1b18] font-sans">Elena Martin</p>
+              <p class="mt-1 text-[11px] uppercase tracking-[0.14em] text-[#8a8178] font-sans">
+                Mayfair Townhouse — London
+              </p>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-6 pt-8 mt-8 border-t border-[#d9d1c5]">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                Recognition
+              </p>
+              <p class="font-serif text-[1.35rem] leading-[1.02] tracking-[-0.03em] text-[#181512] mb-3">
+                Featured in private editorial selections and residential
+                design roundups.
+              </p>
+              <p class="text-[14px] leading-7 text-[#5f5851] font-sans font-light">
+                Commissioned for homes where atmosphere matters as much as
+                architecture.
+              </p>
+            </div>
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-2">
+                Approach
+              </p>
+              <p class="font-serif text-[1.35rem] leading-[1.02] tracking-[-0.03em] text-[#181512] mb-3">
+                Fewer interventions, stronger emotional clarity.
+              </p>
+              <p class="text-[14px] leading-7 text-[#5f5851] font-sans font-light">
+                Every decision is reduced to what improves daily life, visual
+                calm, and material longevity.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supporting Image -->
+        <div data-anim="scale" data-delay="0.2"
+          class="group relative overflow-hidden bg-[#e9e2d8] min-h-[320px] sm:min-h-[360px] lg:min-h-[420px]">
+          <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/64bcde1c-ffbf-4b24-8a5e-d34d34f4a9aa_3840w.jpg?w=1000&q=80"
+              alt="Interior detail"
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+            />
+          <div
+            class="absolute inset-4 sm:inset-5 border border-[rgba(255,255,255,0.48)] transition-all duration-500 group-hover:border-[rgba(255,255,255,0.68)]">
+          </div>
+          <div class="absolute left-4 right-4 bottom-4 sm:left-5 sm:right-5 sm:bottom-5">
+            <div
+              class="border border-white/45 bg-[rgba(243,239,232,0.78)] backdrop-blur-md px-4 py-4 shadow-[0_14px_36px_rgba(23,18,14,0.10)] transition-all duration-500 group-hover:bg-[rgba(243,239,232,0.88)]">
+              <p
+                class="text-[10px] uppercase tracking-[0.14em] text-[#7d7469] font-sans mb-2 transition-colors duration-300 group-hover:text-[#2F5D50]">
+                Lasting Impression
+              </p>
+              <p class="font-serif text-[1.3rem] leading-[1.05] tracking-[-0.03em] text-[#181512]">
+                Quiet materials, softened light, and a home that settles
+                beautifully over time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Closing CTA / Footer -->
+  <section id="contact" class="relative overflow-hidden bg-[#f5f1ea]">
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(47,93,80,0.05),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(24,21,18,0.03),transparent_22%)]">
+      </div>
+    </div>
+
+    <div class="relative max-w-[1380px] mx-auto px-6 sm:px-8 lg:px-14 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-10 lg:pb-12">
+      <!-- CTA Panel -->
+      <div data-anim="up"
+        class="border border-[#d9d1c5] bg-[rgba(255,255,255,0.28)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16">
+        <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16 items-end">
+          <div data-anim="stagger" data-delay="0.1">
+            <div data-anim-child=""
+              class="inline-flex items-center gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans mb-6">
+              <span
+                  class="inline-block h-[6px] w-[6px] rounded-full bg-[#2F5D50]"
+                ></span>
+              Begin a Conversation
+            </div>
+            <p data-anim-child="" class="max-w-[15rem] text-[13px] leading-7 text-[#7a7268] font-sans font-light">
+              For residential commissions, private consultations, and spaces
+              shaped with warmth, restraint, and material clarity.
+            </p>
+          </div>
+
+          <div>
+            <h2 data-anim="stagger" data-delay="0.2"
+              class="lg:hidden font-serif text-[#181512] tracking-[-0.04em] leading-[0.95] text-[2rem] sm:text-[2.6rem] md:text-[3.7rem] max-w-[23ch]">
+              <span data-anim-child="" class="block">
+                  Let’s create a home
+                </span>
+              <span data-anim-child="" class="block">
+                  that
+                  <span class="italic text-[#2F5D50]">settles beautifully</span>
+              </span>
+              <span data-anim-child="" class="block">over time.</span>
+            </h2>
+
+            <h2 data-anim="stagger" data-delay="0.2"
+              class="hidden lg:block font-serif text-[#181512] tracking-[-0.04em] leading-[0.98] text-[4.4rem] max-w-[23ch]">
+              <span data-anim-child="" class="block">
+                  Let’s create a home
+                </span>
+              <span data-anim-child="" class="block">
+                  that
+                  <span class="italic text-[#2F5D50]">settles beautifully</span>
+              </span>
+              <span data-anim-child="" class="block">over time.</span>
+            </h2>
+
+            <p data-anim="up" data-delay="0.4"
+              class="mt-6 max-w-[40rem] text-[15px] sm:text-[16px] leading-8 text-[#5f5851] font-sans font-light">
+              Each project begins with a quieter conversation — about how you
+              live, how you want a space to feel, and what should remain long
+              after trends have passed.
+            </p>
+
+            <div data-anim="none" data-delay="0.5"
+              class="mt-8 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 relative z-20">
+              <a data-anim-child="" href="mailto:hello@spatialdesignatelier.com"
+                class="inline-flex items-center justify-center gap-3 h-14 sm:h-12 px-8 rounded-full bg-[#1d1a17] text-[#f3efe8] border border-[#1d1a17] hover:bg-[#2F5D50] hover:border-[#2F5D50] transition-all duration-300 font-sans text-[12px] sm:text-[11px] uppercase tracking-[0.18em] shadow-md">
+                Start a Conversation
+                <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+              </a>
+              <a data-anim-child="" href="#showcase"
+                class="inline-flex items-center justify-center gap-2 h-14 sm:h-12 px-6 rounded-full border border-[#d2c9bc] bg-white text-[#181512] hover:bg-neutral-50 transition-all duration-300 font-sans text-[12px] sm:text-[11px] uppercase tracking-[0.18em] shadow-md">
+                View Selected Works
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="pt-8 sm:pt-10 lg:pt-12">
+        <div data-anim="stagger" data-delay="0.2"
+          class="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] gap-8 lg:gap-10 border-t border-[#d9d1c5] pt-8">
+          <div data-anim-child="">
+            <a href="#" class="inline-flex items-center gap-3 mb-5 group">
+              <div
+                class="h-10 w-10 rounded-full border border-[#cbc2b5] bg-white/60 flex items-center justify-center text-[11px] text-[#2F5D50] font-medium tracking-[0.16em] uppercase font-sans group-hover:bg-[#2F5D50] group-hover:text-white transition-colors duration-300">
+                SA
+              </div>
+              <div class="flex flex-col leading-[0.9] pt-[1px]">
+                <span
+                    class="text-[0.70rem] uppercase tracking-[0.14em] text-[#7c7368] font-sans whitespace-nowrap"
+                  >
+                    Spatial Design
+                  </span>
+                <span
+                    class="text-[1.05rem] tracking-[-0.03em] text-[#181512] font-serif italic whitespace-nowrap"
+                  >
+                    Atelier
+                  </span>
+              </div>
+            </a>
+            <p class="max-w-[18rem] text-[14px] leading-7 text-[#5f5851] font-sans font-light">
+              Residential interiors shaped through atmosphere, proportion, and
+              materials chosen to endure beautifully.
+            </p>
+          </div>
+
+          <div data-anim-child="">
+            <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-4">
+              Navigation
+            </p>
+            <div class="flex flex-col gap-3">
+              <a href="#philosophy" class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Philosophy
+              </a>
+              <a href="#showcase" class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Selected Works
+              </a>
+              <a href="#methodology"
+                class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Methodology
+              </a>
+              <a href="#proof" class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Client Reflection
+              </a>
+            </div>
+          </div>
+
+          <div data-anim-child="">
+            <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-4">
+              Contact
+            </p>
+            <div class="flex flex-col gap-3 text-[14px] text-[#1f1b18] font-sans">
+              <a href="mailto:hello@spatialdesignatelier.com" class="hover:text-[#2F5D50] transition-colors">
+                hello@spatialdesignatelier.com
+              </a>
+              <span>London / Milan / Remote</span>
+              <span>Private residential commissions</span>
+            </div>
+          </div>
+
+          <div data-anim-child="">
+            <p class="text-[10px] uppercase tracking-[0.14em] text-[#8a8178] font-sans mb-4">
+              Elsewhere
+            </p>
+            <div class="flex flex-col gap-3">
+              <a href="#" class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Instagram
+              </a>
+              <a href="#" class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Pinterest
+              </a>
+              <a href="#" class="text-[14px] text-[#1f1b18] font-sans hover:text-[#2F5D50] transition-colors">
+                Request a Consultation
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div data-anim="none" data-delay="0.4"
+          class="mt-8 pt-5 border-t border-[#d9d1c5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <p class="text-[11px] uppercase tracking-[0.14em] text-[#6f675f] font-sans">
+            © 2026 Spatial Design Atelier
+          </p>
+          <div class="flex items-center gap-4 sm:gap-6">
+            <a href="#"
+              class="text-[11px] uppercase tracking-[0.14em] font-sans hover:text-[#2F5D50] transition-colors text-[#6f675f]">
+              Privacy
+            </a>
+            <a href="#"
+              class="text-[11px] uppercase tracking-[0.14em] font-sans hover:text-[#2F5D50] transition-colors text-[#6f675f]">
+              Terms
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    // Reveal body softly once loaded
+      window.addEventListener('load', () => {
+        document.body.classList.add('is-loaded');
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Mobile Menu Logic (Existing) ---
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const tabletToggle = document.getElementById('tablet-menu-toggle');
+        const tabletMenu = document.getElementById('desktop-tablet-menu');
+
+        if (mobileToggle && mobileMenu) {
+          mobileToggle.addEventListener('click', () => {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            mobileToggle.setAttribute('aria-expanded', String(!isOpen));
+          });
+        }
+
+        if (tabletToggle && tabletMenu) {
+          tabletToggle.addEventListener('click', () => {
+            const isOpen = !tabletMenu.classList.contains('hidden');
+            tabletMenu.classList.toggle('hidden');
+            tabletToggle.setAttribute('aria-expanded', String(!isOpen));
+          });
+        }
+
+        document.addEventListener('click', (e) => {
+          if (tabletToggle && tabletMenu && !tabletToggle.contains(e.target) && !tabletMenu.contains(e.target)) {
+            tabletMenu.classList.add('hidden');
+            tabletToggle.setAttribute('aria-expanded', 'false');
+          }
+          if (mobileToggle && mobileMenu && !mobileToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // --- Premium GSAP Animation System ---
+        gsap.registerPlugin(ScrollTrigger);
+        const mm = gsap.matchMedia();
+
+        mm.add("(prefers-reduced-motion: no-preference)", () => {
+          const ease = "power3.out";
+          const dur = 1.3;
+
+          // 1. Navigation Anchor State
+          const navInner = document.getElementById('main-nav-inner');
+          gsap.from(navInner, { y: -24, opacity: 0, duration: 1.5, ease, delay: 0.1 });
+
+          ScrollTrigger.create({
+            start: "top -50",
+            onUpdate: (self) => {
+              if (self.direction === 1) {
+                navInner.classList.add('shadow-[0_15px_40px_rgba(25,20,16,0.08)]', 'py-1');
+                navInner.classList.replace('bg-[rgba(242,238,231,0.82)]', 'bg-[rgba(242,238,231,0.96)]');
+              } else if (self.direction === -1 && self.scroll() < 50) {
+                navInner.classList.remove('shadow-[0_15px_40px_rgba(25,20,16,0.08)]', 'py-1');
+                navInner.classList.replace('bg-[rgba(242,238,231,0.96)]', 'bg-[rgba(242,238,231,0.82)]');
+              }
+            }
+          });
+
+          // 2. Hero Timeline (Orchestrated Load)
+          const heroTl = gsap.timeline({ delay: 0.15, defaults: { ease, duration: dur } });
+          heroTl.from(".hero-label", { opacity: 0, y: 15 }, 0)
+                .from(".hero-headline span.block", { opacity: 0, y: 25, stagger: 0.12 }, 0.1)
+                .from(".hero-copy", { opacity: 0, y: 20 }, 0.4)
+                .from(".hero-btn-group > *", { opacity: 0, y: 15, stagger: 0.1 }, 0.6)
+                .from(".hero-meta > div", { opacity: 0, y: 15, stagger: 0.1 }, 0.8)
+                .from(".hero-img-wrap", { scale: 1.05, opacity: 0, duration: 1.8, ease: "power2.out" }, 0.2)
+                .from(".hero-plaque", { opacity: 0, y: 20 }, 1.1)
+                .from(".hero-vol", { opacity: 0 }, 1.2);
+
+          // 3. Subtle Image Parallax (Scrub)
+          gsap.utils.toArray('[data-anim="parallax"]').forEach(img => {
+            gsap.set(img, { scale: 1.1 }); // Pre-scale slightly to give room for parallax shift
+            gsap.to(img, {
+              yPercent: 10,
+              ease: "none",
+              scrollTrigger: {
+                trigger: img.parentElement,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+              }
+            });
+          });
+
+          // 4. Global Modular System
+          const scrollConfig = (el) => ({ trigger: el, start: "top 88%" });
+
+          // Reveal Up
+          gsap.utils.toArray('[data-anim="up"]').forEach(el => {
+            gsap.from(el, {
+              scrollTrigger: scrollConfig(el),
+              y: 30, opacity: 0, duration: dur, ease,
+              delay: el.dataset.delay ? parseFloat(el.dataset.delay) : 0
+            });
+          });
+
+          // Reveal Fade
+          gsap.utils.toArray('[data-anim="fade"]').forEach(el => {
+            gsap.from(el, {
+              scrollTrigger: scrollConfig(el),
+              opacity: 0, duration: dur, ease,
+              delay: el.dataset.delay ? parseFloat(el.dataset.delay) : 0
+            });
+          });
+
+          // Reveal Scale (For images/panels)
+          gsap.utils.toArray('[data-anim="scale"]').forEach(el => {
+            gsap.from(el, {
+              scrollTrigger: scrollConfig(el),
+              scale: 1.04, opacity: 0, duration: 1.6, ease: "power2.out",
+              delay: el.dataset.delay ? parseFloat(el.dataset.delay) : 0
+            });
+          });
+
+          // Elegant Stagger Groups
+          gsap.utils.toArray('[data-anim="stagger"]').forEach(parent => {
+            const children = parent.querySelectorAll('[data-anim-child]');
+            if(children.length === 0) return;
+            gsap.from(children, {
+              scrollTrigger: scrollConfig(parent),
+              y: 28, opacity: 0, duration: dur, ease, stagger: 0.12,
+              delay: parent.dataset.delay ? parseFloat(parent.dataset.delay) : 0
+            });
+          });
+
+        });
+      });
+  </script>
+</body>
+
+</html>

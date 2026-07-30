@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuGen - AI Image Generation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+body { font-family: 'Inter', sans-serif; }
+.glass-panel {
+background: rgba(5, 9, 20, 0.5);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.text-glow {
+text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+.neon-glow {
+box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+.animate-on-scroll {
+opacity: 0;
+transform: translateY(20px);
+animation: fadeSlideIn 0.8s ease-out forwards;
+}
+@keyframes fadeSlideIn {
+to { opacity: 1; transform: translateY(0); }
+}
+@keyframes gradientMove {
+0% { background-position: 0% 50%; }
+100% { background-position: 200% 50%; }
+}
+@keyframes dashFlow {
+0% { background-position: 0 0; }
+100% { background-position: 24px 0; }
+}
+.animate-flow-dash {
+background-image: linear-gradient(90deg, rgba(59, 130, 246, 0.5) 50%, transparent 50%);
+background-size: 24px 2px;
+animation: dashFlow 1s linear infinite;
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes verticalBeam { 0% { transform: translateY(-100%); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(200%); opacity: 0; } }
+.beam-line-anim { animation: verticalBeam 4s linear infinite; }
+.btn-beam-wrap { position: relative; border-radius: 9999px; overflow: hidden; padding: 1px; background: rgba(255, 255, 255, 0.1); }
+.btn-beam-wrap::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.4), #3b82f6); animation: spin 2s linear infinite; opacity: 0; transition: opacity 0.3s; }
+.btn-beam-wrap:hover::before { opacity: 1; }
+.btn-beam-content { position: relative; background: #050914; border-radius: 9999px; z-index: 1; }
+.flashlight-card { position: relative; }
+.flashlight-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255,255,255,0.06), transparent 40%); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 0; }
+.flashlight-card:hover::before { opacity: 1; }
+.flashlight-card::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(59, 130, 246, 0.5), transparent 40%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
+.flashlight-card:hover::after { opacity: 1; }
+.flashlight-card > * { position: relative; z-index: 2; }
+</style>
+<style>
+.invisible { visibility: hidden !important; }
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-roboto">
+.font-roboto { font-family: 'Roboto', sans-serif !important; }
+</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-montserrat">
+.font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-poppins">
+.font-poppins { font-family: 'Poppins', sans-serif !important; }
+</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&display=swap"><style id="all-fonts-style-font-playfair">
+.font-playfair { font-family: 'Playfair Display', serif !important; }
+</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&display=swap"><style id="all-fonts-style-font-instrument-serif">
+.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }
+</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap"><style id="all-fonts-style-font-merriweather">
+.font-merriweather { font-family: 'Merriweather', serif !important; }
+</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-bricolage">
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"><style id="all-fonts-style-font-jakarta">
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"><style id="all-fonts-style-font-manrope">
+.font-manrope { font-family: 'Manrope', sans-serif !important; }
+</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-space-grotesk">
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }
+</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&display=swap"><style id="all-fonts-style-font-work-sans">
+.font-work-sans { font-family: 'Work Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap"><style id="all-fonts-style-font-pt-serif">
+.font-pt-serif { font-family: 'PT Serif', serif !important; }
+</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-geist-mono">
+.font-geist-mono { font-family: 'Geist Mono', monospace !important; }
+</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"><style id="all-fonts-style-font-space-mono">
+.font-space-mono { font-family: 'Space Mono', monospace !important; }
+</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-quicksand">
+.font-quicksand { font-family: 'Quicksand', sans-serif !important; }
+</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap"><style id="all-fonts-style-font-nunito">
+.font-nunito { font-family: 'Nunito', sans-serif !important; }
+</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&display=swap"><style id="all-fonts-style-font-newsreader">
+.font-newsreader { font-family: 'Newsreader', serif !important; }
+</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap"><style id="all-fonts-style-font-google-sans-flex">
+.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }
+</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-oswald">
+.font-oswald { font-family: 'Oswald', sans-serif !important; }
+</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-dm-sans">
+.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-cormorant" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-cormorant">
+.font-cormorant { font-family: 'Cormorant Garamond', serif !important; }
+</style><style id="border-gradient-shared-style">
+[style*="--border-gradient"]::before {
+content: "";
+position: absolute;
+inset: 0;
+padding: 1px;
+border-radius: var(--border-radius-before, inherit);
+-webkit-mask: linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
+background: var(--border-gradient);
+pointer-events: none;
+}</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="overflow-x-hidden selection:bg-blue-500/30 selection:text-blue-200 text-slate-200 bg-[#050914]">
+
+
+
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component top-0 w-full -z-10 absolute h-[800px]" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div class="absolute w-full h-full left-0 top-0 -z-10" data-us-project="gYGCraBekUyqZWu3BIB5"></div>
+<script type="text/javascript">!function(){var u=window.UnicornStudio;if(u&&u.init){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){u.init()})}else{u.init()}}else{window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js",i.onload=function(){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){UnicornStudio.init()})}else{UnicornStudio.init()}},(document.head||document.body).appendChild(i)}}();</script></div>
+    <!-- Background Elements -->
+    <div class="fixed inset-0 z-0 pointer-events-none flex justify-center w-full max-w-[1400px] mx-auto opacity-40 md:opacity-100">
+      <div class="w-full h-full border-x border-white/[0.03] relative overflow-hidden">
+        <div class="absolute left-1/4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent to-transparent overflow-hidden via-amber-500/10">
+          <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent to-transparent beam-line-anim via-amber-400"></div>
+        </div>
+        <div class="absolute right-1/4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent to-transparent overflow-hidden via-amber-500/10">
+          <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent to-transparent beam-line-anim via-amber-400" style="animation-delay: 2s;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="absolute top-0 w-full z-50 py-8 px-6 lg:px-12 flex justify-between items-center max-w-[1400px] mx-auto left-0 right-0">
+      <div class="flex items-center gap-2">
+        <iconify-icon icon="solar:cpu-line-duotone" class="text-2xl text-amber-400"></iconify-icon>
+        <span class="text-xl font-medium tracking-tight text-white">
+          NeuGen
+        </span>
+      </div>
+
+      <div class="hidden md:flex items-center gap-12 text-xs font-light tracking-wide text-slate-400">
+        <a href="#" class="hover:text-white transition-colors">Generate</a>
+        <a href="#" class="hover:text-white transition-colors">Models</a>
+        <a href="#" class="hover:text-white transition-colors">Capabilities</a>
+        <a href="#" class="hover:text-white transition-colors">Showcase</a>
+      </div>
+
+      <div class="hidden md:block">
+        <button class="group/btn relative">
+          <div class="-inset-1 group-hover/btn:opacity-75 transition duration-500 bg-amber-500/40 opacity-40 rounded-xl absolute blur"></div>
+          <div class="flex active:translate-y-[2px] active:shadow-[0_0_0_1px_rgba(251,191,36,0.5),0_2px_0_#b45309] transition-all duration-150 text-amber-950 bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 pt-1 pr-6 pb-1 pl-6 relative shadow-[0_0_0_1px_rgba(251,191,36,0.5),0_4px_0_#b45309,0_10px_15px_-3px_rgba(0,0,0,0.5)] gap-x-3 gap-y-3 items-center">
+            <span class="text-sm font-medium tracking-tight">Generate</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fill-amber-950/20 stroke-[1.5]" data-lucide="arrow-big-right-dash" data-icon-set="lucide" data-icon-replaced="true" style="color: rgb(69, 26, 3);">
+              <path d="M5 9v6"></path>
+              <path d="M9 9h3V5l7 7-7 7v-4H9V9z"></path>
+            </svg>
+          </div>
+        </button>
+      </div>
+
+      <div class="md:hidden">
+        <iconify-icon icon="solar:hamburger-menu-linear" class="text-2xl text-slate-400"></iconify-icon>
+      </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div class="z-10 relative">
+      <!-- Hero Section -->
+      <section class="min-h-screen flex overflow-hidden pt-20 pb-4 relative items-center">
+        <div class="blur-[120px] -z-10 w-3/4 h-3/4 rounded-full absolute top-0 right-0 pointer-events-none bg-amber-600/10"></div>
+
+        <div class="lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 w-full max-w-[1400px] mr-auto ml-auto pr-6 pl-6 gap-x-12 gap-y-12 items-center">
+          <div class="space-y-10 relative z-10 mt-12 lg:mt-0">
+            <h1 class="text-5xl md:text-7xl font-light tracking-tight leading-[1.1] text-slate-100 uppercase">
+              Generate.
+              <br>
+              <span class="text-transparent bg-clip-text bg-gradient-to-b drop-shadow-[0_0_40px_rgba(59,130,246,0.2)] from-amber-100 via-amber-400 to-amber-900">
+                AI Images.
+              </span>
+            </h1>
+
+            <!-- Bracketed Box style -->
+            <div class="relative p-5 text-sm font-light text-slate-400 tracking-wide flex flex-col gap-4 bg-[#050914]/50 backdrop-blur-sm max-w-md border border-white/[0.03]">
+              <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-slate-600"></div>
+              <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-slate-600"></div>
+              <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-slate-600"></div>
+              <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-slate-600"></div>
+
+              <p class="leading-relaxed">
+                The most advanced text-to-image AI generator available.
+                Transforming your creative prompts into stunning visual
+                realities in seconds.
+              </p>
+            </div>
+
+            <div class="flex gap-4 mt-8 items-center">
+              <div class="flex items-baseline gap-2">
+                <span class="text-4xl tracking-tight font-medium text-amber-400">
+                  2.4M+
+                </span>
+                <span class="text-xs font-light text-slate-500 uppercase">
+                  Images
+                </span>
+              </div>
+              <div class="h-8 w-px bg-white/[0.1] mx-4"></div>
+              <span class="text-xs text-slate-400 font-light tracking-wide uppercase">
+                High-Res &amp; Fast
+              </span>
+            </div>
+          </div>
+
+          
+        </div>
+      </section>
+
+      <!-- Visual Mastery Section (Capabilities Style) -->
+      <section class="md:px-8 md:pt-0 z-20 font-sans w-full max-w-[1600px] mr-auto ml-auto pt-24 pr-4 pb-24 pl-4 relative">
+  <div class="border-white/[0.08] overflow-hidden flex flex-col md:flex-row bg-[#101014] h-[900px] border rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.5)] gap-x-3 gap-y-3" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 75%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 75%, transparent);">
+    
+    <!-- Sidebar -->
+    <aside class="md:w-64 flex-shrink-0 border-white/[0.05] hidden md:flex flex-col bg-[#101014] w-full border-r pt-6 pr-4 pb-6 pl-4 justify-between">
+      <div class="overflow-y-auto custom-scrollbar pr-2">
+        <div class="px-3 mb-8 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-none bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>
+          </div>
+          <span class="text-lg font-medium text-white tracking-tight">NeuGen Studio</span>
+        </div>
+        
+        <nav class="space-y-1">
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none font-medium transition-colors bg-amber-500/10 text-amber-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+            <span class="text-sm">Workspace</span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand-2"><path d="m21 21-2-2m-5.421-4.01 2.5-2.5a2 2 0 1 1 2.829 2.829l-2.5 2.5a2 2 0 1 1-2.829-2.829Z"></path><path d="M3 3l5 5"></path><path d="m5 3 2 2"></path><path d="m3 5 2 2"></path><path d="M10 7l1 1"></path><path d="M7 10l1 1"></path></svg>
+            <span class="text-sm font-medium">Generation</span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gallery-vertical-end"><path d="M7 2h10"></path><path d="M5 6h14"></path><rect width="18" height="12" x="3" y="10" rx="2"></rect></svg>
+            <span class="text-sm font-medium">Collections</span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
+            <span class="text-sm font-medium">History</span>
+          </a>
+        </nav>
+        
+        <div class="mt-10">
+          <h4 class="px-3 text-[10px] font-medium text-slate-500 uppercase tracking-[0.2em] mb-3">Model Lab</h4>
+          <nav class="space-y-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-microscope"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0-14 0"></path><path d="M9 14h2"></path><path d="M9 12a2 2 0 1 0-2 2V6h6v8a2 2 0 1 0-2-2"></path><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>
+              <span class="text-sm font-medium">Fine-tuning</span>
+            </a>
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+              <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+                <span class="text-sm font-medium">Style Forge</span>
+              </div>
+              <span class="text-[9px] font-semibold uppercase tracking-wider text-amber-500 bg-amber-500/10 px-1.5 py-0.5 border border-amber-500/20">Beta</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-binary"><rect width="14" height="14" x="5" y="5" rx="2"></rect><path d="M8 10v4"></path><path d="M15 10v4"></path><path d="M12 10v4"></path></svg>
+              <span class="text-sm font-medium">Parameter Logs</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="mt-10 mb-6">
+          <h4 class="px-3 text-[10px] font-medium text-slate-500 uppercase tracking-[0.2em] mb-3">System</h4>
+          <nav class="space-y-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database"><circle cx="12" cy="5" r="3"></circle><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>
+              <span class="text-sm font-medium">Storage Usage</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-2"><path d="M2 21a8 8 0 0 1 13.21-6"></path><path d="M7 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path><path d="M22 21a8 8 0 0 0-11-7.29"></path><path d="M16 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path></svg>
+              <span class="text-sm font-medium">Collaborators</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="space-y-1.5 pt-4 border-t border-white/[0.05]">
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+          <span class="text-sm font-medium">Help</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" class=""></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+          <span class="text-sm font-medium">Updates</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-none text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] transition-colors mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+          <span class="text-sm font-medium">Dark Mode</span>
+        </a>
+        
+        <!-- User Profile Dropdown Simulator -->
+        <button class="w-full flex items-center justify-between px-3 py-2.5 rounded-none text-slate-300 hover:bg-white/[0.08] bg-white/[0.03] border border-white/[0.05] transition-colors">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-none bg-gradient-to-tr to-amber-500/20 flex items-center justify-center border from-amber-500/40 text-amber-400 border-amber-500/30">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <span class="text-sm font-medium">Alex M.</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-more-horizontal text-slate-500"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col bg-[#050505] relative w-full border-l border-white/[0.02] overflow-hidden">
+  
+  <!-- Main Scrollable Content -->
+  <div class="flex-1 overflow-y-auto custom-scrollbar pb-40">
+    
+    <!-- Immersive Header / Hero Gallery -->
+    <div class="relative w-full h-[60vh] min-h-[400px] flex flex-col justify-end p-6 md:p-12 mb-8 group">
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0de312e9-1b5a-4eaf-bb8b-5630032a6636_1600w.webp" alt="Featured Generation" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105">
+      <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#050505]/80 via-transparent to-transparent"></div>
+      
+      <!-- Top Subtle Nav inside Hero -->
+      <div class="absolute top-0 left-0 right-0 p-6 md:px-10 flex justify-between items-center z-20">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+          <span class="text-xs font-medium tracking-widest uppercase text-slate-300">Live Feed</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-md text-xs font-medium text-slate-300 transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal"><line x1="21" x2="14" y1="4" y2="4"></line><line x1="10" x2="3" y1="4" y2="4"></line><line x1="21" x2="12" y1="12" y2="12"></line><line x1="8" x2="3" y1="12" y2="12"></line><line x1="21" x2="16" y1="20" y2="20"></line><line x1="12" x2="3" y1="20" y2="20"></line><line x1="14" x2="14" y1="2" y2="6"></line><line x1="8" x2="8" y1="10" y2="14"></line><line x1="16" x2="16" y1="18" y2="22"></line></svg>
+            Filters
+          </button>
+        </div>
+      </div>
+
+      <div class="relative z-10 max-w-3xl transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-semibold uppercase tracking-widest backdrop-blur-md">Featured</span>
+          <span class="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            v4.0 Alpha Engine
+          </span>
+        </div>
+        <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-white mb-3 leading-tight">
+          Abstract conceptualization of dimensional fluid mechanics.
+        </h1>
+        <div class="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
+            <img src="https://i.pravatar.cc/100?img=33" alt="Creator" class="w-6 h-6 rounded-full border border-white/20">
+            <span class="font-medium">Elena R.</span>
+          </div>
+          <button class="text-xs font-medium text-white/70 hover:text-white transition-colors flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+            Copy Prompt
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Curated Bento Grid -->
+    <div class="px-6 md:px-10 max-w-[1600px] mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-medium text-white tracking-tight">Community Showcase</h2>
+        <div class="flex gap-1 bg-[#111] p-1 rounded-lg border border-white/5">
+          <button class="px-3 py-1.5 rounded-md bg-white/10 text-xs font-medium text-white shadow-sm">Trending</button>
+          <button class="px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white transition-colors">Following</button>
+          <button class="px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white transition-colors">Recent</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[240px]">
+        
+        <!-- Bento Item 1 (Tall) -->
+        <div class="md:col-span-1 md:row-span-2 group overflow-hidden hover:border-white/20 transition-all duration-300 cursor-pointer bg-[#111] border-white/5 border relative">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d2561cb9-548e-42a5-8ade-53df0e98e888_800w.webp" alt="Generated Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter contrast-125">
+          <div class="group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 rounded-none absolute top-0 right-0 bottom-0 left-0"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <p class="text-sm font-medium text-white truncate mb-1 shadow-sm">Ethereal quantum structures</p>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-slate-400 font-mono">--ar 9:16 --v 4.0</span>
+              <button class="text-white/50 hover:text-amber-400 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Item 2 (Wide) -->
+        <div class="md:col-span-2 md:row-span-1 group overflow-hidden hover:border-amber-500/30 transition-all duration-300 cursor-pointer bg-[#111] border-white/5 border relative">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d6792f1a-e2a6-4245-819a-5d1c1e3791b3_1600w.webp" alt="Generated Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-end">
+            <div class="">
+              <p class="text-sm font-medium text-white mb-1 shadow-sm">Bioluminescent deep sea entity</p>
+              <span class="text-[10px] text-slate-400 font-mono">--style raw --c 50</span>
+            </div>
+            <button class="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bento Item 3 (Square) -->
+        <div class="md:col-span-1 md:row-span-1 group overflow-hidden hover:border-white/20 transition-all duration-300 cursor-pointer bg-[#111] relative">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4f288575-ac60-4575-8d54-9e26119b372a_800w.jpg" alt="Generated Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter contrast-125 saturate-150">
+          <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
+          <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none"></div>
+        </div>
+
+        <!-- Bento Item 4 (Square) -->
+        <div class="md:col-span-1 md:row-span-1 group overflow-hidden hover:border-white/20 transition-all duration-300 cursor-pointer bg-[#111] border-white/5 border relative">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f8f5be7d-53b1-4fe2-bbee-947a3a599363_800w.webp" alt="Generated Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
+          <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none"></div>
+        </div>
+
+        <!-- Bento Item 5 (Wide) -->
+        <div class="md:col-span-2 md:row-span-1 group overflow-hidden hover:border-white/20 transition-all duration-300 cursor-pointer bg-[#111] border-white/5 border relative">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/d1e5a098-6ebf-47f9-8928-c39071ca2c68/1600w.png" alt="Generated Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter hue-rotate-90">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-end">
+            <div class="">
+              <p class="text-sm font-medium text-white mb-1 shadow-sm">Neon-lit architectural geometry</p>
+              <span class="text-[10px] text-slate-400 font-mono">--style cyberpunk --ar 16:9</span>
+            </div>
+            <button class="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Command Palette -->
+  <div class="-translate-x-1/2 z-50 w-[90%] max-w-3xl absolute bottom-40 left-1/2 gap-x-3 gap-y-3">
+    <div class="border-white/[0.05] flashlight-card flex flex-col gap-3 transition-all bg-[#0a0f1c]/80 w-full border rounded-sm pt-4 pr-4 pb-4 pl-4 relative shadow-[0_0_30px_rgba(59,130,246,0.1)] backdrop-blur-md gap-x-3 gap-y-3" style="--mouse-x: 458.5px; --mouse-y: 88.5px;">
+  <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-amber-500"></div>
+  <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-amber-500"></div>
+  <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-amber-500"></div>
+  <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-amber-500"></div>
+
+  <div class="flex items-center gap-3">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal text-amber-400"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+    <span class="text-xs font-mono uppercase tracking-widest text-amber-400/80">
+      /imagine prompt
+    </span>
+  </div>
+  
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-between items-center bg-[#050914] rounded-sm p-3 border border-white/[0.05] focus-within:border-amber-500/50 focus-within:ring-1 focus-within:ring-amber-500/50 transition-all">
+      <input type="text" placeholder="A surreal geometric lattice in a dark void, quantum lighting, 8k..." class="flex-1 bg-transparent border-none outline-none text-xs text-slate-300 font-mono tracking-tight pr-4 placeholder:text-slate-500">
+      
+      <div class="flex items-center gap-2 shrink-0">
+        <button class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-sm hover:bg-white/5 text-slate-400 hover:text-white transition-colors text-xs font-medium shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+          Ref
+        </button>
+        <button class="border px-4 py-1.5 rounded-sm text-xs font-medium tracking-wide transition-colors bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 flex items-center gap-2">
+          Generate
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"></polyline><path d="M20 4v7a4 4 0 0 1-4 4H4"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Parameters -->
+    <div class="flex items-center justify-between pt-1 px-1">
+      <div class="flex items-center gap-4 overflow-x-auto custom-scrollbar">
+        <button class="flex items-center gap-1.5 text-[11px] font-mono text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+          <span class="w-4 h-4 rounded-sm bg-white/10 flex items-center justify-center border border-white/20 text-white font-sans">4</span>
+          Aspect Ratio
+        </button>
+        <button class="flex items-center gap-1.5 text-[11px] font-mono text-amber-400 hover:text-amber-300 transition-colors whitespace-nowrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+          v4.0 Alpha
+        </button>
+        <button class="flex items-center gap-1.5 text-[11px] font-mono text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+          Style: Raw
+        </button>
+      </div>
+      <button class="text-slate-400 hover:text-white transition-colors p-1 rounded-sm hover:bg-white/10 shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-2"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="5" cy="7" r="3"></circle></svg>
+      </button>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</main>
+  </div>
+</section><section class="border-white/[0.03] z-20 md:py-32 bg-gradient-to-b from-[#050914] to-transparent w-full border-t py-24 relative">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div class="mb-16 md:mb-20 animate-on-scroll">
+            <h2 class="text-3xl tracking-tight font-light text-slate-100 mb-4 uppercase">
+              AI Art Styles
+            </h2>
+            <p class="text-sm font-light text-slate-400 max-w-xl leading-relaxed">
+              From stunning photorealism to expressive anime and concept art.
+              Our advanced AI understands your creative prompts to deliver
+              breathtaking visuals.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-on-scroll">
+            <div class="group relative p-4 border border-white/[0.05] bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300 rounded-sm overflow-hidden flex flex-col flashlight-card" style="--mouse-x: 25px; --mouse-y: 115.5px;">
+              <div class="relative h-48 md:h-64 mb-4 overflow-hidden rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/139ed8b6-013c-4038-a14c-28d58cc7a1e3_800w.jpg" alt="Cyberpunk style" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 hue-rotate-180">
+              </div>
+              <div class="mt-auto border px-3 py-2 rounded-sm text-xs font-mono flex items-center gap-2 border-amber-500/20 bg-amber-500/5 text-amber-300">
+                <iconify-icon icon="solar:bolt-circle-line-duotone"></iconify-icon>
+                --style cyberpunk
+              </div>
+            </div>
+            <div class="group relative p-4 border border-white/[0.05] bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300 rounded-sm overflow-hidden flex flex-col flashlight-card" style="--mouse-x: 269px; --mouse-y: 59px;">
+              <div class="relative h-48 md:h-64 mb-4 overflow-hidden rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c9104c6d-9521-4057-b664-ed476bf3039e_800w.webp" alt="Photorealism" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 saturate-50">
+              </div>
+              <div class="mt-auto border px-3 py-2 rounded-sm text-xs font-mono flex items-center gap-2 border-amber-500/20 bg-amber-500/5 text-amber-300">
+                <iconify-icon icon="solar:camera-line-duotone"></iconify-icon>
+                --style photoreal
+              </div>
+            </div>
+            <div class="group relative p-4 border border-white/[0.05] bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300 rounded-sm overflow-hidden flex flex-col flashlight-card">
+              <div class="relative h-48 md:h-64 mb-4 overflow-hidden rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/4d12e57a-d3c5-47be-99ba-fc1211f55cf8/800w.png" alt="Abstract 3D Shape" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 hue-rotate-180">
+              </div>
+              <div class="mt-auto border px-3 py-2 rounded-sm text-xs font-mono flex items-center gap-2 border-amber-500/20 bg-amber-500/5 text-amber-300">
+                <iconify-icon icon="solar:box-minimalistic-line-duotone"></iconify-icon>
+                --style 3d-render
+              </div>
+            </div>
+            <div class="group relative p-4 border border-white/[0.05] bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300 rounded-sm overflow-hidden flex flex-col flashlight-card">
+              <div class="relative h-48 md:h-64 mb-4 overflow-hidden rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/922f712e-4dfd-4a06-94b8-7a12ea01d0d2_800w.webp" alt="Concept Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 hue-rotate-[220deg]">
+              </div>
+              <div class="mt-auto border px-3 py-2 rounded-sm text-xs font-mono flex items-center gap-2 border-amber-500/20 bg-amber-500/5 text-amber-300">
+                <iconify-icon icon="solar:pen-new-square-line-duotone"></iconify-icon>
+                --style concept-art
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services -> Capabilities Section (Tiers Style) -->
+      <section class="py-24 md:py-32 relative border-t border-white/[0.03]">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div class="mb-16 animate-on-scroll">
+            <h3 class="text-3xl tracking-tight font-light text-slate-100 mb-4">
+              Core Capabilities
+            </h3>
+            <p class="text-sm font-light text-slate-400 max-w-md">
+              Our AI image generation engine is built on fundamental principles
+              of speed, precision, and breathtaking quality.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 gap-x-6 gap-y-6">
+            <!-- Card 1 -->
+            <div class="relative p-8 border border-white/[0.05] bg-white/[0.01] flex flex-col hover:bg-white/[0.02] transition-colors animate-on-scroll flashlight-card rounded-sm" style="--mouse-x: 165px; --mouse-y: 14.5px;">
+              <iconify-icon icon="solar:text-field-focus-line-duotone" class="text-3xl mb-6 text-amber-400"></iconify-icon>
+              <h4 class="text-sm font-medium text-slate-200 uppercase tracking-wide mb-3">
+                Text to Image
+              </h4>
+              <p class="text-xs font-light text-slate-400 mb-8 flex-1 leading-relaxed">
+                Transform your natural language prompts directly into stunning,
+                high-resolution AI artworks.
+              </p>
+              <button class="w-full py-3 border border-white/[0.1] text-xs font-medium text-slate-300 hover:bg-white/[0.03] transition-colors rounded-sm flex items-center justify-center gap-2">
+                Initiate
+                <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              </button>
+            </div>
+
+            <!-- Card 2 (Active/Highlighted) -->
+            <div class="flex flex-col transform lg:-translate-y-4 lg:mt-0 animate-on-scroll group flashlight-card border-amber-500/30 border rounded-sm mt-4 pt-8 pr-8 pb-8 pl-8 relative shadow-[0_0_40px_rgba(59,130,246,0.1)]" style="--mouse-x: 84px; --mouse-y: 24.5px;">
+  <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-amber-500"></div>
+  <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-amber-500"></div>
+  <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-amber-500"></div>
+  <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-amber-500"></div>
+
+  <div class="flex justify-between items-start mb-6">
+    <iconify-icon icon="solar:gallery-edit-line-duotone" class="text-4xl drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] text-amber-400"></iconify-icon>
+    <span class="text-[10px] px-2 py-1 border font-medium tracking-wide bg-amber-500/20 text-amber-300 border-amber-500/30">
+                  CORE
+                </span>
+  </div>
+  <h4 class="text-sm font-medium uppercase tracking-wide mb-3 text-amber-400">
+    Image to Image
+  </h4>
+  <p class="text-xs font-light text-slate-300 mb-8 flex-1 leading-relaxed">
+    Use your existing images as references to generate new,
+    beautifully reimagined visuals.
+  </p>
+
+  <button class="border-white/[0.1] hover:bg-white/[0.03] transition-colors flex text-xs font-medium text-slate-300 w-full border rounded-sm gap-x-2 gap-y-2 items-center justify-center">
+                <div class="btn-beam-content flex transition-colors duration-300 text-xs font-medium text-white text-center w-full pt-3 pr-6 pb-3 pl-6 gap-x-2 gap-y-2 items-center justify-center">
+                  Upload Reference
+                </div>
+              </button>
+</div>
+
+            <!-- Card 3 -->
+            <div class="relative p-8 border border-white/[0.05] bg-white/[0.01] flex flex-col hover:bg-white/[0.02] transition-colors mt-4 lg:mt-0 animate-on-scroll flashlight-card rounded-sm" style="--mouse-x: 57px; --mouse-y: 37px;">
+              <iconify-icon icon="solar:maximize-square-line-duotone" class="text-3xl mb-6 text-amber-400"></iconify-icon>
+              <h4 class="text-sm font-medium text-slate-200 uppercase tracking-wide mb-3">
+                Outpainting
+              </h4>
+              <p class="text-xs font-light text-slate-400 mb-8 flex-1 leading-relaxed">
+                Expand your images seamlessly beyond their original borders with
+                AI-driven outpainting.
+              </p>
+              <button class="w-full py-3 border border-white/[0.1] text-xs font-medium text-slate-300 hover:bg-white/[0.03] transition-colors rounded-sm flex items-center justify-center gap-2">
+                Expand
+                <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              </button>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="relative p-8 border border-white/[0.05] bg-white/[0.01] flex flex-col hover:bg-white/[0.02] transition-colors mt-4 lg:mt-0 animate-on-scroll flashlight-card rounded-sm">
+              <iconify-icon icon="solar:tuning-square-2-line-duotone" class="text-3xl mb-6 text-amber-400"></iconify-icon>
+              <h4 class="text-sm font-medium text-slate-200 uppercase tracking-wide mb-3">
+                ControlNet &amp; Posing
+              </h4>
+              <p class="text-xs font-light text-slate-400 mb-8 flex-1 leading-relaxed">
+                Apply advanced structural controls to maintain exact poses,
+                compositions, and character consistency.
+              </p>
+              <button class="w-full py-3 border border-white/[0.1] text-xs font-medium text-slate-300 hover:bg-white/[0.03] transition-colors rounded-sm flex items-center justify-center gap-2">
+                Configure
+                <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="overflow-hidden border-t border-white/[0.03] bg-gradient-to-b from-white/[0.01] to-transparent py-24 md:py-32 relative">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div class="text-center max-w-3xl mx-auto mb-20 animate-on-scroll">
+            <h6 class="uppercase block text-xs font-medium tracking-wide mb-3 text-amber-500">
+              Generation Process
+            </h6>
+            <h2 class="text-3xl lg:text-4xl font-light tracking-tight text-slate-100 mb-6">
+              How It Works
+            </h2>
+            <p class="text-sm text-slate-400 font-light leading-relaxed">
+              Generating high-fidelity AI artworks is effortless with our
+              intuitive creative pipeline.
+            </p>
+          </div>
+
+          <div class="relative grid grid-cols-1 md:grid-cols-3 gap-12 animate-on-scroll">
+            <!-- Animated Connector Line -->
+            <div class="hidden md:block absolute top-12 left-[16%] right-[16%] h-[1px] -z-10 bg-gradient-to-r from-transparent to-transparent via-amber-500/30">
+              <div class="absolute inset-0 w-full h-full animate-flow-dash [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)] opacity-80"></div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="relative flex flex-col items-center text-center group cursor-default">
+              <div class="w-24 h-24 rounded-full bg-[#050914] border border-white/[0.1] flex items-center justify-center mb-6 relative z-10 transition-colors group-hover:border-amber-500/50">
+                <iconify-icon icon="solar:keyboard-line-duotone" class="text-3xl text-slate-400 transition-colors group-hover:text-amber-400"></iconify-icon>
+                <div class="absolute -top-1 -right-1 w-6 h-6 rounded-sm flex items-center justify-center font-mono text-xs shadow-lg bg-[#0a0f1c] border text-amber-300 border-amber-500/30">
+                  01
+                </div>
+              </div>
+              <h3 class="text-base font-medium text-slate-200 mb-3 tracking-wide uppercase">
+                Write Your Prompt
+              </h3>
+              <p class="text-slate-400 text-xs font-light leading-relaxed px-4">
+                Describe your vision in detail. Add style keywords like
+                'cinematic lighting' to guide the AI.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="relative flex flex-col items-center text-center group cursor-default">
+              <div class="w-24 h-24 rounded-full bg-[#050914] border border-white/[0.1] flex items-center justify-center mb-6 relative z-10 transition-colors shadow-[0_0_30px_rgba(59,130,246,0.1)] group-hover:border-amber-500/50">
+                <iconify-icon icon="solar:cpu-line-duotone" class="text-4xl text-slate-400 transition-colors group-hover:text-amber-400"></iconify-icon>
+                <div class="absolute -top-1 -right-1 w-6 h-6 rounded-sm flex items-center justify-center font-mono text-xs shadow-lg bg-[#0a0f1c] border text-amber-300 border-amber-500/30">
+                  02
+                </div>
+              </div>
+              <h3 class="text-base font-medium text-slate-200 mb-3 tracking-wide uppercase">
+                AI Generation
+              </h3>
+              <p class="text-slate-400 text-xs font-light leading-relaxed px-4">
+                Our powerful AI models process your request, rendering multiple
+                high-quality variations in seconds.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="relative flex flex-col items-center text-center group cursor-default">
+              <div class="w-24 h-24 rounded-full bg-[#050914] border border-white/[0.1] flex items-center justify-center mb-6 relative z-10 transition-colors group-hover:border-amber-500/50">
+                <iconify-icon icon="solar:cloud-download-line-duotone" class="text-3xl text-slate-400 transition-colors group-hover:text-amber-400"></iconify-icon>
+                <div class="absolute -top-1 -right-1 w-6 h-6 rounded-sm flex items-center justify-center font-mono text-xs shadow-lg bg-[#0a0f1c] border text-amber-300 border-amber-500/30">
+                  03
+                </div>
+              </div>
+              <h3 class="text-base font-medium text-slate-200 mb-3 tracking-wide uppercase">
+                Upscale &amp; Download
+              </h3>
+              <p class="text-slate-400 text-xs font-light leading-relaxed px-4">
+                Select your favorite generation. Apply our AI upscalers for
+                crisp, production-ready 4K and 8K images.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats/Showcase Section -->
+      <section class="md:py-32 border-white/[0.03] border-t pt-24 pb-24 relative">
+        <div class="lg:px-12 max-w-[1400px] mr-auto ml-auto pr-6 pl-6">
+          <div class="md:p-12 overflow-hidden border-white/[0.05] flashlight-card bg-[#050914] border rounded-sm relative shadow-2xl" style="--mouse-x: 330px; --mouse-y: 480.75px;">
+            <!-- Brackets -->
+            <div class="absolute top-0 left-0 w-3 h-3 border-t border-l border-amber-500/50"></div>
+            <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-amber-500/50"></div>
+            <div class="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-amber-500/50"></div>
+            <div class="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-amber-500/50"></div>
+
+            <div class="absolute top-0 right-0 w-96 h-96 rounded-full blur-[100px] pointer-events-none bg-amber-500/5"></div>
+
+            <div class="flex mb-10 items-center justify-between relative z-10 p-6 md:p-0">
+              <span class="uppercase block text-xs font-medium text-slate-400 tracking-wide">
+                Network Log
+              </span>
+              <div class="flex gap-2 text-xs font-mono text-slate-500 border border-white/[0.1] px-3 py-1 bg-white/[0.02] rounded-sm">
+                <span id="slide-number" class="transition-all duration-300 text-amber-400">
+                  01
+                </span>
+                / 03
+              </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center px-6 pb-6 md:px-0 md:pb-0 relative z-10">
+              <div class="">
+                <h3 class="text-3xl lg:text-4xl font-light tracking-tight leading-[1.2] mb-8 text-slate-200">
+                  Our AI models have successfully generated over
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r font-medium from-amber-300 to-amber-400">
+                    1.2 Billion images
+                  </span>
+                  this year.
+                </h3>
+                <button class="btn-beam-wrap group">
+                  <div class="btn-beam-content px-6 py-2 text-xs font-medium flex items-center gap-2 transition-colors duration-300 text-amber-100">
+                    Start Generating
+                    <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                  </div>
+                </button>
+              </div>
+
+              <div class="flex flex-col gap-4 w-full">
+                <!-- Dynamic Image Area -->
+                <div class="relative w-full h-[350px] rounded-sm overflow-hidden border border-white/[0.05] bg-[#0a0f1c] group p-1">
+                  <img id="gen-slide-img" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/bb7d69a4-6b69-421d-8749-3a98dac099a1/800w.png" alt="Generated visual" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-[1.02] rounded-sm">
+
+                  <div class="absolute top-4 right-4 z-20 bg-[#050914]/80 backdrop-blur-md border border-white/[0.1] px-3 py-1.5 rounded-sm flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)] bg-amber-400"></div>
+                    <span class="text-[9px] font-mono uppercase tracking-widest text-slate-300">
+                      Model: Alpha
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Prompt Info & Navigation -->
+                <div class="flex items-start justify-between gap-4 bg-white/[0.02] border border-white/[0.05] p-4 rounded-sm">
+                  <div class="flex-1">
+                    <p class="text-[10px] font-mono mb-1 tracking-widest uppercase text-amber-400/70">
+                      Input Data
+                    </p>
+                    <p id="gen-slide-prompt" class="text-xs font-light text-slate-300 line-clamp-2 leading-relaxed">
+                      A surreal figure standing in calm waters beneath a massive
+                      glowing crescent moon, atmospheric lighting, cinematic, 8k
+                      resolution.
+                    </p>
+                  </div>
+
+                  <div class="flex gap-1 shrink-0">
+                    <button onclick="changeGenSlide(-1)" class="flex hover:bg-white/[0.05] transition-colors w-8 h-8 border-white/[0.1] border rounded-sm items-center justify-center text-slate-400 hover:text-white">
+                      <iconify-icon icon="solar:alt-arrow-left-linear"></iconify-icon>
+                    </button>
+                    <button onclick="changeGenSlide(1)" class="flex transition-all border w-8 h-8 rounded-sm items-center justify-center bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-400">
+                      <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            const genSlides = [
+            { img: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/bb7d69a4-6b69-421d-8749-3a98dac099a1/800w.png", prompt: "A surreal figure standing in calm waters beneath a massive glowing crescent moon, atmospheric lighting, cinematic, 8k resolution.", id: "01" },
+            { img: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/333ed9cc-5ceb-4a82-b640-b96d93a6743f/800w.png", prompt: "A solitary figure walking across an expansive desert dune at sunset, warm golden hour lighting, dramatic shadows, photorealistic.", id: "02" },
+            { img: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/429fb0e2-bd97-413a-8168-ae276101fc2c/800w.png", prompt: "A futuristic monolithic structure emerging from a hazy landscape, dramatic scale, sci-fi concept art, high detail.", id: "03" }
+            ];
+            let currentGenIdx = 0;
+
+            function changeGenSlide(direction) {
+            currentGenIdx = (currentGenIdx + direction + genSlides.length) % genSlides.length;
+            const imgEl = document.getElementById('gen-slide-img');
+            const numEl = document.getElementById('slide-number');
+            const promptEl = document.getElementById('gen-slide-prompt');
+
+            if(imgEl && numEl && promptEl) {
+                imgEl.style.opacity = '0';
+                numEl.style.opacity = '0';
+                promptEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    imgEl.src = genSlides[currentGenIdx].img;
+                    numEl.innerText = genSlides[currentGenIdx].id;
+                    promptEl.innerText = genSlides[currentGenIdx].prompt;
+
+                    imgEl.onload = () => { imgEl.style.opacity = '1'; };
+                    if(imgEl.complete) imgEl.style.opacity = '1';
+
+                    numEl.style.opacity = '1';
+                    promptEl.style.opacity = '1';
+                }, 200);
+            }
+            }
+          </script>
+        </div>
+      </section>
+
+      <!-- Styles/Models Tabs Section -->
+      <section class="py-24 md:py-32 relative border-t border-white/[0.03]">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <h2 class="text-3xl tracking-tight font-light text-slate-100 mb-12">
+            AI Models &amp; Styles
+          </h2>
+
+          <div class="flex flex-wrap border-white/[0.05] border-b mb-12">
+            <button onclick="showModel('photoreal')" class="text-xs font-medium border-b px-6 py-4 relative tracking-wide uppercase text-amber-400 border-amber-500 bg-amber-500/[0.02]" id="tab-photoreal">
+              <span class="relative flex items-center gap-2">
+                <iconify-icon icon="solar:cpu-line-duotone" class="text-base"></iconify-icon>
+                Photorealism
+              </span>
+            </button>
+            <button onclick="showModel('anime')" class="text-xs font-light text-slate-500 hover:text-slate-300 transition-colors px-6 py-4 relative flex items-center gap-2 tracking-wide uppercase border-b border-transparent" id="tab-anime">
+              <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+              Anime &amp; Stylized
+            </button>
+            <button onclick="showModel('concept')" class="hover:text-slate-300 transition-colors flex gap-2 text-xs font-light text-slate-500 px-6 py-4 relative items-center tracking-wide uppercase border-b border-transparent" id="tab-concept">
+              <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+              Concept Art
+            </button>
+          </div>
+
+          <!-- Content Panels -->
+          <div id="content-photoreal" class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-6">
+              <span class="text-[10px] font-mono tracking-widest uppercase border px-2 py-1 rounded-sm text-amber-400 border-amber-500/30 bg-amber-500/10">
+                Model: N-REAL
+              </span>
+              <h3 class="text-4xl font-light tracking-tight text-slate-100">
+                Absolute Photorealism
+              </h3>
+              <p class="text-slate-400 leading-relaxed text-sm font-light max-w-lg">
+                Create photos indistinguishable from reality. Trained on vast
+                datasets to perfect lighting, textures, and stunningly lifelike
+                details.
+              </p>
+              <div class="pt-4 flex items-center gap-4">
+                <span class="px-3 py-1 bg-[#0a0f1c] border border-white/[0.1] rounded-sm text-xs font-mono text-slate-400">
+                  --model real
+                </span>
+                <button class="text-xs font-medium transition-colors flex items-center gap-1 uppercase tracking-wide text-amber-400 hover:text-amber-300">
+                  View Logs
+                  <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+              </div>
+            </div>
+            <div class="relative h-[300px] flex items-center justify-end">
+              <div class="absolute inset-0 rounded-full blur-[80px] pointer-events-none bg-amber-600/5"></div>
+              <div class="relative w-full max-w-sm aspect-square p-2 bg-white/[0.02] border border-white/[0.05] rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/cd29a9d7-58d1-4bab-bc8c-fd014c562441_800w.webp" class="w-full h-full object-cover rounded-sm filter grayscale saturate-50 contrast-125">
+              </div>
+            </div>
+          </div>
+
+          <div id="content-anime" class="hidden grid lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-6">
+              <span class="text-[10px] font-mono tracking-widest uppercase border px-2 py-1 rounded-sm text-amber-400 border-amber-500/30 bg-amber-500/10">
+                Model: N-STYL
+              </span>
+              <h3 class="text-4xl font-light tracking-tight text-slate-100">
+                Expressive Anime
+              </h3>
+              <p class="text-slate-400 leading-relaxed text-sm font-light max-w-lg">
+                Vibrant colors and crisp linework. Perfect for character design,
+                illustrations, and cohesive artistic visual identities.
+              </p>
+              <div class="pt-4 flex items-center gap-4">
+                <span class="px-3 py-1 bg-[#0a0f1c] border border-white/[0.1] rounded-sm text-xs font-mono text-slate-400">
+                  --model anime
+                </span>
+                <button class="text-xs font-medium transition-colors flex items-center gap-1 uppercase tracking-wide text-amber-400 hover:text-amber-300">
+                  View Logs
+                  <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+              </div>
+            </div>
+            <div class="relative h-[300px] flex items-center justify-end">
+              <div class="absolute inset-0 rounded-full blur-[80px] pointer-events-none bg-amber-600/5"></div>
+              <div class="relative w-full max-w-sm aspect-square p-2 bg-white/[0.02] border border-white/[0.05] rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2660aa2d-1535-47c9-aa83-46ff15b0f8f5_800w.webp" class="w-full h-full object-cover rounded-sm filter hue-rotate-180 saturate-50 contrast-125">
+              </div>
+            </div>
+          </div>
+
+          <div id="content-concept" class="hidden grid lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-6">
+              <span class="text-[10px] font-mono tracking-widest uppercase border px-2 py-1 rounded-sm text-amber-400 border-amber-500/30 bg-amber-500/10">
+                Model: N-CNCPT
+              </span>
+              <h3 class="text-4xl font-light tracking-tight text-slate-100">
+                Immersive Concept Art
+              </h3>
+              <p class="text-slate-400 leading-relaxed text-sm font-light max-w-lg">
+                Expansive environmental designs. Engineered to rapidly prototype
+                beautiful landscapes, sci-fi worlds, and fantasy atmospheres.
+              </p>
+              <div class="pt-4 flex items-center gap-4">
+                <span class="px-3 py-1 bg-[#0a0f1c] border border-white/[0.1] rounded-sm text-xs font-mono text-slate-400">
+                  --model concept
+                </span>
+                <button class="text-xs font-medium transition-colors flex items-center gap-1 uppercase tracking-wide text-amber-400 hover:text-amber-300">
+                  View Logs
+                  <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+              </div>
+            </div>
+            <div class="relative h-[300px] flex items-center justify-end">
+              <div class="absolute inset-0 rounded-full blur-[80px] pointer-events-none bg-amber-800/5"></div>
+              <div class="relative w-full max-w-sm aspect-square p-2 bg-white/[0.02] border border-white/[0.05] rounded-sm">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/b5d747ab-b9b0-4379-9347-fd0661e8f119/3840w.png" class="w-full h-full object-cover rounded-sm filter grayscale saturate-50 contrast-125">
+              </div>
+            </div>
+          </div>
+
+          <script>
+            function showModel(model) {
+                const models = ['photoreal', 'anime', 'concept'];
+                const labels = {
+                'photoreal': 'Photorealism',
+                'anime': 'Anime & Stylized',
+                'concept': 'Concept Art'
+                };
+
+                models.forEach(mod => {
+                const content = document.getElementById('content-' + mod);
+                const tab = document.getElementById('tab-' + mod);
+
+                if (mod === model) {
+                    content.classList.remove('hidden');
+                    tab.className = 'text-xs font-medium text-amber-400 border-b border-amber-500 px-6 py-4 relative tracking-wide uppercase bg-amber-500/[0.02]';
+                    tab.innerHTML = '<span class="relative flex items-center gap-2"><iconify-icon icon="solar:cpu-line-duotone" class="text-base"></iconify-icon>' + labels[mod] + '</span>';
+                } else {
+                    content.classList.add('hidden');
+                    tab.className = 'text-xs font-light text-slate-500 hover:text-slate-300 transition-colors px-6 py-4 relative flex items-center gap-2 tracking-wide uppercase border-b border-transparent';
+                    tab.innerHTML = '<iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>' + labels[mod];
+                }
+                });
+            }
+          </script>
+        </div>
+      </section>
+
+      <!-- Version History Section -->
+      <section class="border-white/[0.03] bg-gradient-to-b from-white/[0.01] to-transparent border-t pt-24 pb-24 relative">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="relative rounded-sm overflow-hidden aspect-square border border-white/[0.05] group bg-[#0a0f1c] p-2 shadow-2xl flashlight-card" style="--mouse-x: 537px; --mouse-y: 266.75px;">
+              <div class="w-full h-full relative overflow-hidden rounded-sm">
+                <img id="version-display-image" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/e41c2eba-a959-4377-8295-ac996393ebcd/1600w.png" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 filter hue-rotate-180 saturate-50 contrast-125">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050914] via-transparent to-transparent opacity-80"></div>
+              </div>
+            </div>
+
+            <div class="">
+              <div class="flex gap-6 border-white/[0.05] overflow-x-auto border-b mb-10 pb-3 gap-x-6 gap-y-6" id="version-tabs-container">
+                <button onclick="updateVersionTab('v4')" class="version-tab text-sm font-medium text-slate-200 pb-3 border-b inline-block bg-transparent cursor-pointer transition-colors tracking-wide uppercase border-amber-500" data-version="v4">
+                  Core v4.0
+                </button>
+                <button onclick="updateVersionTab('v3')" class="version-tab text-sm font-light text-slate-500 hover:text-slate-300 pb-3 border-b border-transparent inline-block bg-transparent cursor-pointer transition-colors tracking-wide uppercase" data-version="v3">
+                  Core v3.0
+                </button>
+                <button onclick="updateVersionTab('v2')" class="version-tab text-sm font-light text-slate-500 hover:text-slate-300 pb-3 border-b border-transparent inline-block bg-transparent cursor-pointer transition-colors tracking-wide uppercase" data-version="v2">
+                  Legacy
+                </button>
+              </div>
+
+              <span class="uppercase block text-[10px] font-mono tracking-widest mb-3 border px-2 py-1 rounded-sm w-max text-amber-400 border-amber-500/30 bg-amber-500/10">
+                Deployment Specs
+              </span>
+
+              <div class="flex justify-between items-start mb-6">
+                <h2 class="text-4xl font-light tracking-tight leading-none text-slate-100">
+                  <span id="version-title" class="block">Nexus Alpha</span>
+                  <span id="version-subtitle" class="block text-xl text-slate-500 font-light mt-3">
+                    Optimization Patch
+                  </span>
+                </h2>
+                <div class="flex flex-col gap-2">
+                  <button onclick="navigateVersion(1)" class="flex border border-white/[0.1] hover:bg-white/[0.05] transition-colors cursor-pointer text-slate-400 w-10 h-10 rounded-sm items-center justify-center">
+                    <iconify-icon icon="solar:alt-arrow-right-linear" class="text-lg"></iconify-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div id="version-tags" class="flex flex-wrap gap-2 mb-8">
+                <span class="px-2 py-1 rounded-sm bg-white/[0.02] text-[10px] font-mono text-slate-400 border border-white/[0.05] uppercase tracking-wide">
+                  12B Params
+                </span>
+                <span class="px-2 py-1 rounded-sm bg-white/[0.02] text-[10px] font-mono text-slate-400 border border-white/[0.05] uppercase tracking-wide">
+                  Prompt Coherence
+                </span>
+                <span class="px-2 py-1 rounded-sm bg-white/[0.02] text-[10px] font-mono text-slate-400 border border-white/[0.05] uppercase tracking-wide">
+                  Res 1024x1024
+                </span>
+              </div>
+
+              <p id="version-description" class="text-slate-400 text-sm font-light leading-relaxed mb-10 max-w-md">
+                Our latest AI model update enhances prompt understanding and
+                image coherence. Generation times are drastically reduced while
+                boosting base resolution to 1024x1024.
+              </p>
+
+              <button class="btn-beam-wrap group w-max">
+                <div class="btn-beam-content px-6 py-2.5 text-xs font-medium flex items-center gap-2 transition-colors duration-300 text-amber-100">
+                  Review Changelog
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <script>
+          const versionData = {
+          'v4': {
+              title: 'Nexus Alpha',
+              subtitle: 'Optimization Patch',
+              desc: 'Our latest AI model update enhances prompt understanding and image coherence. Generation times are drastically reduced while boosting base resolution to 1024x1024.',
+              tags: ['12B Params', 'Prompt Coherence', 'Res 1024x1024'],
+              img: 'https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/e41c2eba-a959-4377-8295-ac996393ebcd/1600w.png'
+          },
+          'v3': {
+              title: 'Core Delta',
+              subtitle: 'Structural Engine',
+              desc: 'Implemented base framework for structural constraints. Enabled ControlNet-based spatial control parameters directly in the execution pipeline.',
+              tags: ['8B Params', 'ControlNet', 'Fast Routing'],
+              img: 'https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/2cfc7a4b-7b93-4383-bb69-3a3535aa9000/1600w.png'
+          },
+          'v2': {
+              title: 'Legacy Beta',
+              subtitle: 'Initial Boot',
+              desc: 'The foundational model structure. Allowed for rapid prototyping via primitive image distribution algorithms.',
+              tags: ['3B Params', 'SD Base', 'Raw Power'],
+              img: 'https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/00b2a18f-3b42-4b51-822c-d32fc870fc2c/1600w.jpg'
+          }
+          };
+
+          let currentActiveVersion = 'v4';
+          const versionsList = ['v4', 'v3', 'v2'];
+
+          function updateVersionTab(version) {
+          if (!versionData[version]) return;
+          currentActiveVersion = version;
+
+          const tabs = document.querySelectorAll('.version-tab');
+          tabs.forEach(tab => {
+              if (tab.getAttribute('data-version') === version) {
+              tab.classList.remove('text-slate-500', 'hover:text-slate-300', 'border-transparent', 'font-light');
+              tab.classList.add('text-slate-200', 'border-amber-500', 'font-medium');
+              } else {
+              tab.classList.remove('text-slate-200', 'border-amber-500', 'font-medium');
+              tab.classList.add('text-slate-500', 'hover:text-slate-300', 'border-transparent', 'font-light');
+              }
+          });
+
+          const data = versionData[version];
+          const imgEl = document.getElementById('version-display-image');
+          const titleEl = document.getElementById('version-title');
+          const subtitleEl = document.getElementById('version-subtitle');
+          const descEl = document.getElementById('version-description');
+          const tagsEl = document.getElementById('version-tags');
+
+          imgEl.style.opacity = '0.5';
+          setTimeout(() => {
+              imgEl.src = data.img;
+              imgEl.onload = () => { imgEl.style.opacity = '1'; };
+              if(imgEl.complete) imgEl.style.opacity = '1';
+          }, 150);
+
+          titleEl.textContent = data.title;
+          subtitleEl.textContent = data.subtitle;
+          descEl.textContent = data.desc;
+
+          tagsEl.innerHTML = data.tags.map(tag =>
+              `<span class="px-2 py-1 rounded-sm bg-white/[0.02] text-[10px] font-mono text-slate-400 border border-white/[0.05] uppercase tracking-wide">${tag}</span>`
+          ).join('');
+          }
+
+          function navigateVersion(direction) {
+          const currentIndex = versionsList.indexOf(currentActiveVersion);
+          let newIndex = currentIndex + direction;
+
+          if (newIndex >= versionsList.length) newIndex = 0;
+          if (newIndex < 0) newIndex = versionsList.length - 1;
+
+          updateVersionTab(versionsList[newIndex]);
+          }
+        </script>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="w-full relative z-20 py-32 border-t border-white/[0.03] overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[100px] pointer-events-none bg-amber-500/10"></div>
+
+        <div class="max-w-[800px] mx-auto px-6 text-center flex flex-col items-center relative z-10">
+          <iconify-icon icon="solar:code-circle-bold-duotone" class="text-5xl mb-8 opacity-80 text-amber-500"></iconify-icon>
+          <h2 class="text-4xl lg:text-5xl tracking-tight font-light text-slate-100 mb-6">
+            Start Generating Images.
+          </h2>
+          <p class="text-sm md:text-base font-light text-slate-400 mb-10 max-w-lg">
+            Join millions of creators making stunning AI art. Start generating
+            images today or integrate our API into your apps.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button class="btn-beam-wrap group">
+              <div class="btn-beam-content px-8 py-3 text-sm font-medium text-white flex justify-center items-center gap-2 transition-colors duration-300">
+                Get Started Free
+              </div>
+            </button>
+            <button class="bg-white/[0.02] border border-white/[0.1] text-slate-300 font-medium text-sm py-3 px-8 rounded-full hover:bg-white/[0.05] transition-colors">
+              Documentation
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="w-full border-t border-white/[0.05] bg-[#050914] relative z-20 pt-16 pb-8">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 mb-16">
+            <div class="col-span-2 lg:col-span-2">
+              <div class="text-sm font-medium text-slate-200 tracking-[0.2em] mb-4 flex items-center gap-2">
+                <iconify-icon icon="solar:cpu-line-duotone" class="text-lg text-amber-400"></iconify-icon>
+                NEUGEN
+              </div>
+              <p class="text-xs font-light text-slate-500 max-w-xs leading-relaxed">
+                Engineering advanced AI image generation models for creators and
+                developers.
+              </p>
+            </div>
+
+            <div>
+              <h5 class="text-[10px] font-medium text-slate-200 uppercase tracking-widest mb-4">
+                Architecture
+              </h5>
+              <ul class="flex flex-col gap-3 text-xs font-light text-slate-400">
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Modules
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Nodes
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Status
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="text-[10px] font-medium text-slate-200 uppercase tracking-widest mb-4">
+                Data
+              </h5>
+              <ul class="flex flex-col gap-3 text-xs font-light text-slate-400">
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    API Ref
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Syntax
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Logs
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="text-[10px] font-medium text-slate-200 uppercase tracking-widest mb-4">
+                Entity
+              </h5>
+              <ul class="flex flex-col gap-3 text-xs font-light text-slate-400">
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Core Team
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Terms
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="transition-colors hover:text-amber-400">
+                    Privacy
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pt-8 border-t border-white/[0.05] flex justify-between items-center gap-4">
+            <p class="text-[10px] uppercase tracking-widest font-mono text-slate-600">
+              © 2024 NeuGen. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      document.querySelectorAll('.flashlight-card').forEach(card => {
+          card.addEventListener('mousemove', e => {
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              card.style.setProperty('--mouse-x', `${x}px`);
+              card.style.setProperty('--mouse-y', `${y}px`);
+          });
+      });
+    </script>
+  
+</body></html>

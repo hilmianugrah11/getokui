@@ -1,0 +1,2748 @@
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vektor — Intelligence Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Instrument+Serif:ital@0;1&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+--ink: #080808;
+--paper: #f2ede6;
+--acid: #d4ff47;
+--ice: #a8f0e8;
+--rouge: #ff3d5a;
+--amber: #ffb347;
+--mist: rgba(242,237,230,0.06);
+--border: rgba(242,237,230,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;overflow-x:hidden;cursor:none}
+/* CURSOR */
+#cursor{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--acid);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .3s,height .3s}
+#cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1px solid rgba(212,255,71,.5);pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;backdrop-filter:blur(12px);background:rgba(8,8,8,.7);transition:padding .35s cubic-bezier(.16,1,.3,1),background .35s}
+nav.scrolled{padding:12px 48px;background:rgba(8,8,8,.92)}
+nav::after{content:'';position:absolute;bottom:0;left:48px;right:48px;height:.5px;background:var(--border)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.12em;color:var(--paper);text-decoration:none}
+.nav-logo span{color:var(--acid)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:.1em;color:rgba(242,237,230,.5);text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--paper)}
+.nav-cta{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--acid);border:none;padding:10px 20px;border-radius:2px;cursor:none;font-family:'IBM Plex Mono',monospace;font-weight:500;transition:background .2s}
+.nav-cta:hover{background:#fff}
+/* ══ HERO — GSAP PARALLAX ══ */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:120px 48px 56px}
+/* Full-bleed canvas background */
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+/* Vignette overlay */
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 50%,transparent 40%,rgba(8,8,8,.7) 100%);pointer-events:none;z-index:1}
+/* Bottom fade into page */
+.hero-vignette::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(transparent,var(--ink));pointer-events:none}
+/* Floating data labels — perspective grid nodes */
+.hero-nodes{position:absolute;inset:0;pointer-events:none;z-index:2}
+.hnode{position:absolute;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:rgba(212,255,71,0);white-space:nowrap;transition:color 1s}
+.hnode.lit{color:rgba(212,255,71,.35)}
+.hnode-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--acid);margin-right:6px;vertical-align:middle;opacity:.6}
+/* Hero content layer */
+.hero-content{position:relative;z-index:5;display:flex;flex-direction:column;padding-bottom:0}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);margin-bottom:28px;opacity:0;transform:translateY(16px);animation:fade-up .7s .3s forwards}
+.hero-eyebrow::before{content:'';width:32px;height:.5px;background:var(--acid)}
+.hero-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,9.5vw,140px);line-height:.92;letter-spacing:.01em;max-width:75%;position:relative;z-index:2;opacity:0;transform:translateY(40px);animation:fade-up .9s .45s cubic-bezier(.16,1,.3,1) forwards;will-change:transform}
+.hero-headline em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--acid)}
+.hero-headline .line-2{display:block;color:rgba(242,237,230,.2);margin-left:4vw}
+/* Split lines for GSAP — each word wrapped */
+.hero-word{display:inline-block;overflow:hidden;vertical-align:bottom}
+.hero-word-inner{display:inline-block;transform:translateY(110%)}
+.hero-sub{margin-top:36px;max-width:380px;font-size:13px;line-height:1.8;color:rgba(242,237,230,.55);position:relative;padding-left:20px;opacity:0;transform:translateY(20px);animation:fade-up .7s .7s forwards}
+.hero-sub::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--border)}
+.hero-actions{display:flex;align-items:center;gap:20px;margin-top:40px;opacity:0;transform:translateY(20px);animation:fade-up .7s .85s forwards}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--acid);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:14px 28px;border-radius:2px;border:none;cursor:none;text-decoration:none;transition:background .2s,transform .15s}
+.btn-primary:hover{background:#fff;transform:translateY(-1px)}
+.btn-ghost{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(242,237,230,.5);text-decoration:none;transition:color .2s}
+.btn-ghost:hover{color:var(--paper)}
+.hero-stats{display:flex;gap:0;margin-top:56px;border-top:.5px solid var(--border);padding-top:28px;opacity:0;animation:fade-up .7s 1.05s forwards}
+.stat{flex:1;padding-right:32px;border-right:.5px solid var(--border);margin-right:32px}
+.stat:last-child{border-right:none;margin-right:0}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:.04em;color:var(--paper);line-height:1}
+.stat-num span{color:var(--acid)}
+.stat-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,237,230,.35);margin-top:4px}
+@keyframes fade-up{to{opacity:1;transform:translateY(0)}}
+/* Noise texture overlay */
+.hero-noise{position:absolute;inset:0;opacity:.04;pointer-events:none;z-index:3;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+/* Mouse-follow glow */
+#hero-glow{position:absolute;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:2;background:radial-gradient(circle,rgba(212,255,71,.10) 0%,rgba(212,255,71,.045) 30%,transparent 65%);transform:translate(-50%,-50%);left:50%;top:45%;will-change:left,top;opacity:0;transition:opacity .8s ease}
+#hero-glow.on{opacity:1}
+#hero-glow::after{content:'';position:absolute;inset:30%;border-radius:50%;background:radial-gradient(circle,rgba(168,240,232,.07) 0%,transparent 70%)}
+/* Scroll-out wrapper — GSAP clips this on scroll */
+#hero-parallax-wrap{position:relative;min-height:100svh;overflow:hidden}
+#hero-parallax-wrap .hero{min-height:100svh}
+@media (min-width: 769px){
+#hero-parallax-wrap{min-height:min(100svh, 900px)}
+#hero-parallax-wrap .hero{min-height:min(100svh, 900px)}
+}
+/* MARQUEE */
+.marquee-section{border-top:.5px solid var(--border);border-bottom:.5px solid var(--border);overflow:hidden;padding:18px 0;background:rgba(212,255,71,.04)}
+.marquee-track{display:flex;width:max-content;animation:marquee-scroll 25s linear infinite}
+.marquee-item{display:flex;align-items:center;gap:16px;padding:0 40px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.1em;color:rgba(242,237,230,.18);white-space:nowrap}
+.marquee-item .sep{width:4px;height:4px;border-radius:50%;background:var(--acid);opacity:.6}
+@keyframes marquee-scroll{to{transform:translateX(-50%)}}
+/* FEATURES */
+.features{padding:120px 48px;position:relative}
+.section-tag{display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,237,230,.35);margin-bottom:60px}
+.section-tag::after{content:'';display:block;width:48px;height:.5px;background:rgba(242,237,230,.2)}
+.feat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:auto auto;gap:1px;background:var(--border)}
+.feat-card{background:var(--ink);padding:40px;position:relative;overflow:hidden;transition:background .3s}
+.feat-card:hover{background:var(--mist)}
+.feat-card.tall{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;min-height:480px}
+.feat-card.accent{background:rgba(212,255,71,.04)}
+.feat-num{font-family:'Bebas Neue',sans-serif;font-size:72px;color:rgba(242,237,230,.05);line-height:1;position:absolute;top:20px;right:28px}
+.feat-icon-wrap{width:44px;height:44px;border:.5px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;font-size:20px}
+.feat-title{font-family:'Instrument Serif',serif;font-size:26px;font-style:italic;color:var(--paper);line-height:1.2;margin-bottom:14px}
+.feat-card.tall .feat-title{font-size:36px}
+.feat-body{font-size:12px;line-height:1.8;color:rgba(242,237,230,.45);max-width:320px}
+.feat-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:32px}
+.bar-c{flex:1;border-radius:2px 2px 0 0;background:rgba(212,255,71,.12);position:relative;transition:background .3s;animation:bar-grow 1.2s cubic-bezier(.16,1,.3,1) both}
+.bar-c::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px;background:var(--acid)}
+@keyframes bar-grow{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+.feat-card:hover .bar-c{background:rgba(212,255,71,.2)}
+.feat-donut{position:relative;width:80px;height:80px;margin:20px 0}
+.feat-donut svg{transform:rotate(-90deg)}
+.donut-track{fill:none;stroke:rgba(242,237,230,.06);stroke-width:4}
+.donut-fill{fill:none;stroke:var(--acid);stroke-width:4;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:55;animation:donut-spin 2s cubic-bezier(.16,1,.3,1) both}
+@keyframes donut-spin{from{stroke-dashoffset:220}to{stroke-dashoffset:55}}
+.feat-donut-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.05em}
+.feat-flow{margin:20px 0;position:relative;height:60px}
+.flow-line{position:absolute;height:.5px;background:linear-gradient(90deg,transparent,var(--ice),transparent);width:100%;animation:flow-pulse 3s ease-in-out infinite}
+.flow-line:nth-child(2){top:20px;animation-delay:1s}
+.flow-line:nth-child(3){top:40px;animation-delay:2s}
+@keyframes flow-pulse{0%,100%{opacity:0;transform:translateX(-20px)}50%{opacity:1;transform:translateX(0)}}
+/* ══ BENTO GRID ══ */
+.bento{padding:120px 48px;position:relative}
+.bento-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px}
+.bento-cell{position:relative;border-radius:10px;overflow:hidden;border:.5px solid var(--border);background:#0c0c0c;cursor:none;transition:border-color .4s,transform .45s cubic-bezier(.16,1,.3,1)}
+.bento-cell:hover{border-color:rgba(212,255,71,.4);transform:translateY(-4px)}
+.bento-cell.b-wide{grid-column:span 2}
+.bento-cell.b-tall{grid-row:span 2}
+.bento-cell.b-big{grid-column:span 2;grid-row:span 2}
+.bento-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.55) contrast(1.05);transform:scale(1.02);transition:filter .7s ease,transform .9s cubic-bezier(.16,1,.3,1);will-change:transform,filter}
+.bento-cell:hover .bento-img{filter:grayscale(0) brightness(.75) contrast(1.05);transform:scale(1.1)}
+.bento-tint{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(8,8,8,.88) 100%);transition:opacity .5s;pointer-events:none}
+.bento-cell:hover .bento-tint{opacity:.85}
+.bento-meta{position:absolute;left:0;right:0;bottom:0;padding:20px 22px;z-index:3;display:flex;flex-direction:column;gap:5px;transform:translateY(8px);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.bento-cell:hover .bento-meta{transform:translateY(0)}
+.bento-kicker{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);opacity:0;transform:translateY(8px);transition:opacity .45s .08s,transform .45s .08s}
+.bento-cell:hover .bento-kicker{opacity:1;transform:translateY(0)}
+.bento-title{font-family:'Instrument Serif',serif;font-style:italic;font-size:21px;line-height:1.15;color:var(--paper)}
+.bento-cell.b-big .bento-title{font-size:30px}
+.bento-desc{font-size:10px;line-height:1.7;color:rgba(242,237,230,.55);max-height:0;opacity:0;overflow:hidden;transition:max-height .55s cubic-bezier(.16,1,.3,1),opacity .45s .1s}
+.bento-cell:hover .bento-desc{max-height:60px;opacity:1}
+.bento-arrow{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;border:.5px solid rgba(242,237,230,.25);display:flex;align-items:center;justify-content:center;color:var(--paper);font-size:12px;background:rgba(8,8,8,.45);backdrop-filter:blur(4px);transform:rotate(0deg) scale(.7);opacity:0;transition:all .45s cubic-bezier(.16,1,.3,1);z-index:4}
+.bento-cell:hover .bento-arrow{opacity:1;transform:rotate(45deg) scale(1);border-color:var(--acid);color:var(--acid)}
+/* scanning line that sweeps on hover */
+.bento-scan{position:absolute;left:0;right:0;height:1px;top:-2px;background:linear-gradient(90deg,transparent,var(--acid),transparent);opacity:0;z-index:2;pointer-events:none}
+.bento-cell:hover .bento-scan{animation:bento-scan-down 1s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes bento-scan-down{0%{top:-2px;opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+/* corner ticks */
+.bento-cell::before,.bento-cell::after{content:'';position:absolute;width:14px;height:14px;border-color:var(--acid);border-style:solid;opacity:0;transition:opacity .4s;z-index:4;pointer-events:none}
+.bento-cell::before{top:10px;left:10px;border-width:1px 0 0 1px}
+.bento-cell::after{bottom:10px;right:10px;border-width:0 1px 1px 0}
+.bento-cell:hover::before,.bento-cell:hover::after{opacity:.8}
+/* non-image utility cells */
+.bento-cell.b-stat{display:flex;flex-direction:column;justify-content:space-between;padding:22px;background:rgba(212,255,71,.04)}
+.b-stat-num{font-family:'Bebas Neue',sans-serif;font-size:54px;line-height:1;color:var(--paper)}
+.b-stat-num span{color:var(--acid)}
+.b-stat-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,237,230,.35)}
+.b-stat-spark{display:flex;align-items:flex-end;gap:3px;height:34px;margin-top:10px}
+.b-spark-bar{flex:1;background:rgba(212,255,71,.18);border-radius:1px;transform-origin:bottom;transition:background .3s}
+.bento-cell.b-stat:hover .b-spark-bar{background:rgba(212,255,71,.45);animation:spark-bounce .5s cubic-bezier(.16,1,.3,1)}
+@keyframes spark-bounce{0%{transform:scaleY(.3)}60%{transform:scaleY(1.12)}100%{transform:scaleY(1)}}
+.bento-cell.b-quote{display:flex;flex-direction:column;justify-content:center;padding:26px;background:#0c0c0c}
+.b-quote-mark{font-family:'Instrument Serif',serif;font-size:52px;line-height:.6;color:var(--acid);opacity:.5;margin-bottom:14px}
+.b-quote-text{font-family:'Instrument Serif',serif;font-style:italic;font-size:15px;line-height:1.55;color:rgba(242,237,230,.7)}
+.b-quote-who{font-size:10px;letter-spacing:.08em;color:rgba(242,237,230,.3);margin-top:14px;text-transform:uppercase}
+.bento-cell.b-quote:hover .b-quote-mark{animation:quote-pop .45s cubic-bezier(.16,1,.3,1)}
+@keyframes quote-pop{50%{transform:scale(1.25) rotate(-6deg)}}
+@media(max-width:900px){.bento-grid{grid-template-columns:repeat(2,1fr)}}
+/* DIAGONAL */
+.diagonal-section{position:relative;padding:100px 48px;overflow:hidden;background:var(--mist);clip-path:polygon(0 4%,100% 0,100% 96%,0 100%);margin:-40px 0}
+.diagonal-inner{display:flex;align-items:center;justify-content:space-between;gap:60px}
+.diagonal-text{max-width:480px}
+.diagonal-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,5vw,72px);line-height:.95;margin-bottom:20px}
+.diagonal-headline em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--acid)}
+.diagonal-body{font-size:12px;line-height:1.9;color:rgba(242,237,230,.45)}
+.terminal{flex-shrink:0;width:360px;background:#0c0c0c;border:.5px solid rgba(212,255,71,.2);border-radius:8px;overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:.5px solid rgba(212,255,71,.1);background:rgba(212,255,71,.03)}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.term-body{padding:20px;font-size:11px;line-height:2}
+.term-prompt{color:var(--acid)}
+.term-cmd{color:var(--paper)}
+.term-out{color:rgba(242,237,230,.4)}
+.term-cursor{display:inline-block;width:8px;height:13px;background:var(--acid);vertical-align:text-bottom;animation:blink 1.1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* ══════════════════════════════════════
+SECTION: HOW IT WORKS — text scramble
+══════════════════════════════════════ */
+.how{padding:140px 48px;position:relative;overflow:hidden}
+.how-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.how-left{position:sticky;top:120px}
+.how-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,96px);line-height:.92;margin-bottom:24px}
+.how-big em{font-family:'Instrument Serif',serif;font-style:italic;color:rgba(242,237,230,.2)}
+.how-desc{font-size:12px;line-height:1.9;color:rgba(242,237,230,.4);max-width:340px}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{padding:36px 0;border-bottom:.5px solid var(--border);display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:start;transition:background .3s;cursor:default}
+.step:first-child{border-top:.5px solid var(--border)}
+.step-idx{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:1;color:rgba(242,237,230,.1);transition:color .3s}
+.step:hover .step-idx{color:var(--acid)}
+.step-content{}
+.step-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,237,230,.3);margin-bottom:10px}
+.step-title{font-family:'Instrument Serif',serif;font-style:italic;font-size:24px;color:var(--paper);margin-bottom:10px;line-height:1.2}
+.step-body{font-size:11px;line-height:1.8;color:rgba(242,237,230,.4)}
+/* scramble animation triggered by JS */
+.scramble{display:inline}
+/* bar that fills on hover */
+.step-bar{height:1px;background:var(--border);margin-top:16px;position:relative;overflow:hidden}
+.step-bar::after{content:'';position:absolute;left:0;top:0;height:100%;width:0;background:var(--acid);transition:width .6s cubic-bezier(.16,1,.3,1)}
+.step:hover .step-bar::after{width:100%}
+/* ══════════════════════════════════════
+SECTION: LOGOS — horizontal tape
+══════════════════════════════════════ */
+.logos-section{padding:80px 0;overflow:hidden;position:relative}
+.logos-label{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,237,230,.2);text-align:center;margin-bottom:40px}
+.logos-tape{display:flex;gap:0;width:max-content;animation:tape-scroll 20s linear infinite}
+.logos-tape:hover{animation-play-state:paused}
+.logo-cell{padding:20px 48px;border-right:.5px solid var(--border);display:flex;align-items:center;gap:10px;white-space:nowrap;transition:opacity .3s}
+.logo-cell:hover{opacity:1 !important}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.1em;color:rgba(242,237,230,.18)}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
+@keyframes tape-scroll{to{transform:translateX(-50%)}}
+/* fade edges */
+.logos-section::before,.logos-section::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.logos-section::before{left:0;background:linear-gradient(90deg,var(--ink),transparent)}
+.logos-section::after{right:0;background:linear-gradient(-90deg,var(--ink),transparent)}
+/* ══════════════════════════════════════
+SECTION: INTEGRATIONS — svg path draw
+══════════════════════════════════════ */
+.integrations{padding:120px 48px;position:relative}
+.integ-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.integ-text{}
+.integ-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);line-height:.92;margin-bottom:20px}
+.integ-headline em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--acid)}
+.integ-body{font-size:12px;line-height:1.9;color:rgba(242,237,230,.4);max-width:360px;margin-bottom:32px}
+.integ-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border:.5px solid var(--border);border-radius:2px;color:rgba(242,237,230,.4);transition:all .2s}
+.chip:hover{border-color:var(--acid);color:var(--acid)}
+/* SVG web */
+.integ-viz{position:relative;width:100%;aspect-ratio:1;max-width:480px;justify-self:center}
+.integ-svg{width:100%;height:100%}
+.node-path{stroke:rgba(212,255,71,.15);stroke-width:.5;fill:none;stroke-dasharray:200;stroke-dashoffset:200;transition:stroke .3s}
+.node-path.drawn{animation:path-draw 1.2s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes path-draw{to{stroke-dashoffset:0}}
+.node-circle{fill:var(--ink);stroke:rgba(212,255,71,.3);stroke-width:.5;transition:all .3s}
+.node-circle:hover{stroke:var(--acid);stroke-width:1.5}
+.node-label{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:rgba(242,237,230,.4);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.node-center{fill:var(--acid);opacity:.9}
+.node-center-label{font-family:'Bebas Neue',sans-serif;font-size:11px;fill:var(--ink);text-anchor:middle;dominant-baseline:central;pointer-events:none;letter-spacing:.05em}
+/* pulse ring */
+.pulse-ring{fill:none;stroke:var(--acid);stroke-width:.5;transform-origin:center;animation:pulse-out 3s ease-out infinite;opacity:0}
+.pulse-ring:nth-child(2){animation-delay:1s}
+.pulse-ring:nth-child(3){animation-delay:2s}
+@keyframes pulse-out{0%{r:20px;opacity:.6}100%{r:60px;opacity:0}}
+/* ══════════════════════════════════════
+SECTION: TESTIMONIALS — split parallax
+══════════════════════════════════════ */
+.testimonials{padding:0;overflow:hidden;position:relative}
+.testi-header{padding:80px 48px 0;text-align:center}
+.testi-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);line-height:.92;margin-bottom:8px}
+.testi-headline em{font-family:'Instrument Serif',serif;font-style:italic;color:rgba(242,237,230,.25)}
+/* Two columns that scroll at different speeds via JS */
+.testi-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:60px;height:640px;overflow:hidden}
+.testi-col{display:flex;flex-direction:column;gap:1px;background:var(--border);will-change:transform}
+.testi-col-a{animation:col-scroll-up 30s linear infinite}
+.testi-col-b{animation:col-scroll-down 36s linear infinite}
+@keyframes col-scroll-up{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes col-scroll-down{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+.testi-card{background:var(--ink);padding:32px 36px;flex-shrink:0}
+.testi-card:hover{background:var(--mist)}
+.testi-quote{font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;line-height:1.6;color:rgba(242,237,230,.75);margin-bottom:20px}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:36px;height:36px;border-radius:50%;background:var(--mist);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.testi-name{font-size:11px;font-weight:500;color:var(--paper)}
+.testi-role{font-size:10px;color:rgba(242,237,230,.3);letter-spacing:.06em;margin-top:2px}
+.testi-stars{color:var(--acid);font-size:12px;margin-bottom:14px;letter-spacing:2px}
+/* Hover pause */
+.testi-col-a:hover{animation-play-state:paused}
+.testi-col-b:hover{animation-play-state:paused}
+/* ══════════════════════════════════════
+SECTION: METRICS COUNTER
+══════════════════════════════════════ */
+.metrics{padding:120px 48px;position:relative;overflow:hidden}
+.metrics-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.metric-cell{background:var(--ink);padding:48px 36px;position:relative;overflow:hidden;transition:background .3s}
+.metric-cell:hover{background:var(--mist)}
+.metric-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .4s}
+.metric-cell:hover::before{background:var(--acid)}
+.metric-n{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,5vw,72px);line-height:1;letter-spacing:.02em;color:var(--paper);display:block}
+.metric-unit{color:var(--acid)}
+.metric-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,237,230,.3);margin-top:8px}
+.metric-sub{font-size:11px;color:rgba(242,237,230,.2);margin-top:6px;line-height:1.5}
+/* count-up animation: JS handles this */
+.metric-n[data-target]{color:rgba(242,237,230,.08)}
+.metric-n.counted{color:var(--paper);transition:color .2s}
+/* decorative bg number */
+.metric-bg{position:absolute;right:16px;bottom:8px;font-family:'Bebas Neue',sans-serif;font-size:96px;color:rgba(242,237,230,.03);line-height:1;pointer-events:none}
+/* ══════════════════════════════════════
+SECTION: PROCESS — HORIZONTAL SCROLL
+══════════════════════════════════════ */
+.process{padding:120px 0 120px;position:relative;overflow:hidden}
+.process-header{padding:0 48px;margin-bottom:60px}
+.process-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);line-height:.92}
+.process-headline em{font-family:'Instrument Serif',serif;font-style:italic;color:rgba(242,237,230,.25)}
+.process-track-wrap{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding:0 48px 32px;cursor:grab;user-select:none}
+.process-track-wrap::-webkit-scrollbar{height:2px}
+.process-track-wrap::-webkit-scrollbar-track{background:var(--border)}
+.process-track-wrap::-webkit-scrollbar-thumb{background:var(--acid)}
+.process-track{display:flex;gap:1px;background:var(--border);width:max-content}
+.process-card{background:var(--ink);padding:48px 40px;width:320px;flex-shrink:0;position:relative;overflow:hidden;transition:background .3s}
+.process-card:hover{background:var(--mist)}
+.process-card-num{font-family:'Bebas Neue',sans-serif;font-size:96px;color:rgba(242,237,230,.04);line-height:1;position:absolute;right:20px;top:10px}
+.process-card-step{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,237,230,.25);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.process-card-step::before{content:'';display:block;width:20px;height:.5px;background:var(--acid)}
+.process-card-title{font-family:'Instrument Serif',serif;font-style:italic;font-size:28px;color:var(--paper);line-height:1.2;margin-bottom:14px}
+.process-card-body{font-size:11px;line-height:1.8;color:rgba(242,237,230,.38)}
+/* Animated icon per card */
+.process-icon{width:48px;height:48px;margin-bottom:28px;position:relative}
+.pi-circle{stroke:rgba(242,237,230,.1);fill:none;stroke-width:.5}
+.pi-arc{stroke:var(--acid);fill:none;stroke-width:1;stroke-dasharray:100;stroke-dashoffset:100;stroke-linecap:round}
+.process-card:hover .pi-arc{animation:arc-draw .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes arc-draw{to{stroke-dashoffset:0}}
+/* connector arrow between cards */
+.process-arrow{display:flex;align-items:center;justify-content:center;width:48px;background:var(--ink);flex-shrink:0;color:rgba(242,237,230,.15);font-size:18px}
+/* DIAGONAL CALLOUT */
+.diagonal-section{position:relative;padding:100px 48px;overflow:hidden;background:var(--mist);clip-path:polygon(0 4%,100% 0,100% 96%,0 100%);margin:-40px 0;z-index:1}
+/* ══ PRICING — INTERACTIVE CALCULATOR ══ */
+.pricing{padding:120px 48px;position:relative;overflow:hidden}
+.pricing-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);line-height:.95;margin-bottom:16px}
+.pricing-headline em{font-family:'Instrument Serif',serif;font-style:italic;color:rgba(242,237,230,.25)}
+.pricing-sub{font-size:12px;color:rgba(242,237,230,.35);margin-bottom:48px;letter-spacing:.04em}
+.pricing-toggle{display:inline-flex;align-items:center;gap:12px;margin-bottom:48px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(242,237,230,.35);cursor:none}
+.toggle-track{width:44px;height:24px;background:var(--border);border-radius:100px;position:relative;cursor:none;transition:background .3s;border:.5px solid rgba(242,237,230,.12)}
+.toggle-track.on{background:var(--acid)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--paper);transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s}
+.toggle-track.on .toggle-thumb{transform:translateX(20px);background:var(--ink)}
+.toggle-save{color:var(--acid);font-size:10px;opacity:0;transition:opacity .3s;background:rgba(212,255,71,.1);padding:3px 8px;border-radius:2px}
+.annual-active .toggle-save{opacity:1}
+.pricing-layout{display:grid;grid-template-columns:300px 1fr;gap:1px;background:var(--border);align-items:stretch;position:relative}
+#priceCanvas{position:absolute;inset:0;pointer-events:none;z-index:10}
+.price-calc{background:#0c0c0c;padding:36px 32px;display:flex;flex-direction:column;gap:24px}
+.calc-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,237,230,.25);padding-bottom:12px;border-bottom:.5px solid var(--border)}
+.calc-label{font-size:11px;color:rgba(242,237,230,.4);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.calc-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--acid);letter-spacing:.06em}
+.calc-range{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:none}
+.calc-range::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acid);cursor:none;box-shadow:0 0 0 3px rgba(212,255,71,.15);transition:box-shadow .2s}
+.calc-range::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(212,255,71,.2)}
+.calc-range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--acid);border:none;cursor:none}
+.calc-ticks{display:flex;justify-content:space-between;margin-top:5px}
+.calc-tick{font-size:9px;color:rgba(242,237,230,.18);letter-spacing:.04em}
+.calc-result{background:var(--ink);border:.5px solid var(--border);border-radius:4px;padding:20px;margin-top:4px;transition:border-color .3s}
+.calc-result.highlight{border-color:rgba(212,255,71,.3)}
+.calc-result-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,237,230,.25);margin-bottom:8px}
+.calc-result-amt{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;letter-spacing:.02em;color:var(--paper);display:flex;align-items:flex-start;gap:4px;overflow:hidden}
+.calc-result-currency{font-size:22px;margin-top:6px;color:rgba(242,237,230,.4)}
+.calc-result-per{font-size:11px;color:rgba(242,237,230,.3);margin-top:6px}
+.calc-plan-badge{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;background:rgba(212,255,71,.1);color:var(--acid);border-radius:2px;margin-top:12px;transition:all .3s}
+/* Right side: horizontally scrollable card strip */
+.price-cards-area{background:var(--ink);overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:28px 24px;cursor:grab;user-select:none}
+.price-cards-area::-webkit-scrollbar{height:3px}
+.price-cards-area::-webkit-scrollbar-track{background:rgba(242,237,230,.05);border-radius:2px}
+.price-cards-area::-webkit-scrollbar-thumb{background:var(--acid);border-radius:2px}
+.price-cards-track{display:flex;gap:16px;width:max-content;padding-bottom:8px}
+.price-card-v{width:248px;flex-shrink:0;background:#0c0c0c;border:.5px solid var(--border);border-radius:8px;padding:28px 24px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:border-color .3s,transform .3s cubic-bezier(.16,1,.3,1),background .3s;cursor:none}
+.price-card-v:hover{transform:translateY(-4px);border-color:rgba(242,237,230,.25)}
+.price-card-v.active{border-color:var(--acid);background:rgba(212,255,71,.03);transform:translateY(-4px)}
+.price-card-v::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .3s}
+.price-card-v.active::before{background:var(--acid)}
+.price-card-v .beam{position:absolute;inset:0;background:linear-gradient(180deg,rgba(212,255,71,.08),transparent 50%);opacity:0;transform:translateY(-100%);pointer-events:none}
+.price-card-v.active .beam{animation:beam-sweep .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes beam-sweep{from{opacity:1;transform:translateY(-100%)}to{opacity:1;transform:translateY(0)}}
+.pcv-badge{position:absolute;top:16px;right:16px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);background:rgba(212,255,71,.1);padding:3px 8px;border-radius:2px;opacity:0;transition:opacity .3s}
+.price-card-v.active .pcv-badge{opacity:1}
+.pcv-tier{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,237,230,.3);margin-bottom:16px;transition:color .3s}
+.price-card-v.active .pcv-tier{color:var(--acid)}
+.pcv-amt{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;letter-spacing:.02em;color:rgba(242,237,230,.45);transition:color .3s;display:flex;align-items:flex-start;gap:3px}
+.price-card-v.active .pcv-amt{color:var(--paper)}
+.pcv-dollar{font-size:20px;margin-top:5px;opacity:.5}
+.pcv-period{font-size:10px;color:rgba(242,237,230,.25);margin-top:5px;letter-spacing:.05em;min-height:14px}
+.pcv-divider{height:.5px;background:var(--border);margin:20px 0}
+.pcv-features{display:flex;flex-direction:column;gap:9px;flex:1}
+.prf{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(242,237,230,.3);transition:color .3s;line-height:1.5}
+.price-card-v.active .prf{color:rgba(242,237,230,.55)}
+.prf-dot{width:4px;height:4px;border-radius:50%;background:rgba(242,237,230,.15);flex-shrink:0;transition:background .3s}
+.price-card-v.active .prf-dot{background:var(--acid)}
+.prf-muted{opacity:.4}
+.pcv-btn{display:block;padding:12px;margin-top:24px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-align:center;cursor:none;border-radius:2px;transition:all .25s;text-decoration:none;white-space:nowrap;border:.5px solid rgba(242,237,230,.15);color:rgba(242,237,230,.35);background:transparent}
+.price-card-v.active .pcv-btn{border-color:var(--acid);color:var(--ink);background:var(--acid);font-weight:500}
+.pcv-btn:hover{border-color:rgba(242,237,230,.5);color:rgba(242,237,230,.7)}
+.price-card-v.active .pcv-btn:hover{background:#fff;border-color:#fff}
+.price-card-v.enterprise .pcv-amt{font-size:30px;margin-top:8px;letter-spacing:.03em}
+/* scroll hint arrow */
+.price-scroll-hint{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,237,230,.2);margin-top:12px;padding-left:24px}
+.price-scroll-hint svg{animation:hint-slide 1.6s ease-in-out infinite}
+@keyframes hint-slide{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes digit-roll{0%{transform:translateY(50%);opacity:0}100%{transform:translateY(0);opacity:1}}
+.rolling{display:inline-block;animation:digit-roll .28s cubic-bezier(.16,1,.3,1) forwards}
+/* ══════════════════════════════════════
+SECTION: CTA — CINEMATIC FULL-BLEED
+══════════════════════════════════════ */
+.cta-section{position:relative;min-height:80vh;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center;padding:100px 48px}
+/* Animated gradient mesh background */
+.cta-bg{position:absolute;inset:0;overflow:hidden}
+.cta-orb{position:absolute;border-radius:50%;filter:blur(80px);animation:orb-drift 12s ease-in-out infinite}
+.cta-orb:nth-child(1){width:600px;height:600px;background:radial-gradient(circle,rgba(212,255,71,.12),transparent 70%);top:-200px;left:-200px;animation-duration:15s}
+.cta-orb:nth-child(2){width:500px;height:500px;background:radial-gradient(circle,rgba(168,240,232,.08),transparent 70%);bottom:-100px;right:-100px;animation-duration:18s;animation-direction:reverse}
+.cta-orb:nth-child(3){width:400px;height:400px;background:radial-gradient(circle,rgba(255,61,90,.06),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:10s}
+@keyframes orb-drift{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-20px)}66%{transform:translate(-20px,30px)}}
+/* Scanline grain overlay */
+.cta-scan{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none}
+/* Large decorative text */
+.cta-ghost{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,18vw,260px);color:rgba(242,237,230,.025);line-height:1;letter-spacing:.02em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;user-select:none}
+.cta-inner{position:relative;z-index:2}
+.cta-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,237,230,.35);margin-bottom:32px;border:.5px solid var(--border);padding:8px 16px;border-radius:2px}
+.cta-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--acid);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+.cta-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,10vw,140px);line-height:.9;margin-bottom:24px}
+.cta-big em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--acid)}
+.cta-sub{font-size:13px;line-height:1.8;color:rgba(242,237,230,.4);max-width:440px;margin:0 auto 40px}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:20px}
+/* border-drawing button */
+.btn-draw{position:relative;display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:14px 28px;cursor:none;text-decoration:none;overflow:hidden}
+.btn-draw::before,.btn-draw::after{content:'';position:absolute;background:var(--paper);transition:all .4s cubic-bezier(.16,1,.3,1)}
+.btn-draw::before{top:0;left:0;width:.5px;height:0}
+.btn-draw::after{bottom:0;right:0;width:.5px;height:0}
+.btn-draw span.edge-t,.btn-draw span.edge-b{position:absolute;height:.5px;background:var(--paper);transition:all .4s cubic-bezier(.16,1,.3,1)}
+.btn-draw span.edge-t{top:0;left:0;width:0}
+.btn-draw span.edge-b{bottom:0;right:0;width:0}
+.btn-draw:hover::before{height:100%}
+.btn-draw:hover::after{height:100%}
+.btn-draw:hover span.edge-t{width:100%}
+.btn-draw:hover span.edge-b{width:100%}
+/* FOOTER */
+footer{border-top:.5px solid var(--border);padding:34px 48px;display:flex;align-items:center;justify-content:space-between;min-height:auto}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.12em}
+.foot-logo span{color:var(--acid)}
+.foot-copy{font-size:11px;color:rgba(242,237,230,.2);letter-spacing:.05em}
+.foot-links{display:flex;gap:24px;list-style:none}
+.foot-links a{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,237,230,.3);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--paper)}
+/* PARTICLE CANVAS */
+#particle-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35}
+nav,.hero,.marquee-section,.features,.how,.logos-section,.integrations,.testimonials,.metrics,.process,.diagonal-section,.pricing,.cta-section,footer{position:relative;z-index:1}
+/* REVEAL UTILITY */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+<style>
+@media (max-width: 1024px) {
+.feat-grid { grid-template-columns: 1fr 1fr; }
+.metrics-inner { grid-template-columns: 1fr 1fr; }
+.pricing-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+nav { padding: 16px 24px !important; }
+.nav-links { display: none; }
+.hero { padding: 96px 24px 42px; min-height: 72svh; justify-content: center; }
+#hero-parallax-wrap { height: auto !important; min-height: 72svh; }
+#hero-parallax-wrap .hero { min-height: 72svh; }
+.hero-headline { max-width: 100%; font-size: clamp(48px, 12vw, 80px); }
+.hero-stats { flex-direction: column; gap: 20px; border-top: none; margin-top: 32px; padding-top: 0; }
+.stat { padding-right: 0; margin-right: 0; border-right: none; border-bottom: .5px solid var(--border); padding-bottom: 20px; }
+.stat:last-child { border-bottom: none; padding-bottom: 0; }
+.features, .bento, .diagonal-section, .how, .integrations, .metrics, .process, .pricing, .cta-section { padding: 80px 24px; }
+.process-header { padding: 0 24px; margin-bottom: 40px; }
+.process-track-wrap { padding: 0 24px 32px; }
+.testi-header { padding: 60px 24px 0; }
+.feat-grid { grid-template-columns: 1fr; }
+.feat-card.tall { min-height: auto; }
+.bento-grid { grid-template-columns: 1fr; }
+.bento-cell.b-wide, .bento-cell.b-big, .bento-cell.b-tall { grid-column: span 1; grid-row: span 1; }
+.diagonal-inner, .how-inner, .integ-inner { grid-template-columns: 1fr; gap: 40px; }
+.how-left { position: relative; top: 0; }
+.terminal { width: 100%; max-width: 100%; }
+.testi-cols { grid-template-columns: 1fr; height: 480px !important; margin-top: 40px; }
+.testi-col-b { display: none; }
+.metrics-inner { grid-template-columns: 1fr; }
+.cta-actions { flex-direction: column; width: 100%; }
+.cta-actions .btn-primary, .cta-actions .btn-draw { width: 100%; justify-content: center; }
+footer { flex-direction: column; gap: 14px; align-items: flex-start; padding: 28px 24px; }
+.foot-links { flex-wrap: wrap; }
+}
+.testi-avatar { overflow: hidden; padding: 0; background: transparent; }
+.testi-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+@media (max-width: 768px) {
+.hero-eyebrow { margin-bottom: 16px; }
+.hero-sub { margin-top: 22px; line-height: 1.65; }
+.hero-actions { margin-top: 26px; flex-wrap: wrap; }
+.hero-stats { margin-top: 28px; }
+.foot-logo { font-size: 22px; }
+.foot-copy { font-size: 10px; }
+.foot-links { gap: 14px; }
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.mobile-menu-btn { display: none; background: transparent; border: none; color: var(--paper); cursor: none; padding: 4px; }
+@media (max-width: 768px) {
+.mobile-menu-btn { display: block; }
+.nav-links.open { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(8,8,8,.98); backdrop-filter: blur(12px); padding: 32px 24px; border-bottom: .5px solid var(--border); gap: 24px; z-index: 1000; align-items: flex-start; }
+.nav-links.open a { font-size: 16px; letter-spacing: 0.15em; }
+}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="">
+    <canvas id="particle-canvas" width="1512" height="818"></canvas>
+    <div id="cursor" style="left: 547px; top: 5px;"></div>
+    <div id="cursor-ring" style="left: 0px; top: 0px;"></div>
+
+    <!-- NAV -->
+    <nav class="">
+      <a href="#" class="nav-logo">
+        VEKT
+        <span>◉</span>
+        R
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Platform</a></li>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+      <div class="nav-actions" style="display: flex; align-items: center; gap: 16px;">
+        <button class="nav-cta">Get access</button>
+        <button id="mobileMenuBtn" class="mobile-menu-btn">
+          <svg id="burgerIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg id="closeIcon" style="display:none;" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div id="hero-parallax-wrap">
+  <section class="hero" id="hero">
+    <!-- Animated canvas background -->
+    <canvas id="hero-canvas" width="1512" height="818"></canvas>
+    <div class="hero-vignette"></div>
+    <div class="hero-noise"></div>
+    <div id="hero-glow" style="left: 756px; top: 368.1px;"></div>
+
+    <!-- Floating data nodes -->
+    <div class="hero-nodes" id="heroNodes">
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        inference.edge.01
+      </div>
+      <div class="hnode" style="left: 50.6737%; top: 46.256%;">
+        <span class="hnode-dot"></span>
+        latency:11ms
+      </div>
+      <div class="hnode" style="left: 41.6664%; top: 11.1186%;">
+        <span class="hnode-dot"></span>
+        model.router
+      </div>
+      <div class="hnode" style="left: 80.3167%; top: 81.9268%;">
+        <span class="hnode-dot"></span>
+        token.budget
+      </div>
+      <div class="hnode" style="left: 76.6003%; top: 17.953%;">
+        <span class="hnode-dot"></span>
+        embedding.v3
+      </div>
+      <div class="hnode" style="left: 45.2184%; top: 38.5411%;">
+        <span class="hnode-dot"></span>
+        stream.active
+      </div>
+      <div class="hnode" style="left: 21.7566%; top: 9.8209%;">
+        <span class="hnode-dot"></span>
+        fallback:ready
+      </div>
+      <div class="hnode" style="left: 50.5107%; top: 31.3831%;">
+        <span class="hnode-dot"></span>
+        cache.hit:94%
+      </div>
+      <div class="hnode" style="left: 50.7176%; top: 35.5886%;">
+        <span class="hnode-dot"></span>
+        region:us-east
+      </div>
+      <div class="hnode" style="left: 45.893%; top: 61.0861%;">
+        <span class="hnode-dot"></span>
+        cost:$0.002
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        inference.edge.01
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        latency:11ms
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        model.router
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        token.budget
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        embedding.v3
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        stream.active
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        fallback:ready
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        cache.hit:94%
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        region:us-east
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        cost:$0.002
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        inference.edge.01
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        latency:11ms
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        model.router
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        token.budget
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        embedding.v3
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        stream.active
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        fallback:ready
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        cache.hit:94%
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        region:us-east
+      </div>
+      <div class="hnode" style="left: 20.238%; top: 35.3864%;">
+        <span class="hnode-dot"></span>
+        cost:$0.002
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="hero-content" id="heroContent">
+      <p class="hero-eyebrow" id="heroEyebrow">
+        Intelligence Infrastructure · v2.4
+      </p>
+
+      <h1 class="hero-headline" id="heroHeadline">
+        <span class="hero-line" id="hline0">Build systems</span>
+        <br>
+        <span class="hero-line" id="hline1" style=" transform-origin: 0% 50%;">
+          that
+          <em class="">think</em>
+        </span>
+        <br>
+        <span class="hero-line hero-line-ghost" id="hline2" style="color:rgba(242,237,230,.2);margin-left:4vw;display:block">
+          faster than you
+        </span>
+      </h1>
+
+      <p class="hero-sub" id="heroSub">
+        Vektor orchestrates your AI workflows at the infrastructure
+        layer — no glue code, no latency surprises. Ship in hours, not
+        sprints.
+      </p>
+
+      <div class="hero-actions" id="heroActions">
+        <a href="#" class="btn-primary">
+          Start building free
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+        <a href="#" class="btn-ghost">Watch demo →</a>
+      </div>
+
+      <div class="hero-stats" id="heroStats">
+        <div class="stat">
+          <div class="stat-num">
+            4.2
+            <span>B</span>
+          </div>
+          <div class="stat-label">API calls / month</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">
+            99.
+            <span class="">98</span>
+          </div>
+          <div class="stat-label">Uptime SLA</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">
+            <span>&lt;</span>
+            12
+          </div>
+          <div class="stat-label">ms p99 latency</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">
+            380
+            <span>+</span>
+          </div>
+          <div class="stat-label">Enterprise clients</div>
+        </div>
+      </div>
+    </div>
+  </section>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+      <div class="marquee-track">
+        <div class="marquee-item">
+          Realtime inference
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Vector embeddings
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Model routing
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Auto-scaling pipelines
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Edge deployment
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Observability layer
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Rate-limit controls
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Multi-model orchestration
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Realtime inference
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Vector embeddings
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Model routing
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Auto-scaling pipelines
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Edge deployment
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Observability layer
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Rate-limit controls
+          <span class="sep"></span>
+        </div>
+        <div class="marquee-item">
+          Multi-model orchestration
+          <span class="sep"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section class="features">
+      <p class="section-tag">Core platform</p>
+      <div class="feat-grid">
+        <div class="feat-card tall reveal" style="transition-delay: 0s;">
+          <div class="">
+            <div class="feat-num">01</div>
+            <div class="feat-icon-wrap">⚡</div>
+            <h3 class="feat-title">
+              Adaptive model
+              <br>
+              routing at scale
+            </h3>
+            <p class="feat-body">
+              Route every request to the optimal model based on cost, latency,
+              and capability — automatically. No config files, no manual tuning.
+            </p>
+          </div>
+          <div>
+            <p style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,237,230,.25);margin-bottom:12px;">
+              Live throughput
+            </p>
+            <div class="feat-chart">
+              <div class="bar-c" style="height:35%;animation-delay:.1s"></div>
+              <div class="bar-c" style="height:55%;animation-delay:.15s"></div>
+              <div class="bar-c" style="height:42%;animation-delay:.2s"></div>
+              <div class="bar-c" style="height:78%;animation-delay:.25s"></div>
+              <div class="bar-c" style="height:62%;animation-delay:.3s"></div>
+              <div class="bar-c" style="height:90%;animation-delay:.35s"></div>
+              <div class="bar-c" style="height:70%;animation-delay:.4s"></div>
+              <div class="bar-c" style="height:85%;animation-delay:.45s;background:rgba(212,255,71,.3)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="feat-card accent reveal" style="transition-delay: 0.1s;">
+          <div class="feat-num">02</div>
+          <div class="feat-icon-wrap">◎</div>
+          <h3 class="feat-title">
+            Sub-12ms
+            <br>
+            response
+          </h3>
+          <div class="feat-donut">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="donut-track" cx="40" cy="40" r="35"></circle>
+              <circle class="donut-fill" cx="40" cy="40" r="35"></circle>
+            </svg>
+            <div class="feat-donut-label">75%</div>
+          </div>
+          <p class="feat-body" style="font-size:11px;">
+            Faster than industry avg.
+          </p>
+        </div>
+        <div class="feat-card reveal" style="transition-delay: 0.2s;">
+          <div class="feat-num">03</div>
+          <div class="feat-icon-wrap">⟳</div>
+          <h3 class="feat-title">
+            Zero-downtime
+            <br>
+            deploys
+          </h3>
+          <div class="feat-flow">
+            <div class="flow-line"></div>
+            <div class="flow-line"></div>
+            <div class="flow-line"></div>
+          </div>
+          <p class="feat-body" style="font-size:11px;">
+            Blue-green deploys with instant rollback.
+          </p>
+        </div>
+        <div class="feat-card reveal" style="transition-delay: 0.3s;">
+          <div class="feat-num">04</div>
+          <div class="feat-icon-wrap">⊞</div>
+          <h3 class="feat-title">
+            Unified
+            <br>
+            observability
+          </h3>
+          <p class="feat-body" style="font-size:11px;margin-top:12px;">
+            Full traces, cost breakdowns, and anomaly detection in one
+            dashboard.
+          </p>
+        </div>
+        <div class="feat-card reveal" style="background: rgba(168, 240, 232, 0.03); transition-delay: 0s;">
+          <div class="feat-num">05</div>
+          <div class="feat-icon-wrap" style="border-color:rgba(168,240,232,.2)">
+            ⬡
+          </div>
+          <h3 class="feat-title" style="color:var(--ice)">
+            Edge-native
+            <br>
+            everywhere
+          </h3>
+          <p class="feat-body" style="font-size:11px;margin-top:12px;">
+            Deploy to 200+ PoPs. Your users never notice the latency cliff.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BENTO GRID ── -->
+    <section class="bento">
+      <p class="section-tag">In the wild</p>
+      <div class="bento-grid">
+        <div class="bento-cell b-big reveal" data-tilt="" style="transition-delay: 0.1s;">
+          <img class="bento-img" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0ee0afe2-e108-42af-a584-d4ebcd1ec4a1_1600w.png" alt="Server infrastructure" loading="lazy">
+          <div class="bento-tint"></div>
+          <div class="bento-scan"></div>
+          <div class="bento-arrow">→</div>
+          <div class="bento-meta">
+            <p class="bento-kicker">Infrastructure</p>
+            <h3 class="bento-title">Global edge network</h3>
+            <p class="bento-desc">
+              200+ points of presence routing every request to the nearest
+              available model endpoint, automatically.
+            </p>
+          </div>
+        </div>
+
+        <div class="bento-cell b-stat reveal" style="transition-delay: 0.2s;">
+          <div>
+            <div class="b-stat-num">
+              4.2
+              <span>B</span>
+            </div>
+            <p class="b-stat-label">Requests / month</p>
+          </div>
+          <div class="b-stat-spark">
+            <div class="b-spark-bar" style="height:30%"></div>
+            <div class="b-spark-bar" style="height:45%"></div>
+            <div class="b-spark-bar" style="height:38%"></div>
+            <div class="b-spark-bar" style="height:62%"></div>
+            <div class="b-spark-bar" style="height:55%"></div>
+            <div class="b-spark-bar" style="height:78%"></div>
+            <div class="b-spark-bar" style="height:70%"></div>
+            <div class="b-spark-bar" style="height:92%"></div>
+          </div>
+        </div>
+
+        <div class="bento-cell reveal" data-tilt="" style="transition-delay: 0.3s;">
+          <img class="bento-img" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2e7bbf0b-fdb2-4a02-b8c8-46266e9f30d4_800w.webp" alt="Analytics dashboard" loading="lazy">
+          <div class="bento-tint"></div>
+          <div class="bento-scan"></div>
+          <div class="bento-arrow">→</div>
+          <div class="bento-meta">
+            <p class="bento-kicker">Observability</p>
+            <h3 class="bento-title">Live dashboards</h3>
+          </div>
+        </div>
+
+        <div class="bento-cell b-tall reveal" data-tilt="" style="transition-delay: 0s;">
+          <img class="bento-img" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/225dd491-fdd9-474d-8947-f3c72f370d67/800w.jpg" alt="Network cables" loading="lazy">
+          <div class="bento-tint"></div>
+          <div class="bento-scan"></div>
+          <div class="bento-arrow">→</div>
+          <div class="bento-meta">
+            <p class="bento-kicker">Security</p>
+            <h3 class="bento-title">SOC 2 Type II certified</h3>
+            <p class="bento-desc">
+              End-to-end encryption, zero data retention modes, and on-prem
+              deployment for regulated industries.
+            </p>
+          </div>
+        </div>
+
+        <div class="bento-cell b-quote reveal" style="transition-delay: 0.1s;">
+          <div class="b-quote-mark">"</div>
+          <p class="b-quote-text">
+            Vektor is the missing layer between our product and every AI
+            provider.
+          </p>
+          <p class="b-quote-who">CTO · Bastion AI</p>
+        </div>
+
+        <div class="bento-cell b-wide reveal" data-tilt="" style="transition-delay: 0.2s;">
+          <img class="bento-img" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/502c4b24-fa28-45d3-94da-4346703e446b_1600w.jpg" alt="Code on screen" loading="lazy">
+          <div class="bento-tint"></div>
+          <div class="bento-scan"></div>
+          <div class="bento-arrow">→</div>
+          <div class="bento-meta">
+            <p class="bento-kicker">Developer experience</p>
+            <h3 class="bento-title">One SDK, every model</h3>
+            <p class="bento-desc">
+              Type-safe clients for TypeScript, Python, Go, and Rust. Switch
+              providers with a one-line change.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HOW IT WORKS ── -->
+    <section class="how">
+      <div class="how-inner">
+        <div class="how-left">
+          <div class="section-tag reveal" style="transition-delay: 0.3s;">
+            How it works
+          </div>
+          <h2 class="how-big reveal" style="transition-delay: 0s;">
+            Simple
+            <br>
+            by
+            <em>design</em>
+          </h2>
+          <p class="how-desc reveal" style="transition-delay: 0.1s;">
+            Four steps from zero to production-grade AI infrastructure. No PhD
+            required.
+          </p>
+        </div>
+        <div class="steps">
+          <div class="step reveal" style="transition-delay: 0.2s;">
+            <div class="step-idx">01</div>
+            <div class="step-content">
+              <p class="step-label">Connect</p>
+              <h3 class="step-title scramble" data-text="Install the SDK">
+                Install the SDK
+              </h3>
+              <p class="step-body">
+                One npm install. Our SDK auto-discovers your runtime and
+                configures itself. No YAML, no infra tickets.
+              </p>
+              <div class="step-bar"></div>
+            </div>
+          </div>
+          <div class="step reveal" style="transition-delay: 0.3s;">
+            <div class="step-idx">02</div>
+            <div class="step-content">
+              <p class="step-label">Configure</p>
+              <h3 class="step-title scramble" data-text="Define your models">
+                Define your models
+              </h3>
+              <p class="step-body">
+                Declare which models you want access to. We handle auth, rate
+                limiting, and fallback routing automatically.
+              </p>
+              <div class="step-bar"></div>
+            </div>
+          </div>
+          <div class="step reveal" style="transition-delay: 0s;">
+            <div class="step-idx">03</div>
+            <div class="step-content">
+              <p class="step-label">Ship</p>
+              <h3 class="step-title scramble" data-text="Deploy anywhere">
+                Deploy anywhere
+              </h3>
+              <p class="step-body">
+                Push to any cloud, edge runtime, or on-prem server. Vektor
+                follows your existing CI/CD pipeline.
+              </p>
+              <div class="step-bar"></div>
+            </div>
+          </div>
+          <div class="step reveal" style="transition-delay: 0.1s;">
+            <div class="step-idx">04</div>
+            <div class="step-content">
+              <p class="step-label">Observe</p>
+              <h3 class="step-title scramble" data-text="Monitor &amp; optimize">
+                Monitor &amp; optimize
+              </h3>
+              <p class="step-body">
+                Full cost attribution, latency heatmaps, and anomaly alerts.
+                Know exactly what your AI is spending and why.
+              </p>
+              <div class="step-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LOGOS TAPE ── -->
+    <div class="logos-section">
+      <p class="logos-label">Trusted by engineering teams at</p>
+      <div class="logos-tape">
+        <div class="logo-cell">
+          <span class="logo-name">Stripe</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Notion</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Linear</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Vercel</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Figma</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Loom</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Supabase</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Retool</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Codeium</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Runway</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Stripe</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Notion</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Linear</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Vercel</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Figma</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Loom</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Supabase</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Retool</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Codeium</span>
+          <span class="logo-dot"></span>
+        </div>
+        <div class="logo-cell">
+          <span class="logo-name">Runway</span>
+          <span class="logo-dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DIAGONAL SDK CALLOUT ── -->
+    <div class="diagonal-section">
+      <div class="diagonal-inner">
+        <div class="diagonal-text reveal" style="transition-delay: 0.2s;">
+          <h2 class="diagonal-headline">
+            One SDK.
+            <br>
+            <em>Infinite</em>
+            <br>
+            models.
+          </h2>
+          <p class="diagonal-body">
+            Stop rewriting integrations every time a new frontier model drops.
+            Vektor's unified SDK abstracts provider differences so you stay
+            focused on product — not plumbing.
+          </p>
+          <a href="#" class="btn-primary" style="margin-top:28px;display:inline-flex">
+            Read the docs →
+          </a>
+        </div>
+        <div class="terminal reveal" style="transition-delay: 0.3s;">
+          <div class="term-bar">
+            <div class="term-dot" style="background:#ff5f57"></div>
+            <div class="term-dot" style="background:#febc2e"></div>
+            <div class="term-dot" style="background:#28c840"></div>
+            <span style="font-size:11px;color:rgba(242,237,230,.2);margin-left:8px">
+              vektor.init
+            </span>
+          </div>
+          <div class="term-body">
+            <div>
+              <span class="term-prompt">$</span>
+              <span class="term-cmd">npm install @vektor/sdk</span>
+            </div>
+            <div class="term-out">✓ Installed in 0.4s</div>
+            <div style="margin-top:8px">
+              <span class="term-prompt">›</span>
+              <span class="term-cmd">import Vektor from '@vektor/sdk'</span>
+            </div>
+            <div>
+              <span class="term-prompt">›</span>
+              <span class="term-cmd">const vk = new Vektor({ key })</span>
+            </div>
+            <div style="margin-top:8px">
+              <span class="term-prompt">›</span>
+              <span class="term-cmd">await vk.run('gpt-4o', prompt)</span>
+            </div>
+            <div class="term-out">← { tokens: 412, ms: 11, cost: $0.002 }</div>
+            <div style="margin-top:8px">
+              <span class="term-prompt">›</span>
+              <span class="term-cursor"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INTEGRATIONS — SVG PATH DRAW ── -->
+    <section class="integrations">
+      <div class="integ-inner">
+        <div class="integ-text">
+          <div class="section-tag reveal" style="transition-delay: 0s;">
+            Integrations
+          </div>
+          <h2 class="integ-headline reveal" style="transition-delay: 0.1s;">
+            Every model.
+            <br>
+            <em>One</em>
+            hub.
+          </h2>
+          <p class="integ-body reveal" style="transition-delay: 0.2s;">
+            Connect to every major AI provider through a single endpoint. Switch
+            models mid-flight without touching your application code.
+          </p>
+          <div class="integ-chips reveal" style="transition-delay: 0.3s;">
+            <span class="chip">OpenAI</span>
+            <span class="chip">Anthropic</span>
+            <span class="chip">Gemini</span>
+            <span class="chip">Mistral</span>
+            <span class="chip">Llama 3</span>
+            <span class="chip">Cohere</span>
+            <span class="chip">Grok</span>
+            <span class="chip">Groq</span>
+            <span class="chip">+ 40 more</span>
+          </div>
+        </div>
+        <div class="integ-viz reveal" id="integViz" style="transition-delay: 0s;">
+          <svg class="integ-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" id="integSvg">
+            <!-- pulse rings on center -->
+            <circle class="pulse-ring" cx="200" cy="200" r="20"></circle>
+            <circle class="pulse-ring" cx="200" cy="200" r="20"></circle>
+            <circle class="pulse-ring" cx="200" cy="200" r="20"></circle>
+            <!-- paths from center to nodes - will be drawn in JS -->
+            <path class="node-path" id="np0" d="M200,200 L200,60"></path>
+            <path class="node-path" id="np1" d="M200,200 L318,130"></path>
+            <path class="node-path" id="np2" d="M200,200 L340,200"></path>
+            <path class="node-path" id="np3" d="M200,200 L318,270"></path>
+            <path class="node-path" id="np4" d="M200,200 L200,340"></path>
+            <path class="node-path" id="np5" d="M200,200 L82,270"></path>
+            <path class="node-path" id="np6" d="M200,200 L60,200"></path>
+            <path class="node-path" id="np7" d="M200,200 L82,130"></path>
+            <!-- outer nodes -->
+            <g class="node-group" data-label="OpenAI">
+              <circle class="node-circle" cx="200" cy="60" r="28"></circle>
+              <text class="node-label" x="200" y="60">OpenAI</text>
+            </g>
+            <g class="node-group" data-label="Gemini">
+              <circle class="node-circle" cx="318" cy="130" r="28"></circle>
+              <text class="node-label" x="318" y="130">Gemini</text>
+            </g>
+            <g class="node-group" data-label="Cohere">
+              <circle class="node-circle" cx="340" cy="200" r="28"></circle>
+              <text class="node-label" x="340" y="200">Cohere</text>
+            </g>
+            <g class="node-group" data-label="Llama">
+              <circle class="node-circle" cx="318" cy="270" r="28"></circle>
+              <text class="node-label" x="318" y="270">Llama</text>
+            </g>
+            <g class="node-group" data-label="Mistral">
+              <circle class="node-circle" cx="200" cy="340" r="28"></circle>
+              <text class="node-label" x="200" y="340">Mistral</text>
+            </g>
+            <g class="node-group" data-label="Groq">
+              <circle class="node-circle" cx="82" cy="270" r="28"></circle>
+              <text class="node-label" x="82" y="270">Groq</text>
+            </g>
+            <g class="node-group" data-label="Grok">
+              <circle class="node-circle" cx="60" cy="200" r="28"></circle>
+              <text class="node-label" x="60" y="200">Grok</text>
+            </g>
+            <g class="node-group" data-label="Claude">
+              <circle class="node-circle" cx="82" cy="130" r="28"></circle>
+              <text class="node-label" x="82" y="130">Claude</text>
+            </g>
+            <!-- center node -->
+            <circle cx="200" cy="200" r="32" class="node-center"></circle>
+            <text class="node-center-label" x="200" y="200">VEKTR</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── METRICS COUNTER ── -->
+    <section class="metrics">
+      <div class="metrics-inner">
+        <div class="metric-cell reveal" style="transition-delay: 0.1s;">
+          <div class="metric-bg">01</div>
+          <span class="metric-n" data-target="4200000000" data-suffix="B+" data-display="4.2B+">
+            4.2B+
+          </span>
+          <p class="metric-label">Requests served</p>
+          <p class="metric-sub">Last 30 days across all regions</p>
+        </div>
+        <div class="metric-cell reveal" style="transition-delay: 0.2s;">
+          <div class="metric-bg">02</div>
+          <span class="metric-n" data-target="99.98" data-suffix="%" data-display="99.98%">
+            99.98%
+          </span>
+          <p class="metric-label">Platform uptime</p>
+          <p class="metric-sub">12-month rolling average</p>
+        </div>
+        <div class="metric-cell reveal" style="transition-delay: 0.3s;">
+          <div class="metric-bg">03</div>
+          <span class="metric-n" data-target="11" data-suffix="ms" data-display="11ms">
+            <span class="metric-unit">&lt;</span>
+            11ms
+          </span>
+          <p class="metric-label">Median latency</p>
+          <p class="metric-sub">p50 globally, edge-routed</p>
+        </div>
+        <div class="metric-cell reveal" style="transition-delay: 0s;">
+          <div class="metric-bg">04</div>
+          <span class="metric-n" data-target="380" data-suffix="+" data-display="380+">
+            380+
+          </span>
+          <p class="metric-label">Enterprise teams</p>
+          <p class="metric-sub">From seed to Fortune 500</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROCESS — HORIZONTAL DRAG SCROLL ── -->
+    <section class="process">
+      <div class="process-header">
+        <div class="section-tag reveal" style="transition-delay: 0.1s;">
+          The workflow
+        </div>
+        <h2 class="process-headline reveal" style="transition-delay: 0.2s;">
+          From idea to
+          <br>
+          <em>production</em>
+          fast
+        </h2>
+      </div>
+      <div class="process-track-wrap" id="processTrack" style="cursor: grab;">
+        <div class="process-track">
+          <div class="process-card">
+            <div class="process-card-num">01</div>
+            <div class="process-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48">
+                <circle class="pi-circle" cx="24" cy="24" r="20"></circle>
+                <path class="pi-arc" d="M24,4 A20,20 0 0,1 44,24"></path>
+              </svg>
+            </div>
+            <p class="process-card-step">Step one</p>
+            <h3 class="process-card-title">Architect your pipeline</h3>
+            <p class="process-card-body">
+              Map your AI use-cases to Vektor's pipeline primitives. Route,
+              chain, and parallelize model calls using a declarative graph
+              syntax.
+            </p>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-card">
+            <div class="process-card-num">02</div>
+            <div class="process-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" class="">
+                <circle class="pi-circle" cx="24" cy="24" r="20"></circle>
+                <path class="pi-arc" d="M24,4 A20,20 0 0,1 44,24 A20,20 0 0,1 24,44"></path>
+              </svg>
+            </div>
+            <p class="process-card-step">Step two</p>
+            <h3 class="process-card-title">Integrate in minutes</h3>
+            <p class="process-card-body">
+              Drop in our SDK and call
+              <code style="color:var(--acid);font-size:10px">vk.run()</code>
+              . Vektor handles auth, retries, and fallbacks across every
+              provider automatically.
+            </p>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-card">
+            <div class="process-card-num">03</div>
+            <div class="process-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48">
+                <circle class="pi-circle" cx="24" cy="24" r="20"></circle>
+                <path class="pi-arc" d="M24,4 A20,20 0 1,1 23.9,4"></path>
+              </svg>
+            </div>
+            <p class="process-card-step">Step three</p>
+            <h3 class="process-card-title">Test with confidence</h3>
+            <p class="process-card-body">
+              Replay production traces in staging. Regression-test prompt
+              changes before they touch users. Catch quality drifts
+              automatically.
+            </p>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-card">
+            <div class="process-card-num">04</div>
+            <div class="process-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48">
+                <circle class="pi-circle" cx="24" cy="24" r="20"></circle>
+                <path class="pi-arc" d="M4,24 A20,20 0 0,1 44,24"></path>
+              </svg>
+            </div>
+            <p class="process-card-step">Step four</p>
+            <h3 class="process-card-title">Deploy to the edge</h3>
+            <p class="process-card-body">
+              One command deploys your pipeline to 200+ global PoPs. Requests
+              automatically route to the closest available model endpoint.
+            </p>
+          </div>
+          <div class="process-arrow">→</div>
+          <div class="process-card" style="background:rgba(212,255,71,.04)">
+            <div class="process-card-num">05</div>
+            <div class="process-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48">
+                <circle class="pi-circle" cx="24" cy="24" r="20"></circle>
+                <path class="pi-arc" stroke="var(--acid)" d="M24,4 A20,20 0 1,1 24,44 A20,20 0 1,1 24,4"></path>
+              </svg>
+            </div>
+            <p class="process-card-step">Step five</p>
+            <h3 class="process-card-title">Observe everything</h3>
+            <p class="process-card-body">
+              Live dashboards show token spend, latency percentiles, and error
+              rates. Anomaly alerts fire before users notice anything is wrong.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS — DUAL AUTO-SCROLL COLUMNS ── -->
+    <section class="testimonials">
+      <div class="testi-header">
+        <div class="section-tag" style="display:inline-flex;margin-bottom:16px">
+          What teams say
+        </div>
+        <h2 class="testi-headline">
+          Loved by
+          <br>
+          <em class="">builders</em>
+        </h2>
+      </div>
+      <div class="testi-cols" style="mask-image: linear-gradient(180deg, transparent, black 35%, black 60%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 35%, black 60%, transparent);">
+        <div class="testi-col testi-col-a" id="colA">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Vektor cut our model integration work from weeks to hours. We now
+              ship AI features in a single sprint."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1574eec9-016e-40cc-8d2d-04de1c9cc1b0_800w.png" alt="Alicia Torres">
+              </div>
+              <div>
+                <p class="testi-name">Alicia Torres</p>
+                <p class="testi-role">VP Eng · Runway</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "The routing intelligence is genuinely magic. We stopped
+              overpaying for GPT-4 on tasks that Haiku handles just fine."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/533a16b9-9e5e-49d1-a4ea-83f9178889ff_320w.png" alt="James Osei">
+              </div>
+              <div>
+                <p class="testi-name">James Osei</p>
+                <p class="testi-role">Staff Eng · Linear</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Finally, an AI infra layer that doesn't make me feel like I'm
+              gluing 12 things together with duct tape."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/72adc0f8-ad1f-4732-a5bf-c000b45152a2_320w.webp" alt="Yuna Park">
+              </div>
+              <div>
+                <p class="testi-name">Yuna Park</p>
+                <p class="testi-role">CTO · Bastion AI</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "The observability alone is worth the price. We caught a prompt
+              regression before it hit 1% of users."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ec6a5cab-715c-44c6-9cd8-aff440c886f6_320w.webp" alt="Marcus Webb">
+              </div>
+              <div>
+                <p class="testi-name">Marcus Webb</p>
+                <p class="testi-role">Lead Eng · Notion</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Vektor cut our model integration work from weeks to hours. We now
+              ship AI features in a single sprint."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/9fc26ef9-ae15-4f56-ac63-077c7659dafa_320w.png" alt="Alicia Torres">
+              </div>
+              <div>
+                <p class="testi-name">Alicia Torres</p>
+                <p class="testi-role">VP Eng · Runway</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "The routing intelligence is genuinely magic. We stopped
+              overpaying for GPT-4 on tasks that Haiku handles just fine."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e8434c85-a821-467d-8899-e9f0d5e32184_320w.webp" alt="James Osei">
+              </div>
+              <div>
+                <p class="testi-name">James Osei</p>
+                <p class="testi-role">Staff Eng · Linear</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Finally, an AI infra layer that doesn't make me feel like I'm
+              gluing 12 things together with duct tape."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6e825b87-0682-49e3-98c2-dbdab1f8f9c5_320w.webp" alt="Yuna Park">
+              </div>
+              <div>
+                <p class="testi-name">Yuna Park</p>
+                <p class="testi-role">CTO · Bastion AI</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "The observability alone is worth the price. We caught a prompt
+              regression before it hit 1% of users."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/03517ac1-a924-43ae-88b0-64089e9abe04_320w.webp" alt="Marcus Webb">
+              </div>
+              <div>
+                <p class="testi-name">Marcus Webb</p>
+                <p class="testi-role">Lead Eng · Notion</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-col testi-col-b" id="colB">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Switched from rolling our own router to Vektor in an afternoon.
+              Best afternoon of my engineering career."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a47fdc81-bd26-49ad-af4d-e2e22283b996_320w.png" alt="Priya Mehta">
+              </div>
+              <div>
+                <p class="testi-name">Priya Mehta</p>
+                <p class="testi-role">Founding Eng · Codeium</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Edge routing means our EU customers stopped complaining about
+              latency. That's worth more than the subscription."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bf728e3d-89a4-468d-96e5-d2d55f70e406_320w.webp" alt="Felix Braun">
+              </div>
+              <div>
+                <p class="testi-name">Felix Braun</p>
+                <p class="testi-role">Principal Eng · Loom</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "We A/B test prompt variants across models using Vektor's traffic
+              splitting. The ROI visibility is incredible."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bd0dc97c-a094-49ac-8265-f47f1efa3939_320w.webp" alt="Sofia Andrade">
+              </div>
+              <div>
+                <p class="testi-name">Sofia Andrade</p>
+                <p class="testi-role">AI Eng · Retool</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "The zero-config fallback routing has saved us three times during
+              OpenAI outages. Customers never noticed."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/152b527e-f3bb-44db-98a8-e224a84a1318_320w.webp" alt="Chen Wei">
+              </div>
+              <div>
+                <p class="testi-name">Chen Wei</p>
+                <p class="testi-role">Platform Eng · Supabase</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Switched from rolling our own router to Vektor in an afternoon.
+              Best afternoon of my engineering career."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/23c92345-65be-44d2-b48a-3073db88554d_320w.webp" alt="Priya Mehta">
+              </div>
+              <div>
+                <p class="testi-name">Priya Mehta</p>
+                <p class="testi-role">Founding Eng · Codeium</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "Edge routing means our EU customers stopped complaining about
+              latency. That's worth more than the subscription."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/39e15168-9f77-4837-9a4b-89c74b8bc38b_320w.webp" alt="Felix Braun">
+              </div>
+              <div>
+                <p class="testi-name">Felix Braun</p>
+                <p class="testi-role">Principal Eng · Loom</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "We A/B test prompt variants across models using Vektor's traffic
+              splitting. The ROI visibility is incredible."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a9f2a6f7-f473-484f-9db4-504cae45afd1_320w.webp" alt="Sofia Andrade">
+              </div>
+              <div>
+                <p class="testi-name">Sofia Andrade</p>
+                <p class="testi-role">AI Eng · Retool</p>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">
+              "The zero-config fallback routing has saved us three times during
+              OpenAI outages. Customers never noticed."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/986db8ed-1c5d-42fb-8c1d-4b3716d2e317_320w.jpg" alt="Chen Wei">
+              </div>
+              <div>
+                <p class="testi-name">Chen Wei</p>
+                <p class="testi-role">Platform Eng · Supabase</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRICING — INTERACTIVE CALCULATOR ── -->
+    <section class="pricing" id="pricing">
+      <div class="section-tag">Simple pricing</div>
+      <h2 class="pricing-headline tracking-tight" style="font-weight: 500;">
+        Build your
+        <br>
+        <em style="font-weight: 400;">perfect</em>
+        plan
+      </h2>
+      <p class="pricing-sub">
+        Slide to estimate your usage. We pick the right tier. No surprises.
+      </p>
+
+      <div class="pricing-toggle" id="pricingToggle" style="font-weight: 500;">
+        Monthly
+        <div class="toggle-track" id="toggleTrack">
+          <div class="toggle-thumb"></div>
+        </div>
+        Annual
+        <span class="toggle-save">Save 20%</span>
+      </div>
+
+      <div class="pricing-layout" id="pricingLayout">
+        <canvas id="priceCanvas" width="1416" height="514"></canvas>
+
+        <!-- CALCULATOR -->
+        <div class="price-calc">
+          <p class="calc-title tracking-tight" style="font-weight: 500;">
+            Usage estimator
+          </p>
+
+          <div>
+            <div class="calc-label" style="font-weight: 500;">
+              Monthly tokens
+              <span class="calc-val" id="tokenVal">10M</span>
+            </div>
+            <input type="range" class="calc-range" id="tokenSlider" min="0" max="100" value="20">
+            <div class="calc-ticks">
+              <span class="calc-tick">1M</span>
+              <span class="calc-tick">50M</span>
+              <span class="calc-tick">500M</span>
+              <span class="calc-tick">∞</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="calc-label" style="font-weight: 500;">
+              Team seats
+              <span class="calc-val" id="seatVal">3</span>
+            </div>
+            <input type="range" class="calc-range" id="seatSlider" min="1" max="50" value="3">
+            <div class="calc-ticks">
+              <span class="calc-tick">1</span>
+              <span class="calc-tick">10</span>
+              <span class="calc-tick">25</span>
+              <span class="calc-tick">50+</span>
+            </div>
+          </div>
+
+          <div class="calc-result" id="calcResult">
+            <p class="calc-result-label" style="font-weight: 500;">
+              Estimated monthly
+            </p>
+            <div class="calc-result-amt tracking-tight" style="font-weight: 500;">
+              <span class="calc-result-currency">$</span>
+              <span id="calcPrice" class="rolling">147</span>
+            </div>
+            <p class="calc-result-per" id="calcPer">per month</p>
+            <div class="calc-plan-badge" id="calcBadge" style="font-weight: 500;">
+              Pro plan
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAN CARDS — horizontal scroll -->
+        <div class="w-full" style="max-width: 100%; overflow: hidden;">
+          <div class="price-cards-area overflow-x-auto w-full" id="priceCardsArea" style="cursor: grab; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: 1rem; scrollbar-width: thin;">
+            <div class="price-cards-track flex" style="display: flex; gap: 1.5rem; min-width: max-content;">
+              <div class="price-card-v shrink-0 snap-start" id="row-starter" data-plan="starter" style="flex-shrink: 0; scroll-snap-align: start;">
+                <div class="beam" style="animation: auto ease 0s 1 normal none running none;"></div>
+                <span class="pcv-badge">Recommended</span>
+                <p class="pcv-tier tracking-tight" style="font-weight: 500;">
+                  Starter
+                </p>
+                <div class="pcv-amt tracking-tight" style="font-weight: 500;">
+                  <span class="pcv-dollar">$</span>
+                  <span id="p-starter">0</span>
+                </div>
+                <p class="pcv-period">free forever</p>
+                <div class="pcv-divider"></div>
+                <div class="pcv-features">
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    1M tokens / month
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    3 model providers
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Community support
+                  </div>
+                  <div class="prf prf-muted">
+                    <span class="prf-dot"></span>
+                    Edge deployment
+                  </div>
+                </div>
+                <a href="#" class="pcv-btn" style="font-weight: 500;">
+                  Get started
+                </a>
+              </div>
+
+              <div class="price-card-v shrink-0 snap-start active" id="row-pro" data-plan="pro" style="flex-shrink: 0; scroll-snap-align: start;">
+                <div class="beam" style="animation: auto ease 0s 1 normal none running none;"></div>
+                <span class="pcv-badge">Recommended</span>
+                <p class="pcv-tier tracking-tight" style="font-weight: 500;">
+                  Pro
+                </p>
+                <div class="pcv-amt tracking-tight" style="font-weight: 500;">
+                  <span class="pcv-dollar">$</span>
+                  <span id="p-pro">49</span>
+                </div>
+                <p class="pcv-period" id="period-pro">per seat / mo</p>
+                <div class="pcv-divider"></div>
+                <div class="pcv-features">
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    50M tokens / month
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    All model providers
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Priority support
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Edge deployment
+                  </div>
+                </div>
+                <a href="#" class="pcv-btn" style="font-weight: 500;">
+                  Start trial
+                </a>
+              </div>
+
+              <div class="price-card-v shrink-0 snap-start" id="row-team" data-plan="team" style="flex-shrink: 0; scroll-snap-align: start;">
+                <div class="beam" style="animation: auto ease 0s 1 normal none running none;"></div>
+                <span class="pcv-badge">Recommended</span>
+                <p class="pcv-tier tracking-tight" style="font-weight: 500;">
+                  Team
+                </p>
+                <div class="pcv-amt tracking-tight" style="font-weight: 500;">
+                  <span class="pcv-dollar">$</span>
+                  <span id="p-team">199</span>
+                </div>
+                <p class="pcv-period" id="period-team">up to 10 seats / mo</p>
+                <div class="pcv-divider"></div>
+                <div class="pcv-features">
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    200M tokens / month
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Shared workspace
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    SSO + audit logs
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    99.95% SLA
+                  </div>
+                </div>
+                <a href="#" class="pcv-btn" style="font-weight: 500;">
+                  Start trial
+                </a>
+              </div>
+
+              <div class="price-card-v enterprise shrink-0 snap-start" id="row-enterprise" data-plan="enterprise" style="flex-shrink: 0; scroll-snap-align: start;">
+                <div class="beam" style="animation: auto ease 0s 1 normal none running none;"></div>
+                <span class="pcv-badge">Recommended</span>
+                <p class="pcv-tier tracking-tight" style="font-weight: 500;">
+                  Enterprise
+                </p>
+                <div class="pcv-amt tracking-tight" style="font-weight: 500;">
+                  <span id="p-enterprise">Custom</span>
+                </div>
+                <p class="pcv-period">volume pricing</p>
+                <div class="pcv-divider"></div>
+                <div class="pcv-features">
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Unlimited tokens
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Dedicated infra + on-prem
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    24/7 support + SLA
+                  </div>
+                  <div class="prf">
+                    <span class="prf-dot"></span>
+                    Custom contracts
+                  </div>
+                </div>
+                <a href="#" class="pcv-btn" style="font-weight: 500;">
+                  Talk to sales
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="price-scroll-hint" style="font-weight: 500;">
+            Drag or scroll
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+              <path d="M1 5h11M9 1.5L12.5 5 9 8.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA — CINEMATIC ── -->
+    <section class="cta-section">
+      <div class="cta-bg">
+        <div class="cta-orb"></div>
+        <div class="cta-orb"></div>
+        <div class="cta-orb"></div>
+      </div>
+      <div class="cta-scan"></div>
+      <div class="cta-ghost">SHIP</div>
+      <div class="cta-inner">
+        <div class="cta-tag">Now in public beta</div>
+        <h2 class="cta-big">
+          The last
+          <br>
+          AI infra
+          <br>
+          you'll
+          <em>ever</em>
+          need
+        </h2>
+        <p class="cta-sub">
+          Join 380+ engineering teams who've standardized on Vektor. Start free,
+          scale without limits.
+        </p>
+        <div class="cta-actions">
+          <a href="#" class="btn-primary">Start for free — no credit card</a>
+          <a href="#" class="btn-draw">
+            <span class="edge-t"></span>
+            <span class="edge-b"></span>
+            Schedule a demo
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="foot-logo">
+        VEKT
+        <span>◉</span>
+        R
+      </div>
+      <p class="foot-copy">© 2025 Vektor Inc. All rights reserved.</p>
+      <ul class="foot-links">
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Status</a></li>
+        <li><a href="#">GitHub</a></li>
+      </ul>
+    </footer>
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* ── CURSOR ── */
+      const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+      let mx=0,my=0,rx=0,ry=0;
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+      (function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+
+      /* ── BG PARTICLES (global) ── */
+      const canvas=document.getElementById('particle-canvas'),ctx=canvas.getContext('2d');
+      let W,H,pts=[];
+      function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+      resize();window.addEventListener('resize',resize);
+      function initPts(){pts=[];const n=Math.floor(W*H/16000);for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.3,a:Math.random()*.4+.08})}
+      initPts();
+      (function drawPts(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(212,255,71,${p.a})`;ctx.fill()});for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<90){ctx.beginPath();ctx.strokeStyle=`rgba(212,255,71,${.05*(1-d/90)})`;ctx.lineWidth=.4;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}}requestAnimationFrame(drawPts)})();
+
+      /* ══════════════════════════════════════════
+         HERO CANVAS — Topographic noise field
+         Layered sine-based contour lines that shift
+         and breathe, creating a living landscape
+         ══════════════════════════════════════════ */
+      (function(){
+        const hc=document.getElementById('hero-canvas');
+        if(!hc)return;
+        const hctx=hc.getContext('2d');
+        let HW,HH,t=0;
+
+        function resizeHero(){
+          HW=hc.width=hc.offsetWidth;
+          HH=hc.height=hc.offsetHeight;
+        }
+        resizeHero();
+        window.addEventListener('resize',resizeHero);
+
+        /* Simplex-like noise via layered sines */
+        function noise(x,y,t){
+          return(
+            Math.sin(x*0.006+t*0.3)*0.4+
+            Math.sin(y*0.008+t*0.2)*0.3+
+            Math.sin((x+y)*0.005+t*0.15)*0.2+
+            Math.sin(x*0.012-y*0.007+t*0.4)*0.1+
+            Math.sin(x*0.003+y*0.009+t*0.1)*0.25+
+            Math.cos(x*0.007-t*0.25)*0.15+
+            Math.cos(y*0.011+t*0.18)*0.12
+          )/1.52;
+        }
+
+        /* Marching squares contour extractor */
+        function getContours(field,W,H,threshold){
+          const lines=[];
+          for(let y=0;y<H-1;y++){
+            for(let x=0;x<W-1;x++){
+              const tl=field[y*W+x],tr=field[y*W+x+1];
+              const bl=field[(y+1)*W+x],br=field[(y+1)*W+x+1];
+              const idx=((tl>threshold)?8:0)|((tr>threshold)?4:0)|((br>threshold)?2:0)|((bl>threshold)?1:0);
+              if(idx===0||idx===15)continue;
+              /* Interpolation helper */
+              const lerp=(a,b)=>(threshold-a)/(b-a);
+              const top={x:x+lerp(tl,tr),y};
+              const bottom={x:x+lerp(bl,br),y:y+1};
+              const left={x,y:y+lerp(tl,bl)};
+              const right={x:x+1,y:y+lerp(tr,br)};
+              const edges={1:[bottom,left],2:[right,bottom],3:[right,left],
+                4:[top,right],5:[top,left,bottom,right],6:[top,bottom],
+                7:[top,left],8:[top,left],9:[top,bottom],
+                10:[left,top,right,bottom],11:[top,right],
+                12:[left,right],13:[right,bottom],14:[left,bottom]};
+              const pts=edges[idx]||[];
+              if(pts.length>=2)lines.push([pts[0],pts[1]]);
+              if(pts.length===4)lines.push([pts[2],pts[3]]);
+            }
+          }
+          return lines;
+        }
+
+        const COLS=60,ROWS=40;
+
+        function drawFrame(){
+          t+=0.005;
+          hctx.clearRect(0,0,HW,HH);
+
+          /* Build field */
+          const field=new Float32Array(COLS*ROWS);
+          for(let row=0;row<ROWS;row++){
+            for(let col=0;col<COLS;col++){
+              const nx=col/COLS*HW,ny=row/ROWS*HH;
+              field[row*COLS+col]=noise(nx,ny,t);
+            }
+          }
+
+          const scaleX=HW/(COLS-1),scaleY=HH/(ROWS-1);
+
+          /* Draw multiple threshold levels = contour lines */
+          const levels=[
+            {thr:-0.55,alpha:0.04,w:0.5,color:'212,255,71'},
+            {thr:-0.35,alpha:0.06,w:0.5,color:'212,255,71'},
+            {thr:-0.15,alpha:0.09,w:0.5,color:'212,255,71'},
+            {thr:0.0, alpha:0.12,w:0.8,color:'168,240,232'},
+            {thr:0.15,alpha:0.10,w:0.5,color:'212,255,71'},
+            {thr:0.32,alpha:0.07,w:0.5,color:'212,255,71'},
+            {thr:0.50,alpha:0.05,w:0.5,color:'242,237,230'},
+          ];
+
+          levels.forEach(({thr,alpha,w,color})=>{
+            const lines=getContours(field,COLS,ROWS,thr);
+            hctx.strokeStyle=`rgba(${color},${alpha})`;
+            hctx.lineWidth=w;
+            hctx.lineCap='round';
+            lines.forEach(([p0,p1])=>{
+              hctx.beginPath();
+              hctx.moveTo(p0.x*scaleX,p0.y*scaleY);
+              hctx.lineTo(p1.x*scaleX,p1.y*scaleY);
+              hctx.stroke();
+            });
+          });
+
+          /* Glowing accent dots at high-density intersections */
+          const hotspots=[];
+          for(let i=0;i<field.length;i++){
+            const v=Math.abs(field[i]);
+            if(v>0.42&&v<0.48&&Math.random()<0.003){
+              const col=i%COLS,row=Math.floor(i/COLS);
+              hotspots.push({x:col*scaleX,y:row*scaleY,v});
+            }
+          }
+          hotspots.forEach(h=>{
+            const r=(h.v-0.42)/0.06;
+            hctx.beginPath();
+            hctx.arc(h.x,h.y,1.5,0,Math.PI*2);
+            hctx.fillStyle=`rgba(212,255,71,${0.3+r*0.4})`;
+            hctx.fill();
+          });
+
+          /* Perspective grid lines — converging to vanishing point */
+          const vx=HW*0.62,vy=HH*0.38;
+          hctx.lineWidth=0.3;
+          for(let i=0;i<12;i++){
+            const angle=(i/12)*Math.PI*2+t*0.015;
+            const ex=vx+Math.cos(angle)*HW*1.2;
+            const ey=vy+Math.sin(angle)*HH*1.2;
+            const dist=Math.sqrt((ex-vx)**2+(ey-vy)**2);
+            const grad=hctx.createLinearGradient(vx,vy,ex,ey);
+            grad.addColorStop(0,'rgba(212,255,71,0)');
+            grad.addColorStop(0.3,`rgba(212,255,71,${0.04+Math.sin(t+i)*0.02})`);
+            grad.addColorStop(1,'rgba(212,255,71,0)');
+            hctx.strokeStyle=grad;
+            hctx.beginPath();
+            hctx.moveTo(vx,vy);
+            hctx.lineTo(ex,ey);
+            hctx.stroke();
+          }
+
+          requestAnimationFrame(drawFrame);
+        }
+        drawFrame();
+
+        /* Floating data node labels */
+        const nodeData=[
+          'inference.edge.01','latency:11ms','model.router','token.budget','embedding.v3',
+          'stream.active','fallback:ready','cache.hit:94%','region:us-east','cost:$0.002'
+        ];
+        const nodesEl=document.getElementById('heroNodes');
+        if(nodesEl){
+          nodeData.forEach((label,i)=>{
+            const el=document.createElement('div');
+            el.className='hnode';
+            el.innerHTML=`<span class="hnode-dot"></span>${label}`;
+            el.style.left=`${10+Math.random()*75}%`;
+            el.style.top=`${8+Math.random()*75}%`;
+            nodesEl.appendChild(el);
+            /* Staggered light-up */
+            setTimeout(()=>el.classList.add('lit'),1200+i*350);
+            /* Drift slowly */
+            setInterval(()=>{
+              const nx=parseFloat(el.style.left)+(Math.random()-.5)*0.4;
+              const ny=parseFloat(el.style.top)+(Math.random()-.5)*0.3;
+              el.style.left=Math.max(5,Math.min(88,nx))+'%';
+              el.style.top=Math.max(5,Math.min(88,ny))+'%';
+              el.style.transition='left 3s ease, top 3s ease';
+            },3000+i*400);
+          });
+        }
+      })();
+
+      /* ── NAV SCROLLED STATE ── */
+      (function(){
+        const nav=document.querySelector('nav');
+        window.addEventListener('scroll',()=>{
+          nav.classList.toggle('scrolled',window.scrollY>60);
+        },{passive:true});
+      })();
+
+      /* ── BENTO TILT + IMAGE PARALLAX ── */
+      document.querySelectorAll('.bento-cell[data-tilt]').forEach(cell=>{
+        const img=cell.querySelector('.bento-img');
+        cell.addEventListener('mousemove',e=>{
+          const r=cell.getBoundingClientRect();
+          const px=(e.clientX-r.left)/r.width-.5;
+          const py=(e.clientY-r.top)/r.height-.5;
+          cell.style.transform=`translateY(-4px) rotateX(${-py*4}deg) rotateY(${px*4}deg)`;
+          cell.style.transformStyle='preserve-3d';
+          if(img)img.style.transform=`scale(1.12) translate(${-px*10}px,${-py*10}px)`;
+        });
+        cell.addEventListener('mouseleave',()=>{
+          cell.style.transform='';
+          if(img)img.style.transform='';
+        });
+      });
+
+      /* ══════════════════════════════════════════
+         HERO MOUSE-FOLLOW GLOW
+         ══════════════════════════════════════════ */
+      (function(){
+        const glow=document.getElementById('hero-glow');
+        const hero=document.getElementById('hero');
+        if(!glow||!hero)return;
+        let gx=window.innerWidth/2,gy=window.innerHeight*0.45;
+        let tx=gx,ty=gy;
+        let active=false;
+
+        hero.addEventListener('mousemove',e=>{
+          const r=hero.getBoundingClientRect();
+          tx=e.clientX-r.left;
+          ty=e.clientY-r.top;
+          if(!active){active=true;glow.classList.add('on');}
+        });
+        hero.addEventListener('mouseleave',()=>{
+          active=false;
+          glow.classList.remove('on');
+        });
+
+        (function loop(){
+          gx+=(tx-gx)*0.07;
+          gy+=(ty-gy)*0.07;
+          glow.style.left=gx+'px';
+          glow.style.top=gy+'px';
+          requestAnimationFrame(loop);
+        })();
+      })();
+
+      /* ══════════════════════════════════════════
+         GSAP HERO PARALLAX & SCROLL EFFECTS
+         ══════════════════════════════════════════ */
+      window.addEventListener('load',()=>{
+        // Remove any saved GSAP spacer wrappers if this code was copied from a live preview.
+        document.querySelectorAll('.pin-spacer').forEach(spacer=>{
+          const child=spacer.querySelector('#hero-parallax-wrap');
+          if(child && spacer.parentNode) spacer.parentNode.replaceChild(child, spacer);
+        });
+        ScrollTrigger.refresh();
+
+        /* ─ 1. CANVAS scale + fade on scroll ─ */
+        gsap.to('#hero-canvas',{
+          scale:1.08,
+          opacity:0,
+          ease:'none',
+          scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:true}
+        });
+
+        /* ─ Glow fades out on scroll ─ */
+        gsap.to('#hero-glow',{
+          opacity:0,
+          scale:1.3,
+          ease:'none',
+          scrollTrigger:{trigger:'#hero',start:'top top',end:'50% top',scrub:true}
+        });
+
+        /* ─ 2. Vignette deepens ─ */
+        gsap.to('.hero-vignette',{
+          opacity:2,
+          ease:'none',
+          scrollTrigger:{trigger:'#hero',start:'top top',end:'80% top',scrub:true}
+        });
+
+        /* ─ 3. Floating nodes drift upward and fade ─ */
+        gsap.to('.hnode',{
+          y:-60,
+          opacity:0,
+          stagger:0.05,
+          ease:'none',
+          scrollTrigger:{trigger:'#hero',start:'top top',end:'60% top',scrub:true}
+        });
+
+        /* ─ 4. Eyebrow flies LEFT ─ */
+        gsap.to('#heroEyebrow',{
+          x:-120,
+          opacity:0,
+          ease:'power2.in',
+          scrollTrigger:{trigger:'#hero',start:'15% top',end:'55% top',scrub:true}
+        });
+
+        /* ─ 5. Headline line 0 — drift LEFT + up ─ */
+        gsap.to('#hline0',{
+          x:-80,
+          y:-40,
+          opacity:0,
+          ease:'power1.in',
+          scrollTrigger:{trigger:'#hero',start:'10% top',end:'50% top',scrub:true}
+        });
+
+        /* ─ 6. Headline line 1 — scale up + fade ─ */
+        gsap.to('#hline1',{
+          scale:1.06,
+          y:-20,
+          opacity:0,
+          ease:'power1.in',
+          transformOrigin:'left center',
+          scrollTrigger:{trigger:'#hero',start:'15% top',end:'55% top',scrub:true}
+        });
+
+        /* ─ 7. Ghost line flies RIGHT ─ */
+        gsap.to('#hline2',{
+          x:100,
+          opacity:0,
+          ease:'power1.in',
+          scrollTrigger:{trigger:'#hero',start:'20% top',end:'55% top',scrub:true}
+        });
+
+        /* ─ 8. Sub + actions slide down + fade ─ */
+        gsap.to(['#heroSub','#heroActions'],{
+          y:50,
+          opacity:0,
+          stagger:0.08,
+          ease:'none',
+          scrollTrigger:{trigger:'#hero',start:'25% top',end:'60% top',scrub:true}
+        });
+
+        /* ─ 9. Stats strip — each cell peels downward ─ */
+        gsap.to('.stat',{
+          y:70,
+          opacity:0,
+          stagger:0.12,
+          ease:'none',
+          scrollTrigger:{trigger:'#hero',start:'30% top',end:'65% top',scrub:true}
+        });
+
+        /* ─ 10. Brief desktop-only pin. Mobile is not pinned to avoid tall empty space. ─ */
+        if (window.matchMedia('(min-width: 769px)').matches) {
+          ScrollTrigger.create({
+            trigger:'#hero-parallax-wrap',
+            start:'top top',
+            end:'+=18%',
+            pin:true,
+            pinSpacing:true,
+            anticipatePin:1
+          });
+        }
+      });
+
+      /* ── INTERSECTION REVEAL ── */
+      const revealObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible')}})},{threshold:.1});
+      document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*.1)+'s';revealObs.observe(el)});
+
+      /* ── SCRAMBLE TEXT ── */
+      const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&';
+      function scramble(el){const orig=el.dataset.text;let iter=0;const iv=setInterval(()=>{el.textContent=orig.split('').map((_,i)=>i<iter?orig[i]:chars[Math.floor(Math.random()*chars.length)]).join('');if(iter>=orig.length)clearInterval(iv);iter+=.5},40)}
+      document.querySelectorAll('.step').forEach(step=>{step.addEventListener('mouseenter',()=>{const el=step.querySelector('.scramble');if(el)scramble(el)})});
+
+      /* ── INTEGRATION SVG PATH DRAW ── */
+      const integObs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){setTimeout(()=>{document.querySelectorAll('.node-path').forEach((p,i)=>{setTimeout(()=>{p.classList.add('drawn')},i*120)})},200);integObs.disconnect()}},{threshold:.3});
+      const integEl=document.getElementById('integViz');if(integEl)integObs.observe(integEl);
+
+      /* ── COUNTER ANIMATION ── */
+      function animateCounter(el){const display=el.dataset.display;const frames=60;let f=0;const iv=setInterval(()=>{f++;const t=f/frames;const ease=1-Math.pow(1-t,3);el.textContent=display.replace(/[\d.]+/,m=>{const v=parseFloat(m);const curr=v*ease;return curr<10?curr.toFixed(1):Math.round(curr)});if(f>=frames){el.textContent=display;clearInterval(iv)}},16)}
+      const counterObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.metric-n[data-display]').forEach(el=>{animateCounter(el)});counterObs.unobserve(e.target)}})},{threshold:.4});
+      document.querySelectorAll('.metrics-inner').forEach(el=>counterObs.observe(el));
+
+      /* ── DRAG-SCROLL process track ── */
+      const track=document.getElementById('processTrack');
+      if(track){let isDown=false,startX,scrollLeft;track.addEventListener('mousedown',e=>{isDown=true;track.style.cursor='grabbing';startX=e.pageX-track.offsetLeft;scrollLeft=track.scrollLeft});track.addEventListener('mouseleave',()=>{isDown=false;track.style.cursor='grab'});track.addEventListener('mouseup',()=>{isDown=false;track.style.cursor='grab'});track.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-track.offsetLeft;track.scrollLeft=scrollLeft-(x-startX)*1.2})}
+
+      /* ── TESTIMONIALS ── */
+      const testimonials=[
+        {q:"Vektor cut our model integration work from weeks to hours. We now ship AI features in a single sprint.",name:"Alicia Torres",role:"VP Eng · Runway",init:"AT",stars:5},
+        {q:"The routing intelligence is genuinely magic. We stopped overpaying for GPT-4 on tasks that Haiku handles just fine.",name:"James Osei",role:"Staff Eng · Linear",init:"JO",stars:5},
+        {q:"Finally, an AI infra layer that doesn't make me feel like I'm gluing 12 things together with duct tape.",name:"Yuna Park",role:"CTO · Bastion AI",init:"YP",stars:5},
+        {q:"The observability alone is worth the price. We caught a prompt regression before it hit 1% of users.",name:"Marcus Webb",role:"Lead Eng · Notion",init:"MW",stars:5},
+        {q:"Switched from rolling our own router to Vektor in an afternoon. Best afternoon of my engineering career.",name:"Priya Mehta",role:"Founding Eng · Codeium",init:"PM",stars:5},
+        {q:"Edge routing means our EU customers stopped complaining about latency. That's worth more than the subscription.",name:"Felix Braun",role:"Principal Eng · Loom",init:"FB",stars:5},
+        {q:"We A/B test prompt variants across models using Vektor's traffic splitting. The ROI visibility is incredible.",name:"Sofia Andrade",role:"AI Eng · Retool",init:"SA",stars:5},
+        {q:"The zero-config fallback routing has saved us three times during OpenAI outages. Customers never noticed.",name:"Chen Wei",role:"Platform Eng · Supabase",init:"CW",stars:5},
+      ];
+      function makeCard(t){return`<div class="testi-card"><div class="testi-stars">${'★'.repeat(t.stars)}</div><p class="testi-quote">"${t.q}"</p><div class="testi-author"><div class="testi-avatar">${t.init}</div><div><p class="testi-name">${t.name}</p><p class="testi-role">${t.role}</p></div></div></div>`}
+      const colA=document.getElementById('colA'),colB=document.getElementById('colB');
+      if(colA&&colB){
+        const half=Math.ceil(testimonials.length/2);
+        const aItems=testimonials.slice(0,half);
+        const bItems=testimonials.slice(half);
+        const aHTML=aItems.map(makeCard).join('');colA.innerHTML=aHTML+aHTML;
+        const bHTML=bItems.map(makeCard).join('');colB.innerHTML=bHTML+bHTML;
+      }
+
+      /* ── PROCESS CARD ARC RESET ── */
+      document.querySelectorAll('.process-card').forEach(c=>{c.addEventListener('mouseleave',()=>{const arc=c.querySelector('.pi-arc');arc.style.animation='none';void arc.offsetWidth;arc.style.animation=''})});
+
+      /* ══ PRICING CALCULATOR ══ */
+      (function(){
+        const tokenSlider=document.getElementById('tokenSlider');
+        const seatSlider=document.getElementById('seatSlider');
+        const tokenVal=document.getElementById('tokenVal');
+        const seatVal=document.getElementById('seatVal');
+        const calcPrice=document.getElementById('calcPrice');
+        const calcPer=document.getElementById('calcPer');
+        const calcBadge=document.getElementById('calcBadge');
+        const calcResult=document.getElementById('calcResult');
+        const toggleTrack=document.getElementById('toggleTrack');
+        const pricingToggle=document.getElementById('pricingToggle');
+        const layout=document.getElementById('pricingLayout');
+        if(!tokenSlider)return;
+
+        let isAnnual=false;
+
+        const PLANS=[
+          {id:'starter',name:'Starter plan',maxTokensM:1,maxSeats:1,basePrice:0,label:'Free forever'},
+          {id:'pro',name:'Pro plan',maxTokensM:50,maxSeats:5,basePrice:49,label:'per seat / mo'},
+          {id:'team',name:'Team plan',maxTokensM:200,maxSeats:10,basePrice:199,label:'up to 10 seats'},
+          {id:'enterprise',name:'Enterprise',maxTokensM:Infinity,maxSeats:Infinity,basePrice:null,label:'Custom pricing'},
+        ];
+
+        function getTokensM(v){
+          // 0-100 slider → 1M to 500M+ nonlinear
+          if(v<=20) return Math.round(v/20*10);        // 0-20 → 0-10M
+          if(v<=50) return Math.round(10+(v-20)/30*90); // 20-50 → 10-100M
+          if(v<=80) return Math.round(100+(v-50)/30*400); // 50-80 → 100-500M
+          return Infinity;
+        }
+
+        function fmt(n){
+          if(n>=1000)return(n/1000).toFixed(0)+'B';
+          if(n>=100)return n.toFixed(0)+'M';
+          return n.toFixed(0)+'M';
+        }
+
+        function getPlan(tokensM,seats){
+          if(tokensM===Infinity||seats>10)return PLANS[3];
+          if(tokensM>50||seats>5)return PLANS[2];
+          if(tokensM>1||seats>1)return PLANS[1];
+          return PLANS[0];
+        }
+
+        function rollNumber(el,newVal){
+          el.classList.remove('rolling');
+          void el.offsetWidth;
+          el.textContent=newVal;
+          el.classList.add('rolling');
+        }
+
+        let currentPlanId='starter';
+
+        function burstParticles(rowEl){
+          const pc=document.getElementById('priceCanvas');
+          if(!pc)return;
+          const pr=layout.getBoundingClientRect();
+          const rr=rowEl.getBoundingClientRect();
+          pc.width=pr.width;pc.height=pr.height;
+          const cx=rr.left-pr.left+rr.width/2;
+          const cy=rr.top-pr.top+rr.height*.2;
+          const ctx2=pc.getContext('2d');
+          const bursts=Array.from({length:28},()=>({
+            x:cx,y:cy,
+            vx:(Math.random()-.5)*6,
+            vy:(Math.random()-.5)*4-1,
+            r:Math.random()*3+1,
+            life:1,
+            decay:Math.random()*.04+.025
+          }));
+          function draw(){
+            ctx2.clearRect(0,0,pc.width,pc.height);
+            let alive=false;
+            bursts.forEach(b=>{
+              b.x+=b.vx;b.y+=b.vy;b.vy+=.12;b.life-=b.decay;
+              if(b.life>0){
+                alive=true;
+                ctx2.beginPath();ctx2.arc(b.x,b.y,b.r*b.life,0,Math.PI*2);
+                ctx2.fillStyle=`rgba(212,255,71,${b.life*.9})`;ctx2.fill();
+              }
+            });
+            if(alive)requestAnimationFrame(draw);
+            else ctx2.clearRect(0,0,pc.width,pc.height);
+          }
+          draw();
+        }
+
+        function activateRow(planId){
+          if(planId===currentPlanId)return;
+          currentPlanId=planId;
+          document.querySelectorAll('.price-card-v').forEach(r=>{
+            r.classList.remove('active');
+            const b=r.querySelector('.beam');
+            b.style.animation='none';void b.offsetWidth;
+          });
+          const row=document.getElementById('row-'+planId);
+          if(row){
+            row.classList.add('active');
+            burstParticles(row);
+            /* auto-scroll the active card into view */
+            const area=document.getElementById('priceCardsArea');
+            if(area){
+              const target=row.offsetLeft-area.offsetWidth/2+row.offsetWidth/2;
+              area.scrollTo({left:Math.max(0,target),behavior:'smooth'});
+            }
+          }
+        }
+
+        function update(){
+          const tv=parseInt(tokenSlider.value);
+          const seats=parseInt(seatSlider.value);
+          const tokensM=getTokensM(tv);
+          tokenVal.textContent=tokensM===Infinity?'500M+':fmt(tokensM);
+          seatVal.textContent=seats;
+
+          const plan=getPlan(tokensM,seats);
+          activateRow(plan.id);
+
+          // Update calc display
+          if(plan.basePrice===null){
+            rollNumber(calcPrice,'—');
+            calcPer.textContent='Contact us for volume pricing';
+            calcBadge.textContent=plan.name;
+          } else if(plan.basePrice===0){
+            rollNumber(calcPrice,'0');
+            calcPer.textContent='Free forever · no credit card needed';
+            calcBadge.textContent=plan.name;
+          } else {
+            let total=plan.id==='pro'?plan.basePrice*seats:plan.basePrice;
+            if(isAnnual)total=Math.round(total*.8);
+            rollNumber(calcPrice,total.toLocaleString());
+            calcPer.textContent=isAnnual?'per month, billed annually':'per month';
+            calcBadge.textContent=plan.name+(isAnnual?' · 20% off':'');
+          }
+
+          // Flash the result box
+          calcResult.classList.remove('highlight');
+          void calcResult.offsetWidth;
+          calcResult.classList.add('highlight');
+          setTimeout(()=>calcResult.classList.remove('highlight'),400);
+
+          // Update annual prices shown on rows
+          const mult=isAnnual?.8:1;
+          const proP=document.getElementById('p-pro');
+          const teamP=document.getElementById('p-team');
+          if(proP)proP.textContent=Math.round(49*mult);
+          if(teamP)teamP.textContent=Math.round(199*mult);
+          const pp=document.getElementById('period-pro');
+          const pt=document.getElementById('period-team');
+          if(pp)pp.textContent=isAnnual?'per seat / yr (billed ann.)':'per seat / mo';
+          if(pt)pt.textContent=isAnnual?'up to 10 seats / yr':'up to 10 seats / mo';
+        }
+
+        tokenSlider.addEventListener('input',update);
+        seatSlider.addEventListener('input',update);
+
+        toggleTrack.addEventListener('click',()=>{
+          isAnnual=!isAnnual;
+          toggleTrack.classList.toggle('on',isAnnual);
+          pricingToggle.classList.toggle('annual-active',isAnnual);
+          update();
+        });
+
+        // Click a card to manually select
+        document.querySelectorAll('.price-card-v').forEach(row=>{
+          row.addEventListener('click',e=>{
+            if(e.target.closest('.pcv-btn'))return;
+            const pid=row.dataset.plan;
+            if(pid===currentPlanId)return;
+            document.querySelectorAll('.price-card-v').forEach(r=>{r.classList.remove('active');const b=r.querySelector('.beam');b.style.animation='none';void b.offsetWidth;});
+            row.classList.add('active');
+            burstParticles(row);
+            currentPlanId=pid;
+          });
+        });
+
+        /* Drag-to-scroll on the cards area */
+        const area=document.getElementById('priceCardsArea');
+        if(area){
+          let down=false,sx,sl,moved=false;
+          area.addEventListener('mousedown',e=>{down=true;moved=false;area.style.cursor='grabbing';sx=e.pageX-area.offsetLeft;sl=area.scrollLeft});
+          area.addEventListener('mouseleave',()=>{down=false;area.style.cursor='grab'});
+          area.addEventListener('mouseup',()=>{down=false;area.style.cursor='grab'});
+          area.addEventListener('mousemove',e=>{
+            if(!down)return;
+            e.preventDefault();
+            const x=e.pageX-area.offsetLeft;
+            if(Math.abs(x-sx)>4)moved=true;
+            area.scrollLeft=sl-(x-sx)*1.1;
+          });
+          /* prevent click-select after a drag */
+          area.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
+        }
+
+        update();
+      })();
+    </script>
+
+    <script>
+      (function(){
+        const ts=[
+          {q:"Vektor cut our model integration work from weeks to hours. We now ship AI features in a single sprint.",name:"Alicia Torres",role:"VP Eng · Runway",img:"https://i.pravatar.cc/100?img=1",stars:5},
+          {q:"The routing intelligence is genuinely magic. We stopped overpaying for GPT-4 on tasks that Haiku handles just fine.",name:"James Osei",role:"Staff Eng · Linear",img:"https://i.pravatar.cc/100?img=2",stars:5},
+          {q:"Finally, an AI infra layer that doesn't make me feel like I'm gluing 12 things together with duct tape.",name:"Yuna Park",role:"CTO · Bastion AI",img:"https://i.pravatar.cc/100?img=3",stars:5},
+          {q:"The observability alone is worth the price. We caught a prompt regression before it hit 1% of users.",name:"Marcus Webb",role:"Lead Eng · Notion",img:"https://i.pravatar.cc/100?img=4",stars:5},
+          {q:"Switched from rolling our own router to Vektor in an afternoon. Best afternoon of my engineering career.",name:"Priya Mehta",role:"Founding Eng · Codeium",img:"https://i.pravatar.cc/100?img=5",stars:5},
+          {q:"Edge routing means our EU customers stopped complaining about latency. That's worth more than the subscription.",name:"Felix Braun",role:"Principal Eng · Loom",img:"https://i.pravatar.cc/100?img=6",stars:5},
+          {q:"We A/B test prompt variants across models using Vektor's traffic splitting. The ROI visibility is incredible.",name:"Sofia Andrade",role:"AI Eng · Retool",img:"https://i.pravatar.cc/100?img=7",stars:5},
+          {q:"The zero-config fallback routing has saved us three times during OpenAI outages. Customers never noticed.",name:"Chen Wei",role:"Platform Eng · Supabase",img:"https://i.pravatar.cc/100?img=8",stars:5}
+        ];
+        function mc(t){return `<div class="testi-card"><div class="testi-stars">${'★'.repeat(t.stars)}</div><p class="testi-quote">"${t.q}"</p><div class="testi-author"><div class="testi-avatar"><img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" alt="${t.name}"></div><div><p class="testi-name">${t.name}</p><p class="testi-role">${t.role}</p></div></div></div>`;}
+        window.addEventListener('DOMContentLoaded', () => {
+          const cA=document.getElementById('colA');
+          const cB=document.getElementById('colB');
+          if(cA && cB){
+            const h=Math.ceil(ts.length/2);
+            const aH=ts.slice(0,h).map(mc).join(''); cA.innerHTML=aH+aH;
+            const bH=ts.slice(h).map(mc).join(''); cB.innerHTML=bH+bH;
+          }
+        });
+      })();
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.querySelector('.nav-links');
+        const burgerIcon = document.getElementById('burgerIcon');
+        const closeIcon = document.getElementById('closeIcon');
+        if (menuBtn && navLinks) {
+          menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            const isOpen = navLinks.classList.contains('open');
+            burgerIcon.style.display = isOpen ? 'none' : 'block';
+            closeIcon.style.display = isOpen ? 'block' : 'none';
+          });
+          navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              navLinks.classList.remove('open');
+              burgerIcon.style.display = 'block';
+              closeIcon.style.display = 'none';
+            });
+          });
+        }
+      });
+    </script>
+  
+</body></html>

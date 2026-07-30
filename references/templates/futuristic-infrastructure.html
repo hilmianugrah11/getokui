@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRZN - Infrastructure</title>
+<!-- Google Fonts: Inter with thinner weights -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<!-- Three.js -->
+<style>
+/* Custom Animations */
+@keyframes scanline {
+0% { transform: translateY(-100%); opacity: 0; }
+50% { opacity: 1; }
+100% { transform: translateY(1000%); opacity: 0; }
+}
+@keyframes flow-x {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(300%); }
+}
+@keyframes dash-move {
+to { stroke-dashoffset: -40; }
+}
+@keyframes float-slow {
+0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+50% { transform: translate(-50%, -50%) translateY(-15px); }
+}
+@keyframes counter-spin {
+from { transform: translate(-50%, -50%) rotate(0deg); }
+to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+@keyframes bar-1 { 0%, 100% { height: 30%; } 50% { height: 80%; } }
+@keyframes bar-2 { 0%, 100% { height: 60%; } 50% { height: 100%; } }
+@keyframes bar-3 { 0%, 100% { height: 40%; } 50% { height: 60%; } }
+@keyframes bar-4 { 0%, 100% { height: 80%; } 50% { height: 40%; } }
+.orbit-track {
+animation: spin 30s linear infinite;
+}
+.orbit-track:hover {
+animation-play-state: paused;
+}
+.orbit-item {
+animation: counter-spin 30s linear infinite;
+}
+.orbit-track:hover .orbit-item {
+animation-play-state: paused;
+}
+.animate-scanline {
+animation: scanline 4s linear infinite;
+}
+.animate-dash {
+animation: dash-move 2s linear infinite;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="bg-black text-white antialiased selection:bg-orange-900/50 overflow-x-hidden" style="font-family: 'Inter', sans-serif;">
+    <!-- WebGL Background -->
+    
+
+    <!-- Gradient Overlay -->
+    <div id="webgl-container" class="fixed inset-0 z-0 pointer-events-none opacity-90">
+      <canvas id="blackhole-canvas" class="absolute inset-0 w-full h-full" width="1512" height="818"></canvas>
+      <div class="absolute inset-0 opacity-[0.03] mix-blend-screen" style="background-image: url('https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&amp;w=2121&amp;auto=format&amp;fit=crop'); background-size: cover; background-position: center;"></div>
+    </div><div class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at center, transparent 0%, #000000 80%);"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto border-x border-white/10 min-h-screen flex flex-col bg-black/40 backdrop-blur-[2px]">
+      <!-- Global Top Corner Squares -->
+      <div class="absolute -top-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+      <div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+      <!-- Navigation -->
+      <header class="h-20 border-b border-white/10 flex items-center justify-between px-6 md:px-10 relative bg-black/40 backdrop-blur-md">
+        <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+        <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+        <!-- Logo -->
+        <div class="flex items-center">
+          <span class="text-lg font-normal tracking-tighter">HRZN</span>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-8 text-sm font-extralight text-white/60">
+          <a href="#" class="hover:text-white transition-colors">Features</a>
+          <a href="#" class="hover:text-white transition-colors">
+            Architecture
+          </a>
+          <a href="#" class="hover:text-white transition-colors">Pricing</a>
+        </nav>
+
+        <div class="flex items-center gap-4 text-sm">
+          <a href="#" class="hidden md:block font-extralight text-white/60 hover:text-white transition-colors">
+            Sign in
+          </a>
+          <a href="#" class="bg-white text-black px-4 py-2 rounded-full font-normal hover:bg-white/90 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            Initialize
+          </a>
+        </div>
+      </header>
+
+      <!-- Hero Section -->
+      <main class="flex-grow flex flex-col items-center justify-center text-center px-6 py-32 md:py-48 relative border-b border-white/10 overflow-hidden">
+        <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+        <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+        <!-- Eyebrow -->
+        <div class="flex items-center gap-6 mb-12">
+          <div class="h-px w-16 lg:w-24 bg-orange-500/50" style="box-shadow: 0 0 10px rgba(249,115,22,0.6);"></div>
+          <span class="text-orange-400 text-xs font-medium uppercase tracking-[0.3em]" style="text-shadow: 0 0 12px rgba(251,146,60,0.5);">
+            Stellar Grid Architecture
+          </span>
+          <div class="h-px w-16 lg:w-24 bg-orange-500/50" style="box-shadow: 0 0 10px rgba(249,115,22,0.6);"></div>
+        </div>
+
+        <!-- Typography Display -->
+        <div class="flex flex-col items-center text-center">
+          <h1 class="text-7xl sm:text-8xl md:text-[10rem] leading-none font-medium tracking-tighter text-white" style="text-shadow: 0 0 30px rgba(255,255,255,0.3), 0 0 80px rgba(249,115,22,0.4);">
+            <span class="inline-block overflow-hidden pt-[0.2em] px-[0.1em] -mt-[0.2em] -mx-[0.1em] pb-[0.05em] -mb-[0.05em] align-bottom">
+              <span class="reveal-text inline-block translate-y-[100%] opacity-0">
+                EVENT
+              </span>
+            </span>
+          </h1>
+          <h2 class="text-7xl sm:text-8xl md:text-[10rem] leading-none font-medium tracking-tighter mt-[-0.1em]" style="color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4); text-shadow: 0 0 20px rgba(255,255,255,0.15);">
+            <span class="inline-block overflow-hidden pt-[0.2em] px-[0.1em] -mt-[0.2em] -mx-[0.1em] pb-[0.05em] -mb-[0.05em] align-bottom">
+              <span class="reveal-text inline-block translate-y-[100%] opacity-0">
+                HORIZON
+              </span>
+            </span>
+          </h2>
+        </div>
+
+      <p class="split-words mt-12 text-white/50 text-base md:text-lg max-w-2xl text-center leading-relaxed font-extralight tracking-[0.01em]"
+        style="text-shadow: 0 0 10px rgba(255,255,255,0.1);">
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">Immersive</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">digital</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">environments</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">engineered</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">beyond</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">conventional</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">boundaries.</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">Hyper-optimized.</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top mr-[0.3em]">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">Seamlessly</span>
+        </span>
+      
+        <span class="inline-block overflow-hidden align-top">
+          <span class="reveal-text inline-block translate-y-[100%] opacity-0">integrated.</span>
+        </span>
+      
+      </p>
+
+        <!-- CTAs -->
+        <div class="mt-16 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto z-10">
+  <style>
+    @keyframes circle-wave {
+      0% { inset: 0px; opacity: 0; border-color: rgba(249,115,22,0); }
+      5% { opacity: 0.6; border-color: rgba(249,115,22,0.8); }
+      100% { inset: -80px; opacity: 0; border-color: rgba(249,115,22,0); }
+    }
+    @keyframes circle-click {
+      0% { inset: 0px; opacity: 1; border-width: 2px; border-color: rgba(255,255,255,1); }
+      100% { inset: -150px; opacity: 0; border-width: 1px; border-color: rgba(249,115,22,0); }
+    }
+    .signal-btn .wave {
+      display: none;
+    }
+    .signal-btn:hover .wave {
+      display: block;
+    }
+    .signal-btn:hover .wave-1 { animation: circle-wave 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+    .signal-btn:hover .wave-2 { animation: circle-wave 2.4s cubic-bezier(0.16, 1, wave-3 { animation: circle-wave 2.4s cubic-bezier(0.16, 1, 0.3, 1) 1.6s infinite; }
+    .signal-btn:active .click-wave,
+    .signal-btn:focus .click-wave {
+       animation: circle-click 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+
+  <button class="signal-btn relative group w-full sm:w-auto px-10 py-4 bg-[#050505] text-white text-xs font-medium uppercase tracking-[0.2em] border border-orange-500/40 rounded-full transition-all duration-300 hover:bg-black hover:border-orange-500/60 hover:shadow-[0_0_30px_rgba(249,115,22,0.2)] focus:outline-none">
+    
+    <!-- Pulse Center & Waves -->
+    <div class="absolute top-1/2 left-1/2 w-0 h-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+      <div class="wave wave-1 absolute rounded-full border border-orange-500/0" style="inset: 0;">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-orange-400 rounded-full shadow-[0_0_8px_rgba(249,115,22,1)]"></div>
+      </div>
+      <div class="wave wave-2 absolute rounded-full border border-orange-500/0" style="inset: 0;">
+        <div class="absolute top-1/2 left-full -translate-x-1/2 -translate-y-1/2 w-[3px] h-[3px] bg-orange-400 rounded-full shadow-[0_0_8px_rgba(249,115,22,1)]"></div>
+      </div>
+      <div class="wave wave-3 absolute rounded-full border border-orange-500/0" style="inset: 0;">
+        <div class="absolute top-full left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,1)]"></div>
+      </div>
+      
+      <!-- Click Emission Wave -->
+      <div class="click-wave absolute rounded-full border border-transparent opacity-0 pointer-events-none" style="inset: 0;"></div>
+    </div>
+
+    <!-- Button Content -->
+    <span class="relative z-10 flex items-center justify-center gap-3">
+      Initialize Sequence
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-500 group-hover:text-orange-400 transition-colors">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+      </svg>
+    </span>
+  </button>
+
+  <a href="#" class="block w-full sm:w-auto text-center px-6 py-4 text-xs font-medium text-white/40 hover:text-white uppercase tracking-[0.2em] transition-colors">
+    Access Archives
+  </a>
+</div>
+      </main>
+      <section class="relative z-10 w-full bg-black/40 backdrop-blur-sm overflow-hidden border-b border-white/10">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none"></div>
+        <div class="w-full flex items-center relative">
+          <div class="absolute left-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
+          <div class="absolute right-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
+          <div id="logo-ticker" class="flex items-center w-max opacity-30" style="will-change: transform;">
+            <div class="flex items-center gap-16 md:gap-24 px-8 py-10">
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Nebula
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Nova
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Corona
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Zenith
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Quasar
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Radiant
+              </span>
+            </div>
+            <div class="flex items-center gap-16 md:gap-24 px-8 py-10">
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Nebula
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Nova
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Corona
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Zenith
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Quasar
+              </span>
+              <span class="text-xl md:text-3xl font-normal uppercase tracking-widest" style="text-shadow: 0 0 10px rgba(255,255,255,0.5);">
+                Radiant
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- System Architecture -->
+      <section class="py-32 px-6 md:px-10 border-b border-white/10 relative overflow-hidden flex flex-col items-center bg-[#020202]">
+  <style>
+    @keyframes flow-right {
+      0% { left: -10%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { left: 110%; opacity: 0; }
+    }
+    @keyframes flow-down {
+      0% { top: -10%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: 110%; opacity: 0; }
+    }
+    @keyframes float-erratic-1 {
+      0%, 100% { transform: translate(0px, 0px) rotate(-6deg); }
+      33% { transform: translate(8px, -15px) rotate(2deg); }
+      66% { transform: translate(-5px, 10px) rotate(-8deg); }
+    }
+    @keyframes float-erratic-2 {
+      0%, 100% { transform: translate(0px, 0px) rotate(12deg); }
+      33% { transform: translate(-10px, -5px) rotate(4deg); }
+      66% { transform: translate(15px, 15px) rotate(16deg); }
+    }
+    @keyframes float-erratic-3 {
+      0%, 100% { transform: translate(0px, 0px) rotate(-12deg); }
+      50% { transform: translate(12px, -12px) rotate(-4deg); }
+    }
+  </style>
+
+  <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+  <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+  <div class="text-center z-10 mb-20 max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6 shadow-[0_0_15px_rgba(249,115,22,0.1)]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-400">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span class="text-[10px] uppercase tracking-widest text-white/60">Real-time Refinement</span>
+    </div>
+    <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-white drop-shadow-sm">
+      Chaos to Clarity
+    </h2>
+    <p class="mt-5 text-base font-extralight text-white/50 leading-relaxed">
+      Raw, unstructured telemetry is ingested, scrubbed, and transformed into highly structured, actionable intelligence instantly.
+    </p>
+  </div>
+
+  <div class="relative w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_200px_1fr] gap-6 lg:gap-0 items-center z-10">
+    
+    <!-- Left Pane (Chaos / Raw Data) -->
+    <div class="h-[450px] lg:h-[550px] border border-white/10 bg-[#070707] rounded-2xl relative overflow-hidden flex flex-col p-6 shadow-inner shadow-black">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.03)_0%,transparent_70%)] pointer-events-none"></div>
+      
+      <!-- Scattered Noise Elements -->
+      <div class="absolute top-[15%] left-[10%] p-2.5 bg-white/5 border border-white/10 rounded font-mono text-[10px] text-white/40 blur-[1px] shadow-sm" style="animation: float-erratic-1 7s ease-in-out infinite;">
+         { "id": "null", "err": 0x8F }
+      </div>
+      <div class="absolute top-[35%] left-[5%] p-3 bg-orange-500/10 border border-orange-500/20 rounded font-mono text-[11px] text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.1)]" style="animation: float-erratic-2 9s ease-in-out infinite;">
+         01001101 01100001
+      </div>
+      <div class="absolute top-[65%] left-[20%] p-2 bg-red-500/10 border border-red-500/20 rounded font-mono text-[9px] text-red-400 blur-[0.5px]" style="animation: float-erratic-3 6s ease-in-out infinite;">
+         WARN: packet_loss=42%
+      </div>
+      <div class="absolute top-[25%] right-[10%] p-2.5 bg-white/5 border border-white/10 rounded font-mono text-[10px] text-white/30" style="animation: float-erratic-3 8s ease-in-out infinite 1s;">
+         undefined_reference
+      </div>
+      <div class="absolute bottom-[20%] right-[15%] p-3 bg-white/5 border border-white/10 rounded font-mono text-[10px] text-white/50" style="animation: float-erratic-1 10s ease-in-out infinite 0.5s;">
+         { seq: NaN, v: "1.0.4-rc" }
+      </div>
+      <div class="absolute top-[50%] right-[5%] w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping"></div>
+      <div class="absolute bottom-[30%] left-[15%] w-1 h-1 rounded-full bg-white/40 animate-pulse"></div>
+
+      <!-- Foreground Indicator -->
+      <div class="mt-auto relative z-10">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full border border-white/10 bg-black flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/40">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-white/80 font-medium tracking-tight text-sm">Raw Ingestion</h3>
+            <p class="text-white/40 text-[10px] font-mono mt-0.5">Unstructured Noise Matrix</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Pane (Transformation Zone) -->
+    <div class="h-[120px] lg:h-[550px] w-full flex flex-row lg:flex-col items-center justify-center relative overflow-hidden">
+       <!-- Horizontal connecting lines (Desktop) -->
+       <div class="hidden lg:block absolute left-0 right-0 h-px top-1/2 -translate-y-1/2 bg-white/5"></div>
+       <div class="hidden lg:block absolute left-0 right-0 h-px top-[35%] bg-white/5"></div>
+       <div class="hidden lg:block absolute left-0 right-0 h-px top-[65%] bg-white/5"></div>
+       
+       <!-- Vertical connecting lines (Mobile) -->
+       <div class="block lg:hidden absolute top-0 bottom-0 w-px left-1/2 -translate-x-1/2 bg-white/5"></div>
+       <div class="block lg:hidden absolute top-0 bottom-0 w-px left-[35%] bg-white/5"></div>
+       <div class="block lg:hidden absolute top-0 bottom-0 w-px left-[65%] bg-white/5"></div>
+
+       <!-- Moving particles (Desktop) -->
+       <div class="hidden lg:block absolute top-1/2 -translate-y-1/2 w-24 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-white shadow-[0_0_10px_#f97316]" style="animation: flow-right 2s linear infinite;"></div>
+       <div class="hidden lg:block absolute top-[35%] w-16 h-px bg-gradient-to-r from-transparent via-orange-400 to-white shadow-[0_0_8px_#fb923c]" style="animation: flow-right 3s linear infinite 1s;"></div>
+       <div class="hidden lg:block absolute top-[65%] w-32 h-px bg-gradient-to-r from-transparent via-orange-600 to-white shadow-[0_0_12px_#ea580c]" style="animation: flow-right 2.5s linear infinite 0.5s;"></div>
+
+       <!-- Moving particles (Mobile) -->
+       <div class="block lg:hidden absolute left-1/2 -translate-x-1/2 h-24 w-[2px] bg-gradient-to-b from-transparent via-orange-500 to-white shadow-[0_0_10px_#f97316]" style="animation: flow-down 2s linear infinite;"></div>
+       <div class="block lg:hidden absolute left-[35%] h-16 w-px bg-gradient-to-b from-transparent via-orange-400 to-white shadow-[0_0_8px_#fb923c]" style="animation: flow-down 3s linear infinite 1s;"></div>
+       <div class="block lg:hidden absolute left-[65%] h-32 w-px bg-gradient-to-b from-transparent via-orange-600 to-white shadow-[0_0_12px_#ea580c]" style="animation: flow-down 2.5s linear infinite 0.5s;"></div>
+
+       <!-- Central Processor Node -->
+       <div class="z-20 w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-black border border-orange-500/40 shadow-[0_0_40px_rgba(249,115,22,0.15)] flex items-center justify-center backdrop-blur-md relative">
+          <div class="absolute inset-0 bg-orange-500/10 rounded-2xl animate-pulse"></div>
+          <div class="absolute -inset-2 border border-orange-500/20 rounded-2xl animate-[spin_4s_linear_infinite] opacity-50"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]">
+             <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+             <rect x="9" y="9" width="6" height="6"></rect>
+             <line x1="9" y1="1" x2="9" y2="4"></line>
+             <line x1="15" y1="1" x2="15" y2="4"></line>
+             <line x1="9" y1="20" x2="9" y2="23"></line>
+             <line x1="15" y1="20" x2="15" y2="23"></line>
+             <line x1="20" y1="9" x2="23" y2="9"></line>
+             <line x1="20" y1="14" x2="23" y2="14"></line>
+             <line x1="1" y1="9" x2="4" y2="9"></line>
+             <line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+       </div>
+    </div>
+
+    <!-- Right Pane (Structured Output) -->
+    <div class="h-[450px] lg:h-[550px] border border-white/10 bg-[#050505] rounded-2xl p-6 flex flex-col gap-5 relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+       <!-- Subtle Background Glow -->
+       <div class="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[80px] rounded-full pointer-events-none"></div>
+       
+       <div class="flex items-center justify-between mb-2">
+         <h3 class="text-white font-medium text-sm tracking-tight flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+              <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+              <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            Structured Output
+         </h3>
+         <span class="px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 text-[9px] font-mono tracking-widest border border-green-500/20 flex items-center gap-1.5 shadow-[0_0_10px_rgba(34,197,94,0.1)]">
+           <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+           OPTIMIZED
+         </span>
+       </div>
+
+       <!-- Metric Cards -->
+       <div class="grid grid-cols-2 gap-3 relative z-10">
+         <div class="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors">
+            <div class="text-[9px] text-white/40 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+               Payload
+            </div>
+            <div class="text-xl text-white font-medium">1.24 <span class="text-xs text-white/30 font-light">MB/s</span></div>
+         </div>
+         <div class="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors">
+            <div class="text-[9px] text-white/40 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+               Latency
+            </div>
+            <div class="text-xl text-white font-medium">12 <span class="text-xs text-white/30 font-light">ms</span></div>
+         </div>
+       </div>
+
+       <!-- Clean List -->
+       <div class="flex-1 bg-[#020202] border border-white/5 rounded-xl p-2 flex flex-col gap-1 overflow-hidden relative z-10 shadow-inner">
+          <div class="flex items-center justify-between p-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-white/5 transition-all">
+             <div class="flex items-center gap-3">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_5px_#f97316]"></div>
+                <span class="text-xs text-white/80 font-mono">SEQ_001_ALPHA</span>
+             </div>
+             <span class="text-[10px] text-green-400 font-mono bg-green-500/10 px-1.5 py-0.5 rounded">100% PASS</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-white/5 transition-all">
+             <div class="flex items-center gap-3">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_5px_#f97316]"></div>
+                <span class="text-xs text-white/80 font-mono">SEQ_002_BETA</span>
+             </div>
+             <span class="text-[10px] text-green-400 font-mono bg-green-500/10 px-1.5 py-0.5 rounded">100% PASS</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-white/5 transition-all">
+             <div class="flex items-center gap-3">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_5px_#f97316]"></div>
+                <span class="text-xs text-white/80 font-mono">SEQ_003_GAMMA</span>
+             </div>
+             <span class="text-[10px] text-green-400 font-mono bg-green-500/10 px-1.5 py-0.5 rounded">100% PASS</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-white/5 transition-all">
+             <div class="flex items-center gap-3">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_5px_#f97316]"></div>
+                <span class="text-xs text-white/80 font-mono">SEQ_004_DELTA</span>
+             </div>
+             <span class="text-[10px] text-green-400 font-mono bg-green-500/10 px-1.5 py-0.5 rounded">100% PASS</span>
+          </div>
+       </div>
+
+       <!-- Interactive Toggle -->
+       <div class="flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 relative z-10">
+          <span class="text-xs font-medium text-white/80">Continuous Optimization</span>
+          <div class="w-9 h-5 rounded-full bg-orange-500/20 border border-orange-500/50 p-0.5 relative cursor-pointer shadow-[0_0_10px_rgba(249,115,22,0.1)]">
+             <div class="w-3.5 h-3.5 rounded-full bg-orange-400 absolute right-0.5 top-0.5 shadow-[0_0_5px_#fb923c]"></div>
+          </div>
+       </div>
+    </div>
+  </div>
+</section>
+
+      <!-- Capabilities Grid -->
+      <section class="md:px-10 border-white/10 border-b pt-24 pr-6 pb-32 pl-6 relative bg-black">
+  <!-- Subtle UI background -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.03)_0%,transparent_70%)] pointer-events-none"></div>
+
+  <!-- Header -->
+  <div class="relative z-50 flex flex-col items-center text-center mb-8 pointer-events-none">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
+      <svg class="w-3.5 h-3.5 text-white/60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+        <path d="M3 3v5h5"></path>
+        <path d="M12 7v5l4 2"></path>
+      </svg>
+      <span class="text-[10px] uppercase tracking-widest text-white/60">Temporal Flow</span>
+    </div>
+    <h2 class="text-3xl md:text-5xl font-normal tracking-tight text-white drop-shadow-lg">
+      State Transformation
+    </h2>
+    <p class="mt-4 text-sm font-extralight text-white/50 max-w-xl mx-auto">
+      Scrub through time to observe payload optimization. Raw incoming signals are filtered, restructured, and deployed with zero-latency precision.
+    </p>
+  </div>
+
+  <!-- Scroll-based 3D Scrub Container -->
+  <div id="hrzn-scrub-container" class="relative z-10 w-full h-[300vh] mt-10">
+    <div class="sticky flex flex-col overflow-hidden w-full h-screen top-0 items-center justify-center" style="perspective: 1500px">
+      
+      <!-- 3D Scene Wrapper -->
+      <div id="hrzn-scene-wrapper" class="relative w-[320px] md:w-[500px] h-[320px] md:h-[400px] flex items-center justify-center" style="transform-style: preserve-3d;">
+        
+        <!-- Timeline Navigation Overlay (2D) -->
+        <div class="absolute -bottom-24 md:-bottom-32 left-1/2 -translate-x-1/2 w-[85vw] max-w-lg flex items-center justify-between text-[10px] md:text-xs text-white/40 font-normal z-50 px-4 whitespace-nowrap">
+          <span id="hrzn-label-0" class="transition-colors duration-300" style="color: rgb(255, 255, 255);">Raw</span>
+          <div class="flex-1 h-[1px] bg-white/10 mx-2 md:mx-4 relative rounded-full overflow-hidden">
+            <div id="hrzn-timeline-progress" class="absolute top-0 left-0 h-full bg-orange-500 w-0 transition-all duration-75 ease-out shadow-[0_0_10px_rgba(249,115,22,0.8)]" style="width: 0%;"></div>
+          </div>
+          <span id="hrzn-label-1" class="transition-colors duration-300" style="color: rgba(255, 255, 255, 0.4);">Filtering</span>
+          <div class="flex-1 h-[1px] bg-white/10 mx-2 md:mx-4 relative rounded-full overflow-hidden"></div>
+          <span id="hrzn-label-2" class="transition-colors duration-300" style="color: rgba(255, 255, 255, 0.4);">Optimized</span>
+        </div>
+
+        <!-- Timeline Axis (Pierces through the layers) -->
+        <div class="absolute left-[-20px] md:left-[-40px] top-1/2 -translate-y-1/2 w-[2px] h-[300px] md:h-[400px] bg-orange-500 rounded-full opacity-30 shadow-[0_0_15px_rgba(249,115,22,0.5)] transform translateZ(-200px)"></div>
+
+        <!-- ================= LAYER 0: RAW ================= -->
+        <div id="hrzn-layer-0" class="absolute inset-0 transition-all duration-200 ease-out will-change-transform" style="transform-style: preserve-3d;">
+          <div class="absolute inset-0 bg-orange-900/20 blur-2xl translate-x-4 translate-y-4 rounded-2xl"></div>
+          
+          <div class="absolute inset-0 border border-orange-500/20 bg-black/80 backdrop-blur-md rounded-2xl overflow-hidden p-4 md:p-6 shadow-[0_0_30px_rgba(249,115,22,0.1)] flex flex-col">
+             <div class="flex items-center justify-between border-b border-orange-500/20 pb-3 md:pb-4 mb-4 md:mb-6">
+               <div class="flex items-center gap-3">
+                 <div class="w-6 h-6 md:w-8 md:h-8 rounded bg-orange-500/10 flex items-center justify-center border border-orange-500/20 text-orange-400">
+                   <svg class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"></path>
+                     <polyline points="14 2 14 8 20 8"></polyline>
+                     <path d="m9 18 3-3-3-3"></path>
+                     <path d="m13 18 3-3-3-3"></path>
+                   </svg>
+                 </div>
+                 <div class="">
+                   <div class="text-[9px] md:text-[10px] text-orange-400/70 uppercase tracking-widest font-mono">T-Minus 150ms</div>
+                   <div class="text-xs md:text-sm text-white font-normal">Raw Ingestion</div>
+                 </div>
+               </div>
+               <div class="text-right">
+                 <div class="text-lg md:text-xl text-white font-normal">245<span class="text-[10px] md:text-xs text-white/50 ml-1">ms</span></div>
+                 <div class="text-[8px] md:text-[9px] text-orange-400 uppercase tracking-widest">Critical</div>
+               </div>
+             </div>
+             
+             <div class="flex-1 relative border border-orange-500/10 rounded-lg bg-orange-500/5 overflow-hidden">
+               <div class="absolute top-1/4 left-1/4 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-orange-500/50 shadow-[0_0_10px_rgba(249,115,22,1)] animate-ping"></div>
+               <div class="absolute top-3/4 left-1/2 w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-orange-500/40 shadow-[0_0_10px_rgba(249,115,22,1)]"></div>
+               <div class="absolute top-1/2 left-3/4 w-2 h-2 md:w-3 md:h-3 rounded-full bg-orange-500/30"></div>
+               
+               <svg class="w-full h-full absolute inset-0 opacity-40" viewBox="0 0 100 50" preserveAspectRatio="none">
+                 <path d="M0,25 L10,40 L20,10 L30,35 L40,15 L50,45 L60,5 L70,30 L80,20 L90,40 L100,25" fill="none" stroke="#f97316" stroke-width="0.5" stroke-dasharray="2 2"></path>
+               </svg>
+
+               <div class="absolute bottom-2 left-2 text-[7px] md:text-[8px] font-mono text-orange-400/50 leading-tight">
+                 err_packet_drop: 14%<br>
+                 buffer_overflow: true<br>
+                 sync_status: critical
+               </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- ================= LAYER 1: PROCESSING ================= -->
+        <div id="hrzn-layer-1" class="absolute inset-0 transition-all duration-200 ease-out will-change-transform" style="transform-style: preserve-3d;">
+          <div class="absolute inset-0 bg-orange-900/10 blur-xl translate-x-2 translate-y-2 rounded-2xl"></div>
+          
+          <div class="absolute inset-0 border border-orange-500/20 bg-black/80 backdrop-blur-xl rounded-2xl overflow-hidden p-4 md:p-6 shadow-[0_0_30px_rgba(249,115,22,0.1)] flex flex-col">
+             <div class="flex items-center justify-between border-b border-orange-500/20 pb-3 md:pb-4 mb-4 md:mb-6">
+               <div class="flex items-center gap-3">
+                 <div class="w-6 h-6 md:w-8 md:h-8 rounded bg-orange-500/10 flex items-center justify-center border border-orange-500/20 text-orange-400">
+                   <svg class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                     <polyline points="2 17 12 22 22 17"></polyline>
+                     <polyline points="2 12 12 17 22 12"></polyline>
+                   </svg>
+                 </div>
+                 <div>
+                   <div class="text-[9px] md:text-[10px] text-orange-400/70 uppercase tracking-widest font-mono">T-Minus 50ms</div>
+                   <div class="text-xs md:text-sm text-white font-normal">Matrix Filtering</div>
+                 </div>
+               </div>
+               <div class="text-right">
+                 <div class="text-lg md:text-xl text-white font-normal">42<span class="text-[10px] md:text-xs text-white/50 ml-1">ms</span></div>
+                 <div class="text-[8px] md:text-[9px] text-orange-400 uppercase tracking-widest">Stabilizing</div>
+               </div>
+             </div>
+
+             <div class="flex-1 relative border border-orange-500/10 rounded-lg bg-orange-500/5 overflow-hidden flex flex-col justify-center gap-2 md:gap-3 p-3 md:p-4">
+                <div class="w-full h-1.5 md:h-2 bg-orange-500/10 rounded overflow-hidden relative">
+                   <div class="h-full bg-orange-500/50 w-3/4 absolute left-0" style="animation: bar-1 2s ease-in-out infinite;"></div>
+                </div>
+                <div class="w-full h-1.5 md:h-2 bg-orange-500/10 rounded overflow-hidden relative">
+                   <div class="h-full bg-orange-500/60 w-1/2 absolute left-0" style="animation: bar-2 2.5s ease-in-out infinite;"></div>
+                </div>
+                <div class="w-full h-1.5 md:h-2 bg-orange-500/10 rounded overflow-hidden relative">
+                   <div class="h-full bg-orange-500/40 w-5/6 absolute left-0" style="animation: bar-3 1.8s ease-in-out infinite;"></div>
+                </div>
+                
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-orange-400/10 to-transparent h-1/2 w-full animate-[scanline_3s_linear_infinite] pointer-events-none"></div>
+
+                <div class="absolute bottom-2 left-2 text-[7px] md:text-[8px] font-mono text-orange-400/50 leading-tight">
+                 dedup_routine: running<br>
+                 packet_loss: 0.1%<br>
+                 encrypt_layer: active
+               </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- ================= LAYER 2: OPTIMIZED ================= -->
+        <div id="hrzn-layer-2" class="absolute inset-0 transition-all duration-200 ease-out will-change-transform" style="transform-style: preserve-3d;">
+          <div class="absolute inset-0 bg-orange-500/10 blur-3xl -translate-x-4 -translate-y-4 rounded-2xl opacity-60"></div>
+          
+          <div class="absolute inset-0 border border-orange-500/30 bg-black/90 backdrop-blur-2xl rounded-2xl overflow-hidden p-4 md:p-6 shadow-[0_0_50px_rgba(249,115,22,0.15)] flex flex-col">
+             <div class="flex items-center justify-between border-b border-orange-500/20 pb-3 md:pb-4 mb-4 md:mb-6 relative z-10">
+               <div class="flex items-center gap-3">
+                 <div class="w-6 h-6 md:w-8 md:h-8 rounded bg-orange-500/20 flex items-center justify-center border border-orange-500/40 text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)]">
+                   <svg class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                   </svg>
+                 </div>
+                 <div>
+                   <div class="text-[9px] md:text-[10px] text-orange-400 uppercase tracking-widest font-mono flex items-center gap-2">
+                     T-Zero
+                     <span class="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                   </div>
+                   <div class="text-xs md:text-sm text-white font-normal">Optimal Execution</div>
+                 </div>
+               </div>
+               <div class="text-right">
+                 <div class="text-lg md:text-xl text-white font-normal">0.4<span class="text-[10px] md:text-xs text-white/50 ml-1">ms</span></div>
+                 <div class="text-[8px] md:text-[9px] text-orange-400 uppercase tracking-widest">Global Deploy</div>
+               </div>
+             </div>
+
+             <div class="flex-1 relative border border-orange-500/20 rounded-lg bg-[#050505] overflow-hidden">
+                <svg class="w-full h-full absolute inset-0" viewBox="0 0 100 50" preserveAspectRatio="none">
+                  <path d="M0,40 C30,40 40,15 60,15 C80,15 90,40 100,40" fill="none" stroke="rgba(249,115,22,0.6)" stroke-width="0.5" stroke-dasharray="2 2" class="animate-dash"></path>
+                  <path d="M0,45 C20,45 30,15 50,15 C70,15 80,45 100,45" fill="none" stroke="rgba(249,115,22,1)" stroke-width="1.5"></path>
+                  <path d="M0,45 C20,45 30,15 50,15 C70,15 80,45 100,45 L100,50 L0,50 Z" fill="url(#orange-grad-timeline)"></path>
+                  <defs>
+                    <linearGradient id="orange-grad-timeline" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="rgba(249,115,22,0.2)"></stop>
+                      <stop offset="100%" stop-color="rgba(249,115,22,0)"></stop>
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                <div class="absolute w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full shadow-[0_0_10px_#fff,0_0_20px_#f97316]" style="top: 30%; left: 50%;"></div>
+
+                <div class="absolute top-2 right-2 flex flex-col gap-1 text-right">
+                  <div class="bg-black/60 border border-white/5 backdrop-blur-md px-1.5 py-0.5 md:px-2 md:py-1 rounded text-[7px] md:text-[8px] font-mono text-white/80">
+                    <span class="text-white/40">Efficiency:</span> 99.99%
+                  </div>
+                  <div class="bg-black/60 border border-white/51 rounded text-[7px] md:text-[8px] font-mono text-white/80">
+                    <span class="text-white/40">Loss:</span> 0.00%
+                  </div>
+                </div>
+
+                <div class="absolute bottom-2 left-2 text-[7px] md:text-[8px] font-mono text-orange-400/80 leading-tight">
+                 &gt; Payload delivered.<br>
+                 &gt; Network stable.<br>
+                 &gt; Awaiting next task_
+               </div>
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes bar-1 { 0%, 100% { width: 40%; } 50% { width: 80%; } }
+    @keyframes bar-2 { 0%, 100% { width: 60%; } 50% { width: 90%; } }
+    @keyframes bar-3 { 0%, 100% { width: 30%; } 50% { width: 70%; } }
+    @keyframes scanline {
+       0% { transform: translateY(-100%); }
+       100% { transform: translateY(300%); }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('hrzn-scrub-container');
+      if (!container) return;
+      
+      const layers = [
+        document.getElementById('hrzn-layer-0'),
+        document.getElementById('hrzn-layer-1'),
+        document.getElementById('hrzn-layer-2')
+      ];
+      const progressTimeline = document.getElementById('hrzn-timeline-progress');
+      const labels = [
+        document.getElementById('hrzn-label-0'),
+        document.getElementById('hrzn-label-1'),
+        document.getElementById('hrzn-label-2')
+      ];
+
+      const isMobile = window.innerWidth < 768;
+      const xSpread = isMobile ? 180 : 350;
+      const zSpread = isMobile ? -250 : -450;
+
+      function updateScene() {
+        const rect = container.getBoundingClientRect();
+        const maxScroll = rect.height - window.innerHeight;
+        let scrollY = -rect.top;
+        let progress = Math.max(0, Math.min(1, scrollY / maxScroll));
+
+        if(progressTimeline) {
+           progressTimeline.style.width = `${progress * 100}%`;
+        }
+
+        if(labels.length === 3) {
+            labels[0].style.color = progress < 0.33 ? '#ffffff' : 'rgba(255,255,255,0.4)';
+            labels[1].style.color = (progress >= 0.33 && progress < 0.66) ? '#ffffff' : 'rgba(255,255,255,0.4)';
+            labels[2].style.color = progress >= 0.66 ? '#ffffff' : 'rgba(255,255,255,0.4)';
+        }
+
+        const focusIndex = progress * 2;
+
+        layers.forEach((layer, index) => {
+          if(!layer) return;
+          const d = index - focusIndex;
+          const z = d * zSpread;
+          const x = d * xSpread;
+          
+          let opacity = 1 - Math.abs(d) * 0.8;
+          if (opacity < 0) opacity = 0;
+
+          const scale = 1 - Math.abs(d) * 0.05;
+
+          layer.style.transform = `translate3d(${x}px, 0px, ${z}px) scale(${scale})`;
+          layer.style.opacity = opacity;
+
+          let blurAmount = d < 0 ? Math.abs(d) * 8 : 0;
+          layer.style.filter = `blur(${blurAmount}px)`;
+        });
+      }
+
+      window.addEventListener('scroll', updateScene, { passive: true });
+      window.addEventListener('resize', updateScene, { passive: true });
+      updateScene();
+    });
+  </script>
+</section>
+
+      <!-- Live Interface Preview -->
+      <section class="py-24 px-6 md:px-10 border-b border-white/10 relative overflow-hidden">
+        <style>
+          @keyframes ui-float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-8px); }
+          }
+          @keyframes flow-bar {
+              0% { transform: translateX(-100%); }
+              100% { transform: translateX(200%); }
+          }
+          @keyframes terminal-type {
+              0%, 100% { opacity: 0.4; }
+              50% { opacity: 1; }
+          }
+        </style>
+        <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+        <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+        <div class="flex flex-col items-center text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-medium tracking-tight">
+            Command Center
+          </h2>
+          <p class="mt-4 text-base font-extralight text-white/50 max-w-xl">
+            Direct access to the core. Monitor, configure, and execute commands
+            from a unified terminal.
+          </p>
+        </div>
+
+        <!-- Fake UI Container -->
+        <div class="max-w-4xl mx-auto w-full rounded-xl border border-white/10 bg-[#050505]/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden relative group" style="animation: ui-float 6s ease-in-out infinite;">
+          <!-- Scanline effect -->
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/10 to-transparent h-[20%] w-full animate-scanline pointer-events-none z-50"></div>
+
+          <!-- Window Header -->
+          <div class="h-12 border-b border-white/10 bg-white/5 flex items-center px-4 gap-2 relative overflow-hidden">
+            <!-- Header highlight sweep -->
+            <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 opacity-50" style="animation: flow-bar 3s linear infinite;"></div>
+
+            <div class="w-3 h-3 rounded-full bg-white/10 group-hover:bg-red-500/80 transition-colors duration-300 hover:scale-125 cursor-pointer"></div>
+            <div class="w-3 h-3 rounded-full bg-white/10 group-hover:bg-yellow-500/80 transition-colors duration-300 hover:scale-125 cursor-pointer"></div>
+            <div class="w-3 h-3 rounded-full bg-white/10 group-hover:bg-green-500/80 transition-colors duration-300 hover:scale-125 cursor-pointer"></div>
+            <div class="mx-auto text-[10px] uppercase tracking-widest text-white/30 font-medium flex items-center gap-2">
+              Core.exe — Session Active
+              <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+          </div>
+
+          <!-- UI Body -->
+          <div class="flex h-[400px]">
+            <!-- Sidebar -->
+            <div class="w-16 border-r border-white/10 bg-black/50 flex flex-col items-center py-4 gap-6 relative z-10">
+              <div class="text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)] hover:scale-110 transition-transform cursor-pointer">
+                <iconify-icon icon="solar:widget-linear" width="20"></iconify-icon>
+              </div>
+              <div class="text-white/30 hover:text-white/70 hover:scale-110 cursor-pointer transition-all duration-300">
+                <iconify-icon icon="solar:chart-linear" width="20"></iconify-icon>
+              </div>
+              <div class="text-white/30 hover:text-white/70 hover:scale-110 cursor-pointer transition-all duration-300">
+                <iconify-icon icon="solar:shield-warning-linear" width="20"></iconify-icon>
+              </div>
+              <div class="mt-auto text-white/30 hover:text-white/70 hover:rotate-90 cursor-pointer transition-all duration-500">
+                <iconify-icon icon="solar:settings-linear" width="20"></iconify-icon>
+              </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 p-6 flex flex-col gap-6 relative overflow-hidden">
+              <!-- Top Metrics Row -->
+              <div class="grid grid-cols-3 gap-4">
+                <div class="bg-white/5 border border-white/10 rounded-lg p-3 relative overflow-hidden group/metric">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/metric:translate-x-full transition-transform duration-1000"></div>
+                  <p class="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                    Compute Load
+                  </p>
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg font-normal text-white">42.8%</span>
+                    <span class="text-xs text-green-400 flex items-center animate-bounce">
+                      <iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon>
+                    </span>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-lg p-3 relative overflow-hidden group/metric">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/metric:translate-x-full transition-transform duration-1000"></div>
+                  <p class="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                    Active Nodes
+                  </p>
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg font-normal text-white">1,024</span>
+                    <div class="relative ml-auto flex items-center justify-center w-2 h-2">
+                      <div class="absolute inset-0 rounded-full bg-orange-500 animate-ping opacity-75"></div>
+                      <div class="relative w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-lg p-3 relative overflow-hidden group/metric">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/metric:translate-x-full transition-transform duration-1000"></div>
+                  <p class="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                    Network I/O
+                  </p>
+                  <span class="text-lg font-normal text-white block mb-2">
+                    8.4 GB/s
+                  </span>
+                  <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-orange-500 w-1/3 rounded-full relative">
+                      <div class="absolute inset-0 bg-white/30 animate-pulse"></div>
+                      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent" style="animation: flow-bar 1.5s linear infinite;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Graph & Terminal area -->
+              <div class="flex-1 flex gap-4">
+                <!-- Graph -->
+                <div class="flex-1 border border-white/10 bg-black/40 rounded-lg p-4 relative group/graph overflow-hidden">
+                  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.05)_0%,transparent_70%)] opacity-50 animate-pulse"></div>
+                  <p class="text-xs text-white/50 mb-4 relative z-10 flex justify-between items-center">
+                    Throughput Matrix
+                    <span class="w-2 h-2 border border-white/20 rounded-sm animate-spin" style="animation-duration: 4s;"></span>
+                  </p>
+                  <!-- Fake SVG Graph -->
+                  <svg class="w-full h-full absolute bottom-0 left-0 pt-10 px-4" preserveAspectRatio="none" viewBox="0 0 100 50">
+                    <path d="M0,40 Q10,30 20,35 T40,20 T60,25 T80,10 T100,15 L100,50 L0,50 Z" fill="rgba(249,115,22,0.05)" class="animate-pulse" style="animation-duration: 3s;"></path>
+                    <path d="M0,40 Q10,30 20,35 T40,20 T60,25 T80,10 T100,15" fill="none" stroke="#f97316" stroke-width="0.5" stroke-dasharray="4 4" class="animate-dash"></path>
+                  </svg>
+                </div>
+                <!-- Terminal -->
+                <div class="w-1/3 border border-white/10 bg-black/60 rounded-lg p-4 font-mono text-[10px] text-white/50 overflow-hidden flex flex-col gap-1 leading-relaxed relative">
+                  <div class="absolute inset-0 pointer-events-none border border-orange-500/10 rounded-lg opacity-50 animate-pulse" style="animation-duration: 4s;"></div>
+                  <p class="text-orange-400 opacity-80" style="animation: terminal-type 3s infinite;">
+                    Initialize core sequence...
+                  </p>
+                  <p class="opacity-80" style="animation: terminal-type 3s infinite 0.2s;">
+                    [OK] Loading neural weights
+                  </p>
+                  <p class="opacity-80" style="animation: terminal-type 3s infinite 0.4s;">
+                    [OK] Bypassing edge cache
+                  </p>
+                  <p class="text-white/80 opacity-80" style="animation: terminal-type 3s infinite 0.6s;">
+                    &gt; Establishing relay connections
+                  </p>
+                  <p class="opacity-40 line-clamp-1" style="animation: terminal-type 3s infinite 0.8s;">
+                    ping 102.33.1.0 - ms: 1.2
+                  </p>
+                  <p class="opacity-40 line-clamp-1" style="animation: terminal-type 3s infinite 1.0s;">
+                    ping 102.33.1.1 - ms: 1.4
+                  </p>
+                  <p class="opacity-40 line-clamp-1" style="animation: terminal-type 3s infinite 1.2s;">
+                    ping 102.33.1.2 - ms: 1.1
+                  </p>
+                  <div class="mt-2 flex items-center gap-1 text-orange-400">
+                    <span>Awaiting command</span>
+                    <span class="w-1.5 h-3 bg-orange-400 animate-pulse" style="animation-duration: 1s;"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workflow / Process Pipeline -->
+      <section class="py-24 px-6 md:px-10 border-b border-white/10 relative">
+        <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+        <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+        <h2 class="text-3xl md:text-4xl font-medium tracking-tight mb-16 text-center">
+          Execution Pipeline
+        </h2>
+
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 md:gap-0 relative">
+          <!-- Step 1 -->
+          <div class="flex items-center gap-4 md:flex-col relative z-10 w-full md:w-auto">
+            <div class="w-16 h-16 rounded-full border border-white/10 bg-black flex items-center justify-center relative shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+              <iconify-icon icon="solar:box-linear" width="24" class="text-white/60"></iconify-icon>
+              <div class="absolute -inset-2 border border-white/5 rounded-full"></div>
+            </div>
+            <div class="md:text-center mt-0 md:mt-4 flex-1">
+              <h4 class="text-sm font-normal text-white">1. Ingest</h4>
+              <p class="text-xs font-extralight text-white/40 mt-1">
+                Raw payload received
+              </p>
+            </div>
+          </div>
+
+          <!-- Line 1 -->
+          <div class="hidden md:block flex-1 h-[1px] bg-white/10 mx-4 relative overflow-hidden">
+            <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-orange-500 to-transparent" style="animation: flow-x 2s linear infinite;"></div>
+          </div>
+          <!-- Mobile Line -->
+          <div class="block md:hidden w-[1px] h-10 bg-white/10 ml-8 relative overflow-hidden">
+            <div class="absolute inset-0 h-1/2 bg-gradient-to-b from-transparent via-orange-500 to-transparent" style="animation: flow-x 2s linear infinite;"></div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex items-center gap-4 md:flex-col relative z-10 w-full md:w-auto">
+            <div class="w-16 h-16 rounded-full border border-white/10 bg-black flex items-center justify-center relative shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+              <iconify-icon icon="solar:layers-linear" width="24" class="text-white/60"></iconify-icon>
+              <div class="absolute -inset-2 border border-orange-500/20 rounded-full"></div>
+            </div>
+            <div class="md:text-center mt-0 md:mt-4 flex-1">
+              <h4 class="text-sm font-normal text-white">2. Process</h4>
+              <p class="text-xs font-extralight text-white/40 mt-1">
+                Matrix compilation
+              </p>
+            </div>
+          </div>
+
+          <!-- Line 2 -->
+          <div class="hidden md:block flex-1 h-[1px] bg-white/10 mx-4 relative overflow-hidden">
+            <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-orange-500 to-transparent" style="animation: flow-x 2s linear infinite 0.6s;"></div>
+          </div>
+          <div class="block md:hidden w-[1px] h-10 bg-white/10 ml-8 relative overflow-hidden">
+            <div class="absolute inset-0 h-1/2 bg-gradient-to-b from-transparent via-orange-500 to-transparent" style="animation: flow-x 2s linear infinite 0.6s;"></div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex items-center gap-4 md:flex-col relative z-10 w-full md:w-auto">
+            <div class="w-16 h-16 rounded-full border border-orange-500/30 bg-orange-500/10 flex items-center justify-center relative shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+              <iconify-icon icon="solar:rocket-linear" width="24" class="text-orange-400"></iconify-icon>
+              <div class="absolute -inset-2 border border-orange-500/40 rounded-full animate-[pulse_3s_ease-in-out_infinite]"></div>
+            </div>
+            <div class="md:text-center mt-0 md:mt-4 flex-1">
+              <h4 class="text-sm font-normal text-white">3. Deploy</h4>
+              <p class="text-xs font-extralight text-white/40 mt-1">
+                Global distribution
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-32 px-6 md:px-10 border-b border-white/10 relative overflow-hidden bg-black group" style="--x: 575px; --y: 4.5px;" onmousemove="const r = this.getBoundingClientRect(); this.style.setProperty('--x', (event.clientX - r.left) + 'px'); this.style.setProperty('--y', (event.clientY - r.top) + 'px');" ontouchmove="const r = this.getBoundingClientRect(); this.style.setProperty('--x', (event.touches[0].clientX - r.left) + 'px'); this.style.setProperty('--y', (event.touches[0].clientY - r.top) + 'px');">
+
+  <!-- Top Corners -->
+  <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+  <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+  <!-- Section Header -->
+  <div class="text-center z-10 relative mb-16 pointer-events-none">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
+      <i data-lucide="scan" class="w-3.5 h-3.5 text-white/60"></i>
+      <span class="text-[10px] uppercase tracking-widest text-white/60">
+        Deep Inspection
+      </span>
+    </div>
+    <h2 class="text-3xl md:text-4xl font-medium tracking-tight text-white">
+      Quantum Lens
+    </h2>
+    <p class="mt-4 text-base font-extralight text-white/50 max-w-xl mx-auto">
+      Hover over the interface to refract surface-level telemetry and expose the highly-optimized underlying neural matrix.
+    </p>
+  </div>
+
+  <!-- Interactive Area Container -->
+  <div class="relative w-full max-w-5xl mx-auto h-[700px] md:h-[500px] border border-white/10 rounded-2xl bg-[#030303] overflow-hidden cursor-crosshair">
+
+    <!-- ================= LAYER 1: RAW / MINIMAL ================= -->
+    <div class="absolute inset-0 p-6 md:p-10 flex flex-col gap-8 select-none pointer-events-none">
+      <!-- Raw Header -->
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-white/5 pb-6 gap-4">
+         <div class="flex items-center gap-4">
+            <div class="w-8 h-8 rounded bg-white/5"></div>
+            <div class="flex flex-col gap-2">
+               <div class="w-32 h-3 rounded bg-white/5"></div>
+               <div class="w-20 h-2 rounded bg-white/5"></div>
+            </div>
+         </div>
+         <div class="w-24 h-6 rounded-full bg-white/5 border border-white/5"></div>
+      </div>
+
+      <!-- Raw Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
+         <!-- Card 1 -->
+         <div class="border border-white/5 rounded-xl p-6 flex flex-col">
+            <div class="w-10 h-10 rounded-full bg-white/5 mb-6"></div>
+            <div class="w-3/4 h-3 bg-white/10 rounded mb-3"></div>
+            <div class="w-1/2 h-2 bg-white/5 rounded mb-auto"></div>
+            <div class="mt-8 h-24 border border-white/5 border-dashed rounded flex items-center justify-center">
+               <span class="text-[10px] text-white/20 font-mono tracking-widest uppercase">Obfuscated</span>
+            </div>
+         </div>
+         <!-- Card 2 -->
+         <div class="border border-white/5 rounded-xl p-6 flex flex-col">
+            <div class="w-10 h-10 rounded-full bg-white/5 mb-6"></div>
+            <div class="w-2/3 h-3 bg-white/10 rounded mb-3"></div>
+            <div class="w-1/3 h-2 bg-white/5 rounded mb-auto"></div>
+            <div class="mt-8 h-24 border border-white/5 border-dashed rounded flex items-center justify-center">
+               <span class="text-[10px] text-white/20 font-mono tracking-widest uppercase">Encrypted</span>
+            </div>
+         </div>
+         <!-- Card 3 -->
+         <div class="border border-white/5 rounded-xl p-6 flex flex-col hidden md:flex">
+            <div class="w-10 h-10 rounded-full bg-white/5 mb-6"></div>
+            <div class="w-4/5 h-3 bg-white/10 rounded mb-3"></div>
+            <div class="w-1/2 h-2 bg-white/5 rounded mb-auto"></div>
+            <div class="mt-8 h-24 border border-white/5 border-dashed rounded flex items-center justify-center">
+               <span class="text-[10px] text-white/20 font-mono tracking-widest uppercase">Redacted</span>
+            </div>
+         </div>
+      </div>
+    </div>
+
+    <!-- ================= LAYER 2: ENHANCED / REVEALED ================= -->
+    <div class="absolute inset-0 p-6 md:p-10 flex flex-col gap-8 bg-[#0a0500] pointer-events-none select-none transition-opacity duration-300 opacity-0 group-hover:opacity-100 will-change-[mask-image]" style="-webkit-mask-image: radial-gradient(circle 180px at var(--x) var(--y), black 40%, transparent 100%); mask-image: radial-gradient(circle 180px at var(--x) var(--y), black 40%, transparent 100%);">
+
+         <!-- Grid background -->
+         <div class="absolute inset-0 bg-[linear-gradient(rgba(249,115,22,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.05)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+         <!-- Data stream overlay -->
+         <div class="absolute inset-0 overflow0px] text-orange-500 leading-tight break-all">
+              01101110 01100101 01110101 01110010 01100001 01101100 00100000 01101101 01100001 01110100 01110010 01101001 01111000 00100000 01101111 01101110 01101100 01101001 01101110 01100101 00101110 00100000 01100101 01111000 01110100 01110010 01100001 01100011 01110100 01101001 01101110 01100111 00100000 01110100 01100101 01101100 01100101 01101101 01100101 01110100 01110010 01111001 00100000 01100100 01100001 01110100 01100001 00101110 00100000 01110000 01100001 01110010 01100001 01101100 01101100 01100101 01101100 00100000 01110011 01111001 01110011 01110100 01100101 01101101 01110011 00100000 01101111 01110000 01110100 01101001 01101101 01101001 01111010 01100101 01100100 00101110 00100000 01100001 01110111 01100001 01101001 01110100 01101001 01101110 01100111 00100000 01101100 01101111 01100001 01100100 00101110 01101110 01100101 01110101 01110010 01100001 01101100 00100000 01101101 01100001 01110100 01110010 01101001 01111000 00100000 01101111 01101110 01101100 01101001 01101110 01100101 00101110 00100000 01100101 01111000 01110100 01110010 01100001 01100011 01110100 01101001 01101110 01100111 00100000 01110100 01100101 01101100 01100101 01101101 01100101 01110100 01110010 01111001 00100000 01100100 01100001 01110100 01100001 00101110 00100000 01110000 01100001 01110010 01100001 01101100 01101100 01100101 01101100 00100000 01110011 01111001 01110011 01110100 01100101 01101101 01110011 00100000 01101111 01110000 01110100 01101001 01101101 01101001 01111010 01100101 01100100 00101110 00100000 01100001 01110111 01100001 01101001 01110100 01101001 01101110 01100111 00100000 01101100 01101111 01100001 01100100 00101110
+            <p></p>
+         </div>
+
+      <!-- Enhanced Header -->
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-orange-500/20 pb-6 gap-4 relative z-10">
+         <div class="flex items-center gap-4">
+            <div class="w-8 h-8 rounded bg-orange-500/20 text-orange-400 flex items-center justify-center border border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.3)]">
+               <i data-lucide="cpu" class="w-4 h-4"></i>
+            </div>
+            <div class="flex flex-col gap-1">
+               <div class="text-sm text-white font-medium tracking-tight leading-none">Neural Core Sequence</div>
+               <div class="text-[10px] text-orange-400 font-mono uppercase tracking-widest">Active • 99.9% Uptime</div>
+            </div>
+         </div>
+         <div class="px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] font-mono tracking-widest flex items-center gap-2">
+            <span class="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(249,115,22,1)]"></span>
+            LIVE TELEMETRY
+         </div>
+      </div>
+
+      <!-- Enhanced Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 relative z-10">
+         <!-- Enhanced Card 1 -->
+         <div class="border border-orange-500/30 bg-black/60 backdrop-blur-md rounded-xl p-6 flex flex-col shadow-[0_0_30px_rgba(249,115,22,0.1)]">
+            <div class="w-10 h-10 rounded-full bg-orange-500/10 text-orange-400 flex items-center justify-center mb-4 border border-orange-500/20">
+               <i data-lucide="activity" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-sm font-medium text-white mb-1">Throughput Delta</h3>
+            <p class="text-[10px] font-mono text-orange-400/80 mb-auto">Max capacity: 12.4 TB/s</p>
+            <div class="mt-8 h-24 border border-orange-500/20 rounded bg-orange-500/5 p-3 flex items-end gap-[2px] relative overflow-hidden">
+               <div class="absolute top-2 right-2 text-[8px] font-mono text-white/50">84%</div>
+               <div class="flex-1 bg-orange-500/40 h-[30%] rounded-t-sm"></div>
+               <div class="flex-1 bg-orange-500/60 h-[50%] rounded-t-sm"></div>
+               <div class="flex-1 bg-orange-500/80 h-[80%] rounded-t-sm"></div>
+               <div class="flex-1 bg-orange-400 h-[100%] rounded-t-sm shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
+               <div class="flex-1 bg-orange-500/80 h-[70%] rounded-t-sm"></div>
+               <div class="flex-1 bg-orange-500/60 h-[40%] rounded-t-sm"></div>
+            </div>
+         </div>
+         <!-- Enhanced Card 2 -->
+         <div class="border border-orange-500/30 bg-black/60 backdrop-blur-md rounded-xl p-6 flex flex-col shadow-[0_0_30px_rgba(249,115,22,0.1)]">
+            <div class="w-10 h-10 rounded-full bg-orange-500/10 text-orange-400 flex items-center justify-center mb-4 border border-orange-500/20">
+               <i data-lucide="network" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-sm font-medium text-white mb-1">Node Latency</h3>
+            <p class="text-[10px] font-mono text-orange-400/80 mb-auto">Avg ping: 0.4ms</p>
+            <div class="mt-8 h-24 border border-orange-500/20 rounded bg-orange-500/5 p-3 relative overflow-hidden flex flex-col justify-center gap-3">
+               <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div class="w-[90%] h-full bg-orange-400 rounded-full shadow-[0_0_10px_rgba(249,115,22,1)] animate-pulse"></div>
+               </div>
+               <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div class="w-[60%] h-full bg-orange-500/60 rounded-full"></div>
+               </div>
+               <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div class="w-[85%] h-full bg-orange-500/80 rounded-full"></div>
+               </div>
+            </div>
+         </div>
+         <!-- Enhanced Card 3 -->
+         <div class="border border-orange-500/30 bg-black/60 backdrop-blur-md rounded-xl p-6 flex-col shadow-[0_0_30px_rgba(249,115,22,0.1)] hidden md:flex">
+            <div class="w-10 h-10 rounded-full bg-orange-500/10 text-orange-400 flex items-center justify-center mb-4 border border-orange-500/20">
+               <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-sm font-medium text-white mb-1">Encryption State</h3>
+            <p class="text-[10px] font-mono text-orange-400/80 mb-auto">Quantum key distributed</p>
+            <div class="mt-8 h-24 border border-orange-500/20 rounded bg-orange-500/5 p-3 flex items-center justify-center relative">
+               <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.2)_0%,transparent_70%)]"></div>
+               <div class="relative w-12 h-12 rounded-full border border-orange-400 border-dashed animate-[spin_4s_linear_infinite] flex items-center justify-center">
+                  <div class="w-8 h-8 rounded-full border border-orange-500/50 animate-[spin_3s_linear_infinite_reverse]"></div>
+               </div>
+               <i data-lucide="lock" class="absolute w-4 h-4 text-orange-400 drop-shadow-[0_0_5px_rgba(249,115,22,1)]"></i>
+            </div>
+         </div>
+      </div>
+    </div>
+
+    <!-- ================= THE LENS RING (Follows cursor) ================= -->
+    <div class="absolute pointer-events-none rounded-full border border-orange-500/50 transition-opacity duration-300 opacity-0 group-hover:opacity-100 z-50 w-[360px] h-[360px]" style="left: var(--x); top: var(--y); box-shadow: inset 0 0 40px rgba(249,115,22,0.2), 0 0 20px rgba(249,115,22,0.3); backdrop-filter: brightness(1.15) contrast(1.1) saturate(1.2);">
+         <!-- Crosshairs -->
+         <div class="absolute top-1/2 -left-2 w-4 h-[1px] bg-orange-500/80"></div>
+         <div class="absolute top-1/2 -right-2 w-4 h-[1px] bg-orange-500/80"></div>
+         <div class="absolute -top-2 left-1/2 w-[1px] h-4 bg-orange-500/80"></div>
+         <div class="absolute -bottom-2 left-1/2 w-[1px] h-4 bg-orange-500/80"></div>
+         <!-- Inner Detail -->
+         <div class="absolute inset-3 rounded-full border border-white/5"></div>
+         <!-- Center reticle -->
+         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(249,115,22,1)]"></div>
+         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-orange-500/20"></div>
+    </div>
+
+  </div>
+
+  <!-- Lucide Icons Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
+</section>
+
+      <!-- Testimonials Orbit -->
+      <section class="md:px-10 overflow-hidden border-white/10 border-b pt-32 pr-6 pb-32 pl-6 relative">
+  <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+  <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-black border border-white/20 z-20"></div>
+
+  <!-- Header -->
+  <div class="flex flex-col items-center text-center mb-24 relative z-30 pointer-events-none">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
+      <svg class="w-3.5 h-3.5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+        <path d="M2 12h20"></path>
+      </svg>
+      <span class="text-[10px] uppercase tracking-widest text-white/60">
+        System Integrators
+      </span>
+    </div>
+    <h2 class="text-3xl md:text-5xl font-medium tracking-tight">
+      Trusted Nodes
+    </h2>
+    <p class="mt-4 text-sm font-extralight text-white/50 max-w-lg mx-auto leading-relaxed">
+      Core partners operating within the absolute threshold. Hover over individual nodes to expand their encrypted
+      telemetry and deployment testimonials.
+    </p>
+  </div>
+
+  <!-- Orbit Container -->
+  <div class="relative w-[320px] h-[320px] md:w-[600px] md:h-[600px] mx-auto mt-10">
+
+    <!-- Outer Track Glow -->
+    <div class="absolute inset-0 rounded-full shadow-[0_0_80px_rgba(249,115,22,0.05)] pointer-events-none z-0"></div>
+
+    <!-- Center Core (Stationary) -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-32 md:h-32 rounded-full border border-orange-500/30 bg-black flex items-center justify-center shadow-[0_0_60px_rgba(249,115,22,0.4)] z-30 backdrop-blur-sm cursor-crosshair group hover:scale-105 transition-transform duration-500">
+      <div class="absolute inset-0 rounded-full bg-orange-500/10 animate-pulse"></div>
+      <div class="absolute -inset-3 md:-inset-4 rounded-full border border-orange-500/20 bg-transparent animate-[spin_10s_linear_infinite] border-dashed">
+      </div>
+      <div class="absolute -inset-6 md:-inset-8 rounded-full border border-white/5 bg-transparent animate-[spin_15s_linear_infinite_reverse] border-dashed opacity-50">
+      </div>
+
+      <span class="text-lg md:text-2xl font-medium tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] relative z-10 group-hover:text-orange-400 transition-colors">
+        CORE
+      </span>
+    </div>
+
+    <!-- Orbit Track (Spins) -->
+    <div class="orbit-track z-20 border-white/5 border rounded-full absolute top-0 right-0 bottom-0 left-0">
+
+      <!-- Inner Dashed Track -->
+      <div class="absolute inset-[15%] rounded-full border border-white/5 border-dashed pointer-events-none opacity-50">
+      </div>
+
+      <!-- Item 1 (Top, 270deg) -->
+      <div class="absolute left-[50%] top-[0%] -translate-x-1/2 -translate-y-1/2 group/item z-40">
+        <!-- Connection Line -->
+        <div class="absolute top-1/2 left-1/2 w-[160px] md:w-[300px] h-[1px] bg-gradient-to-r from-orange-500/80 to-transparent origin-left rotate-90 opacity-0 group-hover/item:opacity-100 transition-all duration-500 -z-10 shadow-[0_0_10px_rgba(249,115,22,0.8)]">
+        </div>
+
+        <!-- Counter-spinning Item -->
+        <div class="orbit-item relative flex items-center justify-center">
+          <!-- Default Avatar -->
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-cover bg-center shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer group-hover/item:opacity-0 group-hover/item:scale-50 transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&amp;h=400&amp;fit=crop');">
+          </div>
+
+          <!-- Expanded Card -->
+          <div class="absolute w-[280px] md:w-[340px] p-6 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl opacity-0 scale-50 pointer-events-none group-hover/item:opacity-100 group-hover/item:scale-100 group-hover/item:pointer-events-auto transition-all duration-500 ease-out shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4 z-50">
+            <div class="flex gap-1 text-orange-500">
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke.09="" 8.26="" 22="" 9.27="" 17="" 14.14="" 18.18="" 21.02="" 12="" 17.77="" 5.82="" 7="" 2="" 8.91="" 2"="">
+                
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" class="">
+                </polygon>
+              </svg>
+            </div>
+            <p class="text-sm font-extralight text-white/80 leading-relaxed">
+              "The core infrastructure shifted our latency from acceptable to imperceptible. Absolute game-changer for
+              our global data streams."
+            </p>
+            <div class="flex border-white/10 border-t mt-2 pt-2 gap-x-3 gap-y-3 items-center">
+              <div class="bg-center w-8 h-8 bg-cover border-white/20 border rounded-full" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&amp;h=400&amp;fit=crop')">
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-normal text-white">Sarah Jenkins</span>
+                <span class="text-[10px] text-orange-400 uppercase tracking-widest">CTO, Nexus Node</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2 (Top Right, 330deg) -->
+      <div class="absolute left-[86.6%] top-[25%] -translate-x-1/2 -translate-y-1/2 group/item z-40">
+        <div class="absolute top-1/2 left-1/2 w-[160px] md:w-[300px] h-[1px] bg-gradient-to-r from-orange-500/80 to-transparent origin-left rotate-[150deg] opacity-0 group-hover/item:opacity-100 transition-all duration-500 -z-10 shadow-[0_0_10px_rgba(249,115,22,0.8)]">
+        </div>
+
+        <div class="orbit-item relative flex items-center justify-center">
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-cover bg-center shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer group-hover/item:opacity-0 group-hover/item:scale-50 transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&amp;h=400&amp;fit=crop');">
+          </div>
+
+          <div class="absolute w-[280px] md:w-[340px] p-6 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl opacity-0 scale-50 pointer-events-none group-hover/item:opacity-100 group-hover/item:scale-100 group-hover/item:pointer-events-auto transition-all duration-500 ease-out shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4 z-50">
+            <div class="flex gap-1 text-orange-500">
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+            </div>
+            <p class="text-sm font-extralight text-white/80 leading-relaxed">
+              "Scaling to millions of concurrent streams felt effortless. The automated healing protocols work
+              flawlessly in the background."
+            </p>
+            <div class="flex items-center gap-3 pt-2 border-t border-white/10 mt-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center border border-white/20" style="background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&amp;h=400&amp;fit=crop');">
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-normal text-white">Mark T.</span>
+                <span class="text-[10px] text-orange-400 uppercase tracking-widest">Lead Engineer, VoidCorp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3 (Bottom Right, 30deg) -->
+      <div class="absolute left-[86.6%] top-[75%] -translate-x-1/2 -translate-y-1/2 group/item z-40">
+        <div class="absolute top-1/2 left-1/2 w-[160px] md:w-[300px] h-[1px] bg-gradient-to-r from-orange-500/80 to-transparent origin-left rotate-[210deg] opacity-0 group-hover/item:opacity-100 transition-all duration-500 -z-10 shadow-[0_0_10px_rgba(249,115,22,0.8)]">
+        </div>
+
+        <div class="orbit-item relative flex items-center justify-center">
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-cover bg-center shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer group-hover/item:opacity-0 group-hover/item:scale-50 transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&amp;h=400&amp;fit=crop');">
+          </div>
+
+          <div class="absolute w-[280px] md:w-[340px] p-6 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl opacity-0 scale-50 pointer-events-none group-hover/item:opacity-100 group-hover/item:scale-100 group-hover/item:pointer-events-auto transition-all duration-500 ease-out shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4 z-50">
+            <div class="flex gap-1 text-orange-500">
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15. 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-5-width=" 2"="" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+            </div>
+            <p class="text-sm font-extralight text-white/80 leading-relaxed">
+              "Quantum encryption integration was seamless. Our data streams have never been more secure and isolated."
+            </p>
+            <div class="flex items-center gap-3 pt-2 border-t border-white/10 mt-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center border border-white/20" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&amp;h=400&amp;fit=crop');">
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-normal text-white">Elena R.</span>
+                <span class="text-[10px] text-orange-400 uppercase tracking-widest">VP Engineering, CipherOps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 4 (Bottom, 90deg) -->
+      <div class="absolute left-[50%] top-[100%] -translate-x-1/2 -translate-y-1/2 group/item z-40">
+        <div class="absolute top-1/2 left-1/2 w-[160px] md:w-[300px] h-[1px] bg-gradient-to-r from-orange-500/80 to-transparent origin-left rotate-[-90deg] opacity-0 group-hover/item:opacity-100 transition-all duration-500 -z-10 shadow-[0_0_10px_rgba(249,115,22,0.8)]">
+        </div>
+
+        <div class="orbit-item relative flex items-center justify-center">
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-cover bg-center shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer group-hover/item:opacity-0 group-hover/item:scale-50 transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&amp;h=400&amp;fit=crop');">
+          </div>
+
+          <div class="absolute w-[280px] md:w-[340px] p-6 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl opacity-0 scale-50 pointer-events-none group-hover/item:opacity-100 group-hover/item:scale-100 group-hover/item:pointer-events-auto transition-all duration-500 ease-out shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4 z-50">
+            <div class="flex gap-1 text-orange-500">
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 text-white/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+            </div>
+            <p class="text-sm font-extralight text-white/80 leading-relaxed">
+              "Deploying payloads globally is instantaneous now. The orbital network operates on an unmatched level."
+            </p>
+            <div class="flex items-center gap-3 pt-2 border-t border-white/10 mt-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center border border-white/20" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&amp;h=400&amp;fit=crop');">
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-normal text-white">David K.</span>
+                <span class="text-[10px] text-orange-400 uppercase tracking-widest">Director, GlobalReach</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 5 (Bottom Left, 150deg) -->
+      <div class="absolute left-[13.4%] top-[75%] -translate-x-1/2 -translate-y-1/2 group/item z-40">
+        <div class="absolute top-1/2 left-1/2 w-[160px] md:w-[300px] h-[1px] bg-gradient-to-r from-orange-500/80 to-transparent origin-left rotate-[-30deg] opacity-0 group-hover/item:opacity-100 transition-all duration-500 -z-10 shadow-[0_0_10px_rgba(249,115,22,0.8)]">
+        </div>
+
+        <div class="orbit-item relative flex items-center justify-center">
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-cover bg-center shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer group-hover/item:opacity-0 group-hover/item:scale-50 transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&amp;h=400&amp;fit=crop');">
+          </div>
+
+          <div class="absolute w-[280px] md:w-[340px] p-6 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl opacity-0 scale-50 pointer-events-none group-hover/item:opacity-100 group-hover/item:scale-100 group-hover/item:pointer-events-auto transition-all duration-500 ease-out shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4 z-50">
+            <div class="flex gap-1 text-orange-500">
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+            </div>
+            <p class="text-sm font-extralight text-white/80 leading-relaxed">
+              "Granular telemetry gave us insights we never knew we needed. Total visibility across the entire matrix."
+            </p>
+            <div class="flex items-center gap-3 pt-2 border-t border-white/10 mt-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center border border-white/20" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&amp;h=400&amp;fit=crop');">
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs text-orange-400 uppercase tracking-widest">Architect, DataFlow</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 6 (Top Left, 210deg) -->
+      <div class="absolute left-[13.4%] top-[25%] -translate-x-1/2 -translate-y-1/2 group/item z-40">
+        <div class="absolute top-1/2 left-1/2 w-[160px] md:w-[300px] h-[1px] bg-gradient-to-r from-orange-500/80 to-transparent origin-left rotate-[30deg] opacity-0 group-hover/item:opacity-100 transition-all duration-500 -z-10 shadow-[0_0_10px_rgba(249,115,22,0.8)]">
+        </div>
+
+        <div class="orbit-item relative flex items-center justify-center">
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-cover bg-center shadow-[0_0_20px_rgba(0,0,0,0.8)] cursor-pointer group-hover/item:opacity-0 group-hover/item:scale-50 transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&amp;h=400&amp;fit=crop');">
+          </div>
+
+          <div class="absolute w-[280px] md:w-[340px] p-6 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl opacity-0 scale-50 pointer-events-none group-hover/item:opacity-100 group-hover/item:scale-100 group-hover/item:pointer-events-auto transition-all duration-500 ease-out shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col gap-4 z-50">
+            <div class="flex gap-1 text-orange-500">
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <svg class="w-3.5 h-3.5 fill-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="" 17="" 14.14="" 18.18="" 21.02="" 12="" 17.77="" 5.82="" 7="" 2="" 9.27="" 8.91="" 8.26="" 2"="">
+                </polygon>
+              </svg>
+            </div>
+            <p class="text-sm font-extralight text-white/80 leading-relaxed">
+              "The parallel reality collapse engine optimized our routes beyond theoretical limits. A spectacular
+              execution framework."
+            </p>
+            <div class="flex items-center gap-3 pt-2 border-t border-white/10 mt-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center border border-white/20" style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&amp;h=400&amp;fit=crop')">
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-normal text-white">James L.</span>
+                <span class="text-[10px] text-orange-400 uppercase tracking-widest">Founder, QuantumSys</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+      <!-- Call To Action -->
+      <section id="reassembly-section" class="relative h-[300vh] border-b border-white/10">
+        <div class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden px-6">
+          <div class="absolute inset-0 pointer-events-none z-0" style="background: radial-gradient(circle at center, rgba(249,115,22,0.05) 0%, transparent 70%);"></div>
+
+          <div class="absolute top-[15%] md:top-[20%] left-1/2 -translate-x-1/2 text-center z-10 w-full px-6 transition-all duration-300" id="reassembly-text">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
+              <iconify-icon icon="solar:screencast-2-linear" width="14" class="text-white/60"></iconify-icon>
+              <span class="text-[10px] uppercase tracking-widest text-white/60">
+                Automated Construction
+              </span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-medium tracking-tight">
+              System Convergence
+            </h2>
+            <p class="mt-4 text-base font-extralight text-white/50 max-w-xl mx-auto">
+              Scroll to initialize automated assembly protocols. Watch chaos
+              organize into absolute structure.
+            </p>
+          </div>
+
+          <div class="relative w-full max-w-4xl h-[500px] z-20 mt-16 md:mt-0" style="perspective: 2000px;" id="assembly-container">
+            <!-- Piece 1: Header -->
+            <div class="assembly-piece absolute top-0 left-0 right-0 h-16 rounded-xl border border-white/10 bg-[#050505]/90 backdrop-blur-xl flex items-center px-6 gap-4 z-30 shadow-[0_20px_40px_rgba(0,0,0,0.8)]" data-tx="0" data-ty="-400" data-tz="600" data-rx="60" data-ry="15" data-rz="-20" style=" box-shadow: rgba(0, 0, 0, 0.8) 0px 20px 40px; border-color: rgba(255, 255, 255, 0.1);">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+              </div>
+              <div class="mx-auto flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest font-mono">
+                <iconify-icon icon="solar:lock-keyhole-linear"></iconify-icon>
+                Secure Connection Established
+              </div>
+              <div class="ml-auto w-24 h-2 bg-white/10 rounded-full overflow-hidden hidden md:block">
+                <div class="w-full h-full bg-orange-500/50 animate-pulse"></div>
+              </div>
+            </div>
+
+            <!-- Piece 2: Sidebar -->
+            <div class="assembly-piece absolute top-20 left-0 w-16 md:w-48 bottom-0 rounded-xl border border-white/10 bg-[#050505]/90 backdrop-blur-xl p-4 md:p-6 flex flex-col items-center md:items-start gap-6 z-20 shadow-[0_20px_40px_rgba(0,0,0,0.8)]" data-tx="-500" data-ty="200" data-tz="300" data-rx="-20" data-ry="-60" data-rz="30" style=" box-shadow: rgba(0, 0, 0, 0.8) 0px 20px 40px; border-color: rgba(255, 255, 255, 0.1);">
+              <div class="w-full h-10 rounded-lg bg-white/5 flex items-center justify-center md:justify-start md:px-3 text-orange-400 group cursor-pointer transition-colors hover:bg-white/10">
+                <iconify-icon icon="solar:widget-5-linear" width="20" class="group-hover:scale-110 transition-transform"></iconify-icon>
+                <span class="hidden md:block ml-3 text-xs font-medium">
+                  Dashboard
+                </span>
+              </div>
+              <div class="w-full h-10 rounded-lg flex items-center justify-center md:justify-start md:px-3 text-white/40 hover:bg-white/5 hover:text-white/80 transition-colors cursor-pointer group">
+                <iconify-icon icon="solar:chart-square-linear" width="20" class="group-hover:scale-110 transition-transform"></iconify-icon>
+                <span class="hidden md:block ml-3 text-xs font-medium">
+                  Analytics
+                </span>
+              </div>
+              <div class="w-full h-10 rounded-lg flex items-center justify-center md:justify-start md:px-3 text-white/40 hover:bg-white/5 hover:text-white/80 transition-colors cursor-pointer group">
+                <iconify-icon icon="solar:database-linear" width="20" class="group-hover:scale-110 transition-transform"></iconify-icon>
+                <span class="hidden md:block ml-3 text-xs font-medium">
+                  Databases
+                </span>
+              </div>
+              <div class="mt-auto w-full h-10 rounded-lg flex items-center justify-center md:justify-start md:px-3 text-white/40 hover:bg-white/5 hover:text-white/80 transition-colors cursor-pointer group">
+                <iconify-icon icon="solar:settings-linear" width="20" class="group-hover:rotate-90 transition-transform duration-500"></iconify-icon>
+                <span class="hidden md:block ml-3 text-xs font-medium">
+                  Settings
+                </span>
+              </div>
+            </div>
+
+            <!-- Piece 3: Main Graph -->
+            <div class="assembly-piece absolute top-20 left-20 md:left-52 right-0 h-64 rounded-xl border border-white/10 bg-[#050505]/80 backdrop-blur-xl p-6 z-10 flex flex-col shadow-[0_20px_40px_rgba(0,0,0,0.8)] overflow-hidden" data-tx="400" data-ty="-300" data-tz="-400" data-rx="-45" data-ry="45" data-rz="15" style=" box-shadow: rgba(0, 0, 0, 0.8) 0px 20px 40px; border-color: rgba(255, 255, 255, 0.1);">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.05)_0%,transparent_60%)]"></div>
+              <div class="flex justify-between items-center mb-6 relative z-10">
+                <h3 class="text-sm font-normal text-white/80">
+                  Network Throughput
+                </h3>
+                <span class="text-[10px] px-2 py-1 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                  LIVE
+                </span>
+              </div>
+              <div class="flex-1 w-full relative z-10">
+                <div class="absolute inset-0 flex flex-col justify-between border-l border-b border-white/5 pb-1 pl-1">
+                  <div class="w-full h-[1px] bg-white/5"></div>
+                  <div class="w-full h-[1px] bg-white/5"></div>
+                  <div class="w-full h-[1px] bg-white/5"></div>
+                  <div class="w-full h-[1px] bg-white/5"></div>
+                </div>
+                <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 50">
+                  <path d="M0,45 Q15,35 25,40 T45,20 T70,30 T100,10 L100,50 L0,50 Z" fill="rgba(249,115,22,0.05)"></path>
+                  <path d="M0,45 Q15,35 25,40 T45,20 T70,30 T100,10" fill="none" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4 4" class="animate-dash"></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Piece 4: Stat Block 1 -->
+            <div class="assembly-piece absolute top-[352px] left-20 md:left-52 w-[calc(50%-48px)] md:w-[calc(50%-112px)] bottom-0 rounded-xl border border-white/10 bg-[#050505]/90 backdrop-blur-xl p-6 z-20 shadow-[0_20px_40px_rgba(0,0,0,0.8)] group hover:border-orange-500/30 transition-colors" data-tx="300" data-ty="500" data-tz="600" data-rx="75" data-ry="25" data-rz="-30" style=" box-shadow: rgba(0, 0, 0, 0.8) 0px 20px 40px; border-color: rgba(255, 255, 255, 0.1);">
+              <div class="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center mb-4 text-orange-400 border border-orange-500/20 group-hover:scale-110 transition-transform">
+                <iconify-icon icon="solar:cpu-bolt-linear" width="20"></iconify-icon>
+              </div>
+              <div class="text-2xl md:text-3xl font-normal text-white mb-1">
+                99.9
+                <span class="text-lg text-white/50">%</span>
+              </div>
+              <div class="text-[10px] text-white/40 uppercase tracking-widest">
+                Efficiency
+              </div>
+            </div>
+
+            <!-- Piece 5: Stat Block 2 -->
+            <div class="assembly-piece absolute top-[352px] right-0 w-[calc(50%-48px)] md:w-[calc(50%-112px)] bottom-0 rounded-xl border border-white/10 bg-[#050505]/90 backdrop-blur-xl p-6 z-20 shadow-[0_20px_40px_rgba(0,0,0,0.8)] group hover:border-white/30 transition-colors" data-tx="-200" data-ty="400" data-tz="-500" data-rx="-60" data-ry="-30" data-rz="45" style=" box-shadow: rgba(0, 0, 0, 0.8) 0px 20px 40px; border-color: rgba(255, 255, 255, 0.1);">
+              <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-4 text-white/60 border border-white/10 group-hover:scale-110 transition-transform">
+                <iconify-icon icon="solar:shield-check-linear" width="20"></iconify-icon>
+              </div>
+              <div class="text-2xl md:text-3xl font-normal text-white mb-1">
+                0.4
+                <span class="text-lg text-white/50">ms</span>
+              </div>
+              <div class="text-[10px] text-white/40 uppercase tracking-widest">
+                Latency
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const section = document.getElementById("reassembly-section");
+            const pieces = document.querySelectorAll(".assembly-piece");
+            const text = document.getElementById("reassembly-text");
+
+            if (!section) return;
+
+            pieces.forEach(piece => {
+              const tx = piece.getAttribute('data-tx');
+              const ty = piece.getAttribute('data-ty');
+              const tz = piece.getAttribute('data-tz');
+              const rx = piece.getAttribute('data-rx');
+              const ry = piece.getAttribute('data-ry');
+              const rz = piece.getAttribute('data-rz');
+
+              piece.style.transform = `translate3d(${tx}px, ${ty}px, ${tz}px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg)`;
+              piece.style.opacity = '0';
+            });
+
+            window.addEventListener("scroll", () => {
+              if(!section) return;
+              const rect = section.getBoundingClientRect();
+              const windowHeight = window.innerHeight;
+              const totalScroll = rect.height - windowHeight;
+
+              let progress = -rect.top / totalScroll;
+              progress = Math.max(0, Math.min(1, progress));
+
+              const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+              pieces.forEach(piece => {
+                const tx = parseFloat(piece.getAttribute('data-tx'));
+                const ty = parseFloat(piece.getAttribute('data-ty'));
+                const tz = parseFloat(piece.getAttribute('data-tz'));
+                const rx = parseFloat(piece.getAttribute('data-rx'));
+                const ry = parseFloat(piece.getAttribute('data-ry'));
+                const rz = parseFloat(piece.getAttribute('data-rz'));
+
+                const currentTx = tx * (1 - easeProgress);
+                const currentTy = ty * (1 - easeProgress);
+                const currentTz = tz * (1 - easeProgress);
+                const currentRx = rx * (1 - easeProgress);
+                const currentRy = ry * (1 - easeProgress);
+                const currentRz = rz * (1 - easeProgress);
+
+                const opacity = Math.min(1, progress * 3);
+
+                piece.style.transform = `translate3d(${currentTx}px, ${currentTy}px, ${currentTz}px) rotateX(${currentRx}deg) rotateY(${currentRy}deg) rotateZ(${currentRz}deg)`;
+                piece.style.opacity = opacity.toString();
+
+                if (progress > 0.95) {
+                  piece.style.boxShadow = '0 0 40px rgba(249,115,22,0.1)';
+                  piece.style.borderColor = 'rgba(255,255,255,0.2)';
+                  if (piece.classList.contains('bg-[#050505]/80')) {
+                      piece.style.borderColor = 'rgba(249,115,22,0.2)';
+                  }
+                } else {
+                  piece.style.boxShadow = '0 20px 40px rgba(0,0,0,0.8)';
+                  piece.style.borderColor = 'rgba(255,255,255,0.1)';
+                }
+              });
+
+              if (text) {
+                 text.style.opacity = Math.max(0, 1 - (progress * 2.5)).toString();
+                 text.style.transform = `translate3d(-50%, ${progress * -50}px, 0)`;
+              }
+            });
+
+            window.dispatchEvent(new Event('scroll'));
+          });
+        </script>
+      </section>
+      <section class="py-32 px-6 md:px-10 relative overflow-hidden flex flex-col items-center justify-center text-center min-h-[80vh] group bg-[#020202] border-t border-white/5 cursor-crosshair transition-colors duration-1000 hover:bg-black">
+  
+  <!-- Central Gravity Well Glow -->
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+    <div class="w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.05)_0%,transparent_60%)] rounded-full group-hover:bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.25)_0%,transparent_50%)] group-hover:scale-50 opacity-100 group-hover:opacity-0 transition-all duration-[1500ms] ease-in"></div>
+    <div class="absolute w-[100px] h-[100px] bg-orange-500/0 blur-2xl rounded-full group-hover:bg-orange-500/40 group-hover:scale-150 transition-all duration-[1500ms] ease-in"></div>
+  </div>
+
+  <!-- Ambient Grid & Rings -->
+  <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+    <!-- Collapsing Outer Ring -->
+    <div class="absolute w-[150vw] h-[150vw] max-w-[2000px] max-h-[2000px] border border-white/5 rounded-full group-hover:scale-0 group-hover:opacity-0 transition-all duration-[2000ms] ease-in"></div>
+    <!-- Spinning Dashed Ring -->
+    <div class="absolute w-[100vw] h-[100vw] max-w-[1400px] max-h-[1400px] border border-orange-500/10 border-dashed rounded-full animate-[spin_20s_linear_infinite] group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1500ms] ease-in"></div>
+    <!-- Inner Convergence Ring -->
+    <div class="absolute w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] border border-white/10 rounded-full group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1000ms] ease-in"></div>
+  </div>
+
+  <!-- UI Debris / Particles Container (Anchored to Center) -->
+  <div class="absolute top-1/2 left-1/2 w-0 h-0 pointer-events-none z-10">
+    
+    <!-- Debris 1: Terminal Fragment -->
+    <div class="absolute -left-[40vw] -top-[30vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1300ms] ease-in opacity-40 w-48 border border-white/10 bg-black/40 backdrop-blur p-3 rounded-lg text-[10px] font-mono text-white/50 text-left shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+      <span class="text-orange-400">root@matrix:~#</span> init_core<br>
+      &gt; aligning vectors<br>
+      &gt; mass routing...<br>
+      &gt; singularity reached
+    </div>
+
+    <!-- Debris 2: Abstract Graph -->
+    <div class="absolute left-[35vw] -top-[25vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1500ms] ease-in opacity-30 w-40 h-24 border-b border-l border-white/20">
+      <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 50">
+        <path d="M0,40 L20,30 L40,35 L60,15 L80,25 L100,5" stroke="#f97316" stroke-width="1.5" fill="none" class="opacity-80"></path>
+        <path d="M0,40 L20,30 L40,35 L60,15 L80,25 L100,5 L100,50 L0,50 Z" fill="rgba(249,115,22,0.1)"></path>
+      </svg>
+    </div>
+
+    <!-- Debris 3: Data Node -->
+    <div class="absolute -left-[25vw] top-[25vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1100ms] ease-in opacity-50 flex items-center gap-3">
+      <div class="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,1)]"></div>
+      <div class="h-px w-20 bg-gradient-to-r from-orange-500 to-transparent"></div>
+    </div>
+
+    <!-- Debris 4: Telemetry Card -->
+    <div class="absolute left-[25vw] top-[30vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1400ms] ease-in opacity-40 p-3 border border-white/10 rounded-xl bg-white/5 backdrop-blur">
+      <div class="text-[9px] uppercase tracking-widest text-white/40 mb-1">Density</div>
+      <div class="text-sm font-mono text-white">Infinite</div>
+    </div>
+
+    <!-- Debris 5: Targeting Reticle -->
+    <div class="absolute -left-[5vw] -top-[45vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1600ms] ease-in opacity-20 w-24 h-24 border border-orange-500/30 rounded-full flex items-center justify-center">
+      <div class="w-1 h-1 bg-orange-500 rounded-full"></div>
+      <div class="absolute top-0 bottom-0 w- h-px bg-orange-500/30"></div>
+    </div>
+
+    <!-- Debris 6: Binary Stream -->
+    <div class="absolute left-[10vw] top-[40vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[1200ms] ease-in opacity-20 text-[8px] font-mono text-orange-500 leading-none text-right">
+      10110010<br>01001101<br>11100010<br>00111011
+    </div>
+    
+    <!-- Debris 7: Fast Moving Particle -->
+    <div class="absolute -left-[30vw] top-[5vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[800ms] ease-in opacity-80 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,1)]"></div>
+    
+    <!-- Debris 8: Fast Moving Particle 2 -->
+    <div class="absolute left-[35vw] -top-[10vh] group-hover:left-0 group-hover:top-0 group-hover:scale-0 group-hover:opacity-0 transition-all duration-[900ms] ease-in opacity-80 w-1 h-1 bg-orange-400 rounded-full shadow-[0_0_10px_rgba(249,115,22,1)]"></div>
+  </div>
+
+  <!-- Content Layer -->
+  <div class="relative z-20 flex flex-col items-center group-hover:scale-95 transition-transform duration-[1500ms] ease-out pointer-events-none">
+    <h2 class="text-5xl md:text-7xl font-medium tracking-tight text-transparent bg-clip-text pb-2 transition-all duration-[1500ms]" style="background-image: linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.4)); -webkit-background-clip: text;">
+      Initiate Sequence.
+    </h2>
+    <p class="mt-6 text-base md:text-lg font-extralight text-white/50 max-w-xl mx-auto tracking-tight transition-colors duration-[1500ms] group-hover:text-white/30">
+      Merge your operations with the most advanced architecture ever
+      constructed. The system is ready for your payload.
+    </p>
+
+    <!-- Interactive CTA Area -->
+    <div class="mt-12 relative z-30 pointer-events-auto">
+      <!-- The decisive button -->
+      <button class="peer px-10 py-5 bg-white text-black rounded-full font-medium text-sm flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_80px_rgba(255,255,255,0.5)]">
+        Deploy Core Matrix
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap text-orange-500">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </button>
+      
+      <!-- Cinematic Click Burst Effects (Triggered by active state) -->
+      <!-- Massive blinding white flash -->
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full opacity-0 peer-active:w-[250vw] peer-active:h-[250vw] peer-active:opacity-100 transition-all duration-[400ms] ease-out z-[9999] pointer-events-none mix-blend-screen"></div>
+      
+      <!-- Deep orange afterburn glow -->
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-orange-500 rounded-full opacity-0 peer-active:w-[150vw] peer-active:h-[150vw] peer-active:opacity-80 transition-all duration-[800ms] ease-out z-[9998] pointer-events-none mix-blend-screen blur-[100px]"></div>
+      
+      <!-- Shockwave ring -->
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 border-4 border-white rounded-full opacity-0 peer-active:w-[100vw] peer-active:h-[100vw] peer-active:opacity-0 transition-all duration-[600ms] ease-out z-[9997] pointer-events-none"></div>
+    </div>
+  </div>
+</section>
+
+      <!-- Minimal Footer -->
+      <footer class="py-8 px-6 md:px-10 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-extralight text-white/40">
+        <p>© HRZN Systems. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-white transition-colors">Telemetry</a>
+          <a href="#" class="hover:text-white transition-colors">
+            Documentation
+          </a>
+          <a href="#" class="hover:text-white transition-colors">Terms</a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- WebGL Scripts -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.split-words').forEach(el => {
+          const text = el.innerText.trim();
+          const words = text.split(/\s+/);
+          el.innerHTML = '';
+          words.forEach((word, index) => {
+            const wrapper = document.createElement('span');
+            wrapper.className = 'inline-block overflow-hidden align-top pt-[0.2em] px-[0.1em] -mt-[0.2em] -mx-[0.1em] pb-[0.05em] -mb-[0.05em]';
+            if (index < words.length - 1) wrapper.style.marginRight = '0.25em';
+            const inner = document.createElement('span');
+            inner.className = 'reveal-text inline-block translate-y-[100%] opacity-0';
+            inner.innerText = word;
+            wrapper.appendChild(inner);
+            el.appendChild(wrapper);
+          });
+        });
+
+        if (typeof gsap !== 'undefined') {
+          gsap.registerPlugin(ScrollTrigger);
+          gsap.to('.reveal-text', {
+            y: '0%',
+            opacity: 1,
+            ease: 'power4.out',
+            duration: 1.2,
+            stagger: 0.04,
+            scrollTrigger: {
+              trigger: 'main',
+              start: 'top 80%',
+            }
+          });
+
+          gsap.to('#webgl-container', {
+            scale: 0.5,
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: 'main',
+              start: 'top 80px',
+              end: 'bottom top',
+              scrub: true
+            }
+          });
+        }
+      });
+
+      const canvas = document.getElementById('blackhole-canvas');
+      if (canvas) {
+        const gl = canvas.getContext('webgl');
+        if (gl) {
+          const vsSource = `
+            attribute vec2 position;
+            void main() {
+              gl_Position = vec4(position, 0.0, 1.0);
+            }
+          `;
+          const fsSource = `
+            precision highp float;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+            void main() {
+              vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+              float r = length(uv);
+              float angle = atan(uv.y, uv.x);
+              float twist = angle + 8.0 * exp(-r * 2.5) - u_time * 1.5;
+              float spiral1 = sin(twist * 4.0) * 0.5 + 0.5;
+              float spiral2 = sin(twist * 7.0 + u_time * 0.5) * 0.5 + 0.5;
+              float flow = spiral1 * 0.6 + spiral2 * 0.4;
+              float disk = smoothstep(0.7, 0.0, r);
+              vec3 coreColor = vec3(1.0, 0.6, 0.15);
+              vec3 edgeColor = vec3(0.5, 0.1, 0.0);
+              vec3 col = mix(edgeColor, coreColor, flow * disk);
+              col *= flow * disk * 2.5;
+              col += vec3(1.0, 0.8, 0.5) * smoothstep(0.15, 0.0, r) * 1.2;
+              gl_FragColor = vec4(col, 1.0);
+            }
+          `;
+          function createShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+          }
+          const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+          const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+          const program = gl.createProgram();
+          gl.attachShader(program, vertexShader);
+          gl.attachShader(program, fragmentShader);
+          gl.linkProgram(program);
+          gl.useProgram(program);
+          const positionBuffer = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0, -1.0,  1.0,  1.0
+          ]), gl.STATIC_DRAW);
+          const positionLocation = gl.getAttribLocation(program, "position");
+          gl.enableVertexAttribArray(positionLocation);
+          gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+          const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+          const timeLocation = gl.getUniformLocation(program, "u_time");
+          function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+          }
+          window.addEventListener('resize', resizeCanvas);
+          resizeCanvas();
+          function render(time) {
+            gl.uniform1f(timeLocation, time * 0.001);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(render);
+          }
+          requestAnimationFrame(render);
+        }
+      }
+
+      const ticker = document.getElementById('logo-ticker');
+      if (ticker) {
+        let tickerPos = 0;
+        let speed = 1;
+        function animateTicker() {
+          tickerPos -= speed;
+          if (tickerPos <= -(ticker.scrollWidth / 2)) {
+            tickerPos = 0;
+          }
+          ticker.style.transform = `translateX(${tickerPos}px)`;
+          requestAnimationFrame(animateTicker);
+        }
+        window.addEventListener('load', () => {
+          requestAnimationFrame(animateTicker);
+        });
+      }
+    </script>
+  
+</body></html>

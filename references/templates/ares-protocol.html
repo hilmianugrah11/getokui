@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARES Protocol // Mars Expedition</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Syne:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C2A878; border-radius: 2px; }
+html, body { background-color: #0f0f10; }
+body { font-family: 'Syne', sans-serif; }
+.font-display { font-family: 'Abril Fatface', serif; }
+.font-mono { font-family: 'Space Mono', monospace; }
+.grain::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:50; opacity:.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E"); }
+.lenis.lenis-smooth { scroll-behavior: auto; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.checkbox-custom input:checked + div { background-color: #C2A878; border-color: #C2A878; }
+.checkbox-custom input:checked + div iconify-icon { opacity: 1; }
+.hover-lift { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s; }
+.hover-lift:hover { transform: translateY(-4px); border-color: rgba(194,168,120,0.3); }
+.shimmer { background: linear-gradient(90deg, transparent, rgba(194,168,120,0.1), transparent); background-size: 200% 100%; animation: shimmer 3s linear infinite; }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.marquee-track { animation: marquee 40s linear infinite; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+</style>
+<style id="aura-animations">
+.aura-word{display:inline-block;opacity:0;filter:blur(12px);transform:translateY(20px);will-change:opacity,filter,transform;}.aura-fade-el{opacity:0;filter:blur(10px);transform:translateY(24px);will-change:opacity,filter,transform;}
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body
+    class="text-[#f0f0f0] antialiased selection:bg-[#C2A878] selection:text-[#0f0f10]"
+  >
+    <!-- NAV -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-40 px-6 lg:px-12 py-5 flex justify-between items-center backdrop-blur-md bg-[#0f0f10]/60 border-b border-white/5"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="w-2 h-2 rounded-full bg-[#C2A878] shadow-[0_0_10px_#C2A878] animate-pulse"
+        ></div>
+        <span class="font-semibold text-xs tracking-[0.3em] uppercase">
+          ARES
+        </span>
+      </div>
+      <div
+        class="hidden md:flex gap-10 text-xs uppercase tracking-[0.25em] text-white/50 font-medium"
+      >
+        <a href="#mission" class="hover:text-white transition-colors">
+          Mission
+        </a>
+        <a href="#journey" class="hover:text-white transition-colors">
+          Journey
+        </a>
+        <a href="#origin" class="hover:text-white transition-colors">Origin</a>
+        <a href="#crew" class="hover:text-white transition-colors">Crew</a>
+      </div>
+      <button
+        class="px-5 py-2.5 rounded-full bg-[#C2A878] text-[#0f0f10] text-[10px] font-semibold uppercase tracking-[0.25em] hover:bg-[#d8c8b8] transition-colors"
+      >
+        Reserve Seat
+      </button>
+    </nav>
+
+    <!-- HERO -->
+    <section
+      class="relative min-h-screen w-full flex flex-col lg:flex-row overflow-hidden"
+    >
+      <!-- 3D Canvas -->
+      <div
+        id="canvas-container"
+        class="relative w-full h-[55vh] lg:h-screen lg:flex-1 order-1 overflow-hidden"
+      >
+        <video
+          src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/9109ecbb-cdc4-4815-981e-2ea83be13765/1779103093167-2fab1ce2-440f-451f-8a34-8d953500119f.mp4"
+          poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0421a7d1-35d9-4506-ac90-8934f53c608b_1600w.png"
+          data-aura-generated-video="true"
+          data-aura-video-preset="loop-in-view"
+          muted=""
+          playsinline=""
+          preload="metadata"
+          loop=""
+          aria-label="Mars surface"
+          class="absolute inset-0 w-full h-full object-cover"
+        ></video>
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-[#0f0f10]/40 via-transparent to-[#0f0f10]/30"
+        ></div>
+        <div
+          class="absolute top-24 left-8 lg:left-12 z-10 flex items-center gap-3"
+        >
+          <iconify-icon
+            icon="solar:monitor-camera-linear"
+            stroke-width="1.5"
+            class="text-xl text-[#C2A878]"
+          ></iconify-icon>
+          <div class="flex flex-col">
+            <span
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40"
+            >
+              Visual Feed
+            </span>
+            <span class="font-mono text-[10px] tracking-[0.3em] uppercase">
+              Orbiter-09 // Live
+            </span>
+          </div>
+        </div>
+        <div
+          class="absolute bottom-8 left-8 lg:left-12 z-10 font-mono text-[10px] tracking-[0.3em] uppercase text-white/60 space-y-1"
+        >
+          <div>LAT 14.5684° S</div>
+          <div>LON 175.4726° E</div>
+          <div>ALT 12,400 KM</div>
+        </div>
+        <div
+          class="absolute bottom-8 right-8 lg:right-12 z-10 font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878]"
+        >
+          [ TRANSMISSION OPEN ]
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside
+        class="w-full lg:w-[480px] lg:h-screen bg-[#0f0f10] lg:border-l border-white/5 flex flex-col z-20 order-2 relative pt-20 lg:pt-24"
+      >
+        <div class="px-8 pb-6 flex flex-col gap-6 border-b border-white/5">
+          <div class="flex justify-between items-start">
+            <div
+              class="inline-flex items-center gap-3 bg-[#1a1a1c] px-4 py-2 rounded-full border border-white/5"
+            >
+              <div
+                class="w-1.5 h-1.5 rounded-full bg-[#C2A878] shadow-[0_0_10px_#C2A878] animate-pulse"
+              ></div>
+              <span
+                class="font-semibold text-[10px] tracking-[0.3em] uppercase text-white/90"
+              >
+                Mission 2034 // T-12Y
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-8 py-8 space-y-8">
+          <div class="space-y-5" data-hero-stagger="">
+            <span
+              class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878]"
+            >
+              A New Earth Awaits
+            </span>
+            <h1
+              class="font-display text-7xl lg:text-8xl leading-[0.9] tracking-tight"
+            >
+              MARS
+              <br />
+              <span class="text-[#C2A878]">Calls.</span>
+            </h1>
+            <p class="text-sm text-white/60 leading-relaxed max-w-sm">
+              The ARES Protocol opens a permanent corridor between Earth and the
+              red planet. Engineered for the first generation of interplanetary
+              citizens.
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button
+                class="px-6 py-4 bg-[#C2A878] text-[#0f0f10] text-[10px] font-semibold uppercase tracking-[0.3em] rounded-2xl hover:bg-[#d8c8b8] transition-transform hover:scale-[1.02]"
+              >
+                Begin Manifest
+              </button>
+              <button
+                class="px-6 py-4 border border-white/10 text-[10px] font-semibold uppercase tracking-[0.3em] rounded-2xl hover:bg-white/5 transition-colors flex items-center gap-2"
+              >
+                <iconify-icon
+                  icon="solar:play-linear"
+                  stroke-width="1.5"
+                ></iconify-icon>
+                Watch Brief
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="bg-[#151516] p-6 rounded-[24px] border border-white/5 space-y-5"
+            data-hero-stagger=""
+          >
+            <div class="flex items-center gap-3">
+              <iconify-icon
+                icon="solar:tuning-linear"
+                stroke-width="1.5"
+                class="text-[#888] text-lg"
+              ></iconify-icon>
+              <span
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.3em]"
+              >
+                Atmospheric Sim
+              </span>
+            </div>
+            <div class="space-y-2">
+              <div
+                class="flex justify-between text-[10px] uppercase tracking-[0.25em] text-white/60"
+              >
+                <span>Rotation</span>
+                <span id="val-rot" class="font-mono text-[#C2A878]">0.4x</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value="20"
+                class="w-full ares-slider"
+                id="slider-rot"
+              />
+            </div>
+            <div class="space-y-2">
+              <div
+                class="flex justify-between text-[10px] uppercase tracking-[0.25em] text-white/60"
+              >
+                <span>Dust Density</span>
+                <span id="val-dust" class="font-mono text-[#C2A878]">HIGH</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value="80"
+                class="w-full ares-slider"
+                id="slider-dust"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3" data-hero-stagger="">
+            <div class="bg-[#151516] p-5 rounded-2xl border border-white/5">
+              <div
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.25em] mb-2"
+              >
+                Gravity
+              </div>
+              <div class="font-mono text-sm">3.721 m/s²</div>
+            </div>
+            <div class="bg-[#151516] p-5 rounded-2xl border border-white/5">
+              <div
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.25em] mb-2"
+              >
+                Avg Temp
+              </div>
+              <div class="font-mono text-sm">-63°C</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <style>
+      input[type=range].ares-slider { -webkit-appearance:none; background:transparent; }
+      input[type=range].ares-slider::-webkit-slider-thumb { -webkit-appearance:none; height:12px; width:12px; border-radius:50%; background:#C2A878; cursor:pointer; margin-top:-5px; box-shadow:0 0 0 2px #0f0f10, 0 0 12px rgba(194,168,120,0.6); }
+      input[type=range].ares-slider::-webkit-slider-runnable-track { height:2px; background:rgba(255,255,255,0.1); border-radius:1px; }
+      input[type=range].ares-slider:focus { outline:none; }
+    </style>
+
+    <!-- MARQUEE -->
+    <section class="border-y border-white/5 py-6 overflow-hidden">
+      <div
+        class="flex marquee-track whitespace-nowrap font-display text-3xl lg:text-5xl"
+      >
+        <span class="px-8 text-white/90">Ad Astra</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/40">Per Aspera</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/90">The Red Frontier</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/40">Beyond Earth</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/90">Ad Astra</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/40">Per Aspera</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/90">The Red Frontier</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+        <span class="px-8 text-white/40">Beyond Earth</span>
+        <span class="px-8 text-[#C2A878]">✦</span>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="mission" class="py-32 lg:py-48 px-6 lg:px-12 relative">
+      <div class="max-w-7xl mx-auto">
+        <div
+          class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20"
+        >
+          <div class="max-w-2xl">
+            <div
+              class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878] mb-6"
+            >
+              [ 01 — Capabilities ]
+            </div>
+            <h2
+              class="font-display text-5xl lg:text-7xl leading-[0.95] tracking-tight"
+            >
+              Engineered for
+              <br />
+              the impossible.
+            </h2>
+          </div>
+          <p class="text-sm text-white/50 max-w-md leading-relaxed">
+            Every system on the ARES vessel has been redesigned from first
+            principles. No legacy code. No compromises.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Feature card 1 -->
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 hover-lift flex flex-col gap-6 min-h-[320px]"
+          >
+            <div class="flex justify-between items-start">
+              <span
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.3em]"
+              >
+                01 / Propulsion
+              </span>
+              <iconify-icon
+                icon="solar:rocket-linear"
+                stroke-width="1.5"
+                class="text-[#C2A878] text-2xl"
+              ></iconify-icon>
+            </div>
+            <h3 class="font-display text-3xl leading-tight mt-auto">
+              Fusion-Ion Hybrid Drive
+            </h3>
+            <p class="text-sm text-white/50 leading-relaxed">
+              Reduces transit time to 90 days through continuous thrust
+              acceleration.
+            </p>
+          </div>
+          <!-- Feature card 2 -->
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 hover-lift flex flex-col gap-6 min-h-[320px]"
+          >
+            <div class="flex justify-between items-start">
+              <span
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.3em]"
+              >
+                02 / Life Support
+              </span>
+              <iconify-icon
+                icon="solar:leaf-linear"
+                stroke-width="1.5"
+                class="text-[#C2A878] text-2xl"
+              ></iconify-icon>
+            </div>
+            <h3 class="font-display text-3xl leading-tight mt-auto">
+              Closed-Loop Biome
+            </h3>
+            <p class="text-sm text-white/50 leading-relaxed">
+              99.6% atmospheric recycling. Hydroponic gardens supply oxygen,
+              water, and food.
+            </p>
+          </div>
+          <!-- Feature card 3 -->
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 hover-lift flex flex-col gap-6 min-h-[320px]"
+          >
+            <div class="flex justify-between items-start">
+              <span
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.3em]"
+              >
+                03 / Habitat
+              </span>
+              <iconify-icon
+                icon="solar:home-2-linear"
+                stroke-width="1.5"
+                class="text-[#C2A878] text-2xl"
+              ></iconify-icon>
+            </div>
+            <h3 class="font-display text-3xl leading-tight mt-auto">
+              Modular Surface Units
+            </h3>
+            <p class="text-sm text-white/50 leading-relaxed">
+              Pre-fabricated habitats deploy autonomously prior to crew arrival.
+            </p>
+          </div>
+          <!-- Feature card 4 -->
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 hover-lift flex flex-col gap-6 min-h-[320px]"
+          >
+            <div class="flex justify-between items-start">
+              <span
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.3em]"
+              >
+                04 / Shielding
+              </span>
+              <iconify-icon
+                icon="solar:shield-linear"
+                stroke-width="1.5"
+                class="text-[#C2A878] text-2xl"
+              ></iconify-icon>
+            </div>
+            <h3 class="font-display text-3xl leading-tight mt-auto">
+              Magnetospheric Bubble
+            </h3>
+            <p class="text-sm text-white/50 leading-relaxed">
+              Active magnetic field deflects 94% of solar and cosmic radiation.
+            </p>
+          </div>
+          <!-- Feature card 5 (highlight) -->
+          <div
+            class="bg-gradient-to-br from-[#C2A878] to-[#a0875d] text-[#0f0f10] p-8 rounded-[24px] hover-lift flex flex-col gap-6 min-h-[320px] md:col-span-2 lg:col-span-1"
+          >
+            <div class="flex justify-between items-start">
+              <span
+                class="text-[10px] font-mono uppercase tracking-[0.3em] opacity-70"
+              >
+                05 / Navigation
+              </span>
+              <iconify-icon
+                icon="solar:compass-linear"
+                stroke-width="1.5"
+                class="text-2xl"
+              ></iconify-icon>
+            </div>
+            <h3 class="font-display text-3xl leading-tight mt-auto">
+              Autonomous Trajectory AI
+            </h3>
+            <p class="text-sm opacity-70 leading-relaxed">
+              Real-time orbital adjustments computed 10,000× per second across
+              1,400 variables.
+            </p>
+          </div>
+          <!-- Feature card 6 -->
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 hover-lift flex flex-col gap-6 min-h-[320px]"
+          >
+            <div class="flex justify-between items-start">
+              <span
+                class="text-[10px] text-[#888] font-mono uppercase tracking-[0.3em]"
+              >
+                06 / Comms
+              </span>
+              <iconify-icon
+                icon="solar:signal-linear"
+                stroke-width="1.5"
+                class="text-[#C2A878] text-2xl"
+              ></iconify-icon>
+            </div>
+            <h3 class="font-display text-3xl leading-tight mt-auto">
+              Laser Mesh Network
+            </h3>
+            <p class="text-sm text-white/50 leading-relaxed">
+              Sub-second latency to Earth via orbital relay satellite
+              constellation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section
+      class="py-32 lg:py-48 px-6 lg:px-12 bg-[#0a0a0b] border-y border-white/5"
+    >
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-20">
+          <div
+            class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878] mb-6"
+          >
+            [ 02 — Voices ]
+          </div>
+          <h2
+            class="font-display text-5xl lg:text-7xl leading-[0.95] tracking-tight max-w-3xl"
+          >
+            Trusted by those
+            <br />
+            who look up.
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 flex flex-col gap-8 min-h-[340px]"
+          >
+            <iconify-icon
+              icon="solar:quote-up-linear"
+              stroke-width="1.5"
+              class="text-[#C2A878] text-3xl"
+            ></iconify-icon>
+            <p class="text-base leading-relaxed text-white/80">
+              "The ARES Protocol isn't a mission. It's a quiet revolution in
+              what humans permit themselves to attempt."
+            </p>
+            <div
+              class="mt-auto flex items-center gap-3 pt-6 border-t border-white/5"
+            >
+              <div class="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&amp;q=80"
+                  alt="Dr. Lena Vasquez"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <div class="text-sm font-semibold">Dr. Lena Vasquez</div>
+                <div
+                  class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+                >
+                  Astrophysicist, MIT
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 flex flex-col gap-8 min-h-[340px]"
+          >
+            <iconify-icon
+              icon="solar:quote-up-linear"
+              stroke-width="1.5"
+              class="text-[#C2A878] text-3xl"
+            ></iconify-icon>
+            <p class="text-base leading-relaxed text-white/80">
+              "I have spent forty years dreaming of Mars. ARES has built the
+              bridge I thought my grandchildren would walk."
+            </p>
+            <div
+              class="mt-auto flex items-center gap-3 pt-6 border-t border-white/5"
+            >
+              <div class="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&amp;q=80"
+                  alt="Cmdr. Hiroshi Tanaka"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <div class="text-sm font-semibold">Cmdr. Hiroshi Tanaka</div>
+                <div
+                  class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+                >
+                  Former ISS Commander
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-[#1a1a1c] p-8 rounded-[24px] border border-white/5 flex flex-col gap-8 min-h-[340px]"
+          >
+            <iconify-icon
+              icon="solar:quote-up-linear"
+              stroke-width="1.5"
+              class="text-[#C2A878] text-3xl"
+            ></iconify-icon>
+            <p class="text-base leading-relaxed text-white/80">
+              "The first time I saw the propulsion architecture, I understood:
+              we are no longer waiting. We are going."
+            </p>
+            <div
+              class="mt-auto flex items-center gap-3 pt-6 border-t border-white/5"
+            >
+              <div class="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&amp;q=80"
+                  alt="Ayana Okonkwo"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <div class="text-sm font-semibold">Ayana Okonkwo</div>
+                <div
+                  class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+                >
+                  Lead Propulsion Engineer
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-5 pt-12 border-t border-white/5"
+        >
+          <div>
+            <div class="font-display text-4xl lg:text-5xl text-[#C2A878]">
+              2,400+
+            </div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40 mt-2"
+            >
+              Engineers
+            </div>
+          </div>
+          <div>
+            <div class="font-display text-4xl lg:text-5xl text-[#C2A878]">
+              $48B
+            </div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40 mt-2"
+            >
+              Program Budget
+            </div>
+          </div>
+          <div>
+            <div class="font-display text-4xl lg:text-5xl text-[#C2A878]">
+              14
+            </div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40 mt-2"
+            >
+              Partner Agencies
+            </div>
+          </div>
+          <div>
+            <div class="font-display text-4xl lg:text-5xl text-[#C2A878]">
+              90D
+            </div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40 mt-2"
+            >
+              Transit Time
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOURNEY (Sticky scroll storytelling) -->
+    <section id="journey" class="relative">
+      <div class="max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-12">
+        <div
+          class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878] mb-6"
+        >
+          [ 03 — The Journey ]
+        </div>
+        <h2
+          class="font-display text-5xl lg:text-7xl leading-[0.95] tracking-tight max-w-3xl"
+        >
+          Seven phases
+          <br />
+          to a second world.
+        </h2>
+      </div>
+
+      <div
+        class="relative lg:flex lg:gap-16 max-w-7xl mx-auto px-6 lg:px-12 pb-32"
+      >
+        <!-- Sticky visual -->
+        <div
+          class="lg:w-1/2 lg:sticky lg:top-24 h-[60vh] lg:h-[80vh] flex items-center justify-center"
+          id="journey-sticky"
+        >
+          <div
+            class="relative w-full h-full flex items-center justify-center overflow-hidden rounded-[24px]"
+          >
+            <video
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/generated-videos/9109ecbb-cdc4-4815-981e-2ea83be13765/1779103173159-d119f402-29d2-4df4-a1cc-c560d67441c2.mp4"
+              poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/15c69e03-3e71-496c-bc46-0ef7d5e83dc7_1600w.png"
+              data-aura-generated-video="true"
+              data-aura-video-preset="loop-in-view"
+              muted=""
+              playsinline=""
+              preload="metadata"
+              loop=""
+              aria-label="Mars planet"
+              class="absolute inset-0 w-full h-full object-cover"
+            ></video>
+            <div
+              class="absolute inset-0 bg-gradient-to-b from-[#0f0f10]/30 via-transparent to-[#0f0f10]/60"
+            ></div>
+            <div
+              class="absolute top-8 left-8 font-mono text-[10px] uppercase tracking-[0.3em] text-white/50"
+            >
+              <div>PHASE</div>
+              <div
+                id="phase-num"
+                class="font-display text-7xl lg:text-9xl text-[#C2A878] mt-2"
+              >
+                01
+              </div>
+            </div>
+            <div class="absolute bottom-8 right-8 text-right">
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50 mb-2"
+              >
+                Current Stage
+              </div>
+              <div id="phase-title" class="font-display text-2xl lg:text-3xl">
+                Pre-Flight
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrolling phases -->
+        <div
+          class="lg:w-1/2 space-y-32 lg:space-y-48 lg:pt-32"
+          id="journey-phases"
+        >
+          <div class="journey-phase" data-num="01" data-title="Pre-Flight">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              T-Minus 14 Days
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              Quarantine &amp; Conditioning
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Crew enters sealed isolation. Final medical baselines. Reflex
+              calibration in centrifuge.
+            </p>
+          </div>
+          <div class="journey-phase" data-num="02" data-title="Launch">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              Day 0
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              Ascent to Orbit
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Boost stage delivers the ARES vessel to low-Earth orbit within 11
+              minutes of ignition.
+            </p>
+          </div>
+          <div class="journey-phase" data-num="03" data-title="Transfer">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              Day 3 → 90
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              Interplanetary Cruise
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Continuous-thrust trajectory. Crew adapts to 0.4G simulated
+              gravity through centrifugal ring.
+            </p>
+          </div>
+          <div class="journey-phase" data-num="04" data-title="Approach">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              Day 91
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              Mars Orbit Insertion
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Aerobraking maneuver. Crew enters parking orbit above Valles
+              Marineris landing zone.
+            </p>
+          </div>
+          <div class="journey-phase" data-num="05" data-title="Descent">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              Day 94
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              Surface Landing
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Supersonic retropropulsion guides the descent vehicle to within 30
+              meters of pre-positioned base.
+            </p>
+          </div>
+          <div class="journey-phase" data-num="06" data-title="Settlement">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              Day 95 → 365
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              First Year Operations
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Habitat expansion, geological survey, deep drilling for
+              sub-surface water reserves.
+            </p>
+          </div>
+          <div class="journey-phase" data-num="07" data-title="Continuity">
+            <div
+              class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#C2A878] mb-4"
+            >
+              Year 2 +
+            </div>
+            <h3 class="font-display text-4xl lg:text-5xl mb-4 tracking-tight">
+              Permanent Presence
+            </h3>
+            <p class="text-sm text-white/60 leading-relaxed max-w-md">
+              Quarterly resupply flights. Civilian researcher program opens. The
+              colony stands on its own.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section
+      id="origin"
+      class="py-32 lg:py-48 px-6 lg:px-12 bg-[#0a0a0b] border-y border-white/5 relative overflow-hidden"
+    >
+      <div class="max-w-5xl mx-auto relative z-10">
+        <div
+          class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878] mb-6"
+        >
+          [ 04 — Origin ]
+        </div>
+        <h2
+          class="font-display text-5xl lg:text-8xl leading-[0.95] tracking-tight mb-16"
+        >
+          A protocol
+          <br />
+          born from
+          <span class="italic text-[#C2A878]">distance.</span>
+        </h2>
+
+        <div class="grid lg:grid-cols-12 gap-12 items-start">
+          <div
+            class="lg:col-span-7 space-y-6 text-base leading-relaxed text-white/70"
+          >
+            <p>
+              In 2019, a small group of propulsion engineers met in a hangar
+              outside Mojave. They asked a question that had been deferred for
+              sixty years:
+              <span class="text-white">
+                what would it actually take to live on Mars?
+              </span>
+            </p>
+            <p>
+              Not visit. Not plant a flag.
+              <em class="text-[#C2A878]">Live.</em>
+              The answer wasn't a single rocket or a single breakthrough. It was
+              a protocol — a connected sequence of systems that, together, made
+              the impossible into the merely difficult.
+            </p>
+            <p>
+              Six years and eleven prototype flights later, the ARES Protocol
+              stands ready. The first manifest closes in fourteen months. The
+              first transfer window opens in twelve years. The corridor will
+              remain open thereafter, every twenty-six months, indefinitely.
+            </p>
+          </div>
+          <div class="lg:col-span-5 space-y-3">
+            <div class="bg-[#1a1a1c] p-6 rounded-2xl border border-white/5">
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#C2A878] mb-3"
+              >
+                Founded
+              </div>
+              <div class="font-display text-3xl">2019</div>
+            </div>
+            <div class="bg-[#1a1a1c] p-6 rounded-2xl border border-white/5">
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#C2A878] mb-3"
+              >
+                First Manifest Closes
+              </div>
+              <div class="font-display text-3xl">2025 Q3</div>
+            </div>
+            <div class="bg-[#1a1a1c] p-6 rounded-2xl border border-white/5">
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#C2A878] mb-3"
+              >
+                Window Opens
+              </div>
+              <div class="font-display text-3xl">2034 Aug 12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT (Crew) -->
+    <section id="crew" class="py-32 lg:py-48 px-6 lg:px-12">
+      <div class="max-w-7xl mx-auto">
+        <div
+          class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20"
+        >
+          <div>
+            <div
+              class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878] mb-6"
+            >
+              [ 05 — Architects ]
+            </div>
+            <h2
+              class="font-display text-5xl lg:text-7xl leading-[0.95] tracking-tight"
+            >
+              The people behind
+              <br />
+              the protocol.
+            </h2>
+          </div>
+          <p class="text-sm text-white/50 max-w-md leading-relaxed">
+            A consortium of 2,400 engineers, biologists, and pilots from
+            fourteen nations — bound by one assignment.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div
+            class="bg-[#1a1a1c] rounded-[24px] border border-white/5 overflow-hidden hover-lift"
+          >
+            <div class="aspect-[4/5] relative overflow-hidden">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f2989d46-5bb5-49c0-95f6-502d081b0851_3840w.png"
+                alt="Eira Solberg"
+                class="absolute inset-0 w-full h-full object-cover"
+                data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/f2989d46-5bb5-49c0-95f6-502d081b0851_3840w.png"
+              />
+              <div
+                class="absolute top-4 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-white/80"
+              >
+                01
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="text-sm font-semibold mb-1">Eira Solberg</div>
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+              >
+                Chief Architect
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-[#1a1a1c] rounded-[24px] border border-white/5 overflow-hidden hover-lift"
+          >
+            <div class="aspect-[4/5] relative overflow-hidden">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7519da5e-b274-4fc7-8d4b-f4a724d863c3_3840w.png"
+                alt="Marcus Eze"
+                class="absolute inset-0 w-full h-full object-cover"
+                data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7519da5e-b274-4fc7-8d4b-f4a724d863c3_3840w.png"
+              />
+              <div
+                class="absolute top-4 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-white/80"
+              >
+                02
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="text-sm font-semibold mb-1">Marcus Eze</div>
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+              >
+                Mission Director
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-[#1a1a1c] rounded-[24px] border border-white/5 overflow-hidden hover-lift"
+          >
+            <div class="aspect-[4/5] relative overflow-hidden">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4730f714-0e73-4133-b391-2ad2f4f64160_3840w.png"
+                alt="Yuki Saito"
+                class="absolute inset-0 w-full h-full object-cover"
+                data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4730f714-0e73-4133-b391-2ad2f4f64160_3840w.png"
+              />
+              <div
+                class="absolute top-4 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-white/80"
+              >
+                03
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="text-sm font-semibold mb-1">Yuki Saito</div>
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+              >
+                Lead Pilot
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-[#1a1a1c] rounded-[24px] border border-white/5 overflow-hidden hover-lift"
+          >
+            <div class="aspect-[4/5] relative overflow-hidden">
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e67c0741-344d-424a-aae3-ccafc1d19274_3840w.png"
+                alt="Aria Reyes"
+                class="absolute inset-0 w-full h-full object-cover"
+                data-element-src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e67c0741-344d-424a-aae3-ccafc1d19274_3840w.png"
+              />
+              <div
+                class="absolute top-4 left-4 font-mono text-[10px] uppercase tracking-[0.3em] text-white/80"
+              >
+                04
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="text-sm font-semibold mb-1">Aria Reyes</div>
+              <div
+                class="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40"
+              >
+                Habitat Systems
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA banner -->
+        <div
+          class="mt-24 bg-[#1a1a1c] rounded-[32px] border border-white/5 p-10 lg:p-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 relative overflow-hidden"
+        >
+          <div
+            class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-[#C2A878]/10 blur-3xl"
+          ></div>
+          <div class="relative max-w-2xl">
+            <div
+              class="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C2A878] mb-4"
+            >
+              Manifest closes Q3 2025
+            </div>
+            <h3
+              class="font-display text-4xl lg:text-6xl leading-[0.95] tracking-tight"
+            >
+              Your seat won't
+              <br />
+              wait forever.
+            </h3>
+          </div>
+          <div class="relative flex flex-col sm:flex-row gap-3">
+            <button
+              class="px-8 py-5 bg-[#C2A878] text-[#0f0f10] text-[10px] font-semibold uppercase tracking-[0.3em] rounded-2xl hover:bg-[#d8c8b8] transition-transform hover:scale-[1.02] whitespace-nowrap"
+            >
+              Reserve Now
+            </button>
+            <button
+              class="px-8 py-5 border border-white/10 text-[10px] font-semibold uppercase tracking-[0.3em] rounded-2xl hover:bg-white/5 transition-colors whitespace-nowrap"
+            >
+              Schedule Briefing
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer
+      class="border-t border-white/5 px-6 lg:px-12 pt-20 pb-10 bg-[#0a0a0b]"
+    >
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-12 mb-20">
+          <div class="col-span-2 space-y-6">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-2 h-2 rounded-full bg-[#C2A878] shadow-[0_0_10px_#C2A878]"
+              ></div>
+              <span class="font-semibold text-xs tracking-[0.3em] uppercase">
+                ARES Protocol
+              </span>
+            </div>
+            <p class="text-sm text-white/40 leading-relaxed max-w-xs">
+              United Aerospace Corporation. Building the bridge between worlds
+              since 2019.
+            </p>
+            <div class="flex gap-3">
+              <a
+                class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-[#C2A878] hover:text-[#C2A878] transition-colors"
+              >
+                <iconify-icon
+                  icon="solar:twitter-linear"
+                  stroke-width="1.5"
+                ></iconify-icon>
+              </a>
+              <a
+                class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-[#C2A878] hover:text-[#C2A878] transition-colors"
+              >
+                <iconify-icon
+                  icon="solar:youtube-linear"
+                  stroke-width="1.5"
+                ></iconify-icon>
+              </a>
+              <a
+                class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-[#C2A878] hover:text-[#C2A878] transition-colors"
+              >
+                <iconify-icon
+                  icon="solar:link-linear"
+                  stroke-width="1.5"
+                ></iconify-icon>
+              </a>
+            </div>
+          </div>
+          <div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-5"
+            >
+              Mission
+            </div>
+            <ul class="space-y-3 text-sm text-white/70">
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Manifest</a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Trajectory</a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">
+                  Colonization
+                </a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Research</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-5"
+            >
+              Corporation
+            </div>
+            <ul class="space-y-3 text-sm text-white/70">
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">About UAC</a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Careers</a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Press</a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Investors</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-5"
+            >
+              Contact
+            </div>
+            <ul class="space-y-3 text-sm text-white/70">
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">
+                  Mission Control
+                </a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">
+                  Media Inquiries
+                </a>
+              </li>
+              <li>
+                <a class="hover:text-[#C2A878] transition-colors">Support</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="font-display text-[16vw] leading-none tracking-tight text-[#C2A878]/10 select-none mb-10"
+        >
+          ARES
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row justify-between gap-4 pt-8 border-t border-white/5 font-mono text-[10px] uppercase tracking-[0.3em] text-white/30"
+        >
+          <span>© 2034 United Aerospace Corp.</span>
+          <span>Ad astra per aspera.</span>
+          <span>v1.0.0 // Mojave, CA</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // LENIS Smooth Scroll
+      const lenis = new Lenis({ duration: 1.2, easing: (t)=>Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+      function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+
+      gsap.registerPlugin(ScrollTrigger);
+      lenis.on('scroll', ScrollTrigger.update);
+
+      // --- THREE.JS Mars ---
+      const container = document.getElementById('canvas-container');
+      const hudLayer = document.getElementById('hud-layer');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0a0b);
+      const camera = new THREE.PerspectiveCamera(40, container.clientWidth/container.clientHeight, 0.1, 1000);
+      camera.position.z = 8;
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      const vertexShader = `varying vec2 vUv; varying vec3 vNormal; varying vec3 vPosition;
+      void main(){ vUv=uv; vNormal=normalize(normalMatrix*normal); vPosition=(modelViewMatrix*vec4(position,1.0)).xyz; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`;
+      const fragmentShader = `
+      uniform vec3 colorPaper; uniform vec3 colorRust; uniform vec3 colorForest; uniform vec3 colorInk;
+      uniform float time; uniform float noiseScale; uniform float dustDensity;
+      varying vec2 vUv; varying vec3 vNormal; varying vec3 vPosition;
+      vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;} vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+      vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);} vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+      float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);
+      vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
+      vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
+      vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy; i=mod289(i);
+      vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+      float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx; vec4 j=p-49.0*floor(p*ns.z*ns.z);
+      vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_); vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy;
+      vec4 h=1.0-abs(x)-abs(y); vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
+      vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0; vec4 sh=-step(h,vec4(0.0));
+      vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+      vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
+      vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+      p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
+      vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0); m=m*m;
+      return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
+      void main(){
+        vec3 lightDir=normalize(vec3(1.0,0.8,1.0));
+        float lightIntensity=dot(vNormal,lightDir);
+        float noiseVal=snoise(vPosition*noiseScale+time*0.05);
+        vec3 finalColor=colorPaper;
+        if(noiseVal>(0.1-(dustDensity*0.5))) finalColor=mix(colorPaper,colorRust,0.5+(dustDensity*0.2));
+        if(lightIntensity<0.0) finalColor=mix(finalColor,colorForest,0.75);
+        float viewDot=dot(normalize(vNormal),vec3(0,0,1));
+        float rim=1.0-max(viewDot,0.0);
+        finalColor+=colorInk*pow(rim,6.0)*0.3;
+        gl_FragColor=vec4(finalColor,1.0);}`;
+
+      const uniforms = {
+        time:{value:0}, noiseScale:{value:2.0}, dustDensity:{value:0.8},
+        colorPaper:{value:new THREE.Color('#151516')},
+        colorRust:{value:new THREE.Color('#C2A878')},
+        colorForest:{value:new THREE.Color('#050505')},
+        colorInk:{value:new THREE.Color('#FFFFFF')}
+      };
+      const geometry = new THREE.IcosahedronGeometry(2.6, 64);
+      const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms });
+      const sphere = new THREE.Mesh(geometry, material);
+      scene.add(sphere);
+
+      const pointsOfInterest = [
+        { pos: new THREE.Vector3(1.5,1.8,1.2), label:"POLAR CAP ALPHA" },
+        { pos: new THREE.Vector3(-0.8,0.5,2.5), label:"VALLES MARINERIS" },
+        { pos: new THREE.Vector3(1.2,-1.0,2.2), label:"CRATER JEZERO" }
+      ];
+      const markers = pointsOfInterest.map((poi,i)=>{
+        const el=document.createElement('div');
+        el.style.position='absolute'; el.style.pointerEvents='none'; el.style.opacity='0'; el.style.transition='opacity 0.5s';
+        el.innerHTML=`<div style="width:4px;height:4px;background:#C2A878;border-radius:50%;box-shadow:0 0 8px #C2A878"></div>
+        <div style="position:absolute;top:2px;left:4px;width:40px;height:1px;background:linear-gradient(90deg,#C2A878,transparent);transform-origin:left;transform:rotate(-45deg)"></div>
+        <div style="position:absolute;top:-25px;left:35px;white-space:nowrap" class="font-mono text-[10px] text-[#C2A878] tracking-widest font-semibold uppercase">
+          <span class="opacity-40 mr-1">0${i+1}</span>${poi.label}</div>`;
+        hudLayer.appendChild(el); return { el, pos:poi.pos };
+      });
+
+      let autoRotationSpeed = 0.0015;
+      let time = 0;
+      const sliderRot = document.getElementById('slider-rot');
+      const sliderDust = document.getElementById('slider-dust');
+      sliderRot.addEventListener('input',(e)=>{ const v=e.target.value/100; autoRotationSpeed=0.0005+(v*0.005); document.getElementById('val-rot').innerText=(v*2).toFixed(1)+'x'; });
+      sliderDust.addEventListener('input',(e)=>{ const v=e.target.value/100; uniforms.dustDensity.value=v; document.getElementById('val-dust').innerText=v>0.6?'HIGH':(v>0.3?'MED':'LOW'); });
+
+      function animate(){
+        requestAnimationFrame(animate);
+        time+=0.005;
+        material.uniforms.time.value=time;
+        sphere.rotation.y+=autoRotationSpeed;
+        renderer.render(scene,camera);
+        markers.forEach(m=>{
+          const v=m.pos.clone(); v.applyMatrix4(sphere.matrixWorld);
+          const isFront=v.z>0; v.project(camera);
+          if(v.z<1 && isFront){
+            const x=(v.x*.5+.5)*container.clientWidth;
+            const y=(v.y*-.5+.5)*container.clientHeight;
+            m.el.style.transform=`translate3d(${x}px,${y}px,0)`;
+            m.el.style.opacity='1';
+          } else { m.el.style.opacity='0'; }
+        });
+      }
+      animate();
+      window.addEventListener('resize',()=>{
+        camera.aspect=container.clientWidth/container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth,container.clientHeight);
+      });
+
+      // Hero intro
+      gsap.from('[data-hero-stagger]',{ opacity:0, y:30, duration:1, stagger:0.15, ease:'power3.out', delay:0.2 });
+
+      // Scroll animations
+      gsap.utils.toArray('section').forEach((sec)=>{
+        const headings = sec.querySelectorAll('h2, h3');
+        headings.forEach(h=>{
+          gsap.from(h,{ scrollTrigger:{trigger:h, start:'top 85%'}, y:40, opacity:0, duration:1, ease:'power3.out' });
+        });
+      });
+
+      // Journey sticky phases
+      const phases = gsap.utils.toArray('.journey-phase');
+      phases.forEach(p=>{
+        ScrollTrigger.create({
+          trigger: p,
+          start: 'top 60%',
+          end: 'bottom 40%',
+          onEnter: ()=>updatePhase(p),
+          onEnterBack: ()=>updatePhase(p)
+        });
+        gsap.from(p,{ scrollTrigger:{trigger:p, start:'top 80%'}, y:60, opacity:0, duration:1.2, ease:'power3.out' });
+      });
+      function updatePhase(el){
+        document.getElementById('phase-num').textContent = el.dataset.num;
+        document.getElementById('phase-title').textContent = el.dataset.title;
+      }
+
+      // Marquee on scroll boost
+      gsap.to('.marquee-track',{ x:'-=200', scrollTrigger:{ trigger:'.marquee-track', scrub:1 }});
+    </script>
+
+    <script data-aura-video-controller="true">
+      (function () {
+        function playVideo(video) {
+          var promise = video.play();
+          if (promise && typeof promise.catch === "function") {
+            promise.catch(function () {});
+          }
+        }
+
+        function setupVideo(video) {
+          if (video.__auraVideoReady === true) return;
+          video.__auraVideoReady = true;
+          video.removeAttribute("data-aura-video-ready");
+          video.removeAttribute("data-aura-video-played");
+          video.muted = true;
+          video.playsInline = true;
+
+          var preset = video.dataset.auraVideoPreset || "loop-in-view";
+          if (preset === "hover") {
+            video.addEventListener("mouseenter", function () {
+              playVideo(video);
+            });
+            video.addEventListener("mouseleave", function () {
+              video.pause();
+              video.currentTime = 0;
+            });
+            return;
+          }
+
+          if (!("IntersectionObserver" in window)) {
+            playVideo(video);
+            return;
+          }
+
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                if (preset === "play-once" && video.__auraVideoPlayed === true) {
+                  return;
+                }
+                playVideo(video);
+              } else {
+                video.pause();
+              }
+            });
+          }, { threshold: 0.35 });
+
+          if (preset === "play-once") {
+            video.addEventListener("ended", function () {
+              video.__auraVideoPlayed = true;
+            }, { once: true });
+          }
+
+          observer.observe(video);
+        }
+
+        function setupVideos() {
+          document
+            .querySelectorAll("video[data-aura-video-preset]")
+            .forEach(setupVideo);
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", setupVideos);
+        } else {
+          setupVideos();
+        }
+      })();
+    </script>
+    <script id="aura-animate-script">
+      (function(){function splitWords(el){if(el.dataset.auraSplit==='1')return;var nodes=Array.from(el.childNodes);var frag=document.createDocumentFragment();nodes.forEach(function(node){if(node.nodeType===3){var text=node.textContent;var parts=text.split(/(\s+)/);parts.forEach(function(p){if(p.trim()===''){frag.appendChild(document.createTextNode(p));}else{var span=document.createElement('span');span.className='aura-word';span.textContent=p;frag.appendChild(span);}});}else{frag.appendChild(node);}});el.innerHTML='';el.appendChild(frag);el.dataset.auraSplit='1';}function run(){if(typeof gsap==='undefined')return;var headings=document.querySelectorAll('h1, h2, h3');headings.forEach(function(h){splitWords(h);var words=h.querySelectorAll('.aura-word');if(!words.length)return;gsap.to(words,{opacity:1,filter:'blur(0px)',y:0,duration:0.9,ease:'power3.out',stagger:0.06,scrollTrigger:{trigger:h,start:'top 88%',once:true}});});var paras=document.querySelectorAll('p, li, .font-mono, button, a, .aura-fade-target');paras.forEach(function(el){if(el.closest('nav'))return;if(el.dataset.auraFade==='1')return;el.dataset.auraFade='1';el.classList.add('aura-fade-el');gsap.to(el,{opacity:1,filter:'blur(0px)',y:0,duration:0.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 92%',once:true}});});}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);}else{run();}})();
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 ---
 name: review
-description: Review an EXISTING UI file's design quality against the getokui taste library, and STOP. Invoked when the user asks getokui to critique/review/audit/"cek design" of a UI they already have — e.g. "getokui, review my landing page", "getokui review index.html", "getokui, cek design komponen ini". This skill reads the file the user points at, compares it against the curated references in index.json (spacing, color, typography, hierarchy, layout, consistency), then presents RANKED design findings and STOPS — it does NOT edit or rewrite the file (that's the glowup skill). Use this for "improve what exists"; for making something new, use the brainstorming skill instead.
+description: Review an EXISTING UI file's design quality against the getokui taste library (213 curated landing pages), and STOP. Invoked when the user asks getokui to critique/review/audit/"cek design" of a UI they already have — e.g. "getokui, review my landing page", "getokui review index.html", "getokui, cek design komponen ini". This skill reads the file the user points at, compares it against the curated references in index.json (spacing, color, typography, hierarchy, layout, consistency), then presents RANKED design findings and STOPS — it does NOT edit or rewrite the file (that's the glowup skill). Use this for "improve what exists"; for making something new, use the brainstorming skill instead.
 ---
 
 # getokui review — Critique an Existing UI Against the Taste Library

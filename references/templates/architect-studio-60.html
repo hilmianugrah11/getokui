@@ -1,0 +1,736 @@
+<html lang="en" class="scroll-smooth"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velos - Spatial Dynamics</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; }
+.font-serif { font-family: 'Playfair Display', serif; }
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Global Grid Lines */
+.grid-lines {
+position: fixed;
+inset: 0;
+width: 100%;
+max-width: 80rem; /* max-w-7xl */
+margin: 0 auto;
+pointer-events: none;
+z-index: 5;
+display: flex;
+justify-content: space-between;
+padding: 0 1.5rem; /* px-6 */
+opacity: 0.15;
+}
+@media (min-width: 768px) { .grid-lines { padding: 0 3rem; /* md:px-12 */ } }
+.grid-line { width: 1px; height: 100%; background-color: rgba(255, 255, 255, 0.2); }
+/* Hero Animations */
+@keyframes cinematicEntrance {
+0% { transform: scale(1.4); filter: blur(20px) grayscale(100%); opacity: 0; }
+20% { opacity: 1; }
+100% { transform: scale(1); filter: blur(0px) grayscale(0%); opacity: 1; }
+}
+.animate-cinematic { animation: cinematicEntrance 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes slideUpFade {
+0% { opacity: 0; transform: translateY(40px); }
+100% { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUpFade 1s ease-out forwards; }
+@keyframes ticker {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+.animate-ticker { animation: ticker 20s linear infinite; }
+/* In-view Animation Logic */
+@keyframes animationIn {
+0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+}
+/* Card Shimmer */
+@keyframes shimmerMove {
+0% { transform: translateX(-150%) skewX(-20deg); }
+100% { transform: translateX(200%) skewX(-20deg); }
+}
+.animate-shimmer-effect {
+animation: shimmerMove 3s ease-in-out infinite;
+animation-delay: 2s;
+}
+</style>
+<script>
+(function () {
+const style = document.createElement("style");
+style.textContent = `
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+`;
+document.head.appendChild(style);
+const once = true;
+if (!window.__inViewIO) {
+window.__inViewIO = new IntersectionObserver((entries) => {
+entries.forEach((entry) => {
+if (entry.isIntersecting) {
+entry.target.classList.add("animate");
+if (once) window.__inViewIO.unobserve(entry.target);
+}
+});
+}, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
+}
+window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+document.querySelectorAll(selector).forEach((el) => {
+window.__inViewIO.observe(el);
+});
+};
+document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+})();
+</script></head>
+<body class="bg-neutral-950 text-neutral-50 w-full overflow-x-hidden selection:bg-white/20 selection:text-white relative">
+
+    <!-- Vertical Lines Container -->
+    <div class="grid-lines">
+        <div class="grid-line"></div>
+        <div class="grid-line hidden md:block"></div>
+        <div class="grid-line hidden md:block"></div>
+        <div class="grid-line"></div>
+    </div>
+
+    <!-- Navigation (Pill Shaped) -->
+    <div class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 animate-slide-up [animation-delay:0.5s] opacity-0">
+        <nav class="w-full max-w-4xl flex items-center justify-between px-2 py-2 pr-6 border border-white/10 bg-neutral-900/80 backdrop-blur-xl rounded-full shadow-2xl transition-all duration-300">
+            <!-- Logo Area -->
+            <div class="flex items-center gap-3 pl-4">
+                 <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black">
+                    <iconify-icon icon="solar:infinity-bold" width="18"></iconify-icon>
+                 </div>
+                 <span class="font-bricolage font-semibold text-lg tracking-tight">Velos</span>
+            </div>
+
+            <!-- Links -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
+                <a href="#" class="text-white hover:text-white transition-colors">Atelier</a>
+                <a href="#projects" class="hover:text-white transition-colors">Selected Works</a>
+                <a href="#process" class="hover:text-white transition-colors">Substance</a>
+                <a href="#careers" class="hover:text-white transition-colors">Join</a>
+                <a href="#methodology" class="hover:text-white transition-colors">Methodology</a>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+                    <iconify-icon icon="solar:magnifer-linear" width="20"></iconify-icon>
+                </button>
+                <button class="relative w-10 h-10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors group">
+                    <iconify-icon icon="solar:menu-dots-square-linear" width="20" class=""></iconify-icon>
+                    <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-white rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Redesigned Hero Section (Updated) -->
+    <header class="relative w-full h-screen overflow-hidden flex flex-col justify-end pb-12 md:pb-24">
+        
+        <!-- Background Image Layer with Cinematic Animation -->
+        <div class="absolute inset-0 z-0 bg-black">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/182d91e1-5681-49cf-a16e-4d56864a24ff_3840w.webp" class="w-full h-full object-cover animate-cinematic opacity-0" alt="Brutalist Architecture Detail">
+            <!-- Overlays -->
+            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-80"></div>
+            <div class="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
+        </div>
+
+        <!-- Floating Data Points -->
+        <div class="absolute top-32 right-6 md:right-12 z-20 flex flex-col items-end gap-2 animate-slide-up [animation-delay:2.5s] opacity-0">
+             <div class="px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-mono tracking-wider uppercase text-white/90">Live: Tokyo Project</span>
+             </div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-[90rem] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+            
+            <!-- Left Column: Primary Headline (Spans 7 columns to create gap) -->
+            <div class="md:col-span-7 relative">
+                 <!-- Decorative Label -->
+                 <div class="flex items-center gap-3 mb-6 animate-slide-up [animation-delay:1.2s] opacity-0">
+                    <span class="h-[1px] w-8 bg-white/60"></span>
+                    <span class="text-xs font-mono uppercase tracking-widest text-white/80">Est. 2024</span>
+                 </div>
+
+                <h1 class="font-bricolage font-bold text-white leading-[0.85] tracking-tight">
+                    <span class="block text-[15vw] md:text-[9rem] lg:text-[11rem] animate-slide-up [animation-delay:1.4s] opacity-0 mix-blend-normal text-white drop-shadow-2xl">VOID</span>
+                    <div class="flex items-baseline gap-4 md:gap-8 -mt-2 md:-mt-8 animate-slide-up [animation-delay:1.6s] opacity-0">
+                        <span class="text-[15vw] md:text-[9rem] lg:text-[11rem] font-serif italic font-thin text-white/60">&</span>
+                        <span class="text-[15vw] md:text-[9rem] lg:text-[11rem] text-white drop-shadow-2xl">MASS</span>
+                    </div>
+                </h1>
+            </div>
+
+            <!-- Right Column: Description & Specs (Starts at col 9, leaving col 8 empty) -->
+            <div class="md:col-span-4 md:col-start-9 flex flex-col justify-end pb-4 md:pb-8">
+                <!-- High Contrast Glassmorphism Card -->
+                <div class="relative overflow-hidden bg-neutral-950/60 backdrop-blur-2xl border border-white/10 p-8 rounded-2xl shadow-2xl animate-slide-up [animation-delay:1.8s] opacity-0 ring-1 ring-white/5">
+                    
+                    <!-- Shimmer Overlay -->
+                    <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent z-0 pointer-events-none animate-shimmer-effect"></div>
+
+                    <div class="relative z-10">
+                        <p class="text-lg md:text-xl text-white font-light leading-relaxed mb-8 antialiased drop-shadow-md">
+                            We sculpt the negative space. A reductionist approach to modern living that prioritizes light, silence, and raw materiality over ornamentation.
+                        </p>
+                        
+                        <div class="flex flex-col gap-6">
+                            <div class="grid grid-cols-2 gap-4 border-t border-white/20 pt-6">
+                                <div>
+                                    <span class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Projects</span>
+                                    <span class="text-2xl font-bricolage text-white">42</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Awards</span>
+                                    <span class="text-2xl font-bricolage text-white">18</span>
+                                </div>
+                            </div>
+
+                            <a href="#projects" class="group flex items-center justify-between w-full p-1 border-b border-white/30 hover:border-white transition-colors pb-2">
+                                <span class="text-sm font-medium tracking-wide text-white">Explore Portfolio</span>
+                                <iconify-icon icon="solar:arrow-right-linear" class="text-white group-hover:translate-x-1 transition-transform" width="18"></iconify-icon>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-slide-up [animation-delay:2.2s] opacity-0">
+            <span class="text-[10px] uppercase tracking-widest text-white/40">Scroll</span>
+            <div class="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
+        </div>
+    </header>
+
+    <!-- Collection Section (Projects) -->
+    <section id="projects" class="bg-[#fdfdfd] text-neutral-900 py-24 md:py-32 relative overflow-hidden">
+        <!-- Section Number -->
+        <div class="absolute top-12 left-6 md:left-12 z-0 opacity-[0.05] font-bricolage font-bold text-[8rem] md:text-[12rem] leading-none text-black pointer-events-none select-none">
+            VOL. II
+        </div>
+
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+        <div class="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both]">
+                <div>
+                    <span class="text-xs uppercase tracking-[0.3em] text-neutral-400 font-medium mb-4 block">Selected Works</span>
+                    <h2 class="text-5xl md:text-7xl leading-[0.95] tracking-tighter font-bricolage font-light text-neutral-900">
+                        Defined <br>
+                        <span class="text-neutral-300 font-bricolage font-light">Horizons.</span>
+                    </h2>
+                </div>
+                
+                <div class="flex gap-8 items-baseline border-b border-neutral-100 pb-2">
+                    <button class="text-2xl md:text-3xl text-neutral-900 font-bricolage font-light border-b-2 border-black pb-1">Private</button>
+                    <button class="md:text-3xl hover:text-neutral-500 transition-colors text-2xl font-light text-neutral-300 font-bricolage pb-1">Public</button>
+                    <button class="text-2xl md:text-3xl text-neutral-300 hover:text-neutral-500 transition-colors font-bricolage font-light pb-1">Experimental</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project Card 1 -->
+                <div class="group relative h-[520px] w-full bg-[#151515] rounded-[32px] overflow-hidden flex flex-col justify-between p-8 transition-transform duration-500 hover:-translate-y-2 hover:shadow-2xl animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both]">
+                    <div class="absolute top-0 right-0 p-6 opacity-40 z-20 group-hover:opacity-100 transition-opacity">
+                        <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm text-white">
+                            <iconify-icon icon="solar:arrow-right-up-linear" width="24"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 w-full h-full">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4774bd65-dd1f-43a8-9d99-2b78ca5ea386_800w.jpg" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" alt="Modern Villa" style="">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
+                    </div>
+
+                    <div class="mt-auto relative z-10">
+                         <div class="mb-4">
+                            <iconify-icon icon="solar:home-angle-linear" width="32" height="32" class="text-white/80"></iconify-icon>
+                         </div>
+                        <h3 class="text-white text-3xl tracking-tight leading-none mb-4 font-bricolage font-light">Casa Nocturna</h3>
+                        <div class="flex justify-between items-center text-white/90 border-t border-white/10 pt-5">
+                            <span class="text-xl font-serif italic">Finalized</span>
+                            <span class="text-xs tracking-wide uppercase text-white/50">Mexico City</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="group relative h-[520px] w-full bg-[#151515] rounded-[32px] overflow-hidden flex flex-col justify-between p-8 transition-transform duration-500 hover:-translate-y-2 hover:shadow-2xl animate-on-scroll [animation:animationIn_0.8s_ease-out_0.4s_both]">
+                    <div class="absolute top-0 right-0 p-6 opacity-40 z-20 group-hover:opacity-100 transition-opacity">
+                         <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm text-white">
+                            <iconify-icon icon="solar:arrow-right-up-linear" width="24"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 w-full h-full">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2a662871-accd-4114-b384-662748965262_800w.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" alt="Glass Tower" style="">
+                        <div class="absolute inset-0 bg-black/20 mix-blend-multiply"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
+                    </div>
+
+                    <div class="mt-auto relative z-10">
+                        <div class="mb-4">
+                            <iconify-icon icon="solar:buildings-linear" width="32" height="32" class="text-white/80"></iconify-icon>
+                         </div>
+                        <h3 class="text-white text-3xl tracking-tight leading-none mb-4 font-bricolage font-light">Vertex HQ</h3>
+                        <div class="flex justify-between items-center text-white/90 border-t border-white/10 pt-5">
+                            <span class="text-xl font-serif italic">Developing</span>
+                            <span class="text-xs tracking-wide uppercase text-white/50">Singapore</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="group relative h-[520px] w-full bg-[#151515] rounded-[32px] overflow-hidden flex flex-col justify-between p-8 transition-transform duration-500 hover:-translate-y-2 hover:shadow-2xl animate-on-scroll [animation:animationIn_0.8s_ease-out_0.5s_both]">
+                    <div class="absolute top-0 right-0 p-6 opacity-40 z-20 group-hover:opacity-100 transition-opacity">
+                         <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm text-white">
+                            <iconify-icon icon="solar:arrow-right-up-linear" width="24"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 w-full h-full">
+                        <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0bd8636d-7546-4246-b9ad-5d35e6af5f29_800w.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80" alt="Zen Garden" style="">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
+                    </div>
+
+                    <div class="mt-auto relative z-10">
+                        <div class="mb-4">
+                            <iconify-icon icon="solar:tea-cup-linear" width="32" height="32" class="text-white/80"></iconify-icon>
+                         </div>
+                        <h3 class="text-white text-3xl tracking-tight leading-none mb-4 font-bricolage font-light">Lotus Gallery</h3>
+                        <div class="flex justify-between items-center text-white/90 border-t border-white/10 pt-5">
+                            <span class="text-xl font-serif italic">Awarded</span>
+                            <span class="text-xs tracking-wide uppercase text-white/50">Bangkok</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-16 flex justify-center animate-on-scroll [animation:animationIn_0.8s_ease-out_0.6s_both]">
+                <button class="group flex items-center gap-3 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-all shadow-lg hover:shadow-xl">
+                    <span class="font-medium tracking-wide">Explore All Projects</span>
+                    <iconify-icon icon="solar:arrow-right-linear" width="20" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Material / Spec List -->
+    <section id="process" class="bg-neutral-950 border-t border-white/5 py-24 px-6 relative">
+         <!-- Section Number -->
+         <div class="absolute top-12 right-6 md:right-12 z-0 opacity-10 font-bricolage font-bold text-[8rem] md:text-[10rem] leading-none text-white pointer-events-none select-none tracking-tighter">
+            VOL. III
+        </div>
+
+         <div class="w-full max-w-5xl mx-auto relative z-10">
+            <div class="text-center mb-16 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both]">
+                <h3 class="text-3xl md:text-5xl font-bricolage font-light text-white mb-4">Tactile Substance</h3>
+                <p class="text-white/50">Engineered elements for the new era of durability.</p>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <!-- List Item 1 -->
+                <div class="group grid grid-cols-1 md:grid-cols-12 gap-6 items-center p-4 md:p-6 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.3s_both]">
+                    
+                    <!-- Image & Name -->
+                    <div class="col-span-1 md:col-span-4 flex items-center gap-6">
+                        <div class="w-20 h-20 md:w-24 md:h-24 bg-white rounded-xl overflow-hidden shrink-0 relative flex items-center justify-center">
+                             <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/33b2ce34-6e4a-4514-b20d-7104ecf14efd_320w.webp" class="w-full h-full object-cover" alt="Concrete Texture" style="">
+                        </div>
+                        <div>
+                             <iconify-icon icon="solar:layers-minimalistic-linear" width="32" class="text-white/60 mb-1"></iconify-icon>
+                            <h4 class="text-xl text-white font-bricolage font-light">Travertine Slate</h4>
+                            <p class="text-xs text-white/40 mt-1 uppercase tracking-wider">Honed Finish</p>
+                        </div>
+                    </div>
+
+                    <!-- Tech Specs -->
+                    <div class="col-span-1 md:col-span-6 grid grid-cols-3 gap-y-4 gap-x-2 border-l border-white/10 pl-6">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 text-white/50 text-xs uppercase tracking-wide">
+                                <iconify-icon icon="solar:scale-linear" width="14"></iconify-icon> Weight
+                            </div>
+                            <span class="text-white text-sm">2800 kg/m³</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 text-white/50 text-xs uppercase tracking-wide">
+                                <iconify-icon icon="solar:map-point-linear" width="14"></iconify-icon> Origin
+                            </div>
+                            <span class="text-white text-sm">Tuscany</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 text-white/50 text-xs uppercase tracking-wide">
+                                <iconify-icon icon="solar:shield-check-linear" width="14"></iconify-icon> Rating
+                            </div>
+                            <span class="text-white text-sm">Class A1 Fire</span>
+                        </div>
+                         <div class="col-span-3 mt-2">
+                             <div class="flex items-center justify-between text-xs text-white/30 mb-1">
+                                 <span>Acoustic Damping</span>
+                                 <span>Freq. Response</span>
+                             </div>
+                             <div class="w-full h-8 flex items-end gap-0.5 opacity-50">
+                                 <div class="w-1 bg-white h-[40%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[60%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[80%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[65%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[50%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[45%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[60%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[75%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[90%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[70%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[55%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[40%] rounded-t-sm"></div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Price & Action -->
+                    <div class="col-span-1 md:col-span-2 flex items-center justify-between md:justify-end gap-6">
+                        <span class="text-xl font-serif italic text-white">Tier S</span>
+                        <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors group-hover:border-white">
+                            <iconify-icon icon="solar:file-download-linear" width="18" class=""></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- List Item 2 -->
+                <div class="group grid grid-cols-1 md:grid-cols-12 gap-6 items-center p-4 md:p-6 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all duration-300 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.4s_both]">
+                    
+                     <!-- Image & Name -->
+                     <div class="col-span-1 md:col-span-4 flex items-center gap-6">
+                        <div class="w-20 h-20 md:w-24 md:h-24 bg-white rounded-xl overflow-hidden shrink-0 relative flex items-center justify-center">
+                             <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1e4989cc-80c7-45b1-9eb3-3f72b473d778_320w.jpg" class="w-full h-full object-cover" alt="Timber Texture">
+                        </div>
+                        <div>
+                            <iconify-icon icon="solar:tree-linear" width="32" class="text-white/60 mb-1"></iconify-icon>
+                            <h4 class="text-xl text-white font-bricolage font-light">Oxidized Copper</h4>
+                            <p class="text-xs text-white/40 mt-1 uppercase tracking-wider">Patina Green</p>
+                        </div>
+                    </div>
+
+                    <!-- Tech Specs -->
+                    <div class="col-span-1 md:col-span-6 grid grid-cols-3 gap-y-4 gap-x-2 border-l border-white/10 pl-6">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 text-white/50 text-xs uppercase tracking-wide">
+                                <iconify-icon icon="solar:clock-circle-linear" width="14"></iconify-icon> Life
+                            </div>
+                            <span class="text-white text-sm">100+ Years</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 text-white/50 text-xs uppercase tracking-wide">
+                                <iconify-icon icon="solar:check-circle-linear" width="14"></iconify-icon> Recycled
+                            </div>
+                            <span class="text-white text-sm">95% Content</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-1.5 text-white/50 text-xs uppercase tracking-wide">
+                                <iconify-icon icon="solar:umbrella-linear" width="14"></iconify-icon> Coating
+                            </div>
+                            <span class="text-white text-sm">Self-Healing</span>
+                        </div>
+                        <div class="col-span-3 mt-2">
+                             <div class="flex items-center justify-between text-xs text-white/30 mb-1">
+                                 <span>Reflectivity Index</span>
+                                 <span>Solar Gain</span>
+                             </div>
+                             <div class="w-full h-8 flex items-end gap-0.5 opacity-50">
+                                 <div class="w-1 bg-white h-[50%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[52%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[55%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[58%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[60%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[60%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[60%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[58%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[55%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[52%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[50%] rounded-t-sm"></div>
+                                 <div class="w-1 bg-white h-[48%] rounded-t-sm"></div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Price & Action -->
+                    <div class="col-span-1 md:col-span-2 flex items-center justify-between md:justify-end gap-6">
+                        <span class="text-xl font-serif italic text-white">Tier A</span>
+                        <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors group-hover:border-white">
+                            <iconify-icon icon="solar:file-download-linear" width="18"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </section>
+
+    <!-- Careers Section (Dark) -->
+    <section id="careers" class="bg-neutral-950 border-t border-white/5 py-24 px-6 relative">
+        <div class="w-full max-w-7xl mx-auto relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8 animate-on-scroll [animation:animationIn_0.8s_ease-out_0.2s_both]">
+                <div>
+                    <span class="text-xs uppercase tracking-[0.3em] text-neutral-400 font-medium mb-4 block">Opportunities</span>
+                    <h2 class="text-5xl md:text-6xl leading-[0.95] tracking-tighter font-bricolage font-light text-white">
+                        Shape the <br>
+                        <span class="text-white/50 font-bricolage font-light">Skyline.</span>
+                    </h2>
+                </div>
+                <p class="text-white/60 text-lg max-w-md font-light border-l border-white/10 pl-6">
+                    We are searching for minds that refuse to accept the standard geometry of today.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                
+                <!-- Job List -->
+                <div class="lg:col-span-8 flex flex-col gap-3">
+                    
+                    <!-- Job Item 1 -->
+                    <div class="group grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all duration-300 cursor-pointer animate-on-scroll">
+                        <div class="col-span-1 md:col-span-6 flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white shrink-0 border border-white/10 group-hover:bg-white group-hover:text-black transition-colors">
+                                <iconify-icon icon="solar:ruler-pen-linear" width="22"></iconify-icon>
+                            </div>
+                            <div>
+                                <h4 class="text-lg text-white font-bricolage font-normal group-hover:translate-x-1 transition-transform">Design Principal</h4>
+                                <div class="flex items-center gap-3 mt-1 text-sm text-white/40">
+                                    <span class="flex items-center gap-1"><iconify-icon icon="solar:map-point-linear" width="12"></iconify-icon> London</span>
+                                    <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                                    <span>Creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1 md:col-span-4 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full border border-white/10 text-[11px] uppercase tracking-wider text-white/60 bg-white/5">Full-time</span>
+                        </div>
+                        <div class="col-span-1 md:col-span-2 flex justify-end">
+                            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/50 group-hover:text-white group-hover:border-white transition-all">
+                                <iconify-icon icon="solar:arrow-right-linear" width="20"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Job Item 2 -->
+                    <div class="group grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all duration-300 cursor-pointer animate-on-scroll">
+                        <div class="col-span-1 md:col-span-6 flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white shrink-0 border border-white/10 group-hover:bg-white group-hover:text-black transition-colors">
+                                <iconify-icon icon="solar:sofa-linear" width="22"></iconify-icon>
+                            </div>
+                            <div>
+                                <h4 class="text-lg text-white font-bricolage font-normal group-hover:translate-x-1 transition-transform">Atmosphere Director</h4>
+                                <div class="flex items-center gap-3 mt-1 text-sm text-white/40">
+                                    <span class="flex items-center gap-1"><iconify-icon icon="solar:map-point-linear" width="12"></iconify-icon> Global</span>
+                                    <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                                    <span>Interiors</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1 md:col-span-4 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full border border-white/10 text-[11px] uppercase tracking-wider text-white/60 bg-white/5">Contract</span>
+                        </div>
+                        <div class="col-span-1 md:col-span-2 flex justify-end">
+                            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/50 group-hover:text-white group-hover:border-white transition-all">
+                                <iconify-icon icon="solar:arrow-right-linear" width="20"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Job Item 3 -->
+                    <div class="group grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all duration-300 cursor-pointer animate-on-scroll">
+                        <div class="col-span-1 md:col-span-6 flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white shrink-0 border border-white/10 group-hover:bg-white group-hover:text-black transition-colors">
+                                <iconify-icon icon="solar:clipboard-check-linear" width="22"></iconify-icon>
+                            </div>
+                            <div>
+                                <h4 class="text-lg text-white font-bricolage font-normal group-hover:translate-x-1 transition-transform">Site Lead</h4>
+                                <div class="flex items-center gap-3 mt-1 text-sm text-white/40">
+                                    <span class="flex items-center gap-1"><iconify-icon icon="solar:map-point-linear" width="12"></iconify-icon> Dubai</span>
+                                    <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                                    <span>Engineering</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1 md:col-span-4 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full border border-white/10 text-[11px] uppercase tracking-wider text-white/60 bg-white/5">Project</span>
+                        </div>
+                        <div class="col-span-1 md:col-span-2 flex justify-end">
+                             <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/50 group-hover:text-white group-hover:border-white transition-all">
+                                <iconify-icon icon="solar:arrow-right-linear" width="20"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Filters -->
+                <div class="lg:col-span-4 pl-0 lg:pl-12">
+                    <div class="bg-white/5 border border-white/5 rounded-3xl p-8 sticky top-32 backdrop-blur-md">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-white font-bricolage font-light text-xl">Refine Search</h3>
+                            <button class="text-xs text-white/40 hover:text-white transition-colors underline">Clear</button>
+                        </div>
+
+                        <!-- Department -->
+                        <div class="mb-8">
+                            <h4 class="text-xs uppercase tracking-widest text-white/40 font-medium mb-4">Focus Area</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 group cursor-pointer">
+                                    <div class="relative flex items-center justify-center">
+                                        <input type="checkbox" checked="" class="peer appearance-none w-5 h-5 rounded border border-white/20 checked:bg-white checked:border-white transition-colors">
+                                        <iconify-icon icon="solar:check-read-linear" class="absolute text-black opacity-0 peer-checked:opacity-100 pointer-events-none" width="14"></iconify-icon>
+                                    </div>
+                                    <span class="text-white/70 group-hover:text-white transition-colors text-sm">Design (5)</span>
+                                </label>
+                                <label class="flex items-center gap-3 group cursor-pointer">
+                                    <div class="relative flex items-center justify-center">
+                                        <input type="checkbox" class="peer appearance-none w-5 h-5 rounded border border-white/20 checked:bg-white checked:border-white transition-colors">
+                                        <iconify-icon icon="solar:check-read-linear" class="absolute text-black opacity-0 peer-checked:opacity-100 pointer-events-none" width="14"></iconify-icon>
+                                    </div>
+                                    <span class="text-white/70 group-hover:text-white transition-colors text-sm">Tech (2)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="">
+                            <h4 class="text-xs uppercase tracking-widest text-white/40 font-medium mb-4">Region</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 group cursor-pointer">
+                                    <div class="relative flex items-center justify-center">
+                                        <input type="radio" name="location" checked="" class="peer appearance-none w-5 h-5 rounded-full border border-white/20 checked:border-white transition-colors">
+                                        <div class="absolute w-2.5 h-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                                    </div>
+                                    <span class="text-white/70 group-hover:text-white transition-colors text-sm">Global</span>
+                                </label>
+                                <label class="flex items-center gap-3 group cursor-pointer">
+                                    <div class="relative flex items-center justify-center">
+                                        <input type="radio" name="location" class="peer appearance-none w-5 h-5 rounded-full border border-white/20 checked:border-white transition-colors">
+                                        <div class="absolute w-2.5 h-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                                    </div>
+                                    <span class="text-white/70 group-hover:text-white transition-colors text-sm">HQ Only</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="methodology" class="bg-[#f8f8f8] text-neutral-900 py-32 px-6 relative border-t border-neutral-200">
+        <div class="w-full max-w-7xl mx-auto relative z-10">
+            
+            <div class="flex flex-col items-center text-center mb-24 animate-on-scroll">
+                <span class="text-xs uppercase tracking-[0.3em] text-neutral-400 font-medium mb-4 block">Core Principles</span>
+                <h2 class="text-4xl md:text-5xl font-bricolage font-light text-neutral-900 mb-6">The Methodology</h2>
+                <p class="text-neutral-500 text-lg max-w-xl font-light">From abstract thought to concrete reality, our workflow is a disciplined reduction of chaos.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                
+                <!-- Step 1 -->
+                <div class="group bg-white rounded-3xl p-8 border border-neutral-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-on-scroll [animation-delay:0.1s]">
+                    <div class="w-14 h-14 rounded-2xl bg-neutral-100 text-neutral-900 flex items-center justify-center mb-6 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
+                        <iconify-icon icon="solar:chat-line-linear" width="28"></iconify-icon>
+                    </div>
+                    <span class="block text-xs font-bold text-neutral-400 mb-2 uppercase tracking-wider">Phase I</span>
+                    <h3 class="text-xl font-bricolage font-medium mb-3">Discovery</h3>
+                    <p class="text-sm text-neutral-500 leading-relaxed">Uncovering the hidden potential of the site and the unspoken desires of the inhabitant.</p>
+                </div>
+
+                <!-- Step 2 -->
+                 <div class="group bg-white rounded-3xl p-8 border border-neutral-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-on-scroll [animation-delay:0.2s]">
+                    <div class="w-14 h-14 rounded-2xl bg-neutral-100 text-neutral-900 flex items-center justify-center mb-6 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
+                        <iconify-icon icon="solar:pen-new-square-linear" width="28"></iconify-icon>
+                    </div>
+                    <span class="block text-xs font-bold text-neutral-400 mb-2 uppercase tracking-wider">Phase II</span>
+                    <h3 class="text-xl font-bricolage font-medium mb-3">Blueprint</h3>
+                    <p class="text-sm text-neutral-500 leading-relaxed">Translating philosophy into geometry. The first lines are drawn not on paper, but in the mind.</p>
+                </div>
+
+                <!-- Step 3 -->
+                 <div class="group bg-white rounded-3xl p-8 border border-neutral-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-on-scroll [animation-delay:0.3s]">
+                    <div class="w-14 h-14 rounded-2xl bg-neutral-100 text-neutral-900 flex items-center justify-center mb-6 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
+                        <iconify-icon icon="solar:documents-linear" width="28"></iconify-icon>
+                    </div>
+                    <span class="block text-xs font-bold text-neutral-400 mb-2 uppercase tracking-wider">Phase III</span>
+                    <h3 class="text-xl font-bricolage font-medium mb-3">Synthesis</h3>
+                    <p class="text-sm text-neutral-500 leading-relaxed">Merging structural integrity with aesthetic purity. Every joint and junction is calculated.</p>
+                </div>
+
+                <!-- Step 4 -->
+                 <div class="group bg-white rounded-3xl p-8 border border-neutral-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-on-scroll [animation-delay:0.4s]">
+                    <div class="w-14 h-14 rounded-2xl bg-neutral-100 text-neutral-900 flex items-center justify-center mb-6 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
+                        <iconify-icon icon="solar:hammer-2-linear" width="28"></iconify-icon>
+                    </div>
+                    <span class="block text-xs font-bold text-neutral-400 mb-2 uppercase tracking-wider">Phase IV</span>
+                    <h3 class="text-xl font-bricolage font-medium mb-3">Execution</h3>
+                    <p class="text-sm text-neutral-500 leading-relaxed">The final act of creation. Where our vision becomes your permanent reality.</p>
+                </div>
+
+            </div>
+
+            <div class="mt-20 text-center animate-on-scroll">
+                <a href="#" class="inline-flex items-center gap-2 text-neutral-900 border-b border-neutral-900 pb-0.5 hover:text-neutral-600 hover:border-neutral-600 transition-colors">
+                    Initiate Collaboration
+                    <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-16 px-6 border-t border-white/10 relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black">
+                        <iconify-icon icon="solar:infinity-bold" width="18"></iconify-icon>
+                    </div>
+                    <h2 class="text-2xl font-bricolage font-semibold">Velos</h2>
+                </div>
+                <p class="text-white/50 max-w-xs mb-8">Architecting the void. We build for the next century, using the materials of the past.</p>
+                
+                <div class="flex gap-4">
+                     <input type="email" placeholder="Email address" class="bg-white/5 border border-white/10 rounded-full px-6 py-3 w-64 focus:outline-none focus:border-white/30 transition-colors placeholder:text-white/20">
+                     <button class="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-neutral-200 transition-colors">Connect</button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-4">
+                <h4 class="font-medium text-lg mb-2">Velos</h4>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Manifesto</a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Collective</a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Recognition</a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Newsroom</a>
+            </div>
+            
+            <div class="flex flex-col gap-4">
+                <h4 class="font-medium text-lg mb-2">Works</h4>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Private Estates</a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Corporate Spires</a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Civic Spaces</a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">Contact</a>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-white/40">
+            <p>© 2024 Velos Group. All rights reserved.</p>
+            <div class="flex gap-6 mt-4 md:mt-0">
+                </div></div></footer></body></html>

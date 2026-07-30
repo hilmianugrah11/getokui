@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian — The Unified API Gateway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@property --gradient-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@property --shimmer-pos{syntax:'<percentage>';initial-value:-100%;inherits:false}
+@property --border-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@property --mouse-x{syntax:'<length>';initial-value:0px;inherits:false}
+@property --mouse-y{syntax:'<length>';initial-value:0px;inherits:false}
+@property --glow-opacity{syntax:'<number>';initial-value:0;inherits:false}
+:root{
+--bg:#08090E;
+--bg-1:#0C0D14;
+--bg-card:rgba(16,17,27,0.65);
+--text:#f0f0f5;
+--text-muted:#9BA3B5;
+--text-dim:#4A5168;
+--accent:#06B6D4;
+--accent2:#22D3EE;
+--accent3:#0EA5E9;
+--border:rgba(6,182,212,0.10);
+--border-h:rgba(6,182,212,0.28);
+--glow:rgba(6,182,212,0.06);
+--max-w:1100px;
+}
+html{scroll-behavior:initial}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:clip;-webkit-font-smoothing:antialiased}
+html{overflow-x:clip}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+/* Noise */
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.03;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* ─── SCROLL PROGRESS BAR ─── */
+.scroll-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));z-index:1001;width:0%;transition:none;box-shadow:0 0 8px var(--accent)}
+/* ─── DOT GRID ─── */
+.dot-bg::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+background:radial-gradient(rgba(6,182,212,0.06) 1px, transparent 1px);
+background-size:24px 24px;
+mask-image:radial-gradient(ellipse 60% 50% at 50% 50%, black, transparent);
+-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 50%, black, transparent);
+}
+/* ─── MAGNETIC BUTTON WRAPPER ─── */
+.magnetic{display:inline-block;transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)}
+/* ─── RIPPLE EFFECT ─── */
+.ripple{position:relative;overflow:hidden}
+.ripple .ripple-circle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.15);transform:scale(0);animation:rippleAnim 0.6s ease-out forwards;pointer-events:none}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0}}
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(8,9,14,0.8);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:1.05rem;letter-spacing:-0.02em}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:0.82rem;color:var(--text-muted);transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.nav-cta{font-size:0.8rem;padding:7px 18px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:600;transition:box-shadow 0.3s,transform 0.2s}
+.nav-links a.nav-cta:hover{color:#fff;box-shadow:0 0 24px rgba(6,182,212,0.5);transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1001}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text-muted);transition:all 0.3s}
+.mobile-menu{display:none;position:fixed;inset:0;background:rgba(8,9,14,0.97);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:1.1rem;color:var(--text-muted)}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+@media(max-width:768px){.nav-links{display:none}.hamburger{display:flex}}
+/* ─── HERO ─── */
+.hero{height:100vh;padding:80px 24px 0;position:relative;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;text-align:center;padding-top:110px}
+/* Aurora — colored blobs blurred by parent */
+.hero-aurora{position:absolute;inset:-50%;z-index:0;filter:blur(120px)}
+.hero-aurora .blob{position:absolute;border-radius:50%}
+.hero-aurora .blob-1{width:55%;height:55%;top:5%;left:10%;background:rgba(6,182,212,0.3);animation:blobDrift1 14s ease-in-out infinite alternate}
+.hero-aurora .blob-2{width:50%;height:50%;bottom:5%;right:10%;background:rgba(34,211,238,0.25);animation:blobDrift2 18s ease-in-out infinite alternate}
+.hero-aurora .blob-3{width:45%;height:60%;top:20%;right:25%;background:rgba(14,165,233,0.2);animation:blobDrift3 16s ease-in-out infinite alternate}
+@keyframes blobDrift1{0%{transform:translate(0,0)}50%{transform:translate(8%,12%)}100%{transform:translate(-5%,6%)}}
+@keyframes blobDrift2{0%{transform:translate(0,0)}50%{transform:translate(-10%,-8%)}100%{transform:translate(6%,-12%)}}
+@keyframes blobDrift3{0%{transform:translate(0,0)}50%{transform:translate(6%,-10%)}100%{transform:translate(-8%,5%)}}
+/* Shooting stars — fall from upper-right to lower-left */
+.meteors{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.meteor{position:absolute;width:1.5px;height:100px;background:linear-gradient(to bottom,transparent,rgba(6,182,212,0.15) 60%,rgba(6,182,212,0.7));transform:rotate(45deg);animation:meteorFall linear infinite;opacity:0;border-radius:1px}
+.meteor::after{content:'';position:absolute;bottom:-2px;left:-1.5px;width:4px;height:4px;background:#fff;border-radius:50%;box-shadow:0 0 6px 2px rgba(6,182,212,0.8),0 0 12px rgba(6,182,212,0.4)}
+@keyframes meteorFall{
+0%{transform:rotate(45deg) translateY(-300px);opacity:0}
+2%{opacity:0}
+4%{opacity:0.8}
+8%{opacity:1}
+20%{opacity:0.9}
+30%{opacity:0.4}
+40%{opacity:0;transform:rotate(45deg) translateY(800px)}
+100%{opacity:0;transform:rotate(45deg) translateY(800px)}
+}
+/* Constellation canvas */
+.hero-canvas{position:absolute;inset:0;z-index:1;pointer-events:none}
+/* Morphing blob */
+.hero-morph{position:absolute;width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;opacity:0.12;
+background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));
+border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;
+animation:morphBlob 12s ease-in-out infinite;
+filter:blur(60px);
+}
+@keyframes morphBlob{
+0%{border-radius:30% 70% 70% 30% / 30% 30% 70% 70%}
+25%{border-radius:58% 42% 75% 25% / 76% 46% 54% 24%}
+50%{border-radius:50% 50% 33% 67% / 55% 27% 73% 45%}
+75%{border-radius:33% 67% 58% 42% / 63% 68% 32% 37%}
+100%{border-radius:30% 70% 70% 30% / 30% 30% 70% 70%}
+}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to bottom,transparent,var(--bg));z-index:2}
+.hero-content{position:relative;z-index:3;max-width:720px}
+/* Hero headline */
+.hero h1{font-size:4rem;font-weight:200;line-height:1.15;letter-spacing:-0.03em;margin-bottom:8px}
+.hero h1 .char{display:inline-block}
+.hero h1 .whitespace{width:0.25em}
+/* Gradient shimmer text */
+.shimmer-text{background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3),var(--accent2),var(--accent));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmerText 4s ease-in-out infinite}
+@keyframes shimmerText{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+/* Flip words */
+.flip-words{display:inline-block;position:relative;height:1.15em;overflow:hidden;vertical-align:bottom;opacity:0;transform:translateY(20px)}
+.flip-words>span{display:block;height:1.15em;animation:flipWord 9s infinite;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:600}
+@keyframes flipWord{
+0%,20%{transform:translateY(0)}
+25%,45%{transform:translateY(-1.15em)}
+50%,70%{transform:translateY(-2.3em)}
+75%,95%{transform:translateY(-3.45em)}
+100%{transform:translateY(-4.6em)}
+}
+.hero .subtitle{font-size:1.05rem;color:var(--text-muted);max-width:540px;margin:20px auto 32px;line-height:1.7;font-weight:300}
+/* Hero CTA buttons */
+.hero-ctas{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:32px}
+/* Primary CTA — gradient fill with glow aura + shimmer sweep */
+.cta-primary{position:relative;padding:15px 36px;border-radius:12px;font-size:0.92rem;font-weight:600;color:white;background:linear-gradient(135deg,var(--accent),var(--accent2));display:inline-flex;align-items:center;gap:8px;transition:all 0.3s;z-index:1;box-shadow:0 4px 20px rgba(6,182,212,0.3),0 0 40px rgba(6,182,212,0.1);overflow:hidden}
+.cta-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,0.25) 50%,transparent 70%);transform:translateX(-100%);transition:transform 0.6s}
+.cta-primary:hover::before{transform:translateX(100%)}
+.cta-primary::after{content:'';position:absolute;inset:-3px;border-radius:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));z-index:-1;filter:blur(12px);opacity:0.5;transition:opacity 0.3s}
+.cta-primary:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 40px rgba(6,182,212,0.5),0 0 60px rgba(6,182,212,0.2)}
+.cta-primary:hover::after{opacity:0.8}
+.cta-primary svg{width:16px;height:16px;transition:transform 0.3s}
+.cta-primary:hover svg{transform:translateX(3px)}
+/* Secondary CTA — glass with glow ring */
+.cta-glass{padding:15px 36px;border-radius:12px;font-size:0.92rem;font-weight:500;color:var(--text-muted);border:1px solid rgba(6,182,212,0.15);background:rgba(16,17,27,0.5);backdrop-filter:blur(16px);transition:all 0.4s;display:inline-flex;align-items:center;gap:8px;position:relative;overflow:hidden}
+.cta-glass::before{content:'';position:absolute;inset:-1px;border-radius:13px;background:conic-gradient(from var(--gradient-angle),rgba(6,182,212,0.3),transparent 40%,transparent 60%,rgba(34,211,238,0.2));opacity:0;transition:opacity 0.4s;z-index:-1;animation:spinBorder 4s linear infinite}
+.cta-glass:hover{color:var(--text);border-color:rgba(6,182,212,0.3);box-shadow:0 0 30px rgba(6,182,212,0.15),inset 0 0 20px rgba(6,182,212,0.03);background:rgba(6,182,212,0.06)}
+.cta-glass:hover::before{opacity:1}
+.cta-glass svg{width:14px;height:14px;opacity:0.5;transition:opacity 0.3s}
+.cta-glass:hover svg{opacity:1}
+@keyframes spinBorder{to{--gradient-angle:360deg}}
+/* ─── HERO APP WINDOW ─── */
+.hero-app-wrap{position:relative;z-index:10;max-width:1100px;margin:-280px auto 0;padding:0 24px}
+.hero-app{border-radius:16px 16px 0 0;overflow:hidden;border:1px solid rgba(6,182,212,0.12);border-bottom:none;background:#0A0B12;box-shadow:0 -20px 80px rgba(0,0,0,0.5),0 0 120px rgba(6,182,212,0.06);position:relative}
+.hero-app::before{content:'';position:absolute;inset:-1px;border-radius:17px 17px 0 0;background:conic-gradient(from var(--border-angle),rgba(6,182,212,0.2),transparent 20%,transparent 80%,rgba(34,211,238,0.15));z-index:-1;animation:borderSweep 8s linear infinite}
+@keyframes borderSweep{to{--border-angle:360deg}}
+.hero-app .app-chrome{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(16,17,27,0.95);border-bottom:1px solid rgba(6,182,212,0.06)}
+.hero-app .app-chrome .dots{display:flex;gap:6px}
+.hero-app .app-chrome .dots span{width:10px;height:10px;border-radius:50%}
+.hero-app .app-chrome .dots span:nth-child(1){background:#ff5f57}
+.hero-app .app-chrome .dots span:nth-child(2){background:#febc2e}
+.hero-app .app-chrome .dots span:nth-child(3){background:#28c840}
+.hero-app .app-chrome .url-bar{flex:1;margin:0 12px;padding:5px 14px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);font-size:0.62rem;color:var(--text-dim);font-family:'SF Mono','Fira Code',monospace;display:flex;align-items:center;gap:6px}
+.hero-app .app-chrome .url-bar .lock{color:var(--accent);font-size:0.55rem}
+.hero-app .app-chrome .chrome-actions{display:flex;gap:8px}
+.hero-app .app-chrome .chrome-actions span{width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center}
+.hero-app .app-chrome .chrome-actions svg{width:10px;height:10px;color:var(--text-dim)}
+/* App layout */
+.app-layout{display:grid;grid-template-columns:52px 1fr 280px;min-height:460px}
+/* Sidebar */
+.app-sidebar{background:rgba(12,13,22,0.95);border-right:1px solid rgba(6,182,212,0.06);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:6px}
+.app-sidebar .sb-item{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:all 0.2s;cursor:default}
+.app-sidebar .sb-item.active{background:rgba(6,182,212,0.12);color:var(--accent)}
+.app-sidebar .sb-item svg{width:16px;height:16px}
+.app-sidebar .sb-sep{width:24px;height:1px;background:rgba(255,255,255,0.04);margin:4px 0}
+/* Main content */
+.app-main{padding:16px 20px;overflow:hidden}
+.app-main .main-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.app-main .breadcrumb{font-size:0.6rem;color:var(--text-dim);display:flex;align-items:center;gap:4px;font-family:'Inter',sans-serif}
+.app-main .breadcrumb .active{color:var(--accent)}
+.app-main .main-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:12px;font-family:'Inter',sans-serif}
+.app-main .main-stats{display:flex;gap:8px;margin-bottom:14px}
+.app-main .ms{flex:1;padding:10px 12px;background:rgba(16,17,27,0.5);border:1px solid rgba(6,182,212,0.06);border-radius:8px}
+.app-main .ms .ms-val{font-size:1.1rem;font-weight:600;color:var(--accent);font-family:'Inter',sans-serif}
+.app-main .ms .ms-lbl{font-size:0.48rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;font-family:'Inter',sans-serif}
+.app-main .ms .ms-change{font-size:0.46rem;color:#10B981;margin-top:2px;font-family:'Inter',sans-serif}
+/* Route table */
+.route-table{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif}
+.route-table th{font-size:0.52rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;text-align:left;padding:6px 8px;border-bottom:1px solid rgba(6,182,212,0.06);font-weight:500}
+.route-table td{font-size:0.6rem;color:var(--text-muted);padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.02);font-weight:400}
+.route-table tr:hover td{background:rgba(6,182,212,0.02)}
+.route-table .method{padding:2px 6px;border-radius:3px;font-size:0.48rem;font-weight:600;font-family:'SF Mono','Fira Code',monospace;text-transform:uppercase}
+.route-table .method.get{background:rgba(16,185,129,0.1);color:#10B981}
+.route-table .method.post{background:rgba(59,130,246,0.1);color:#3B82F6}
+.route-table .method.put{background:rgba(245,158,11,0.1);color:#F59E0B}
+.route-table .method.del{background:rgba(239,68,68,0.1);color:#EF4444}
+.route-table .path{font-family:'SF Mono','Fira Code',monospace;color:var(--text);font-weight:500}
+.route-table .latency{font-family:'SF Mono','Fira Code',monospace;color:var(--accent)}
+.route-table .rps{font-family:'SF Mono','Fira Code',monospace}
+.route-table .status-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+.route-table .status-dot.ok{background:#10B981;box-shadow:0 0 4px rgba(16,185,129,0.5)}
+.route-table .status-dot.warn{background:#F59E0B}
+/* Right panel */
+.app-panel{background:rgba(12,13,22,0.6);border-left:1px solid rgba(6,182,212,0.06);padding:16px 14px;font-family:'Inter',sans-serif;overflow:hidden}
+.app-panel .panel-title{font-size:0.62rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.app-panel .panel-sub{font-size:0.48rem;color:var(--text-dim);margin-bottom:12px}
+.app-panel .mini-chart{height:60px;margin-bottom:12px;position:relative}
+.app-panel .mini-chart svg{width:100%;height:100%}
+.app-panel .panel-metrics{display:flex;flex-direction:column;gap:6px}
+.app-panel .pm{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:rgba(16,17,27,0.4);border:1px solid rgba(6,182,212,0.05);border-radius:5px;font-size:0.54rem}
+.app-panel .pm .pm-lbl{color:var(--text-dim)}
+.app-panel .pm .pm-val{color:var(--accent);font-weight:600;font-family:'SF Mono','Fira Code',monospace;font-size:0.52rem}
+.app-panel .pm .pm-val.green{color:#10B981}
+.app-panel .pm .pm-val.warn{color:#F59E0B}
+.app-panel .panel-log{margin-top:10px}
+.app-panel .panel-log-title{font-size:0.5rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.app-panel .panel-log-title::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);animation:livePulse 2s ease-in-out infinite}
+.app-panel .log-entry{font-size:0.48rem;font-family:'SF Mono','Fira Code',monospace;color:var(--text-dim);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;gap:4px}
+.app-panel .log-entry .log-time{color:var(--accent);min-width:42px}
+.app-panel .log-entry .log-method{font-weight:600;min-width:28px}
+.app-panel .log-entry .log-status{margin-left:auto}
+.app-panel .log-entry .log-status.s2{color:#10B981}
+.app-panel .log-entry .log-status.s4{color:#F59E0B}
+.app-panel .log-entry .log-status.s5{color:#EF4444}
+/* Bottom status bar */
+.app-statusbar{display:flex;align-items:center;gap:12px;padding:6px 16px;background:rgba(16,17,27,0.95);border-top:1px solid rgba(6,182,212,0.06);font-size:0.48rem;font-family:'Inter',sans-serif;color:var(--text-dim)}
+.app-statusbar .status-live{display:flex;align-items:center;gap:4px;color:#10B981}
+.app-statusbar .status-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#10B981;animation:livePulse 2s ease-in-out infinite}
+.app-statusbar .sep{width:1px;height:10px;background:rgba(255,255,255,0.06)}
+/* Alpha mask at bottom of window */
+.hero-app::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(to bottom,transparent,var(--bg));z-index:5;pointer-events:none}
+@media(max-width:768px){
+.hero{padding-top:100px}
+.hero h1{font-size:2.2rem}
+.hero .subtitle{font-size:0.92rem}
+.hero-ctas{flex-direction:column}
+.cta-primary,.cta-glass{width:100%;justify-content:center}
+.hero-morph{width:300px;height:300px}
+/* Hero app window */
+.hero-app-wrap{margin-top:-60px;padding:0 12px}
+.app-layout{grid-template-columns:1fr;min-height:auto}
+.app-sidebar,.app-panel{display:none}
+.app-main{padding:12px 14px}
+.app-main .main-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.route-table th:nth-child(3),.route-table td:nth-child(3),
+.route-table th:nth-child(5),.route-table td:nth-child(5),
+.route-table th:nth-child(6),.route-table td:nth-child(6){display:none}
+.route-table th,.route-table td{padding:6px 6px;font-size:0.54rem}
+.hero-app .app-chrome .chrome-actions{display:none}
+.hero-app .app-chrome .url-bar{font-size:0.54rem;margin-right:0}
+.app-statusbar{font-size:0.42rem;gap:6px;padding:5px 10px}
+}
+/* ─── LOGO BAR ─── */
+.logo-bar{padding:40px 0;overflow:hidden}
+.logo-bar-label{text-align:center;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.14em;color:var(--text-dim);margin-bottom:20px}
+.logo-wrap{position:relative;max-width:var(--max-w);margin:0 auto;overflow:hidden}
+.logo-wrap::before,.logo-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.logo-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.logo-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.logo-track{display:flex;gap:48px;animation:scrollMarquee 25s linear infinite;width:max-content;align-items:center;will-change:transform;backface-visibility:hidden}
+.logo-wrap:hover .logo-track{animation-play-state:paused}
+.logo-track span{font-size:0.88rem;color:var(--text-dim);font-weight:500;white-space:nowrap;opacity:0.5;transition:opacity 0.3s}
+.logo-track span:hover{opacity:1}
+@keyframes scrollMarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* ─── SHARED ─── */
+/* Section dividers — subtle dark curve */
+.section-divider{width:100%;height:48px;position:relative;overflow:hidden}
+.section-divider svg{position:absolute;bottom:0;width:100%;height:48px}
+.section-divider path{fill:var(--bg-1)}
+.section-divider.flip svg{transform:rotate(180deg)}
+.section-divider.flip path{fill:var(--bg)}
+.eyebrow{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);margin-bottom:12px;font-weight:500}
+.section-head h2{font-size:2.6rem;font-weight:200;line-height:1.12;letter-spacing:-0.04em;margin-bottom:14px}
+.section-head h2 .grad{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-head p{font-size:0.92rem;color:var(--text-muted);max-width:520px;font-weight:300;line-height:1.7}
+.wrap{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+/* ─── TEXT REVEAL (aura-compatible: opacity+transform only) ─── */
+.text-reveal{opacity:0;transform:translateY(12px);transition:opacity 0.8s cubic-bezier(0.77,0,0.175,1),transform 0.8s cubic-bezier(0.77,0,0.175,1)}
+.text-reveal.revealed{opacity:1;transform:none}
+/* ─── SPOTLIGHT HOVER ─── */
+.spotlight-container{position:relative}
+.spotlight-container .bento-card::before,
+.spotlight-container .c-card::before,
+.spotlight-container .testi-card::before{
+content:'';position:absolute;inset:0;border-radius:inherit;
+background:radial-gradient(circle 280px at var(--mouse-x) var(--mouse-y), rgba(6,182,212,0.1), transparent 60%);
+opacity:var(--glow-opacity,0);transition:opacity 0.4s;pointer-events:none;z-index:1;
+filter:blur(20px);
+}
+/* ─── BENTO GRID ─── */
+.bento{padding:100px 24px;position:relative;background:var(--bg-1)}
+.bento .section-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(6,182,212,0.05),transparent 70%);pointer-events:none;filter:blur(40px)}
+.bento-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:16px;margin-top:48px}
+.bento-card{background:var(--bg-card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:14px;padding:24px 22px;position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;display:flex;flex-direction:column}
+.bento-card:hover{border-color:var(--border-h);transform:translateY(-4px);box-shadow:0 20px 60px rgba(6,182,212,0.15),0 0 30px rgba(6,182,212,0.08)}
+/* Animated gradient border on hover */
+.bento-card::after{content:'';position:absolute;inset:-1px;border-radius:14px;
+background:conic-gradient(from var(--border-angle),rgba(6,182,212,0.35),transparent 25%,transparent 75%,rgba(34,211,238,0.25));
+opacity:0;transition:opacity 0.4s;pointer-events:none;
+mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+mask-composite:exclude;-webkit-mask-composite:xor;padding:1px;
+animation:borderSweep 4s linear infinite;
+}
+.bento-card:hover::after{opacity:1}
+/* No .large span — clean 3x2 grid, no orphans */
+.bento-card .card-icon{width:40px;height:40px;border-radius:10px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:transform 0.3s,box-shadow 0.3s}
+.bento-card:hover .card-icon{transform:scale(1.1);box-shadow:0 0 20px rgba(6,182,212,0.2)}
+.bento-card .card-icon svg{width:20px;height:20px;color:var(--accent)}
+.bento-card h3{font-size:1.05rem;font-weight:600;margin-bottom:8px;position:relative;z-index:2}
+.bento-card p{font-size:0.82rem;color:var(--text-muted);line-height:1.65;font-weight:300;position:relative;z-index:2}
+/* Card widget — inner UI panel at bottom */
+.card-widget{margin-top:auto;padding-top:16px;position:relative;z-index:2}
+.card-widget-inner{background:rgba(8,9,14,0.7);border:1px solid rgba(6,182,212,0.08);border-radius:10px;padding:14px 16px;font-family:'SF Mono','Fira Code',monospace;font-size:0.7rem;position:relative;overflow:hidden}
+/* Alpha mask fade at bottom of widget */
+.card-widget-inner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,rgba(8,9,14,0.9));pointer-events:none}
+.card-widget .widget-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim)}
+.card-widget .widget-header .live{display:flex;align-items:center;gap:5px;color:var(--accent);font-weight:500}
+.card-widget .widget-header .live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--accent)}50%{opacity:0.4;box-shadow:none}}
+/* Bar chart rows */
+.widget-bars{display:flex;align-items:flex-end;gap:3px;height:48px}
+.widget-bars .bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(to top,var(--accent),var(--accent2));opacity:0.7;transition:opacity 0.2s}
+.bento-card:hover .widget-bars .bar{opacity:1}
+/* Status rows */
+.widget-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.68rem;color:var(--text-dim)}
+.widget-row:last-child{border-bottom:none}
+.widget-row .label{color:var(--text-muted);font-family:'Inter',sans-serif;font-weight:400}
+.widget-row .val{color:var(--accent);font-weight:600}
+.widget-row .val.warn{color:#F59E0B}
+/* Progress bar */
+.widget-progress{height:3px;border-radius:2px;background:rgba(255,255,255,0.06);margin-top:4px;overflow:hidden}
+.widget-progress .fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.widget-progress .fill.warn{background:linear-gradient(90deg,#F59E0B,#F97316)}
+/* Alert badge */
+.widget-alert{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.1);font-size:0.65rem;color:var(--accent);margin-top:8px;font-family:'Inter',sans-serif}
+.widget-alert.threat{color:#EF4444;background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.12)}
+.widget-alert::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+/* Log lines */
+.widget-log{font-size:0.62rem;color:var(--text-dim);line-height:1.8}
+.widget-log .ts{color:var(--accent);margin-right:6px}
+.widget-log .method{color:var(--accent2);font-weight:500}
+/* Plugin row */
+.widget-plugin{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.68rem;font-family:'Inter',sans-serif}
+.widget-plugin .pill{padding:2px 8px;border-radius:4px;background:rgba(6,182,212,0.1);color:var(--accent);font-size:0.58rem;font-weight:500;font-family:'SF Mono','Fira Code',monospace}
+/* Edge node grid */
+.widget-nodes{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+.widget-nodes .node{width:100%;aspect-ratio:1;border-radius:3px;background:rgba(6,182,212,0.15);position:relative}
+.widget-nodes .node.active{background:var(--accent);box-shadow:0 0 6px rgba(6,182,212,0.4)}
+.widget-nodes .node.warn{background:#F59E0B}
+@media(max-width:1023px){.bento-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+.bento-grid{grid-template-columns:1fr}
+}
+/* ─── CAROUSEL ─── */
+.showcase{padding:100px 24px 80px;position:relative}
+.showcase .section-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(6,182,212,0.04),transparent 70%);pointer-events:none}
+.showcase-head{max-width:var(--max-w);margin:0 auto 32px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;z-index:2}
+.carousel-nav{display:flex;gap:8px}
+.carousel-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.3s;background:rgba(16,17,27,0.5)}
+.carousel-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 16px rgba(6,182,212,0.2)}
+.carousel-wrap{position:relative;max-width:calc(var(--max-w) + 200px);margin:0 auto;overflow:hidden}
+.carousel-wrap::before,.carousel-wrap::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:3;pointer-events:none}
+.carousel-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.carousel-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.carousel-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:0 max(24px,calc((100vw - var(--max-w))/2));scrollbar-width:none}
+.carousel-track::-webkit-scrollbar{display:none}
+.c-card{flex-shrink:0;border-radius:12px;border:1px solid rgba(6,182,212,0.08);background:var(--bg-1);overflow:hidden;scroll-snap-align:start;transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);position:relative;will-change:transform}
+.c-card:hover{transform:scale(1.02) translateY(-4px);border-color:var(--border-h);box-shadow:0 20px 60px rgba(6,182,212,0.12)}
+.c-card.wide{width:680px;height:380px}
+.c-card.narrow{width:340px;height:380px}
+.c-card img{width:100%;height:100%;object-fit:cover;filter:saturate(0.85) contrast(1.1);transition:transform 0.6s}
+.c-card:hover img{transform:scale(1.05)}
+.c-card .overlay{position:absolute;bottom:0;left:0;right:0;padding:24px 28px;background:linear-gradient(to top,rgba(8,9,14,0.95) 30%,transparent);z-index:2}
+.c-card .overlay h3{font-size:1rem;font-weight:500;margin-bottom:4px}
+.c-card .overlay p{font-size:0.8rem;color:var(--text-muted);font-weight:300;line-height:1.5}
+.c-card .product-ui{position:absolute;inset:0}
+@media(max-width:768px){
+.c-card.wide{width:85vw;height:280px}
+.c-card.narrow{width:75vw;height:280px}
+.showcase-head{flex-direction:column;align-items:flex-start}
+}
+/* ─── PRODUCT UI ILLUSTRATIONS ─── */
+.product-ui{width:100%;height:100%;background:#0A0B12;position:relative;overflow:hidden;display:flex;flex-direction:column;font-family:'Inter',sans-serif}
+.product-ui::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,transparent,rgba(12,13,20,0.95));z-index:3;pointer-events:none}
+.ui-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(16,17,27,0.9);border-bottom:1px solid rgba(6,182,212,0.06);flex-shrink:0;font-size:0.6rem}
+.ui-bar .dots{display:flex;gap:4px}
+.ui-bar .dots span{width:7px;height:7px;border-radius:50%}
+.ui-bar .dots span:nth-child(1){background:#ff5f57}
+.ui-bar .dots span:nth-child(2){background:#febc2e}
+.ui-bar .dots span:nth-child(3){background:#28c840}
+.ui-bar .tab{padding:3px 10px;color:var(--text-dim);border-bottom:1px solid transparent;margin-left:6px;font-size:0.56rem}
+.ui-bar .tab.active{color:var(--accent);border-color:var(--accent)}
+.ui-body{flex:1;padding:10px;position:relative;overflow:hidden}
+/* Dashboard */
+.ui-dash .sidebar{position:absolute;left:0;top:0;bottom:0;width:40px;background:rgba(16,17,27,0.5);border-right:1px solid rgba(6,182,212,0.06);display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:10px}
+.ui-dash .sidebar i{width:18px;height:18px;border-radius:5px;background:rgba(6,182,212,0.06)}
+.ui-dash .sidebar i.active{background:rgba(6,182,212,0.15);box-shadow:inset 0 0 0 1px rgba(6,182,212,0.2)}
+.ui-dash .main{margin-left:40px;padding:0 8px}
+.ui-dash .stat-row{display:flex;gap:6px;margin-bottom:8px}
+.ui-dash .stat-card{flex:1;padding:6px 8px;background:rgba(16,17,27,0.5);border:1px solid rgba(6,182,212,0.06);border-radius:5px}
+.ui-dash .stat-card .v{font-size:0.85rem;font-weight:600;color:var(--accent)}
+.ui-dash .stat-card .l{font-size:0.46rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-top:1px}
+.ui-dash .chart-box{background:rgba(16,17,27,0.3);border:1px solid rgba(6,182,212,0.06);border-radius:5px;padding:6px;position:relative}
+.ui-dash .chart-box svg{width:100%;height:120px;display:block}
+.ui-dash .chart-label{font-size:0.48rem;color:var(--text-dim);display:flex;justify-content:space-between;padding:4px 2px 0}
+/* Code editor */
+.ui-code{display:flex;height:100%}
+.ui-code .gutter{width:28px;background:rgba(16,17,27,0.4);display:flex;flex-direction:column;align-items:flex-end;padding:4px 6px 0 0;flex-shrink:0}
+.ui-code .gutter span{font-size:0.52rem;color:var(--text-dim);opacity:0.35;line-height:1.7;font-family:'SF Mono','Fira Code',monospace}
+.ui-code .lines{flex:1;padding:4px 8px;font-family:'SF Mono','Fira Code',monospace;font-size:0.58rem;line-height:1.7;overflow:hidden}
+.ui-code .lines div{white-space:nowrap}
+.ui-code .k{color:var(--accent)}
+.ui-code .s{color:var(--accent2)}
+.ui-code .n{color:#F59E0B}
+.ui-code .c{color:var(--text-dim);opacity:0.5;font-style:italic}
+.ui-code .b{color:#A78BFA}
+.ui-code .p{color:var(--text-muted)}
+/* Edge map */
+.ui-map .grid-bg{position:absolute;inset:0;background:radial-gradient(rgba(6,182,212,0.03) 1px,transparent 1px);background-size:14px 14px}
+.ui-map svg{width:100%;height:100%;position:relative;z-index:1}
+.edge-pulse{animation:ePulse 2s ease-in-out infinite}
+@keyframes ePulse{0%,100%{opacity:0.6;r:3}50%{opacity:1;r:5}}
+.edge-ring{animation:eRing 2s ease-in-out infinite;opacity:0}
+@keyframes eRing{0%{r:4;opacity:0.4}100%{r:14;opacity:0}}
+.edge-line{stroke:rgba(6,182,212,0.08);stroke-width:0.5}
+.edge-active{fill:var(--accent)}
+/* Security panel */
+.ui-sec .score-area{text-align:center;padding:12px 0 10px}
+.ui-sec .score-area svg{width:80px;height:80px;margin:0 auto;display:block}
+.ui-sec .score-num{font-size:1.1rem;font-weight:700;color:var(--accent)}
+.ui-sec .score-lbl{font-size:0.5rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+.ui-sec .items{display:flex;flex-direction:column;gap:3px;padding:0 4px}
+.ui-sec .item{display:flex;align-items:center;gap:6px;padding:5px 7px;background:rgba(16,17,27,0.4);border:1px solid rgba(6,182,212,0.05);border-radius:4px;font-size:0.54rem;color:var(--text-muted)}
+.ui-sec .item .d{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ui-sec .item .d.ok{background:#10B981}
+.ui-sec .item .d.wn{background:#F59E0B}
+.ui-sec .item .st{margin-left:auto;font-size:0.48rem;font-weight:600}
+.ui-sec .item .st.ok{color:#10B981}
+.ui-sec .item .st.wn{color:#F59E0B}
+/* Mesh topology */
+.ui-mesh svg{width:100%;height:100%}
+.mesh-box{fill:rgba(16,17,27,0.7);stroke:rgba(6,182,212,0.1);stroke-width:1;rx:6}
+.mesh-lbl{font-size:8px;fill:var(--text-muted);font-family:'Inter',sans-serif;font-weight:500;text-anchor:middle}
+.mesh-line{stroke:rgba(6,182,212,0.12);stroke-width:1;stroke-dasharray:4 3;animation:meshDash 2.5s linear infinite}
+@keyframes meshDash{to{stroke-dashoffset:-28}}
+.mesh-hub{fill:rgba(6,182,212,0.1);stroke:var(--accent);stroke-width:1.5}
+.mesh-hub-lbl{font-size:9px;fill:var(--accent);font-family:'Inter',sans-serif;font-weight:600;text-anchor:middle}
+.mesh-metric{font-size:7px;fill:var(--text-dim);font-family:'SF Mono','Fira Code',monospace;text-anchor:middle}
+.mesh-dot{fill:var(--accent);r:2}
+.mesh-dot-pulse{animation:ePulse 2s ease-in-out infinite}
+/* Bento widget animations */
+.bento-card .widget-bars .bar{transform-origin:bottom;transform:scaleY(0);transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+.bento-card.animated .widget-bars .bar{transform:scaleY(1)}
+.bento-card .widget-progress .fill{transform-origin:left;transform:scaleX(0);transition:transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)}
+.bento-card.animated .widget-progress .fill{transform:scaleX(1)}
+.bento-card .widget-row{opacity:0;transform:translateX(12px);transition:opacity 0.4s,transform 0.4s}
+.bento-card.animated .widget-row{opacity:1;transform:none}
+.bento-card .widget-plugin{opacity:0;transform:translateX(-12px);transition:opacity 0.4s,transform 0.4s}
+.bento-card.animated .widget-plugin{opacity:1;transform:none}
+.bento-card .widget-log > div{opacity:0;transform:translateY(4px);transition:opacity 0.3s,transform 0.3s}
+.bento-card.animated .widget-log > div{opacity:1;transform:none}
+.bento-card .widget-nodes .node{opacity:0;transform:scale(0);transition:opacity 0.2s,transform 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.bento-card.animated .widget-nodes .node{opacity:1;transform:scale(1)}
+.bento-card .widget-alert{opacity:0;transform:translateY(8px);transition:opacity 0.4s,transform 0.4s}
+.bento-card.animated .widget-alert{opacity:1;transform:none}
+/* Stagger delays via nth-child */
+.bento-card .widget-bars .bar:nth-child(1){transition-delay:0s}
+.bento-card .widget-bars .bar:nth-child(2){transition-delay:0.04s}
+.bento-card .widget-bars .bar:nth-child(3){transition-delay:0.08s}
+.bento-card .widget-bars .bar:nth-child(4){transition-delay:0.12s}
+.bento-card .widget-bars .bar:nth-child(5){transition-delay:0.16s}
+.bento-card .widget-bars .bar:nth-child(6){transition-delay:0.2s}
+.bento-card .widget-bars .bar:nth-child(7){transition-delay:0.24s}
+.bento-card .widget-bars .bar:nth-child(8){transition-delay:0.28s}
+.bento-card .widget-bars .bar:nth-child(9){transition-delay:0.32s}
+.bento-card .widget-bars .bar:nth-child(10){transition-delay:0.36s}
+.bento-card .widget-bars .bar:nth-child(11){transition-delay:0.4s}
+.bento-card .widget-bars .bar:nth-child(12){transition-delay:0.44s}
+.bento-card .widget-bars .bar:nth-child(13){transition-delay:0.48s}
+.bento-card .widget-bars .bar:nth-child(14){transition-delay:0.52s}
+.bento-card .widget-bars .bar:nth-child(15){transition-delay:0.56s}
+.bento-card .widget-row:nth-child(1){transition-delay:0.1s}
+.bento-card .widget-row:nth-child(2){transition-delay:0.2s}
+.bento-card .widget-row:nth-child(3){transition-delay:0.3s}
+.bento-card .widget-row:nth-child(4){transition-delay:0.4s}
+.bento-card .widget-row:nth-child(5){transition-delay:0.5s}
+.bento-card .widget-plugin:nth-child(1){transition-delay:0.1s}
+.bento-card .widget-plugin:nth-child(2){transition-delay:0.2s}
+.bento-card .widget-plugin:nth-child(3){transition-delay:0.3s}
+.bento-card .widget-plugin:nth-child(4){transition-delay:0.4s}
+.bento-card .widget-log > div:nth-child(1){transition-delay:0.15s}
+.bento-card .widget-log > div:nth-child(2){transition-delay:0.35s}
+.bento-card .widget-log > div:nth-child(3){transition-delay:0.55s}
+.bento-card .widget-log > div:nth-child(4){transition-delay:0.75s}
+.bento-card .widget-nodes .node:nth-child(n){transition-delay:calc(var(--ni,0) * 0.03s)}
+.bento-card .widget-progress{transition-delay:0.15s}
+.bento-card .widget-alert{transition-delay:0.6s}
+/* ─── BENTO AMBIENT ANIMATIONS ─── */
+.bento-card.animated .widget-bars .bar{transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1),height 1.8s ease-in-out,opacity 0.2s}
+.bento-card.animated .widget-progress .fill{position:relative;overflow:hidden}
+.bento-card.animated .widget-progress .fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.12) 50%,transparent 100%);animation:pShimmer 2.5s ease-in-out infinite}
+@keyframes pShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.widget-alert::before{animation:alertPulse 1.5s ease-in-out infinite !important}
+@keyframes alertPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.6)}}
+.bento-card.animated .widget-nodes .node.active{transition:all 0.5s;animation:nodeGlow 2s ease-in-out infinite}
+@keyframes nodeGlow{0%,100%{box-shadow:0 0 6px rgba(6,182,212,0.4)}50%{box-shadow:0 0 12px rgba(6,182,212,0.8),0 0 20px rgba(6,182,212,0.2)}}
+.bento-card.animated .widget-nodes .node.warn{animation:warnGlow 1.5s ease-in-out infinite}
+@keyframes warnGlow{0%,100%{box-shadow:0 0 6px rgba(245,158,11,0.4)}50%{box-shadow:0 0 12px rgba(245,158,11,0.8)}}
+.widget-log > div{transition:opacity 0.3s,transform 0.3s}
+.widget-row .val{transition:color 0.3s}
+/* ─── CAROUSEL AMBIENT ANIMATIONS ─── */
+.ui-code .cursor{display:inline-block;width:7px;height:1.1em;background:rgba(6,182,212,0.5);animation:curBlink 1s step-end infinite;vertical-align:text-bottom;margin-left:1px;border-radius:1px}
+@keyframes curBlink{0%,100%{opacity:1}50%{opacity:0}}
+.ui-sec .item{position:relative;overflow:hidden}
+.ui-sec .item::after{content:'';position:absolute;top:0;bottom:0;width:60%;background:linear-gradient(90deg,transparent,rgba(6,182,212,0.06),transparent);animation:secScan 4s ease-in-out infinite;transform:translateX(-100%)}
+@keyframes secScan{0%,70%{transform:translateX(-100%)}35%{transform:translateX(250%)}}
+.ui-sec .item:nth-child(2)::after{animation-delay:0.3s}
+.ui-sec .item:nth-child(3)::after{animation-delay:0.6s}
+.ui-sec .item:nth-child(4)::after{animation-delay:0.9s}
+.ui-sec .item:nth-child(5)::after{animation-delay:1.2s}
+.ui-sec .item:nth-child(6)::after{animation-delay:1.5s}
+.ui-sec .item:nth-child(7)::after{animation-delay:1.8s}
+.ui-sec .item:nth-child(8)::after{animation-delay:2.1s}
+.ui-dash .chart-box::before{content:'';position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);opacity:0.3;animation:chartScan 4s linear infinite;z-index:1}
+@keyframes chartScan{0%{left:-2px}100%{left:100%}}
+.ui-sec .score-area svg circle:nth-child(2){animation:scorePulse 3s ease-in-out infinite}
+@keyframes scorePulse{0%,100%{stroke-opacity:1}50%{stroke-opacity:0.65}}
+/* Flowing dot along edge lines */
+.edge-flow{r:2;fill:var(--accent);opacity:0}
+/* Chart line draw animation (aura-compatible: opacity only) */
+.chart-line-draw{opacity:0;animation:fadeArea 1.5s ease-out 0.5s forwards}
+.chart-area-draw{opacity:0;animation:fadeArea 1s ease-out 1.5s forwards}
+@keyframes fadeArea{to{opacity:1}}
+/* ─── COMPARISON TABLE ─── */
+.compare{padding:100px 24px;background:var(--bg-1);position:relative}
+.compare .section-glow{position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 20%,rgba(14,165,233,0.04),transparent 70%);pointer-events:none}
+.compare::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:0.025;
+background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(6,182,212,0.4) 20px,rgba(6,182,212,0.4) 21px),
+repeating-linear-gradient(-45deg,transparent,transparent 20px,rgba(6,182,212,0.4) 20px,rgba(6,182,212,0.4) 21px);
+}
+.compare-table{margin-top:48px;border:1px solid var(--border);border-radius:14px;overflow:hidden;backdrop-filter:blur(12px);background:var(--bg-card);position:relative;z-index:2}
+.compare-table table{width:100%;border-collapse:collapse}
+.compare-table th,.compare-table td{padding:16px 20px;text-align:left;border-bottom:1px solid var(--border);font-size:0.85rem;transition:all 0.25s}
+.compare-table th{font-weight:500;color:var(--text-dim);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;background:rgba(6,182,212,0.03)}
+.compare-table td{color:var(--text-muted);font-weight:300}
+.compare-table td:first-child{color:var(--text);font-weight:400}
+.compare-table td:nth-child(2),.compare-table th:nth-child(2){background:rgba(6,182,212,0.04)}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tbody tr:hover td{background:rgba(6,182,212,0.03)}
+.compare-table tbody tr:hover td:nth-child(2){background:rgba(6,182,212,0.08)}
+.compare-table tbody tr:nth-child(even) td{background:rgba(255,255,255,0.008)}
+.compare-table tbody tr:nth-child(even) td:nth-child(2){background:rgba(6,182,212,0.05)}
+.compare-table .highlight{color:var(--accent);font-weight:500}
+.compare-table .dim{color:var(--text-dim)}
+.check{color:var(--accent)}
+.cross{color:var(--text-dim);opacity:0.4}
+@media(max-width:768px){
+.compare-table{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.compare-table th:nth-child(n+4),.compare-table td:nth-child(n+4){display:none}
+.compare-table th:nth-child(3),.compare-table td:nth-child(3){display:none}
+.compare-table th,.compare-table td{padding:12px 14px;font-size:0.78rem}
+}
+/* ─── STICKY SCROLL SECTION ─── */
+.sticky-section{position:relative;background:var(--bg)}
+.sticky-section .section-glow{position:absolute;top:30%;left:30%;width:500px;height:500px;background:radial-gradient(ellipse,rgba(6,182,212,0.04),transparent 70%);pointer-events:none;filter:blur(40px)}
+.sticky-inner{max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;position:relative}
+.sticky-visual{position:sticky;top:0;height:100vh;display:flex;align-items:center;padding:24px 0}
+.sticky-ui{width:100%;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#0A0B12;box-shadow:0 30px 100px rgba(0,0,0,0.6),0 0 60px var(--glow);position:relative}
+.sticky-ui::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to bottom,transparent,#0A0B12);z-index:3;pointer-events:none}
+.sticky-ui .ui-bar{padding:10px 14px}
+.sticky-ui .ui-body{padding:12px 14px;height:460px;overflow:hidden;position:relative}
+/* Security dashboard visual */
+.sec-dash .shield-area{text-align:center;padding:8px 0 12px}
+.sec-dash .shield-ring{width:100px;height:100px;margin:0 auto;position:relative}
+.sec-dash .shield-ring svg{width:100%;height:100%}
+.sec-dash .shield-ring .ring-bg{fill:none;stroke:rgba(6,182,212,0.08);stroke-width:3}
+.sec-dash .shield-ring .ring-fg{fill:none;stroke:var(--accent);stroke-width:3;stroke-dasharray:282;stroke-dashoffset:14;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;animation:shieldPulse 4s ease-in-out infinite}
+@keyframes shieldPulse{0%,100%{stroke-dashoffset:14;stroke:var(--accent)}50%{stroke-dashoffset:8;stroke:var(--accent2)}}
+.sec-dash .shield-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--accent)}
+.sec-dash .shield-label{font-size:0.52rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px}
+.sec-dash .threat-feed{margin-top:8px}
+.sec-dash .threat-feed-title{font-size:0.56rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sec-dash .threat-feed-title .live-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:livePulse 2s ease-in-out infinite}
+.sec-dash .feed-line{display:flex;align-items:center;gap:6px;font-size:0.56rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-family:'SF Mono','Fira Code',monospace;color:var(--text-dim)}
+.sec-dash .feed-line .tag{padding:1px 5px;border-radius:3px;font-size:0.48rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.sec-dash .feed-line .tag.block{background:rgba(239,68,68,0.1);color:#EF4444}
+.sec-dash .feed-line .tag.allow{background:rgba(16,185,129,0.1);color:#10B981}
+.sec-dash .feed-line .tag.warn{background:rgba(245,158,11,0.1);color:#F59E0B}
+.sec-dash .feed-line .ip{color:var(--text-muted);margin-left:auto;font-size:0.5rem}
+.sec-dash .compliance-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.sec-dash .compliance-badge{padding:4px 8px;border-radius:4px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.12);font-size:0.5rem;color:#10B981;font-weight:500;display:flex;align-items:center;gap:4px}
+.sec-dash .compliance-badge svg{width:10px;height:10px}
+/* Sticky text side */
+.sticky-text{padding:0 24px}
+.sticky-text-inner{padding-top:50vh;display:flex;flex-direction:column;gap:0;padding-bottom:50vh}
+.sticky-feature{padding:80px 0;border-bottom:1px solid rgba(6,182,212,0.06);opacity:1;transform:none;transition:opacity 0.6s,transform 0.6s}
+.js-sticky .sticky-feature{opacity:0.3;transform:translateY(20px)}
+.js-sticky .sticky-feature.active{opacity:1;transform:none}
+.sticky-feature:last-child{border-bottom:none}
+.sticky-feature .feat-icon{width:44px;height:44px;border-radius:11px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all 0.4s}
+.sticky-feature.active .feat-icon{background:rgba(6,182,212,0.15);border-color:rgba(6,182,212,0.3);box-shadow:0 0 20px rgba(6,182,212,0.15)}
+.sticky-feature .feat-icon svg{width:20px;height:20px;color:var(--accent)}
+.sticky-feature h3{font-size:1.3rem;font-weight:500;margin-bottom:8px;letter-spacing:-0.02em}
+.sticky-feature p{font-size:0.86rem;color:var(--text-muted);line-height:1.7;font-weight:300;margin-bottom:12px}
+.sticky-feature .feat-stat{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.1);border-radius:8px;font-size:0.7rem;color:var(--accent);font-weight:500}
+.sticky-feature .feat-stat svg{width:14px;height:14px}
+@media(max-width:768px){
+.sticky-inner{grid-template-columns:1fr;gap:0}
+.sticky-visual{position:relative;height:auto;padding:40px 24px}
+.sticky-ui .ui-body{height:320px}
+.sticky-text-inner{padding-top:40px;padding-bottom:40px;gap:0}
+.sticky-feature{padding:40px 0;opacity:1;transform:none}
+}
+/* ─── METRICS STRIP ─── */
+.metrics{padding:20px 0;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg-1);position:relative}
+.metrics-wrap{position:relative;overflow:hidden}
+.metrics-wrap::before,.metrics-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.metrics-wrap::before{left:0;background:linear-gradient(to right,var(--bg-1),transparent)}
+.metrics-wrap::after{right:0;background:linear-gradient(to left,var(--bg-1),transparent)}
+.metrics-track{display:flex;gap:0;animation:scrollMetrics 30s linear infinite;width:max-content;align-items:center;will-change:transform;backface-visibility:hidden}
+.metrics-wrap:hover .metrics-track{animation-play-state:paused}
+.metric-item{display:flex;align-items:center;gap:10px;padding:0 24px;white-space:nowrap}
+.metric-item .val{font-size:1.1rem;font-weight:600;color:var(--accent)}
+.metric-item .label{font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em}
+.metric-item .dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim);opacity:0.25}
+@keyframes scrollMetrics{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* ─── TABS SECTION ─── */
+.tabs-section{padding:100px 24px;position:relative}
+.tabs-section .section-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(34,211,238,0.05),transparent 70%);pointer-events:none}
+.tab-buttons{display:flex;gap:4px;margin-top:40px;margin-bottom:32px;border:1px solid var(--border);border-radius:12px;padding:4px;max-width:fit-content;background:rgba(12,13,20,0.6)}
+.tab-btn{padding:10px 22px;border-radius:9px;font-size:0.82rem;color:var(--text-dim);transition:all 0.3s;font-weight:400}
+.tab-btn:hover{color:var(--text-muted)}
+.tab-btn.active{background:rgba(6,182,212,0.12);color:var(--accent);font-weight:500}
+.tab-panels{position:relative}
+.tab-panels .tab-panel{opacity:0;transform:translateY(16px);position:absolute;top:0;left:0;right:0;visibility:hidden;transition:opacity 0.5s ease,transform 0.5s ease;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.tab-panels .tab-panel.active{opacity:1;transform:none;position:relative;visibility:visible}
+.tab-panel-text h3{font-size:1.6rem;font-weight:500;margin-bottom:12px;letter-spacing:-0.02em}
+.tab-panel-text p{font-size:0.88rem;color:var(--text-muted);line-height:1.7;font-weight:300;margin-bottom:20px}
+.tab-panel-text ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.tab-panel-text ul li{font-size:0.82rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;font-weight:300}
+.tab-panel-text ul li svg{width:16px;height:16px;color:var(--accent);flex-shrink:0}
+.tab-panel-visual{border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative;box-shadow:0 20px 80px rgba(0,0,0,0.5);transition:transform 0.4s;background:#0A0B12}
+.tab-panel-visual:hover{transform:scale(1.01)}
+.tab-panel-visual .product-ui{position:relative;height:340px}
+.tab-panel-visual .product-ui::after{height:50px}
+/* Routing flow diagram */
+.ui-flow svg{width:100%;height:100%}
+.flow-box{fill:rgba(16,17,27,0.7);stroke:rgba(6,182,212,0.12);stroke-width:1;rx:5}
+.flow-box-accent{fill:rgba(6,182,212,0.08);stroke:var(--accent);stroke-width:1.5;rx:6}
+.flow-lbl{font-size:8px;fill:var(--text-muted);font-family:'Inter',sans-serif;font-weight:500;text-anchor:middle}
+.flow-sub{font-size:6px;fill:var(--text-dim);font-family:'SF Mono','Fira Code',monospace;text-anchor:middle}
+.flow-arrow{stroke:rgba(6,182,212,0.15);stroke-width:1;marker-end:url(#arrowhead)}
+.flow-arrow-active{stroke:var(--accent);stroke-width:1;stroke-dasharray:5 3;animation:meshDash 2s linear infinite;marker-end:url(#arrowhead-active)}
+/* Plugin grid */
+.ui-plugins .plugin-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px 0}
+.ui-plugins .p-card{padding:8px;background:rgba(16,17,27,0.5);border:1px solid rgba(6,182,212,0.06);border-radius:5px;font-size:0.54rem;font-family:'Inter',sans-serif}
+.ui-plugins .p-card .p-name{color:var(--text-muted);font-weight:500;margin-bottom:2px}
+.ui-plugins .p-card .p-desc{color:var(--text-dim);font-size:0.48rem;line-height:1.4;margin-bottom:4px}
+.ui-plugins .p-card .p-meta{display:flex;justify-content:space-between;font-size:0.46rem;color:var(--text-dim)}
+.ui-plugins .p-card .p-meta .dl{color:var(--accent);font-weight:500}
+.ui-plugins .p-card .p-pill{display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(6,182,212,0.08);color:var(--accent);font-size:0.44rem;font-weight:600;font-family:'SF Mono','Fira Code',monospace;margin-right:4px}
+/* Multi-cloud deploy */
+.ui-deploy svg{width:100%;height:100%}
+.deploy-box{fill:rgba(16,17,27,0.6);stroke:rgba(6,182,212,0.1);stroke-width:1;rx:5}
+.deploy-active{fill:rgba(6,182,212,0.06);stroke:var(--accent);stroke-width:1.5;rx:6}
+.deploy-lbl{font-size:8px;fill:var(--text-muted);font-family:'Inter',sans-serif;font-weight:500;text-anchor:middle}
+.deploy-stat{font-size:6px;fill:var(--text-dim);font-family:'SF Mono','Fira Code',monospace;text-anchor:middle}
+.deploy-line{stroke:rgba(6,182,212,0.1);stroke-width:1;stroke-dasharray:4 3;animation:meshDash 3s linear infinite}
+.deploy-check{font-size:7px;fill:#10B981;font-family:'Inter',sans-serif}
+@media(max-width:768px){
+.tab-buttons{flex-wrap:wrap}
+.tab-panels .tab-panel.active{grid-template-columns:1fr}
+.tab-panel-visual img{height:220px}
+}
+/* ─── TESTIMONIALS ─── */
+.testimonial{padding:100px 24px;background:var(--bg-1);position:relative}
+.testimonial .section-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(6,182,212,0.04),transparent 70%);pointer-events:none}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.testi-card{background:rgba(16,17,27,0.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:28px 24px;position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform}
+.testi-card:hover{border-color:var(--border-h);transform:translateY(-4px);box-shadow:0 16px 50px rgba(6,182,212,0.1)}
+.testi-card.featured{border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.03)}
+.testi-card blockquote{font-size:0.92rem;font-weight:300;color:var(--text-muted);line-height:1.7;position:relative;z-index:2}
+.testi-card blockquote::before{content:'\201C';font-size:3rem;color:var(--accent);opacity:0.15;font-family:Georgia,serif;line-height:1;display:block;margin-bottom:-10px}
+.testi-author{display:flex;align-items:center;gap:12px;margin-top:20px;position:relative;z-index:2}
+.testi-author img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border)}
+.testi-author .name{font-size:0.85rem;font-weight:500}
+.testi-author .role{font-size:0.72rem;color:var(--text-dim)}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr}}
+/* ─── BOTTOM CTA ─── */
+.cta-section{padding:120px 24px;text-align:center;position:relative;overflow:hidden}
+.cta-section .cta-mesh{position:absolute;inset:0;pointer-events:none;
+background:
+radial-gradient(ellipse 50% 60% at 30% 40%,rgba(6,182,212,0.07),transparent 60%),
+radial-gradient(ellipse 40% 50% at 70% 60%,rgba(14,165,233,0.05),transparent 60%),
+radial-gradient(ellipse 60% 40% at 50% 20%,rgba(34,211,238,0.04),transparent 60%);
+}
+.cta-section h2{font-size:2.8rem;font-weight:200;letter-spacing:-0.04em;margin-bottom:12px;position:relative;z-index:2}
+.cta-section h2 .grad{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-section>p{font-size:0.92rem;color:var(--text-muted);margin-bottom:28px;font-weight:300;position:relative;z-index:2}
+.cta-email{display:flex;gap:10px;max-width:440px;margin:0 auto 28px;position:relative;z-index:2}
+.cta-email input{flex:1;padding:13px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(12,13,20,0.8);color:var(--text);font-size:0.88rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.3s,box-shadow 0.3s}
+.cta-email input::placeholder{color:var(--text-dim)}
+.cta-email input:focus{border-color:var(--accent);box-shadow:0 0 20px rgba(6,182,212,0.25),0 0 4px rgba(6,182,212,0.1)}
+.cta-email button{padding:13px 28px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-weight:600;font-size:0.88rem;transition:all 0.3s;white-space:nowrap}
+.cta-email button:hover{box-shadow:0 0 24px rgba(6,182,212,0.5);transform:translateY(-1px)}
+.cta-terminal{background:rgba(12,13,20,0.9);border:1px solid var(--border);border-radius:12px;padding:24px 28px;max-width:520px;margin:0 auto;text-align:left;font-family:'SF Mono','Fira Code',monospace;font-size:0.86rem;backdrop-filter:blur(12px);position:relative;z-index:2}
+.cta-terminal .copy-btn{position:absolute;top:16px;right:16px;font-size:0.7rem;color:var(--text-dim);padding:4px 10px;border:1px solid var(--border);border-radius:6px;transition:all 0.2s;font-family:'Inter',sans-serif}
+.cta-terminal .copy-btn:hover{color:var(--accent);border-color:var(--border-h)}
+.cta-links{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:24px;font-size:0.82rem;position:relative;z-index:2}
+.cta-links a{color:var(--text-dim);transition:color 0.2s}
+.cta-links a:hover{color:var(--accent)}
+.cta-links a.primary{color:var(--accent);font-weight:500}
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);padding:60px 24px 32px}
+.footer-inner{max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:40px}
+.footer-brand p{font-size:0.82rem;color:var(--text-dim);margin-top:12px;line-height:1.6}
+.footer-col h4{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:16px}
+.footer-col a{display:block;font-size:0.82rem;color:var(--text-dim);padding:4px 0;transition:color 0.2s}
+.footer-col a:hover{color:var(--accent)}
+.footer-bottom{max-width:var(--max-w);margin:40px auto 0;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-dim)}
+@media(max-width:768px){
+.footer-inner{grid-template-columns:1fr 1fr;gap:32px}
+.footer-bottom{flex-direction:column;gap:8px}
+.cta-email{flex-direction:column}
+.cta-terminal{font-size:0.72rem;padding:16px 18px}
+.cta-links{flex-direction:column;gap:12px}
+.section-head h2{font-size:2rem}
+.ui-plugins .plugin-grid{grid-template-columns:1fr}
+.tab-panel-visual .product-ui{height:260px}
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+Meridian
+    </a>
+    <div class="nav-links">
+      <a href="#">Product</a>
+      <a href="#">Pricing</a>
+      <a href="#">Docs</a>
+      <a href="#">Blog</a>
+      <a href="#">Changelog</a>
+      <a href="#" class="nav-cta">Sign up free</a>
+    </div>
+    <div class="hamburger" onclick="this.classList.toggle('open');document.getElementById('mm').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mm">
+  <a href="#" onclick="document.getElementById('mm').classList.remove('open');document.querySelector('.hamburger').classList.remove('open')">Product</a>
+  <a href="#" onclick="document.getElementById('mm').classList.remove('open');document.querySelector('.hamburger').classList.remove('open')">Pricing</a>
+  <a href="#" onclick="document.getElementById('mm').classList.remove('open');document.querySelector('.hamburger').classList.remove('open')">Docs</a>
+  <a href="#" onclick="document.getElementById('mm').classList.remove('open');document.querySelector('.hamburger').classList.remove('open')">Blog</a>
+  <a href="#" onclick="document.getElementById('mm').classList.remove('open');document.querySelector('.hamburger').classList.remove('open')">Changelog</a>
+  <a href="#" class="nav-cta" style="margin-top:16px">Sign up free</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-aurora">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="hero-morph"></div>
+  <canvas class="hero-canvas" id="constellation"></canvas>
+
+  <!-- Shooting stars — starting from right side, falling left -->
+  <div class="meteors">
+    <div class="meteor" style="top:-5%;right:15%;animation-duration:4s;animation-delay:0.5s"></div>
+    <div class="meteor" style="top:-8%;right:35%;animation-duration:5s;animation-delay:3s"></div>
+    <div class="meteor" style="top:-3%;right:55%;animation-duration:4.5s;animation-delay:6s"></div>
+    <div class="meteor" style="top:-10%;right:25%;animation-duration:5.5s;animation-delay:9s"></div>
+    <div class="meteor" style="top:-6%;right:70%;animation-duration:4s;animation-delay:12s"></div>
+    <div class="meteor" style="top:-4%;right:45%;animation-duration:4.8s;animation-delay:15s"></div>
+  </div>
+
+  <div class="hero-content">
+    <h1><span data-splitting>One gateway to</span><br>
+      <span class="flip-words">
+        <span>rule them all</span>
+        <span>ship faster</span>
+        <span>scale globally</span>
+        <span>sleep better</span>
+        <span>rule them all</span>
+      </span>
+    </h1>
+    <p class="subtitle">Route, secure, and observe every API call across your stack. Replace fragmented tooling with a single unified gateway — sub-millisecond latency at any scale.</p>
+    <div class="hero-ctas">
+      <a href="#" class="cta-primary ripple">Get started free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#" class="cta-glass ripple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Watch demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- HERO APP WINDOW -->
+<div class="hero-app-wrap">
+  <div class="hero-app">
+    <div class="app-chrome">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="url-bar"><span class="lock">🔒</span> app.meridian.dev/dashboard/routes</div>
+      <div class="chrome-actions">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
+      </div>
+    </div>
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <div class="app-sidebar">
+        <div class="sb-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+        <div class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg></div>
+        <div class="sb-sep"></div>
+        <div class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      </div>
+      <!-- Main content -->
+      <div class="app-main">
+        <div class="main-header">
+          <div class="breadcrumb">Dashboard <span style="opacity:0.3">›</span> Routes <span style="opacity:0.3">›</span> <span class="active">Production</span></div>
+        </div>
+        <div class="main-stats">
+          <div class="ms"><div class="ms-val">2.1B</div><div class="ms-lbl">Requests today</div><div class="ms-change">↑ 12.4%</div></div>
+          <div class="ms"><div class="ms-val">0.4ms</div><div class="ms-lbl">p99 Latency</div><div class="ms-change">↓ 8.2%</div></div>
+          <div class="ms"><div class="ms-val">99.99%</div><div class="ms-lbl">Success rate</div><div class="ms-change">↑ 0.01%</div></div>
+          <div class="ms"><div class="ms-val">213</div><div class="ms-lbl">Active nodes</div><div class="ms-change">↑ 3</div></div>
+        </div>
+        <table class="route-table">
+          <thead><tr><th>Route</th><th>Method</th><th>Upstream</th><th>p99</th><th>Req/s</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="path">/api/v2/users</td><td><span class="method get">GET</span></td><td>users-svc</td><td class="latency">0.8ms</td><td class="rps">3,241</td><td><span class="status-dot ok"></span>Healthy</td></tr>
+            <tr><td class="path">/api/v2/auth/token</td><td><span class="method post">POST</span></td><td>auth-svc</td><td class="latency">1.2ms</td><td class="rps">1,847</td><td><span class="status-dot ok"></span>Healthy</td></tr>
+            <tr><td class="path">/api/v2/payments</td><td><span class="method post">POST</span></td><td>pay-svc</td><td class="latency">2.1ms</td><td class="rps">892</td><td><span class="status-dot ok"></span>Healthy</td></tr>
+            <tr><td class="path">/api/v2/events</td><td><span class="method post">POST</span></td><td>events-svc</td><td class="latency">0.4ms</td><td class="rps">8,412</td><td><span class="status-dot ok"></span>Healthy</td></tr>
+            <tr><td class="path">/api/v2/config</td><td><span class="method get">GET</span></td><td>config-svc</td><td class="latency">0.3ms</td><td class="rps">524</td><td><span class="status-dot ok"></span>Healthy</td></tr>
+            <tr><td class="path">/api/v2/webhooks</td><td><span class="method put">PUT</span></td><td>webhook-svc</td><td class="latency">1.8ms</td><td class="rps">167</td><td><span class="status-dot warn"></span>Degraded</td></tr>
+            <tr><td class="path">/api/v2/search</td><td><span class="method get">GET</span></td><td>search-svc</td><td class="latency">3.4ms</td><td class="rps">2,103</td><td><span class="status-dot ok"></span>Healthy</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Right panel -->
+      <div class="app-panel">
+        <div class="panel-title">Traffic Overview</div>
+        <div class="panel-sub">Last 60 minutes</div>
+        <div class="mini-chart">
+          <svg viewBox="0 0 240 60" preserveAspectRatio="none">
+            <defs><linearGradient id="mcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(6,182,212,0.2)"/><stop offset="100%" stop-color="rgba(6,182,212,0)"/></linearGradient></defs>
+            <path d="M0,50 C20,45 40,30 60,35 C80,40 100,20 120,25 C140,30 160,15 180,18 C200,21 220,10 240,8 L240,60 L0,60Z" fill="url(#mcg)"/>
+            <path d="M0,50 C20,45 40,30 60,35 C80,40 100,20 120,25 C140,30 160,15 180,18 C200,21 220,10 240,8" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="panel-metrics">
+          <div class="pm"><span class="pm-lbl">Error rate</span><span class="pm-val green">0.02%</span></div>
+          <div class="pm"><span class="pm-lbl">Active conns</span><span class="pm-val">14,281</span></div>
+          <div class="pm"><span class="pm-lbl">Cache hit</span><span class="pm-val green">94.2%</span></div>
+          <div class="pm"><span class="pm-lbl">Bandwidth</span><span class="pm-val">2.16 TB/s</span></div>
+          <div class="pm"><span class="pm-lbl">Throttled</span><span class="pm-val warn">23</span></div>
+        </div>
+        <div class="panel-log">
+          <div class="panel-log-title">Live requests</div>
+          <div class="log-entry"><span class="log-time">14:02:41</span><span class="log-method">GET</span>/api/users<span class="log-status s2">200</span></div>
+          <div class="log-entry"><span class="log-time">14:02:41</span><span class="log-method">POST</span>/api/auth<span class="log-status s2">201</span></div>
+          <div class="log-entry"><span class="log-time">14:02:42</span><span class="log-method">GET</span>/api/config<span class="log-status s2">200</span></div>
+          <div class="log-entry"><span class="log-time">14:02:42</span><span class="log-method">PUT</span>/api/hooks<span class="log-status s4">429</span></div>
+          <div class="log-entry"><span class="log-time">14:02:43</span><span class="log-method">GET</span>/api/events<span class="log-status s2">200</span></div>
+          <div class="log-entry"><span class="log-time">14:02:43</span><span class="log-method">POST</span>/api/pay<span class="log-status s2">201</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="app-statusbar">
+      <span class="status-live">All systems operational</span>
+      <span class="sep"></span>
+      <span>213 nodes connected</span>
+      <span class="sep"></span>
+      <span>Last sync: 2s ago</span>
+      <span style="margin-left:auto">v3.2.1</span>
+    </div>
+  </div>
+</div>
+
+<!-- LOGO BAR -->
+<section class="logo-bar">
+  <div class="logo-bar-label">Trusted by engineering teams at</div>
+  <div class="logo-wrap">
+    <div class="logo-track">
+      <span>Stripe</span><span>Vercel</span><span>Shopify</span><span>Datadog</span><span>Cloudflare</span><span>Linear</span><span>Notion</span><span>Figma</span><span>GitLab</span><span>Supabase</span><span>PlanetScale</span><span>Railway</span>
+      <span>Stripe</span><span>Vercel</span><span>Shopify</span><span>Datadog</span><span>Cloudflare</span><span>Linear</span><span>Notion</span><span>Figma</span><span>GitLab</span><span>Supabase</span><span>PlanetScale</span><span>Railway</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- BENTO GRID -->
+<section class="bento dot-bg">
+  <div class="section-glow"></div>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Why Meridian</div>
+      <h2 class="text-reveal">Everything your APIs need.<br><span class="grad">Nothing they don't.</span></h2>
+      <p>Replace your patchwork of proxies, WAFs, and rate limiters with one unified control plane.</p>
+    </div>
+    <div class="bento-grid spotlight-container">
+      <!-- 1: Routing — latency bar chart -->
+      <div class="bento-card reveal">
+        <h3>Sub-Millisecond Routing</h3>
+        <p>Content-based routing, weighted load balancing, and canary deployments — all at the edge.</p>
+        <div class="card-widget">
+          <div class="card-widget-inner">
+            <div class="widget-header"><span class="live">Live View</span><span>2.16 TB/s</span></div>
+            <div class="widget-bars">
+              <div class="bar" style="height:35%"></div><div class="bar" style="height:55%"></div><div class="bar" style="height:45%"></div>
+              <div class="bar" style="height:70%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:80%"></div>
+              <div class="bar" style="height:50%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:75%"></div>
+              <div class="bar" style="height:65%"></div><div class="bar" style="height:85%"></div><div class="bar" style="height:40%"></div>
+              <div class="bar" style="height:60%"></div><div class="bar" style="height:95%"></div><div class="bar" style="height:70%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 2: Auth — threat detection -->
+      <div class="bento-card reveal">
+        <h3>Zero Trust Auth</h3>
+        <p>OAuth 2.0, JWT, mTLS, and bot protection baked into every request path.</p>
+        <div class="card-widget">
+          <div class="card-widget-inner">
+            <div class="widget-header"><span class="live">Shield Active</span><span>94% CONF</span></div>
+            <div class="widget-row"><span class="label">JWT Validated</span><span class="val">12.4K/s</span></div>
+            <div class="widget-row"><span class="label">mTLS Handshakes</span><span class="val">8.1K/s</span></div>
+            <div class="widget-row"><span class="label">Bot Score &gt; 0.9</span><span class="val warn">247</span></div>
+            <div class="widget-alert threat">Spike in unauthorized access — 3 IPs blocked</div>
+          </div>
+        </div>
+      </div>
+      <!-- 3: SLA — uptime status -->
+      <div class="bento-card reveal">
+        <h3>99.99% SLA</h3>
+        <p>Global edge deployment with automatic failover and zero-downtime upgrades.</p>
+        <div class="card-widget">
+          <div class="card-widget-inner">
+            <div class="widget-header"><span class="live">All Systems</span><span>Operational</span></div>
+            <div class="widget-row"><span class="label">US-East</span><span class="val">99.99%</span></div>
+            <div class="widget-progress"><div class="fill" style="width:99.9%"></div></div>
+            <div class="widget-row"><span class="label">EU-West</span><span class="val">100%</span></div>
+            <div class="widget-progress"><div class="fill" style="width:100%"></div></div>
+            <div class="widget-row"><span class="label">AP-South</span><span class="val warn">99.97%</span></div>
+            <div class="widget-progress"><div class="fill warn" style="width:99.9%"></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- 4: Plugins — registry -->
+      <div class="bento-card reveal">
+        <h3>150+ Plugins</h3>
+        <p>Extend with JS, Go, or Rust. Transform requests, inject headers, shape responses.</p>
+        <div class="card-widget">
+          <div class="card-widget-inner">
+            <div class="widget-header"><span>Registry</span><span>153 available</span></div>
+            <div class="widget-plugin"><span class="pill">RS</span><span class="label" style="flex:1;color:var(--text-muted)">rate-limiter</span><span style="color:var(--text-dim);font-size:0.6rem">42K installs</span></div>
+            <div class="widget-plugin"><span class="pill">JS</span><span class="label" style="flex:1;color:var(--text-muted)">cors-handler</span><span style="color:var(--text-dim);font-size:0.6rem">38K installs</span></div>
+            <div class="widget-plugin"><span class="pill">GO</span><span class="label" style="flex:1;color:var(--text-muted)">jwt-validator</span><span style="color:var(--text-dim);font-size:0.6rem">31K installs</span></div>
+            <div class="widget-plugin"><span class="pill">RS</span><span class="label" style="flex:1;color:var(--text-muted)">cache-layer</span><span style="color:var(--text-dim);font-size:0.6rem">27K installs</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 5: Observability — request log -->
+      <div class="bento-card reveal">
+        <h3>Real-Time Observability</h3>
+        <p>Every request logged and traced. Live dashboards, distributed tracing, anomaly alerts.</p>
+        <div class="card-widget">
+          <div class="card-widget-inner">
+            <div class="widget-header"><span class="live">Stream</span><span>1.2M req/min</span></div>
+            <div class="widget-log">
+              <div><span class="ts">14:02:41</span><span class="method">GET</span> /api/v2/users <span style="color:var(--accent)">200</span> 0.8ms</div>
+              <div><span class="ts">14:02:41</span><span class="method">POST</span> /api/v2/events <span style="color:var(--accent)">201</span> 1.2ms</div>
+              <div><span class="ts">14:02:42</span><span class="method">GET</span> /api/v2/config <span style="color:var(--accent)">200</span> 0.3ms</div>
+              <div><span class="ts">14:02:42</span><span class="method">PUT</span> /api/v2/routes <span style="color:#F59E0B">429</span> 0.1ms</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 6: Edge — node grid -->
+      <div class="bento-card reveal">
+        <h3>Global Edge Network</h3>
+        <p>Deploy to 200+ edge locations. Sub-10ms response for every user, everywhere.</p>
+        <div class="card-widget">
+          <div class="card-widget-inner">
+            <div class="widget-header"><span class="live">Edge Nodes</span><span>213 active</span></div>
+            <div class="widget-nodes">
+              <div class="node active"></div><div class="node active"></div><div class="node"></div><div class="node active"></div><div class="node active"></div><div class="node"></div><div class="node active"></div><div class="node active"></div>
+              <div class="node active"></div><div class="node"></div><div class="node active"></div><div class="node active"></div><div class="node warn"></div><div class="node active"></div><div class="node active"></div><div class="node"></div>
+              <div class="node"></div><div class="node active"></div><div class="node active"></div><div class="node active"></div><div class="node active"></div><div class="node"></div><div class="node active"></div><div class="node active"></div>
+              <div class="node active"></div><div class="node active"></div><div class="node"></div><div class="node active"></div><div class="node active"></div><div class="node active"></div><div class="node"></div><div class="node active"></div>
+            </div>
+            <div class="widget-row" style="margin-top:8px"><span class="label">Avg latency</span><span class="val">3.2ms</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PRODUCT SHOWCASE -->
+<section class="showcase dot-bg">
+  <div class="section-glow"></div>
+  <div class="showcase-head">
+    <div class="section-head reveal">
+      <div class="eyebrow">Product</div>
+      <h2 class="text-reveal">See Meridian <span class="grad">in action</span></h2>
+      <p>From config-as-code to real-time dashboards — a visual tour of the platform.</p>
+    </div>
+    <div class="carousel-nav reveal">
+      <button class="carousel-btn magnetic" data-dir="-1" data-target="showcase-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <button class="carousel-btn magnetic" data-dir="1" data-target="showcase-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-track spotlight-container" id="showcase-track">
+      <!-- 1: Analytics Dashboard (wide) -->
+      <div class="c-card wide">
+        <div class="product-ui">
+          <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Overview</span><span class="tab">Latency</span><span class="tab">Errors</span></div>
+          <div class="ui-body ui-dash">
+            <div class="sidebar"><i class="active"></i><i></i><i></i><i></i><i></i></div>
+            <div class="main">
+              <div class="stat-row">
+                <div class="stat-card"><div class="v">2.1B</div><div class="l">Requests today</div></div>
+                <div class="stat-card"><div class="v">0.4ms</div><div class="l">p99 Latency</div></div>
+                <div class="stat-card"><div class="v">99.99%</div><div class="l">Success rate</div></div>
+                <div class="stat-card"><div class="v">213</div><div class="l">Edge nodes</div></div>
+              </div>
+              <div class="chart-box">
+                <svg viewBox="0 0 560 120" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(6,182,212,0.3)"/><stop offset="100%" stop-color="rgba(6,182,212,0)"/></linearGradient>
+                  </defs>
+                  <!-- Grid lines -->
+                  <line x1="0" y1="30" x2="560" y2="30" stroke="rgba(6,182,212,0.05)" stroke-width="0.5"/>
+                  <line x1="0" y1="60" x2="560" y2="60" stroke="rgba(6,182,212,0.05)" stroke-width="0.5"/>
+                  <line x1="0" y1="90" x2="560" y2="90" stroke="rgba(6,182,212,0.05)" stroke-width="0.5"/>
+                  <!-- Area fill -->
+                  <path class="chart-area-draw" d="M0,95 C40,90 80,70 120,65 C160,60 200,45 240,50 C280,55 320,35 360,30 C400,25 440,40 480,35 C520,30 550,25 560,20 L560,120 L0,120Z" fill="url(#cg1)"/>
+                  <!-- Line -->
+                  <path class="chart-line-draw" d="M0,95 C40,90 80,70 120,65 C160,60 200,45 240,50 C280,55 320,35 360,30 C400,25 440,40 480,35 C520,30 550,25 560,20" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+                  <!-- Second line (errors) -->
+                  <path d="M0,110 C40,108 80,105 120,107 C160,109 200,106 240,108 C280,110 320,107 360,105 C400,108 440,106 480,109 C520,107 550,108 560,106" fill="none" stroke="rgba(245,158,11,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
+                  <!-- Dots on main line -->
+                  <circle cx="120" cy="65" r="2.5" fill="var(--accent)"/>
+                  <circle cx="360" cy="30" r="2.5" fill="var(--accent)"/>
+                  <circle cx="480" cy="35" r="2.5" fill="var(--accent)"/>
+                </svg>
+                <div class="chart-label"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>Now</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="overlay"><h3>Live Analytics Dashboard</h3><p>Real-time request volume, latency percentiles, error rates, and geo distribution.</p></div>
+      </div>
+
+      <!-- 2: Config as Code (narrow) -->
+      <div class="c-card narrow">
+        <div class="product-ui">
+          <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">gateway.yml</span><span class="tab">routes.yml</span></div>
+          <div class="ui-body ui-code">
+            <div class="gutter"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span></div>
+            <div class="lines">
+              <div><span class="c"># Meridian Gateway Config</span></div>
+              <div><span class="k">version</span><span class="p">:</span> <span class="s">"3.1"</span></div>
+              <div><span class="k">gateway</span><span class="p">:</span></div>
+              <div>&nbsp;&nbsp;<span class="k">name</span><span class="p">:</span> <span class="s">"production"</span></div>
+              <div>&nbsp;&nbsp;<span class="k">edge</span><span class="p">:</span> <span class="b">true</span></div>
+              <div>&nbsp;&nbsp;<span class="k">regions</span><span class="p">:</span> <span class="s">"global"</span></div>
+              <div></div>
+              <div><span class="k">routes</span><span class="p">:</span></div>
+              <div>&nbsp;&nbsp;- <span class="k">path</span><span class="p">:</span> <span class="s">"/api/v2/*"</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">upstream</span><span class="p">:</span> <span class="s">"core-api"</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">timeout</span><span class="p">:</span> <span class="n">3000</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">retries</span><span class="p">:</span> <span class="n">3</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">plugins</span><span class="p">:</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="s">rate-limiter</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="s">jwt-validator</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="s">cors-handler</span></div>
+              <div></div>
+              <div><span class="k">security</span><span class="p">:</span></div>
+              <div>&nbsp;&nbsp;<span class="k">mtls</span><span class="p">:</span> <span class="b">true</span></div>
+              <div>&nbsp;&nbsp;<span class="k">bot_protection</span><span class="p">:</span> <span class="s">"aggressive"</span></div>
+              <div>&nbsp;&nbsp;<span class="k">rate_limit</span><span class="p">:</span> <span class="n">10000</span><span class="cursor"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="overlay"><h3>Config as Code</h3><p>Define routes, policies, and transforms in YAML with git-native workflows.</p></div>
+      </div>
+
+      <!-- 3: Edge Network Map (wide) -->
+      <div class="c-card wide">
+        <div class="product-ui">
+          <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Edge Network</span><span class="tab">Traffic</span></div>
+          <div class="ui-body ui-map">
+            <div class="grid-bg"></div>
+            <svg viewBox="0 0 620 300" preserveAspectRatio="xMidYMid meet">
+              <!-- Connection lines -->
+              <line class="edge-line" x1="150" y1="100" x2="300" y2="120"/>
+              <line class="edge-line" x1="300" y1="120" x2="420" y2="85"/>
+              <line class="edge-line" x1="300" y1="120" x2="350" y2="170"/>
+              <line class="edge-line" x1="420" y1="85" x2="500" y2="130"/>
+              <line class="edge-line" x1="150" y1="100" x2="180" y2="200"/>
+              <line class="edge-line" x1="300" y1="120" x2="420" y2="180"/>
+              <line class="edge-line" x1="500" y1="130" x2="530" y2="200"/>
+              <line class="edge-line" x1="350" y1="170" x2="420" y2="180"/>
+              <!-- NA nodes -->
+              <circle class="edge-pulse" cx="120" cy="90" fill="var(--accent)" style="animation-delay:0s"/>
+              <circle class="edge-ring" cx="120" cy="90" fill="none" stroke="var(--accent)" stroke-width="0.5"/>
+              <circle class="edge-active" cx="150" cy="100" r="3"/>
+              <circle class="edge-active" cx="140" cy="120" r="2" opacity="0.5"/>
+              <circle class="edge-active" cx="170" cy="85" r="2" opacity="0.5"/>
+              <!-- SA node -->
+              <circle class="edge-pulse" cx="180" cy="200" fill="var(--accent)" style="animation-delay:0.5s"/>
+              <circle class="edge-active" cx="190" cy="220" r="2" opacity="0.4"/>
+              <!-- EU nodes -->
+              <circle class="edge-pulse" cx="300" cy="90" fill="var(--accent)" style="animation-delay:0.3s"/>
+              <circle class="edge-ring" cx="300" cy="90" fill="none" stroke="var(--accent)" stroke-width="0.5" style="animation-delay:0.3s"/>
+              <circle class="edge-active" cx="300" cy="120" r="3"/>
+              <circle class="edge-active" cx="280" cy="105" r="2" opacity="0.5"/>
+              <circle class="edge-active" cx="320" cy="110" r="2" opacity="0.5"/>
+              <circle class="edge-active" cx="350" cy="170" r="3"/>
+              <!-- Asia nodes -->
+              <circle class="edge-pulse" cx="420" cy="85" fill="var(--accent)" style="animation-delay:0.7s"/>
+              <circle class="edge-ring" cx="420" cy="85" fill="none" stroke="var(--accent)" stroke-width="0.5" style="animation-delay:0.7s"/>
+              <circle class="edge-active" cx="450" cy="100" r="2" opacity="0.5"/>
+              <circle class="edge-active" cx="420" cy="180" r="3"/>
+              <!-- APAC nodes -->
+              <circle class="edge-pulse" cx="500" cy="130" fill="var(--accent)" style="animation-delay:1s"/>
+              <circle class="edge-active" cx="530" cy="200" r="3"/>
+              <circle class="edge-active" cx="550" cy="180" r="2" opacity="0.5"/>
+              <!-- Region labels -->
+              <text x="120" y="78" font-size="7" fill="var(--text-dim)" font-family="Inter,sans-serif">US-East</text>
+              <text x="280" y="78" font-size="7" fill="var(--text-dim)" font-family="Inter,sans-serif">EU-West</text>
+              <text x="400" y="73" font-size="7" fill="var(--text-dim)" font-family="Inter,sans-serif">AP-East</text>
+              <text x="490" y="118" font-size="7" fill="var(--text-dim)" font-family="Inter,sans-serif">AP-South</text>
+              <text x="170" y="190" font-size="7" fill="var(--text-dim)" font-family="Inter,sans-serif">SA</text>
+              <!-- Status bar at bottom -->
+              <rect x="20" y="260" width="580" height="28" rx="4" fill="rgba(16,17,27,0.6)" stroke="rgba(6,182,212,0.06)" stroke-width="0.5"/>
+              <text x="32" y="278" font-size="7" fill="var(--accent)" font-family="SF Mono,Fira Code,monospace" font-weight="500">● 213 nodes active</text>
+              <text x="170" y="278" font-size="7" fill="var(--text-dim)" font-family="SF Mono,Fira Code,monospace">avg latency: 3.2ms</text>
+              <text x="340" y="278" font-size="7" fill="var(--text-dim)" font-family="SF Mono,Fira Code,monospace">throughput: 2.16 TB/s</text>
+              <text x="500" y="278" font-size="7" fill="#10B981" font-family="SF Mono,Fira Code,monospace">all systems nominal</text>
+            </svg>
+          </div>
+        </div>
+        <div class="overlay"><h3>Edge Deployment</h3><p>Deploy gateways to 200+ edge locations for sub-10ms response times globally.</p></div>
+      </div>
+
+      <!-- 4: Security Controls (narrow) -->
+      <div class="c-card narrow">
+        <div class="product-ui">
+          <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Security</span></div>
+          <div class="ui-body ui-sec">
+            <div class="score-area">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(6,182,212,0.1)" stroke-width="4"/>
+                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="198 16" stroke-linecap="round" transform="rotate(-90 40 40)"/>
+                <text x="40" y="37" text-anchor="middle" font-size="14" font-weight="700" fill="var(--accent)" font-family="Inter,sans-serif">96</text>
+                <text x="40" y="48" text-anchor="middle" font-size="5" fill="var(--text-dim)" font-family="Inter,sans-serif" text-transform="uppercase" letter-spacing="0.1em">SECURITY SCORE</text>
+              </svg>
+            </div>
+            <div class="items">
+              <div class="item"><span class="d ok"></span>mTLS Enforcement<span class="st ok">PASS</span></div>
+              <div class="item"><span class="d ok"></span>JWT Validation<span class="st ok">PASS</span></div>
+              <div class="item"><span class="d ok"></span>Rate Limiting<span class="st ok">ACTIVE</span></div>
+              <div class="item"><span class="d ok"></span>Bot Protection<span class="st ok">PASS</span></div>
+              <div class="item"><span class="d wn"></span>DDoS Shield<span class="st wn">ALERT</span></div>
+              <div class="item"><span class="d ok"></span>CORS Policy<span class="st ok">PASS</span></div>
+              <div class="item"><span class="d ok"></span>IP Allowlist<span class="st ok">PASS</span></div>
+              <div class="item"><span class="d ok"></span>SOC 2 Compliance<span class="st ok">VALID</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="overlay"><h3>Security Controls</h3><p>mTLS, OAuth, JWT validation, rate limiting — configured in seconds.</p></div>
+      </div>
+
+      <!-- 5: Multi-Cloud Mesh (wide) -->
+      <div class="c-card wide">
+        <div class="product-ui">
+          <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Mesh</span><span class="tab">Services</span><span class="tab">Traffic</span></div>
+          <div class="ui-body ui-mesh">
+            <svg viewBox="0 0 620 300" preserveAspectRatio="xMidYMid meet">
+              <!-- Connection lines (animated dashes) -->
+              <line class="mesh-line" x1="130" y1="80" x2="270" y2="150"/>
+              <line class="mesh-line" x1="130" y1="200" x2="270" y2="150"/>
+              <line class="mesh-line" x1="350" y1="150" x2="490" y2="70"/>
+              <line class="mesh-line" x1="350" y1="150" x2="490" y2="150"/>
+              <line class="mesh-line" x1="350" y1="150" x2="490" y2="230"/>
+              <!-- Flow dots on lines -->
+              <circle class="mesh-dot mesh-dot-pulse" cx="200" cy="115" style="animation-delay:0.2s"/>
+              <circle class="mesh-dot mesh-dot-pulse" cx="200" cy="175" style="animation-delay:0.6s"/>
+              <circle class="mesh-dot mesh-dot-pulse" cx="420" cy="110" style="animation-delay:0.4s"/>
+              <circle class="mesh-dot mesh-dot-pulse" cx="420" cy="150" style="animation-delay:0.8s"/>
+              <circle class="mesh-dot mesh-dot-pulse" cx="420" cy="190" style="animation-delay:1.0s"/>
+              <!-- AWS box -->
+              <rect class="mesh-box" x="40" y="55" width="90" height="50"/>
+              <text class="mesh-lbl" x="85" y="78"><tspan font-size="6" fill="var(--text-dim)">&#9729;</tspan> AWS</text>
+              <text class="mesh-metric" x="85" y="95">12 services</text>
+              <!-- GCP box -->
+              <rect class="mesh-box" x="40" y="175" width="90" height="50"/>
+              <text class="mesh-lbl" x="85" y="198"><tspan font-size="6" fill="var(--text-dim)">&#9729;</tspan> GCP</text>
+              <text class="mesh-metric" x="85" y="215">8 services</text>
+              <!-- Meridian Hub (center) -->
+              <rect class="mesh-hub" x="250" y="120" width="120" height="60" rx="10"/>
+              <text class="mesh-hub-lbl" x="310" y="147">MERIDIAN</text>
+              <text class="mesh-metric" x="310" y="162" fill="var(--accent)">unified control</text>
+              <!-- Upstream services -->
+              <rect class="mesh-box" x="460" y="45" width="110" height="50"/>
+              <text class="mesh-lbl" x="515" y="67">Users API</text>
+              <text class="mesh-metric" x="515" y="83">3.2K rps · 0.8ms</text>
+              <rect class="mesh-box" x="460" y="125" width="110" height="50"/>
+              <text class="mesh-lbl" x="515" y="147">Payments</text>
+              <text class="mesh-metric" x="515" y="163">1.1K rps · 2.1ms</text>
+              <rect class="mesh-box" x="460" y="205" width="110" height="50"/>
+              <text class="mesh-lbl" x="515" y="227">Analytics</text>
+              <text class="mesh-metric" x="515" y="243">8.4K rps · 0.4ms</text>
+              <!-- Arrows/direction indicators -->
+              <text x="195" y="108" font-size="8" fill="var(--accent)" opacity="0.5">&#8594;</text>
+              <text x="195" y="182" font-size="8" fill="var(--accent)" opacity="0.5">&#8594;</text>
+              <text x="415" y="103" font-size="8" fill="var(--accent)" opacity="0.5">&#8594;</text>
+              <text x="415" y="153" font-size="8" fill="var(--accent)" opacity="0.5">&#8594;</text>
+              <text x="415" y="198" font-size="8" fill="var(--accent)" opacity="0.5">&#8594;</text>
+            </svg>
+          </div>
+        </div>
+        <div class="overlay"><h3>Multi-Cloud Mesh</h3><p>Unified management across AWS, GCP, Azure, and on-prem.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- COMPARISON TABLE -->
+<section class="compare">
+  <div class="section-glow"></div>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Comparison</div>
+      <h2 class="text-reveal">Meridian vs. <span class="grad">the rest</span></h2>
+      <p>Stop paying per-request premiums. Get everything you need in one gateway.</p>
+    </div>
+    <div class="compare-table reveal">
+      <table>
+        <thead><tr><th>Feature</th><th style="color:var(--accent)">Meridian</th><th>Kong</th><th>AWS API GW</th><th>Apigee</th></tr></thead>
+        <tbody>
+          <tr><td>p99 Latency</td><td class="highlight">0.4ms</td><td class="dim">8ms</td><td class="dim">29ms</td><td class="dim">15ms</td></tr>
+          <tr><td>Edge Locations</td><td class="highlight">200+</td><td class="dim">Self-hosted</td><td class="dim">22 regions</td><td class="dim">5 regions</td></tr>
+          <tr><td>Config as Code</td><td><span class="check">&#10003;</span> YAML + GitOps</td><td><span class="check">&#10003;</span> decK</td><td><span class="cross">&#10005;</span> CloudFormation</td><td><span class="cross">&#10005;</span> UI only</td></tr>
+          <tr><td>Built-in Analytics</td><td><span class="check">&#10003;</span> Full traces</td><td><span class="cross">&#10005;</span> Plugin</td><td><span class="cross">&#10005;</span> CloudWatch</td><td><span class="check">&#10003;</span> Limited</td></tr>
+          <tr><td>Custom Plugins</td><td class="highlight">JS, Go, Rust</td><td>Lua</td><td class="dim">Lambda only</td><td class="dim">Java</td></tr>
+          <tr><td>Multi-Cloud</td><td><span class="check">&#10003;</span> Native</td><td><span class="check">&#10003;</span> Manual</td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> Hybrid</td></tr>
+          <tr><td>Free Tier</td><td class="highlight">10M req/mo</td><td class="dim">OSS only</td><td class="dim">1M req/mo</td><td class="dim">Trial only</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- STICKY SCROLL SECTION -->
+<section class="sticky-section dot-bg">
+  <div class="section-glow"></div>
+  <div class="sticky-inner">
+    <!-- Pinned visual: Security Command Center -->
+    <div class="sticky-visual">
+      <div class="sticky-ui">
+        <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Security</span><span class="tab">Compliance</span><span class="tab">Threats</span></div>
+        <div class="ui-body sec-dash">
+          <div class="shield-area">
+            <div class="shield-ring">
+              <svg viewBox="0 0 100 100">
+                <circle class="ring-bg" cx="50" cy="50" r="45"/>
+                <circle class="ring-fg" cx="50" cy="50" r="45"/>
+              </svg>
+              <div class="shield-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+            </div>
+            <div class="shield-label">All systems protected</div>
+          </div>
+          <div class="threat-feed">
+            <div class="threat-feed-title"><span class="live-dot"></span> Live Threat Feed</div>
+            <div class="feed-line"><span class="tag block">BLOCK</span> SQL injection attempt <span class="ip">203.0.113.42</span></div>
+            <div class="feed-line"><span class="tag block">BLOCK</span> Brute force /api/auth <span class="ip">198.51.100.7</span></div>
+            <div class="feed-line"><span class="tag warn">RATE</span> 10K+ req/min throttled <span class="ip">192.0.2.15</span></div>
+            <div class="feed-line"><span class="tag allow">PASS</span> mTLS verified request <span class="ip">internal</span></div>
+            <div class="feed-line"><span class="tag block">BLOCK</span> Invalid JWT signature <span class="ip">203.0.113.99</span></div>
+            <div class="feed-line"><span class="tag allow">PASS</span> OAuth2 token refresh <span class="ip">internal</span></div>
+            <div class="feed-line"><span class="tag warn">SCAN</span> Port scan detected <span class="ip">198.51.100.23</span></div>
+          </div>
+          <div class="compliance-row">
+            <div class="compliance-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> SOC 2</div>
+            <div class="compliance-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> HIPAA</div>
+            <div class="compliance-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> GDPR</div>
+            <div class="compliance-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> PCI DSS</div>
+            <div class="compliance-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ISO 27001</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrolling features -->
+    <div class="sticky-text">
+      <div class="sticky-text-inner">
+        <div class="sticky-feature" data-sticky-idx="0">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="eyebrow">Zero Trust</div>
+          <h3>End-to-End mTLS</h3>
+          <p>Automatic certificate rotation and pinning across all services. Zero trust from edge to origin — every connection encrypted, every identity verified.</p>
+          <div class="feat-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 100% encrypted connections</div>
+        </div>
+
+        <div class="sticky-feature" data-sticky-idx="1">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="eyebrow">Authentication</div>
+          <h3>OAuth 2.0 + JWT at the Edge</h3>
+          <p>Validate tokens before they reach your services. Block bad actors at the perimeter — sub-millisecond auth that never touches your application code.</p>
+          <div class="feat-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> 0.2ms avg validation time</div>
+        </div>
+
+        <div class="sticky-feature" data-sticky-idx="2">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="eyebrow">Geo-Fencing</div>
+          <h3>Geo-Based Policies</h3>
+          <p>Block, route, or rate-limit based on country, ASN, or IP range. Data residency enforcement and compliance built into the infrastructure layer.</p>
+          <div class="feat-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 195 countries supported</div>
+        </div>
+
+        <div class="sticky-feature" data-sticky-idx="3">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="eyebrow">Protection</div>
+          <h3>DDoS Shield & Rate Limiting</h3>
+          <p>Automatic DDoS mitigation at the edge. Configurable rate limits per endpoint, per client, per API key — with intelligent burst handling.</p>
+          <div class="feat-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 2.4M threats blocked / month</div>
+        </div>
+
+        <div class="sticky-feature" data-sticky-idx="4">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="eyebrow">Intelligence</div>
+          <h3>Bot Detection & WAF</h3>
+          <p>ML-powered bot detection that distinguishes real users from automated scrapers. WAF rules auto-update with zero-day vulnerability feeds in real-time.</p>
+          <div class="feat-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> 99.7% bot detection accuracy</div>
+        </div>
+
+        <div class="sticky-feature" data-sticky-idx="5">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg></div>
+          <div class="eyebrow">Governance</div>
+          <h3>API Key Management</h3>
+          <p>Centralized key issuance, rotation, and revocation. Scoped permissions, usage analytics per key, and automatic rotation on compromise detection.</p>
+          <div class="feat-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Auto-rotate on breach detection</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS STRIP -->
+<section class="metrics">
+  <div class="metrics-wrap">
+  <div class="metrics-track">
+    <div class="metric-item"><span class="val">2B+</span><span class="label">Requests / day</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">200+</span><span class="label">Edge locations</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">0.4ms</span><span class="label">p99 Latency</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">99.99%</span><span class="label">Uptime SLA</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">83%</span><span class="label">Cost reduction</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">150+</span><span class="label">Plugins</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">2B+</span><span class="label">Requests / day</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">200+</span><span class="label">Edge locations</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">0.4ms</span><span class="label">p99 Latency</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">99.99%</span><span class="label">Uptime SLA</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">83%</span><span class="label">Cost reduction</span><span class="dot"></span></div>
+    <div class="metric-item"><span class="val">150+</span><span class="label">Plugins</span><span class="dot"></span></div>
+  </div>
+  </div>
+</section>
+
+
+<!-- TABS SECTION -->
+<section class="tabs-section dot-bg">
+  <div class="section-glow"></div>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Platform</div>
+      <h2 class="text-reveal">Built for every <span class="shimmer-text">workflow</span></h2>
+      <p>Whether you're deploying microservices or managing a monolith, Meridian adapts.</p>
+    </div>
+    <div class="tab-buttons reveal">
+      <button class="tab-btn active" data-tab="routing">Routing</button>
+      <button class="tab-btn" data-tab="plugins">Plugins</button>
+      <button class="tab-btn" data-tab="multicloud">Multi-Cloud</button>
+    </div>
+    <div class="tab-panels">
+      <div class="tab-panel active" id="tab-routing">
+        <div class="tab-panel-text reveal"><h3>Intelligent Routing Engine</h3><p>Content-based routing, load balancing, canary deployments, and circuit breaking — all configured in YAML or our visual editor.</p>
+          <ul><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Path, header, and body-based routing</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Weighted round-robin with auto failover</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Canary deployments with real-time rollback</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Circuit breaking with configurable thresholds</li></ul>
+        </div>
+        <div class="tab-panel-visual reveal">
+          <div class="product-ui">
+            <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Routes</span><span class="tab">Rules</span></div>
+            <div class="ui-body ui-flow">
+              <svg viewBox="0 0 440 280" preserveAspectRatio="xMidYMid meet">
+                <defs><marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0, 6 2, 0 4" fill="rgba(6,182,212,0.3)"/></marker><marker id="arrowhead-active" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0, 6 2, 0 4" fill="var(--accent)"/></marker></defs>
+                <!-- Incoming requests -->
+                <rect class="flow-box" x="10" y="110" width="80" height="40"/><text class="flow-lbl" x="50" y="132">Requests</text><text class="flow-sub" x="50" y="144">12.4K/s</text>
+                <!-- Meridian gateway -->
+                <rect class="flow-box-accent" x="150" y="90" width="120" height="80"/><text class="flow-lbl" x="210" y="120" fill="var(--accent)" font-weight="600" font-size="10">MERIDIAN</text><text class="flow-sub" x="210" y="135">routing engine</text><text class="flow-sub" x="210" y="148">0.4ms p99</text>
+                <!-- Arrows in -->
+                <line class="flow-arrow-active" x1="90" y1="130" x2="148" y2="130"/>
+                <!-- Upstream services -->
+                <rect class="flow-box" x="330" y="30" width="100" height="36"/><text class="flow-lbl" x="380" y="48">Users API</text><text class="flow-sub" x="380" y="58">path: /api/users/*</text>
+                <rect class="flow-box" x="330" y="85" width="100" height="36"/><text class="flow-lbl" x="380" y="103">Auth Service</text><text class="flow-sub" x="380" y="113">path: /api/auth/*</text>
+                <rect class="flow-box" x="330" y="140" width="100" height="36"/><text class="flow-lbl" x="380" y="158">Payments</text><text class="flow-sub" x="380" y="168">path: /api/pay/*</text>
+                <rect class="flow-box" x="330" y="195" width="100" height="36"/><text class="flow-lbl" x="380" y="213">Analytics</text><text class="flow-sub" x="380" y="223">path: /api/events/*</text>
+                <!-- Arrows out -->
+                <line class="flow-arrow" x1="270" y1="110" x2="328" y2="48"/><line class="flow-arrow-active" x1="270" y1="120" x2="328" y2="103"/>
+                <line class="flow-arrow" x1="270" y1="140" x2="328" y2="158"/><line class="flow-arrow" x1="270" y1="150" x2="328" y2="213"/>
+                <!-- Rules box -->
+                <rect class="flow-box" x="155" y="200" width="110" height="55" rx="4"/><text class="flow-sub" x="210" y="215" fill="var(--text-muted)">Active Rules</text>
+                <text class="flow-sub" x="210" y="228">canary: v2 → 15%</text><text class="flow-sub" x="210" y="240">circuit-break: 5xx > 5%</text><text class="flow-sub" x="210" y="252">failover: us-east → eu</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="tab-plugins">
+        <div class="tab-panel-text"><h3>Extensible Plugin System</h3><p>Write edge functions in JavaScript, Go, or Rust with under 10ms cold start. Browse 150+ community plugins or build your own.</p>
+          <ul><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Request/response transforms</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Declarative policy engine (CORS, caching)</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> One-click plugin registry deployment</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Hot-reload without gateway restart</li></ul>
+        </div>
+        <div class="tab-panel-visual">
+          <div class="product-ui">
+            <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Registry</span><span class="tab">Installed</span></div>
+            <div class="ui-body ui-plugins">
+              <div class="plugin-grid">
+                <div class="p-card"><div class="p-name"><span class="p-pill">RS</span> rate-limiter</div><div class="p-desc">Token bucket and sliding window rate limiting per IP, key, or header.</div><div class="p-meta"><span class="dl">42K installs</span><span>v3.2.1</span></div></div>
+                <div class="p-card"><div class="p-name"><span class="p-pill">JS</span> cors-handler</div><div class="p-desc">Configurable CORS headers with wildcard and credentials support.</div><div class="p-meta"><span class="dl">38K installs</span><span>v2.1.0</span></div></div>
+                <div class="p-card"><div class="p-name"><span class="p-pill">GO</span> jwt-validator</div><div class="p-desc">RFC 7519 JWT validation with JWKS rotation and claim assertions.</div><div class="p-meta"><span class="dl">31K installs</span><span>v4.0.3</span></div></div>
+                <div class="p-card"><div class="p-name"><span class="p-pill">RS</span> cache-layer</div><div class="p-desc">Edge caching with stale-while-revalidate and cache tags for purge.</div><div class="p-meta"><span class="dl">27K installs</span><span>v2.8.0</span></div></div>
+                <div class="p-card"><div class="p-name"><span class="p-pill">JS</span> body-transform</div><div class="p-desc">JSONPath transforms on request/response bodies. GraphQL support.</div><div class="p-meta"><span class="dl">19K installs</span><span>v1.5.2</span></div></div>
+                <div class="p-card"><div class="p-name"><span class="p-pill">GO</span> circuit-breaker</div><div class="p-desc">Configurable thresholds with half-open recovery and metrics export.</div><div class="p-meta"><span class="dl">15K installs</span><span>v3.1.0</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="tab-multicloud">
+        <div class="tab-panel-text"><h3>True Multi-Cloud</h3><p>One configuration for every cloud. Deploy Meridian across AWS, GCP, Azure, and bare metal with unified management.</p>
+          <ul><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Unified control plane with GitOps sync</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Hybrid mesh: connect on-prem + cloud</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Data residency + compliance controls</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> SOC 2 and HIPAA built in</li></ul>
+        </div>
+        <div class="tab-panel-visual">
+          <div class="product-ui">
+            <div class="ui-bar"><div class="dots"><span></span><span></span><span></span></div><span class="tab active">Deployments</span><span class="tab">Config</span></div>
+            <div class="ui-body ui-deploy">
+              <svg viewBox="0 0 440 280" preserveAspectRatio="xMidYMid meet">
+                <!-- Meridian Control Plane -->
+                <rect class="deploy-active" x="160" y="20" width="120" height="50"/><text class="deploy-lbl" x="220" y="42" fill="var(--accent)" font-weight="600">Meridian Control</text><text class="deploy-stat" x="220" y="56">unified config · GitOps sync</text>
+                <!-- Connection lines -->
+                <line class="deploy-line" x1="180" y1="70" x2="70" y2="110"/><line class="deploy-line" x1="220" y1="70" x2="220" y2="110"/>
+                <line class="deploy-line" x1="260" y1="70" x2="370" y2="110"/>
+                <!-- AWS -->
+                <rect class="deploy-box" x="20" y="110" width="100" height="70"/><text class="deploy-lbl" x="70" y="132">AWS</text>
+                <text class="deploy-stat" x="70" y="145">us-east-1, eu-west-1</text><text class="deploy-stat" x="70" y="157">6 gateways · 12 routes</text>
+                <text class="deploy-check" x="70" y="172">&#10003; synced 4s ago</text>
+                <!-- GCP -->
+                <rect class="deploy-box" x="170" y="110" width="100" height="70"/><text class="deploy-lbl" x="220" y="132">GCP</text>
+                <text class="deploy-stat" x="220" y="145">us-central1, asia-east1</text><text class="deploy-stat" x="220" y="157">4 gateways · 8 routes</text>
+                <text class="deploy-check" x="220" y="172">&#10003; synced 2s ago</text>
+                <!-- Azure -->
+                <rect class="deploy-box" x="320" y="110" width="100" height="70"/><text class="deploy-lbl" x="370" y="132">Azure</text>
+                <text class="deploy-stat" x="370" y="145">westeurope, eastus</text><text class="deploy-stat" x="370" y="157">3 gateways · 6 routes</text>
+                <text class="deploy-check" x="370" y="172">&#10003; synced 8s ago</text>
+                <!-- On-prem -->
+                <line class="deploy-line" x1="220" y1="180" x2="220" y2="210"/>
+                <rect class="deploy-box" x="145" y="210" width="150" height="50"/><text class="deploy-lbl" x="220" y="232">On-Premises</text>
+                <text class="deploy-stat" x="220" y="245">bare metal · k8s cluster</text><text class="deploy-check" x="220" y="258">&#10003; hybrid mesh active</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TESTIMONIALS -->
+<section class="testimonial dot-bg">
+  <div class="section-glow"></div>
+  <div class="wrap">
+    <div class="section-head reveal" style="text-align:center">
+      <div class="eyebrow" style="text-align:center">What engineers say</div>
+      <h2 class="text-reveal" style="text-align:center">Trusted by the <span class="shimmer-text">best teams</span></h2>
+    </div>
+    <div class="testi-grid spotlight-container">
+      <div class="testi-card reveal">
+        <blockquote>"We migrated from Kong to Meridian in a weekend. Our p99 latency dropped from 45ms to 2ms. The config-as-code approach made it trivial to replicate across environments."</blockquote>
+        <div class="testi-author"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80" alt="Daniel Okonkwo" loading="lazy"><div><div class="name">Daniel Okonkwo</div><div class="role">VP of Platform, Datadog</div></div></div>
+      </div>
+      <div class="testi-card featured reveal">
+        <blockquote>"Meridian replaced three separate tools in our stack — API gateway, rate limiter, and observability layer. It's the single best infrastructure decision we've made this year."</blockquote>
+        <div class="testi-author"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80" alt="Ines Moreno" loading="lazy"><div><div class="name">Ines Moreno</div><div class="role">Principal SRE, Shopify</div></div></div>
+      </div>
+      <div class="testi-card reveal">
+        <blockquote>"The plugin system is incredible. We wrote a custom auth middleware in Rust that runs at the edge with sub-millisecond overhead. Nothing else comes close."</blockquote>
+        <div class="testi-author"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&q=80" alt="Kai Nakamura" loading="lazy"><div><div class="name">Kai Nakamura</div><div class="role">CTO, Railway</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- BOTTOM CTA -->
+<section class="cta-section">
+  <div class="cta-mesh"></div>
+  <div class="eyebrow reveal" style="text-align:center;position:relative;z-index:2">Get Started</div>
+  <h2 class="reveal text-reveal">Deploy in <span class="shimmer-text">30 seconds</span></h2>
+  <p class="reveal">One command. Global edge. Zero config files to write.</p>
+  <div class="cta-email reveal">
+    <input type="email" placeholder="you@company.com" aria-label="Email address">
+    <button type="button" class="ripple">Start free</button>
+  </div>
+  <div class="cta-terminal reveal">
+    <div class="terminal-dots"><span></span><span></span><span></span></div>
+    <button class="copy-btn" onclick="navigator.clipboard.writeText('curl -sSL https://get.meridian.dev | sh')">Copy</button>
+    <div class="terminal-line"><span class="cmd">$</span> curl <span class="flag">-sSL</span> <span class="url">https://get.meridian.dev</span> | sh</div>
+  </div>
+  <div class="cta-links reveal">
+    <a href="#" class="primary">Read the docs</a>
+    <a href="#">View on GitHub</a>
+    <a href="#">Book a demo</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo" style="margin-bottom:4px">
+Meridian
+      </div>
+      <p>The unified API gateway for modern engineering teams.</p>
+    </div>
+    <div class="footer-col"><h4>Product</h4><a href="#">Routing</a><a href="#">Security</a><a href="#">Analytics</a><a href="#">Plugins</a><a href="#">Multi-cloud</a></div>
+    <div class="footer-col"><h4>Developers</h4><a href="#">Documentation</a><a href="#">API Reference</a><a href="#">SDKs</a><a href="#">CLI</a><a href="#">Status</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Contact</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">GDPR</a><a href="#">SOC 2</a></div>
+  </div>
+  <div class="footer-bottom"><span id="copyright"></span><span>Built with care for developer experience.</span></div>
+</footer>
+
+<!-- CDN Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.min.js" defer></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('copyright').textContent = `\u00A9 ${new Date().getFullYear()} Meridian. All rights reserved.`;
+  const isDesktop = window.matchMedia('(min-width:769px)').matches;
+
+  // ─── LENIS SMOOTH SCROLL ───
+  function initLenis() {
+    if (typeof Lenis === 'undefined') { setTimeout(initLenis, 50); return; }
+    const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    // Connect Lenis to GSAP ScrollTrigger
+    lenis.on('scroll', () => { if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.update(); });
+  }
+  initLenis();
+
+  // ─── SCROLL PROGRESS BAR ───
+  const progressBar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (window.scrollY / h * 100) + '%';
+  }, { passive: true });
+
+  // ─── MAGNETIC BUTTONS (desktop) ───
+  if (isDesktop) {
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) * 0.3;
+        const y = (e.clientY - r.top - r.height / 2) * 0.3;
+        el.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+  }
+
+  // ─── RIPPLE CLICK EFFECT ───
+  document.querySelectorAll('.ripple').forEach(el => {
+    el.addEventListener('click', function(e) {
+      const circle = document.createElement('span');
+      circle.classList.add('ripple-circle');
+      const r = this.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      circle.style.width = circle.style.height = size + 'px';
+      circle.style.left = (e.clientX - r.left - size / 2) + 'px';
+      circle.style.top = (e.clientY - r.top - size / 2) + 'px';
+      this.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    });
+  });
+
+  // ─── CAROUSEL ───
+  document.querySelectorAll('.carousel-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = document.getElementById(btn.dataset.target);
+      if (t) t.scrollBy({ left: parseInt(btn.dataset.dir) * 400, behavior: 'smooth' });
+    });
+  });
+
+  // ─── TABS ───
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById('tab-' + btn.dataset.tab);
+      panel.classList.add('active');
+      if (typeof gsap !== 'undefined') gsap.from(panel.querySelectorAll('li'), { opacity: 0, x: -12, stagger: 0.06, duration: 0.4, delay: 0.15 });
+    });
+  });
+
+  // ─── COPY ───
+  document.querySelectorAll('.copy-btn').forEach(b => { b.addEventListener('click', function() { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000); }); });
+
+  // ─── WAIT FOR GSAP ───
+  function waitForGsap(cb) {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') { cb(); return; }
+    setTimeout(() => waitForGsap(cb), 50);
+  }
+
+  waitForGsap(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Splitting.js headline
+    if (typeof Splitting !== 'undefined') {
+      Splitting();
+      gsap.fromTo('.hero h1 [data-splitting] .char', { opacity: 0, y: 30, rotateX: -60 }, { opacity: 1, y: 0, rotateX: 0, stagger: 0.025, duration: 0.7, delay: 0.3, ease: 'back.out(1.2)' });
+    }
+    gsap.fromTo('.flip-words', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.8, ease: 'power2.out' });
+
+    // Typed.js — CTA terminal (bottom section only)
+    if (typeof Typed !== 'undefined') {
+      const ctaLines = document.querySelectorAll('.cta-terminal .terminal-line[data-typed]');
+      if (ctaLines.length) {
+        const originals = []; ctaLines.forEach(l => { originals.push(l.innerHTML); l.innerHTML = ''; });
+        const output = document.querySelector('.cta-terminal .terminal-output');
+        function typeSeq(i) {
+          if (i >= originals.length) { if (output) output.classList.add('typed-done'); return; }
+          new Typed(ctaLines[i], { strings: [originals[i]], typeSpeed: 22, showCursor: false, contentType: 'html', onComplete: () => typeSeq(i + 1) });
+        }
+        setTimeout(() => typeSeq(0), 500);
+      }
+    }
+
+    // Hero subtitle + CTA fade in
+    gsap.fromTo('.hero .subtitle', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, delay: 1 });
+    gsap.fromTo('.hero-ctas', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, delay: 1.2 });
+    gsap.fromTo('.hero-app-wrap', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1, delay: 1.5, ease: 'power3.out' });
+
+    // Clip-path text reveals on scroll
+    document.querySelectorAll('.text-reveal').forEach(el => {
+      ScrollTrigger.create({ trigger: el, start: 'top 80%', once: true, onEnter: () => el.classList.add('revealed') });
+    });
+
+    // General reveals
+    gsap.set('.reveal', { opacity: 0, y: 30 });
+    document.querySelectorAll('.reveal').forEach(el => {
+      gsap.to(el, { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
+    });
+
+    // Bento stagger
+    gsap.set('.bento-card', { opacity: 0, y: 50 });
+    gsap.to('.bento-card', { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.bento-grid', start: 'top 80%', once: true } });
+
+    // Bento widget animations — trigger .animated class with stagger
+    document.querySelectorAll('.bento-card').forEach((card, i) => {
+      ScrollTrigger.create({
+        trigger: card, start: 'top 80%', once: true,
+        onEnter: () => { setTimeout(() => card.classList.add('animated'), 200 + i * 100); }
+      });
+    });
+    // Add --ni custom property for node stagger
+    document.querySelectorAll('.widget-nodes .node').forEach((n, i) => n.style.setProperty('--ni', i));
+
+    // Testimonials stagger
+    gsap.set('.testi-card', { opacity: 0, y: 40 });
+    gsap.to('.testi-card', { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.testi-grid', start: 'top 80%', once: true } });
+
+    // Comparison rows
+    gsap.set('.compare-table tbody tr', { opacity: 0, x: -30 });
+    gsap.to('.compare-table tbody tr', { x: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.compare-table', start: 'top 80%', once: true } });
+
+    // Desktop parallax
+    if (isDesktop) {
+      document.querySelectorAll('.section-head h2').forEach(h => {
+        gsap.to(h, { y: -25, ease: 'none', scrollTrigger: { trigger: h, start: 'top 90%', end: 'top 20%', scrub: 1.5 } });
+      });
+      // Parallax on images
+      document.querySelectorAll('.tab-panel-visual img').forEach(img => {
+        gsap.to(img, { y: -30, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: 1 } });
+      });
+      // Sticky scroll — activate features on scroll
+      document.querySelector('.sticky-section')?.classList.add('js-sticky');
+      document.querySelectorAll('.sticky-feature').forEach(feat => {
+        ScrollTrigger.create({
+          trigger: feat, start: 'top 60%', end: 'bottom 40%',
+          onEnter: () => feat.classList.add('active'),
+          onLeave: () => feat.classList.remove('active'),
+          onEnterBack: () => feat.classList.add('active'),
+          onLeaveBack: () => feat.classList.remove('active')
+        });
+      });
+    }
+
+    // Counter animations
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const isDecimal = target % 1 !== 0;
+      const proxy = { val: 0 };
+      gsap.to(proxy, {
+        val: target, duration: 2.5, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        onUpdate() { el.textContent = (isDecimal ? proxy.val.toFixed(target < 1 ? 1 : 2) : Math.round(proxy.val)) + suffix; }
+      });
+    });
+  });
+
+  // ─── SPOTLIGHT ───
+  if (isDesktop) {
+    document.querySelectorAll('.spotlight-container').forEach(container => {
+      const cards = container.querySelectorAll('.bento-card, .c-card, .testi-card');
+      container.addEventListener('mousemove', e => {
+        cards.forEach(card => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', (e.clientX - r.left) + 'px');
+          card.style.setProperty('--mouse-y', (e.clientY - r.top) + 'px');
+          card.style.setProperty('--glow-opacity', '1');
+        });
+      });
+      container.addEventListener('mouseleave', () => { cards.forEach(c => c.style.setProperty('--glow-opacity', '0')); });
+    });
+
+    // Vanilla Tilt
+    function initTilt() {
+      if (typeof VanillaTilt !== 'undefined') {
+        VanillaTilt.init(document.querySelectorAll('.c-card'), { max: 5, speed: 400, glare: true, 'max-glare': 0.05 });
+      } else setTimeout(initTilt, 100);
+    }
+    initTilt();
+  }
+
+  // ─── CANVAS CONSTELLATION ───
+  if (isDesktop) {
+    const canvas = document.getElementById('constellation');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles = [];
+    function initConst() {
+      const hero = canvas.parentElement;
+      w = canvas.width = hero.clientWidth;
+      h = canvas.height = hero.clientHeight;
+      particles = [];
+      for (let i = 0; i < 60; i++) {
+        particles.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35 });
+      }
+    }
+    requestAnimationFrame(() => requestAnimationFrame(initConst));
+    window.addEventListener('resize', initConst);
+    function draw() {
+      if (!w || !h) { requestAnimationFrame(draw); return; }
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(6,182,212,0.3)'; ctx.fill();
+      });
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 140) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(6,182,212,${0.1 * (1 - dist / 140)})`; ctx.stroke(); }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // ─── AMBIENT WIDGET ANIMATIONS ───
+  // Bar chart: continuously shift bar heights like live data
+  const barsEl = document.querySelector('.widget-bars');
+  if (barsEl) {
+    const bars = barsEl.querySelectorAll('.bar');
+    const baseHeights = Array.from(bars).map(b => parseInt(b.style.height));
+    setInterval(() => {
+      bars.forEach((bar, i) => {
+        const shift = (Math.random() - 0.5) * 25;
+        const h = Math.max(15, Math.min(98, baseHeights[i] + shift));
+        baseHeights[i] = h;
+        bar.style.height = h + '%';
+      });
+    }, 2000);
+  }
+
+  // Log stream: cycle log lines with new entries
+  const logEl = document.querySelector('.widget-log');
+  if (logEl) {
+    const methods = ['GET','POST','PUT','DELETE','PATCH'];
+    const paths = ['/api/v2/users','/api/v2/events','/api/v2/config','/api/v2/routes','/api/v2/auth','/api/v2/metrics'];
+    const sts = [{c:'200',cl:'var(--accent)'},{c:'201',cl:'var(--accent)'},{c:'204',cl:'var(--accent)'},{c:'429',cl:'#F59E0B'},{c:'500',cl:'#EF4444'}];
+    setInterval(() => {
+      const lines = logEl.querySelectorAll('div');
+      if (lines.length >= 4) {
+        lines[0].style.opacity = '0';
+        lines[0].style.transform = 'translateY(-8px)';
+        setTimeout(() => {
+          lines[0].remove();
+          const d = document.createElement('div');
+          const now = new Date();
+          const ts = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+          const m = methods[Math.floor(Math.random()*methods.length)];
+          const p = paths[Math.floor(Math.random()*paths.length)];
+          const s = sts[Math.floor(Math.random()*sts.length)];
+          const lat = (Math.random()*3).toFixed(1);
+          d.innerHTML = `<span class="ts">${ts}</span><span class="method">${m}</span> ${p} <span style="color:${s.cl}">${s.c}</span> ${lat}ms`;
+          d.style.opacity = '0'; d.style.transform = 'translateY(4px)';
+          logEl.appendChild(d);
+          requestAnimationFrame(() => { d.style.opacity = '1'; d.style.transform = 'none'; });
+        }, 300);
+      }
+    }, 2200);
+  }
+
+  // Node grid: randomly toggle active nodes
+  const nodeGrid = document.querySelector('.widget-nodes');
+  if (nodeGrid) {
+    const nodes = nodeGrid.querySelectorAll('.node');
+    setInterval(() => {
+      const idx = Math.floor(Math.random() * nodes.length);
+      const n = nodes[idx];
+      if (!n.classList.contains('warn')) {
+        n.classList.toggle('active');
+      }
+    }, 700);
+  }
+
+  // Auth values: randomly fluctuate
+  const authVals = document.querySelectorAll('.bento-card:nth-child(2) .widget-row .val');
+  if (authVals.length) {
+    const bases = [12.4, 8.1, 247];
+    setInterval(() => {
+      authVals.forEach((v, i) => {
+        if (v.classList.contains('warn')) {
+          const n = Math.max(200, Math.min(350, bases[i] + Math.floor((Math.random()-0.5)*40)));
+          bases[i] = n; v.textContent = n;
+        } else {
+          const shift = (Math.random()-0.5)*2;
+          bases[i] = Math.max(1, bases[i] + shift);
+          v.textContent = bases[i].toFixed(1) + 'K/s';
+        }
+      });
+    }, 1800);
+  }
+
+  // Throughput header value fluctuation
+  const throughputEl = document.querySelector('.bento-card:nth-child(1) .widget-header span:last-child');
+  if (throughputEl) {
+    setInterval(() => {
+      const v = (2 + Math.random() * 0.3).toFixed(2);
+      throughputEl.textContent = v + ' TB/s';
+    }, 3000);
+  }
+
+  // Dashboard stat values: subtle fluctuation
+  const dashStats = document.querySelectorAll('.ui-dash .stat-card .v');
+  if (dashStats.length >= 4) {
+    setInterval(() => {
+      dashStats[0].textContent = (2.0 + Math.random()*0.3).toFixed(1) + 'B';
+      dashStats[1].textContent = (0.3 + Math.random()*0.2).toFixed(1) + 'ms';
+      dashStats[2].textContent = (99.98 + Math.random()*0.02).toFixed(2) + '%';
+      const nodes = 210 + Math.floor(Math.random()*6);
+      dashStats[3].textContent = nodes;
+    }, 2500);
+  }
+
+  // Edge map status bar: fluctuate metrics
+  const edgeTexts = document.querySelectorAll('.ui-map svg text');
+  if (edgeTexts.length) {
+    const latencyEl = Array.from(edgeTexts).find(t => t.textContent.includes('avg latency'));
+    const throughEl = Array.from(edgeTexts).find(t => t.textContent.includes('throughput'));
+    if (latencyEl && throughEl) {
+      setInterval(() => {
+        latencyEl.textContent = 'avg latency: ' + (2.8 + Math.random()*1).toFixed(1) + 'ms';
+        throughEl.textContent = 'throughput: ' + (2 + Math.random()*0.3).toFixed(2) + ' TB/s';
+      }, 3000);
+    }
+  }
+
+  // Threat feed: cycle lines in security dashboard
+  const feedEl = document.querySelector('.threat-feed');
+  if (feedEl) {
+    const threats = [
+      {tag:'block',text:'SQL injection attempt'},{tag:'block',text:'Brute force /api/auth'},
+      {tag:'warn',text:'10K+ req/min throttled'},{tag:'block',text:'XSS payload in header'},
+      {tag:'allow',text:'mTLS verified request'},{tag:'block',text:'Invalid JWT signature'},
+      {tag:'warn',text:'Port scan detected'},{tag:'allow',text:'OAuth2 token refresh'},
+      {tag:'block',text:'Path traversal blocked'},{tag:'block',text:'SSRF attempt detected'},
+      {tag:'warn',text:'Rate limit near threshold'},{tag:'allow',text:'API key validated'},
+      {tag:'block',text:'Bot signature matched'},{tag:'block',text:'Credential stuffing'}
+    ];
+    const ips = ['203.0.113.','198.51.100.','192.0.2.','10.0.','172.16.','internal'];
+    setInterval(() => {
+      const lines = feedEl.querySelectorAll('.feed-line');
+      if (lines.length >= 7) {
+        lines[0].style.opacity = '0'; lines[0].style.transform = 'translateX(-10px)';
+        lines[0].style.transition = 'opacity 0.3s, transform 0.3s';
+        setTimeout(() => {
+          lines[0].remove();
+          const d = document.createElement('div'); d.className = 'feed-line';
+          const t = threats[Math.floor(Math.random()*threats.length)];
+          const ip = t.tag === 'allow' ? 'internal' : ips[Math.floor(Math.random()*4)] + Math.floor(Math.random()*255);
+          d.innerHTML = `<span class="tag ${t.tag}">${t.tag === 'block' ? 'BLOCK' : t.tag === 'warn' ? 'RATE' : 'PASS'}</span> ${t.text} <span class="ip">${ip}</span>`;
+          d.style.opacity = '0'; d.style.transform = 'translateX(10px)';
+          d.style.transition = 'opacity 0.3s, transform 0.3s';
+          feedEl.appendChild(d);
+          requestAnimationFrame(() => { d.style.opacity = '1'; d.style.transform = 'none'; });
+        }, 300);
+      }
+    }, 1800);
+  }
+
+  // Hero app panel — cycle log entries
+  const heroLog = document.querySelector('.app-panel .panel-log');
+  if (heroLog) {
+    const methods = ['GET','POST','PUT','DELETE'];
+    const paths = ['/api/users','/api/auth','/api/config','/api/events','/api/pay','/api/search','/api/hooks'];
+    const statuses = [{c:'200',cl:'s2'},{c:'201',cl:'s2'},{c:'200',cl:'s2'},{c:'429',cl:'s4'},{c:'200',cl:'s2'}];
+    setInterval(() => {
+      const entries = heroLog.querySelectorAll('.log-entry');
+      if (entries.length >= 6) {
+        entries[0].style.opacity = '0';
+        entries[0].style.transition = 'opacity 0.2s';
+        setTimeout(() => {
+          entries[0].remove();
+          const e = document.createElement('div'); e.className = 'log-entry';
+          const now = new Date();
+          const ts = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+          const m = methods[Math.floor(Math.random()*methods.length)];
+          const p = paths[Math.floor(Math.random()*paths.length)];
+          const s = statuses[Math.floor(Math.random()*statuses.length)];
+          e.innerHTML = `<span class="log-time">${ts}</span><span class="log-method">${m}</span>${p}<span class="log-status ${s.cl}">${s.c}</span>`;
+          e.style.opacity = '0';
+          heroLog.appendChild(e);
+          requestAnimationFrame(() => { e.style.transition = 'opacity 0.3s'; e.style.opacity = '1'; });
+        }, 200);
+      }
+    }, 1800);
+  }
+});
+</script>
+</body>
+</html>

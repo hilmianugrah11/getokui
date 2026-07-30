@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AeroNet Core — Planetary Relay Network</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style id="advanced-infrastructure-system">
+:root{--ai-primary:#3B82F6;--ai-secondary:#93C5FD;--ai-tertiary:#2563EB;--ai-neutral:#050505;--ai-surface:#0C0C0E;--ai-text:#F4F4F5;--ai-muted:#71717A;--ai-border:rgba(255,255,255,.08);--ai-border-soft:rgba(255,255,255,.05)}
+html{background:var(--ai-neutral);scroll-behavior:smooth}body{background:var(--ai-neutral)!important;color:var(--ai-text)!important;font-family:'Inter',sans-serif!important}body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 50% -10%,rgba(59,130,246,.14),transparent 34%),radial-gradient(circle at 88% 12%,rgba(147,197,253,.08),transparent 28%),linear-gradient(180deg,#050505 0%,#050505 100%)}body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.12;background-image:linear-gradient(to right,rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.04) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(circle at center,black,transparent 82%);-webkit-mask-image:radial-gradient(circle at center,black,transparent 82%)}
+section:not(#top),footer{background:#050505!important;border-color:rgba(255,255,255,.06)!important}section:not(#top){padding-top:96px!important;padding-bottom:96px!important}h1,h2{font-weight:500!important;letter-spacing:-.025em!important;color:var(--ai-text)!important}h3,summary{font-weight:500!important;color:var(--ai-text)!important}p,li,summary,a,button,span{font-weight:400}.text-white,.text-zinc-50,.text-zinc-100{color:var(--ai-text)!important}.text-gray-400,.text-gray-500,.text-zinc-400,.text-zinc-500,.text-gray-600{color:var(--ai-muted)!important}.text-blue-500,.text-blue-400{color:var(--ai-primary)!important}.text-blue-300,.text-blue-200{color:var(--ai-secondary)!important}.bg-blue-500{background-color:var(--ai-primary)!important}.border-white\/10,.border-white\/20{border-color:var(--ai-border)!important}
+.rounded-2xl:not(.rounded-full),.rounded-xl{border-radius:12px!important}.shadow-2xl{box-shadow:0 0 50px rgba(0,0,0,.5)!important}[class*='bg-white/[']{background-color:rgba(255,255,255,.035)!important}[class*='bg-black/']{background-color:rgba(5,5,5,.72)!important}.bg-zinc-950,.bg-zinc-900\/80,.bg-zinc-900\/60,.bg-\[\#0c0c0e\]{background-color:var(--ai-surface)!important}
+section .rounded-2xl.border[class*='bg-white/[']{background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.016) 8px,rgba(255,255,255,.016) 16px)!important;border-color:rgba(255,255,255,.08)!important;padding:9px!important;box-shadow:none!important}section .rounded-2xl.border[class*='bg-white/['] > .rounded-2xl,section .rounded-2xl.border[class*='bg-white/['] > .relative.rounded-2xl{background:var(--ai-surface)!important;border-color:var(--ai-border-soft)!important;box-shadow:0 25px 50px -12px rgba(0,0,0,.25)!important}.grid.border-t.border-l{border-color:var(--ai-border)!important;background:rgba(5,5,5,.5)!important;box-shadow:0 0 50px rgba(0,0,0,.5)!important}.grid.border-t.border-l > div{border-color:var(--ai-border)!important}
+a.bg-white,button.bg-white{background:var(--ai-primary)!important;color:var(--ai-text)!important;border-color:rgba(147,197,253,.25)!important;box-shadow:0 0 10px rgba(59,130,246,.45)!important}a.bg-white:hover,button.bg-white:hover{background:var(--ai-tertiary)!important}.bg-gradient-to-r.from-emerald-500.to-emerald-400{background-image:linear-gradient(to right,#3B82F6,#93C5FD)!important}.animate-ping{background-color:var(--ai-secondary)!important}
+header a,footer a{transition:color .3s ease,background-color .3s ease,transform .3s ease}header a:hover,footer a:hover{color:var(--ai-secondary)!important}.group:hover{transform:translateY(-1px)}
+section:not(#top){padding:104px 24px!important}section:not(#top)>div{margin-left:auto!important;margin-right:auto!important}#features>div:first-of-type{padding:0!important;margin-bottom:104px!important}#features>.max-w-7xl{margin-top:0!important}@media(min-width:768px){section:not(#top){padding-left:32px!important;padding-right:32px!important}}
+section:not(#top) .rounded-2xl:not(img),section:not(#top) .rounded-xl,footer .rounded-2xl:not(img),footer .rounded-xl{border-radius:0!important}section:not(#top) .rounded-full:not(img):not(.animate-ping),footer .rounded-full:not(img){border-radius:0!important}section:not(#top) .shadow-2xl,footer .shadow-2xl{box-shadow:none!important}section:not(#top) [class*='bg-white/['].border,footer [class*='bg-white/['].border{background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.016) 8px,rgba(255,255,255,.016) 16px)!important}section:not(#top) a.rounded-full,section:not(#top) button.rounded-full{border-radius:0!important;text-transform:none!important}section:not(#top) .inline-flex.rounded-full,section:not(#top) .flex.rounded-full{border-radius:0!important}
+#features>div:first-of-type .grid.border-t.border-l,#features>.max-w-7xl>div:last-child,.section-frame,section:not(#top)>div.mx-auto.max-w-7xl>.rounded-2xl.border,section:not(#top)>div.relative.mx-auto.max-w-7xl>.grid,section:not(#top)>div.relative.mx-auto.max-w-7xl>.rounded-2xl.border{position:relative!important}#features>div:first-of-type .grid.border-t.border-l:before,#features>.max-w-7xl>div:last-child:before,.section-frame:before,section:not(#top)>div.mx-auto.max-w-7xl>.rounded-2xl.border:before,section:not(#top)>div.relative.mx-auto.max-w-7xl>.grid:before,section:not(#top)>div.relative.mx-auto.max-w-7xl>.rounded-2xl.border:before{content:'';position:absolute;top:-2px;left:-2px;width:4px;height:4px;background:#050505;border:1px solid rgba(147,197,253,.65);z-index:20;box-sizing:content-box}#features>div:first-of-type .grid.border-t.border-l:after,#features>.max-w-7xl>div:last-child:after,.section-frame:after,section:not(#top)>div.mx-auto.max-w-7xl>.rounded-2xl.border:after,section:not(#top)>div.relative.mx-auto.max-w-7xl>.grid:after,section:not(#top)>div.relative.mx-auto.max-w-7xl>.rounded-2xl.border:after{content:'';position:absolute;right:-2px;bottom:-2px;width:4px;height:4px;background:#050505;border:1px solid rgba(59,130,246,.75);z-index:20;box-sizing:content-box}
+section:not(#top) iconify-icon.text-white,section:not(#top) iconify-icon.text-gray-300,section:not(#top) iconify-icon.text-gray-400{color:var(--ai-secondary)!important}section:not(#top) .text-4xl.tracking-tight:not(h2),section:not(#top) .text-5xl.tracking-tight:not(h2){color:var(--ai-secondary)!important}section:not(#top) .border-white\/20,section:not(#top) .border-zinc-700{border-color:rgba(59,130,246,.35)!important}section:not(#top) a.bg-white{background:linear-gradient(135deg,var(--ai-primary),var(--ai-tertiary))!important}
+.section-kicker{display:inline-flex!important;align-items:center!important;gap:.5rem!important;margin-bottom:1rem!important;border:1px solid rgba(59,130,246,.24)!important;background:rgba(59,130,246,.08)!important;padding:.375rem .75rem!important;color:var(--ai-secondary)!important}.section-kicker span{color:var(--ai-secondary)!important}.section-kicker iconify-icon{color:var(--ai-secondary)!important}.section-header{margin-bottom:3rem!important}.floating-nav{position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:50;width:calc(100% - 48px);max-width:80rem;box-sizing:border-box;padding:12px 14px;display:grid;grid-template-columns:minmax(170px,1fr) auto minmax(170px,1fr);align-items:center;gap:24px;border:1px solid rgba(59,130,246,.22);background:rgba(5,5,5,.66);box-shadow:0 18px 50px rgba(0,0,0,.34),0 0 32px rgba(59,130,246,.1);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:0;pointer-events:auto}.floating-nav>a:first-child{justify-self:start;min-width:170px}.floating-nav nav{position:static;transform:none;justify-self:center;padding:0;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0}.floating-nav nav a{white-space:nowrap}.floating-nav>div:last-child{justify-self:end;display:flex;align-items:center;justify-content:flex-end;min-width:170px}.floating-nav a[href="#pricing"],#top .hero-copy a{border-radius:0!important}.hero-container{position:absolute;inset:0;z-index:20;width:100%;max-width:calc(80rem + 48px);box-sizing:border-box;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px;pointer-events:none}.hero-copy{position:absolute;top:29%;left:24px;max-width:40rem;pointer-events:none}.hero-float-card{min-width:178px;border:1px solid rgba(59,130,246,.24);background:linear-gradient(135deg,rgba(5,5,5,.78),rgba(15,23,42,.62));box-shadow:0 18px 50px rgba(0,0,0,.38),0 0 28px rgba(59,130,246,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:12px 14px}.hero-float-card:before{content:'';position:absolute;left:-1px;top:-1px;width:18px;height:1px;background:rgba(147,197,253,.75)}.hero-float-card:after{content:'';position:absolute;right:-1px;bottom:-1px;width:18px;height:1px;background:rgba(59,130,246,.75)}.hero-node{position:absolute;width:8px;height:8px;border-radius:999px;background:#60a5fa;box-shadow:0 0 0 5px rgba(59,130,246,.12),0 0 20px rgba(96,165,250,.8)}@media(min-width:768px){.floating-nav{width:calc(100% - 64px);padding:12px 16px}.hero-container{max-width:calc(80rem + 64px);padding-left:32px;padding-right:32px}.hero-copy{top:29%;left:32px}}@media(max-width:767px){.floating-nav{grid-template-columns:1fr auto;gap:16px}.floating-nav>a:first-child,.floating-nav>div:last-child{min-width:0}.floating-nav nav{display:none}.floating-nav .hidden.sm\\:block{display:none!important}}.testimonial-window{height:430px;overflow:hidden;mask-image:linear-gradient(to bottom,transparent,black 10%,black 90%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,black 10%,black 90%,transparent)}.testimonial-track{display:flex;flex-direction:column;gap:12px;will-change:transform}.testimonial-up{animation:testimonialUp 18s ease-in-out infinite alternate}.testimonial-down{animation:testimonialDown 18s ease-in-out infinite alternate}@keyframes testimonialUp{from{transform:translateY(0)}to{transform:translateY(-172px)}}@keyframes testimonialDown{from{transform:translateY(-172px)}to{transform:translateY(0)}}@media(max-width:1023px){.testimonial-window{height:auto;overflow:visible;mask-image:none;-webkit-mask-image:none}.testimonial-track{animation:none!important}}
+.signal-pill{display:flex;align-items:center;gap:9px;width:max-content;border:1px solid rgba(255,255,255,.11);background:rgba(5,5,5,.66);box-shadow:0 16px 42px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:999px;padding:10px 16px}.signal-pill iconify-icon{color:#60a5fa}.signal-pill strong{font-size:13px;font-weight:500;color:#f4f4f5;letter-spacing:.01em}.signal-pill span{font-size:11px;font-weight:400;color:#71717a}.signal-callout{width:max-content;border:1px solid rgba(59,130,246,.28);background:linear-gradient(135deg,rgba(15,23,42,.76),rgba(5,5,5,.64));box-shadow:0 18px 50px rgba(0,0,0,.42),0 0 28px rgba(59,130,246,.14);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:14px;padding:11px 15px}.signal-callout span{font-size:13px;font-weight:500;color:#dbeafe}.signal-orb{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border:1px solid rgba(255,255,255,.1);background:rgba(5,5,5,.66);box-shadow:0 16px 36px rgba(0,0,0,.4),0 0 0 8px rgba(255,255,255,.025);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:999px}.signal-orb iconify-icon{font-size:22px;color:#e5e7eb}.signal-dot{position:absolute;width:8px;height:8px;border-radius:999px;background:#60a5fa;box-shadow:0 0 0 5px rgba(59,130,246,.16),0 0 18px rgba(96,165,250,.85)}
+.globe-float{position:relative;width:max-content;border:1px solid rgba(96,165,250,.24);background:linear-gradient(135deg,rgba(2,6,23,.78),rgba(5,5,5,.58));box-shadow:0 18px 44px rgba(0,0,0,.42),0 0 28px rgba(37,99,235,.14),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:0;padding:11px 13px;color:#e5f0ff;transform-origin:center;animation:globeBreath 3.4s ease-in-out infinite;animation-delay:var(--breath-delay,0s)}.globe-float:before,.globe-float:after{content:'';position:absolute;width:14px;height:14px;pointer-events:none}.globe-float:before{top:-1px;left:-1px;border-top:1px solid rgba(147,197,253,.75);border-left:1px solid rgba(147,197,253,.75)}.globe-float:after{right:-1px;bottom:-1px;border-right:1px solid rgba(59,130,246,.7);border-bottom:1px solid rgba(59,130,246,.7)}.globe-float-row{display:flex;align-items:center;gap:10px}.globe-float iconify-icon{color:#60a5fa;font-size:18px;filter:drop-shadow(0 0 10px rgba(59,130,246,.65))}.globe-float strong{display:block;font-size:13px;line-height:1.1;font-weight:500;color:#f8fbff;letter-spacing:.01em}.globe-float span{display:block;margin-top:3px;font-size:10px;line-height:1;font-weight:400;color:#93c5fd;text-transform:uppercase;letter-spacing:.08em}.globe-float.is-mini{padding:10px;width:46px;height:46px;display:flex;align-items:center;justify-content:center}.globe-float.is-wide{min-width:156px}.globe-anchor{position:absolute;width:7px;height:7px;border-radius:999px;background:#93c5fd;box-shadow:0 0 0 5px rgba(59,130,246,.18),0 0 22px rgba(125,211,252,.9);scale:1;animation:anchorBreath 3.4s ease-in-out infinite;animation-delay:var(--breath-delay,0s)}@keyframes globeBreath{0%,100%{transform:scale(1);box-shadow:0 18px 44px rgba(0,0,0,.42),0 0 24px rgba(37,99,235,.12),inset 0 1px 0 rgba(255,255,255,.06)}50%{transform:scale(1.085);box-shadow:0 24px 58px rgba(0,0,0,.5),0 0 52px rgba(59,130,246,.36),inset 0 1px 0 rgba(255,255,255,.12)}}@keyframes anchorBreath{0%,100%{scale:1;opacity:.76}50%{scale:1.65;opacity:1}}
+.reveal-item{--reveal-y:18px;opacity:0;transform:translateY(var(--reveal-y));transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1),filter .7s ease;transition-delay:var(--reveal-delay,0ms);filter:blur(6px)}.reveal-item.reveal-in{--reveal-y:0px;opacity:1;filter:blur(0)}[data-float]{--float-y:0px;--drift-x:0px;--tilt:0deg;--reveal-y:0px;transform:translate(var(--drift-x),calc(var(--reveal-y) + var(--float-y))) rotate(var(--tilt));transform-origin:center;will-change:transform}[data-float].reveal-item{transform:translate(var(--drift-x),calc(var(--reveal-y) + var(--float-y))) rotate(var(--tilt));transition:opacity .7s ease,filter .7s ease;transition-delay:var(--reveal-delay,0ms)}@media(prefers-reduced-motion:reduce){.reveal-item{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}[data-float]{transform:none!important}}
+</style>
+<meta name="disabled-font-classes" content="font-roboto,font-poppins,font-merriweather,font-work-sans,font-pt-serif,font-space-mono,font-cormorant,font-playfair,font-instrument-serif,font-jakarta,font-nunito,font-bricolage,font-newsreader,font-dm-sans,font-google-sans-flex,font-space-grotesk,font-geist-mono,font-quicksand,font-montserrat,font-manrope,font-oswald">
+<meta name="aura-font-heading-class" content="font-geist">
+<meta name="aura-font-body-class" content="font-geist">
+<meta name="aura-font-heading-label" content="Geist">
+<meta name="aura-font-body-label" content="Geist">
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+  <body class="text-gray-100 antialiased selection:bg-zinc-800 selection:text-white overflow-x-hidden" style="font-family: 'Inter', sans-serif; background: #050505; margin: 0; padding: 0;">
+    <section class="h-[760px] md:h-[820px] overflow-hidden bg-black w-full relative gap-x-4 gap-y-4" style="background: black" id="top">
+      <canvas class="z-0 pointer-events-none w-full h-full absolute top-0 right-0 bottom-0 left-0" width="1790" height="820" id="animationCanvas" style="background: transparent; filter: saturate(1.35); mix-blend-mode: screen;"></canvas>
+
+      <!-- Header -->
+      <header class="floating-nav">
+        <a href="#top" class="flex items-center gap-2 group reveal-item reveal-in" style="--reveal-delay: 0ms;">
+          <iconify-icon icon="solar:globus-linear" stroke-width="1.5" class="text-2xl text-blue-500 group-hover:text-blue-400 transition-colors"></iconify-icon>
+          <span class="text-base tracking-wide font-medium text-white group-hover:text-gray-200 transition-colors font-geist">
+            AeroNet
+          </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8 reveal-item reveal-in" style="--reveal-delay: 95ms;">
+          <a href="#features" class="text-sm font-light text-gray-400 hover:text-blue-400 transition-colors font-geist">
+            Core
+          </a>
+          <a href="#how" class="text-sm font-light text-gray-400 hover:text-blue-400 transition-colors font-geist">
+            Framework
+          </a>
+          <a href="#pricing" class="text-sm font-light text-gray-400 hover:text-blue-400 transition-colors font-geist">
+            Plans
+          </a>
+          <a href="#faq" class="text-sm font-light text-gray-400 hover:text-blue-400 transition-colors font-geist">
+            Docs
+          </a>
+        </nav>
+        <div class="flex items-center gap-5 reveal-item reveal-in" style="--reveal-delay: 190ms;">
+          <a href="#" class="text-sm font-light text-gray-300 hover:text-white transition-colors hidden sm:block font-geist">
+            Log In
+          </a>
+          <a href="#pricing" class="bg-white text-black text-sm font-medium px-5 py-2 rounded-full hover:bg-blue-50 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] font-geist">
+            Deploy Core
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="w-full h-full z-10 relative" style="mask-image: linear-gradient(200deg, transparent, black 0%, black 100%, transparent); -webkit-mask-image: linear-gradient(200deg, transparent, black 0%, black 100%, transparent);">
+        <!-- Hero Text & CTAs -->
+        <div class="hero-container" style="mask-image: linear-gradient(200deg, transparent, black 0%, black 100%, transparent);">
+          <div class="hero-copy" style="mask-image: linear-gradient(200deg, transparent, black 0%, black 100%, transparent); -webkit-mask-image: linear-gradient(200deg, transparent, black 0%, black 100%, transparent);">
+            <!-- Trusted Marquee -->
+
+            <!-- Heading -->
+            <h1 class="text-5xl md:text-7xl text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-200 to-blue-500 leading-tight mb-6 reveal-item tracking-tighter font-geist font-light reveal-in" style="--reveal-delay: 285ms;">
+              Map, secure, and rebalance global traffic.
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-base md:text-lg text-gray-400 font-light max-w-[440px] leading-relaxed reveal-item font-geist reveal-in" style="--reveal-delay: 380ms;">
+              AeroNet Core gives infrastructure teams one relay control plane
+              for route mapping, policy failover, and real-time network
+              capacity.
+            </p>
+
+            <!-- Desktop Buttons -->
+            <div class="hidden flex-wrap gap-4 pointer-events-auto md:flex reveal-item mt-10 gap-x-4 gap-y-4 reveal-in" style="--reveal-delay: 475ms;">
+              <a href="#pricing" class="bg-white text-black text-sm font-medium px-6 py-3.5 rounded-full hover:bg-blue-50 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 font-geist">
+                Deploy AeroNet Core
+              </a>
+              <a href="#features" class="border border-white/10 bg-white/5 text-gray-300 text-sm font-medium px-6 py-3.5 rounded-full backdrop-blur-md hover:bg-white/10 hover:text-white transition-all duration-300 hover:-translate-y-0.5 font-geist">
+                Explore relay fabric
+              </a>
+            </div>
+
+            <!-- Mobile Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-3 pointer-events-auto md:hidden reveal-item reveal-in" style="--reveal-delay: 570ms;">
+              <a href="#features" class="bg-white text-black text-sm font-medium px-5 py-3 rounded-full text-center hover:bg-blue-50 transition-colors shadow-[0_0_15px_rgba(59,130,246,0.3)] font-geist">
+                Explore AeroNet Core
+              </a>
+              <a href="#how" class="border border-white/10 bg-black/40 text-gray-300 text-sm font-medium px-5 py-3 rounded-full text-center backdrop-blur-md hover:text-white transition-colors font-geist">
+                How it works
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Stats Grid -->
+        <div class="absolute bottom-8 left-6 right-6 grid grid-cols-3 gap-3 z-20 md:hidden">
+          <div class="rounded-2xl border border-white/10 border-t-blue-500/30 bg-black/60 backdrop-blur-xl p-4 shadow-2xl">
+            <div class="text-base font-medium text-white font-geist">
+              2.41 PB/s
+            </div>
+            <div class="text-xs font-light text-blue-400 mt-1 font-geist">
+              Peak route
+            </div>
+          </div>
+          <div class="rounded-2xl border border-white/10 border-t-blue-500/30 bg-black/60 backdrop-blur-xl p-4 shadow-2xl">
+            <div class="text-base font-medium text-white font-geist">8,294</div>
+            <div class="text-xs font-light text-blue-400 mt-1 font-geist">
+              Nodes
+            </div>
+          </div>
+          <div class="rounded-2xl border border-white/10 border-t-blue-500/30 bg-black/60 backdrop-blur-xl p-4 shadow-2xl">
+            <div class="text-base font-medium text-white font-geist">
+              99.99%
+            </div>
+            <div class="text-xs font-light text-blue-400 mt-1 font-geist">
+              Uptime
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop Floating Elements -->
+        <div class="absolute inset-0 pointer-events-none hidden md:block">
+          <div class="absolute top-[21%] left-[58%] reveal-item reveal-in" data-float="" data-float-offset="0" style="--float-y: -33.86094577797606px; --drift-x: -20.384111849344485px; --tilt: 1.518144175844078deg; --reveal-delay: 665ms;">
+            <div class="globe-float is-wide" style="--breath-delay: .1s">
+              <div class="globe-float-row">
+                <iconify-icon icon="solar:route-linear"></iconify-icon>
+                <div>
+                  <strong>2.41 PB/s</strong>
+                  <span>Peak relay</span>
+                </div>
+              </div>
+            </div>
+            <div class="globe-anchor -bottom-3 left-8" style="--breath-delay: .1s"></div>
+          </div>
+          <div class="absolute top-[30%] left-[78%] reveal-item reveal-in" data-float="" data-float-offset="2.2" style="--float-y: 17.4436130842668px; --drift-x: 21.27147309370009px; --tilt: 2.055183455654887deg; --reveal-delay: 760ms;">
+            <div class="globe-float is-mini" style="--breath-delay: .8s">
+              <iconify-icon icon="solar:shield-check-linear"></iconify-icon>
+            </div>
+            <div class="globe-anchor -bottom-3 left-1/2 -translate-x-1/2" style="--breath-delay: .8s"></div>
+          </div>
+          <div class="absolute top-[50%] left-[84%] reveal-item reveal-in" data-float="" data-float-offset="4.1" style="--float-y: 21.97771882943662px; --drift-x: -21.14002008765962px; --tilt: -3.076246380897216deg; --reveal-delay: 855ms;">
+            <div class="globe-float is-wide" style="--breath-delay: 1.4s">
+              <div class="globe-float-row">
+                <iconify-icon icon="solar:bolt-circle-linear"></iconify-icon>
+                <div>
+                  <strong>Route secured</strong>
+                  <span>Policy live</span>
+                </div>
+              </div>
+            </div>
+            <div class="globe-anchor -bottom-3 left-6" style="--breath-delay: 1.4s"></div>
+          </div>
+          <div class="absolute top-[66%] left-[68%] reveal-item reveal-in" data-float="" data-float-offset="5.4" style="--float-y: -19.117473322830207px; --drift-x: -1.5458114947299322px; --tilt: -0.21993869191476795deg; --reveal-delay: 950ms;">
+            <div class="globe-float" style="--breath-delay: .4s">
+              <div class="globe-float-row">
+                <iconify-icon icon="solar:graph-up-linear"></iconify-icon>
+                <div>
+                  <strong>+924</strong>
+                  <span>Nodes online</span>
+                </div>
+              </div>
+            </div>
+            <div class="globe-anchor -top-3 right-8" style="--breath-delay: .4s"></div>
+          </div>
+          <div class="absolute top-[75%] left-[80%] reveal-item reveal-in" data-float="" data-float-offset="7" style="--float-y: -27.546017113886236px; --drift-x: 18.745394929100122px; --tilt: 1.3748524464053506deg; --reveal-delay: 1045ms;">
+            <div class="globe-float is-mini" style="--breath-delay: 1.1s">
+              <iconify-icon icon="solar:satellite-linear"></iconify-icon>
+            </div>
+            <div class="globe-anchor -top-3 left-1/2 -translate-x-1/2" style="--breath-delay: 1.1s"></div>
+          </div>
+          <div class="absolute top-[58%] left-[53%] reveal-item reveal-in" data-float="" data-float-offset="8.2" style="--float-y: 8.594307631304428px; --drift-x: -12.855814259024712px; --tilt: -4.326342349428582deg; --reveal-delay: 1140ms;">
+            <div class="globe-float is-wide" style="--breath-delay: 1.8s">
+              <div class="globe-float-row">
+                <iconify-icon icon="solar:radar-linear"></iconify-icon>
+                <div>
+                  <strong>38 ms</strong>
+                  <span>Edge latency</span>
+                </div>
+              </div>
+            </div>
+            <div class="globe-anchor -top-3 right-7" style="--breath-delay: 1.8s"></div>
+          </div>
+          <div class="absolute top-[73%] left-[56%] reveal-item reveal-in" data-float="" data-float-offset="9.6" style="--float-y: 33.877970330141544px; --drift-x: -12.413188783484348px; --tilt: 4.238061892895745deg; --reveal-delay: 1235ms;">
+            <div class="globe-float" style="--breath-delay: 2.3s">
+              <div class="globe-float-row">
+                <iconify-icon icon="solar:lock-keyhole-linear"></iconify-icon>
+                <div>
+                  <strong>Failover armed</strong>
+                  <span>Zero drift</span>
+                </div>
+              </div>
+            </div>
+            <div class="globe-anchor -top-3 left-8" style="--breath-delay: 2.3s"></div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <section class="md:px-8 border-t pt-24 pr-6 pb-24 pl-6 relative" id="features">
+      <div class="max-w-7xl mr-auto ml-auto relative" style="font-family: 'Inter', sans-serif">
+        <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(circle at center, black, transparent 80%); -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);"></div>
+
+        <div class="section-header flex flex-col gap-6 md:flex-row md:items-end md:justify-between z-10 reveal-item relative">
+          <div class="max-w-2xl">
+            <div class="section-kicker rounded-full">
+              <iconify-icon icon="solar:layers-minimalistic-linear" stroke-width="1.5" class="text-base text-gray-300"></iconify-icon>
+              <span class="text-xs font-light text-gray-400 font-geist">
+                Relay architecture
+              </span>
+            </div>
+            <h2 class="text-4xl md:text-5xl text-zinc-50 leading-tight tracking-tighter font-geist font-light">
+              Relay fabric engineered for scale.
+            </h2>
+          </div>
+          <p class="max-w-md text-sm md:text-base font-light leading-7 text-gray-400 font-geist">
+            AeroNet Core connects verified relay nodes, policy routing, and
+            real-time capacity controls into one resilient network layer.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 border-t border-l border-white/10 relative z-10 bg-[#050505]/50 backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+          <div class="border-r border-b border-white/10 p-8 h-64 relative group overflow-hidden reveal-item">
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <h3 class="text-sm font-normal text-zinc-100 mb-2 font-geist">
+              Planetary relay coverage
+            </h3>
+            <p class="text-xs font-light text-zinc-500 leading-relaxed max-w-[85%] font-geist">
+              Traffic is distributed across verified edge nodes and metros
+              automatically. No single region carries the network.
+            </p>
+            <div class="absolute bottom-4 right-4 opacity-10"></div>
+          </div>
+
+          <div class="lg:h-auto lg:row-span-2 flex flex-col overflow-hidden reveal-item h-96 border-white/10 border-r border-b pt-8 pr-8 pb-8 pl-8 relative items-center justify-center">
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
+              <svg width="300" height="300" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="0.2" stroke-dasharray="1 2"></circle>
+                <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-width="0.2" stroke-dasharray="1 3"></circle>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="0.2" stroke-dasharray="2 4"></circle>
+                <circle cx="50" cy="50" r="55" fill="none" stroke="white" stroke-width="0.1" stroke-dasharray="1 5"></circle>
+              </svg>
+            </div>
+            <div class="relative w-48 h-48 z-10 flex items-center justify-center">
+              <div class="absolute inset-0 bg-blue-500/20 blur-[50px] rounded-full scale-150 mix-blend-screen"></div>
+              <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="topFaceAeroNet" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#60a5fa"></stop>
+                    <stop offset="100%" stop-color="#2563eb"></stop>
+                  </linearGradient>
+                  <linearGradient id="leftFaceAeroNet" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1e3a8a"></stop>
+                    <stop offset="100%" stop-color="#0f172a"></stop>
+                  </linearGradient>
+                  <linearGradient id="rightFaceAeroNet" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1d4ed8"></stop>
+                    <stop offset="100%" stop-color="#020617"></stop>
+                  </linearGradient>
+                </defs>
+                <polygon points="50,20 90,40 50,60 10,40" fill="url(#topFaceAeroNet)" stroke="#93c5fd" stroke-width="0.5" stroke-linejoin="round" class=""></polygon>
+                <polygon points="10,40 50,60 50,90 10,70" fill="url(#leftFaceAeroNet)" stroke="#3b82f6" stroke-width="0.5" stroke-linejoin="round"></polygon>
+                <polygon points="90,40 90,70 50,90 50,60" fill="url(#rightFaceAeroNet)" stroke="#2563eb" stroke-width="0.5" stroke-linejoin="round"></polygon>
+              </svg>
+            </div>
+          </div>
+
+          <div class="border-r border-b border-white/10 p-8 h-64 relative reveal-item">
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <h3 class="text-sm font-normal text-zinc-100 mb-2 font-geist">
+              Encrypted transit keys
+            </h3>
+            <p class="text-xs font-light text-zinc-500 leading-relaxed max-w-[85%] font-geist">
+              Every relay exchange uses authenticated sessions and ephemeral
+              keys to keep routes private end to end.
+            </p>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 mt-4 w-max"></div>
+          </div>
+
+          <div class="border-r border-b border-white/10 p-8 h-72 relative overflow-hidden group reveal-item">
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <h3 class="text-sm font-normal text-zinc-100 mb-2 font-geist">
+              Self-healing failover
+            </h3>
+            <p class="text-xs font-light text-zinc-500 leading-relaxed max-w-[85%] font-geist">
+              Relay sessions shift around degraded nodes before customers feel
+              packet loss.
+            </p>
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-32 h-24">
+              <svg viewBox="0 0 100 50" class="absolute bottom-0 w-full opacity-30">
+                <polygon points="50,10 90,25 50,40 10,25" fill="none" stroke="white" stroke-width="1"></polygon>
+              </svg>
+              <svg viewBox="0 0 100 50" class="absolute bottom-4 w-full opacity-60">
+                <polygon points="50,10 90,25 50,40 10,25" fill="none" stroke="white" stroke-width="1"></polygon>
+              </svg>
+              <svg viewBox="0 0 100 50" class="absolute bottom-8 w-full drop-shadow-[0_10px_15px_rgba(59,130,246,0.4)]">
+                <defs>
+                  <linearGradient id="layerGradAeroNet" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#60a5fa"></stop>
+                    <stop offset="100%" stop-color="#2563eb"></stop>
+                  </linearGradient>
+                </defs>
+                <polygon points="50,10 90,25 50,40 10,25" fill="url(#layerGradAeroNet)" stroke="#93c5fd" stroke-width="0.5"></polygon>
+              </svg>
+            </div>
+          </div>
+
+          <div class="reveal-item h-72 border-white/10 border-r border-b pt-8 pr-8 pb-8 pl-8 relative overflow-hidden bg-[#050505]">
+            <!-- Corner dot -->
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+
+            <!-- Subtle background grid -->
+            <div class="absolute inset-0 opacity-[0.16] pointer-events-none" style="
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    "></div>
+
+            <!-- Soft blue glow -->
+            <div class="absolute top-6 right-6 h-32 w-32 rounded-full bg-blue-500/15 blur-3xl pointer-events-none"></div>
+
+            <!-- Visual -->
+            <div class="absolute inset-x-8 top-8 h-36 pointer-events-none">
+              <div class="relative h-full w-full rounded-2xl border border-white/[0.06] bg-white/[0.025] overflow-hidden">
+                <!-- small top labels -->
+                <div class="absolute top-4 left-4 flex items-center gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.9)]"></span>
+                  <span class="text-[10px] uppercase tracking-[0.18em] text-zinc-500 font-geist">
+                    Live route
+                  </span>
+                </div>
+
+                <div class="absolute top-4 right-4 text-[10px] text-zinc-500 font-geist">
+                  98.4% healthy
+                </div>
+
+                <!-- SVG route map -->
+                <svg width="100%" height="100%" viewBox="0 0 420 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0">
+                  <!-- faint routes -->
+                  <path d="M58 108 C116 64 158 62 212 96 C266 130 310 88 362 50" stroke="rgba(255,255,255,0.10)" stroke-width="1"></path>
+                  <path d="M58 108 C112 112 148 132 204 118 C266 102 294 54 362 50" stroke="rgba(255,255,255,0.07)" stroke-width="1"></path>
+                  <path d="M58 108 C118 72 154 38 210 48 C266 58 300 86 362 50" stroke="rgba(255,255,255,0.06)" stroke-width="1"></path>
+
+                  <!-- active route glow -->
+                  <path d="M58 108 C116 64 158 62 212 96 C266 130 310 88 362 50" stroke="rgba(59,130,246,0.22)" stroke-width="7" stroke-linecap="round" class="blur-sm"></path>
+
+                  <!-- active route -->
+                  <path d="M58 108 C116 64 158 62 212 96 C266 130 310 88 362 50" stroke="#60a5fa" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="6 6" class="drop-shadow-[0_0_8px_rgba(96,165,250,0.75)]"></path>
+
+                  <!-- nodes -->
+                  <circle cx="58" cy="108" r="5" fill="#050505" stroke="rgba(255,255,255,0.55)" stroke-width="1"></circle>
+                  <circle cx="144" cy="66" r="4" fill="#050505" stroke="rgba(255,255,255,0.35)" stroke-width="1"></circle>
+                  <circle cx="212" cy="96" r="5" fill="#050505" stroke="#60a5fa" stroke-width="1.2"></circle>
+                  <circle cx="286" cy="114" r="4" fill="#050505" stroke="rgba(255,255,255,0.28)" stroke-width="1"></circle>
+                  <circle cx="362" cy="50" r="6" fill="#2563eb" stroke="#93c5fd" stroke-width="1"></circle>
+
+                  <!-- small data bars -->
+                  <rect x="284" y="32" width="48" height="4" rx="2" fill="rgba(255,255,255,0.08)"></rect>
+                  <rect x="284" y="32" width="34" height="4" rx="2" fill="#60a5fa"></rect>
+
+                  <rect x="284" y="42" width="62" height="4" rx="2" fill="rgba(255,255,255,0.08)"></rect>
+                  <rect x="284" y="42" width="46" height="4" rx="2" fill="rgba(96,165,250,0.55)"></rect>
+
+                  <rect x="284" y="52" width="40" height="4" rx="2" fill="rgba(255,255,255,0.08)"></rect>
+                  <rect x="284" y="52" width="22" height="4" rx="2" fill="rgba(96,165,250,0.35)"></rect>
+                </svg>
+
+                <!-- floating node card -->
+                <div class="absolute left-5 bottom-4 rounded-xl border border-white/[0.07] bg-[#080f1c]/80 backdrop-blur-md px-3 py-2 shadow-2xl">
+                  <div class="flex items-center gap-2">
+                    <div class="h-6 w-6 rounded-full border border-blue-300/30 bg-blue-500/10 flex items-center justify-center">
+                      <div class="h-1.5 w-1.5 rounded-full bg-blue-300"></div>
+                    </div>
+                    <div>
+                      <p class="text-[10px] text-zinc-300 leading-none font-geist">
+                        Edge node
+                      </p>
+                      <p class="mt-1 text-[10px] text-zinc-600 leading-none font-geist">
+                        12ms latency
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- status pill -->
+                <div class="absolute right-5 bottom-4 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1 text-[10px] text-blue-200 font-geist">
+                  Optimized path
+                </div>
+              </div>
+            </div>
+
+            <!-- Text -->
+            <div class="absolute bottom-8 left-8 right-8">
+              <h3 class="text-sm font-normal text-zinc-100 mb-2 font-geist">
+                Adaptive route mapping
+              </h3>
+              <p class="text-xs font-light text-zinc-500 leading-relaxed font-geist">
+                Traffic is routed through the lowest-friction vector across
+                healthy computation and edge nodes.
+              </p>
+            </div>
+          </div>
+
+          <div class="border-r border-b border-white/10 p-8 h-72 relative reveal-item">
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <h3 class="text-sm font-normal text-zinc-100 mb-2 font-geist">
+              Capacity telemetry
+            </h3>
+            <p class="text-xs font-light text-zinc-500 leading-relaxed max-w-[85%] font-geist">
+              Watch saturation, route health, and throughput as the relay fabric
+              expands.
+            </p>
+            <div class="absolute bottom-8 left-8 right-12 bg-[#0c0c0e] border border-white/5 rounded-xl p-5 shadow-2xl">
+              <div class="flex items-center gap-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3v18h18"></path>
+                  <path d="M18 17V9"></path>
+                  <path d="M13 17V5"></path>
+                  <path d="M8 17v-3"></path>
+                </svg>
+                <span class="text-[10px] text-zinc-400 font-normal font-geist">
+                  Route Throughput
+                </span>
+              </div>
+              <div class="text-2xl text-white mb-4 tracking-tighter font-geist font-light">
+                2.41 PB/s
+              </div>
+              <div class="flex gap-1 h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden">
+                <div class="w-3/4 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.3)]"></div>
+                <div class="w-1/4 bg-zinc-800 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col overflow-hidden group reveal-item h-72 border-white/10 border-r border-b pt-8 pr-8 pb-8 pl-8 relative justify-end bg-[#050505]">
+            <!-- corner dot -->
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+
+            <!-- subtle background grid -->
+            <div class="absolute inset-0 opacity-[0.08] pointer-events-none" style="
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 26px 26px;
+    "></div>
+
+            <!-- soft glow -->
+            <div class="absolute top-12 left-1/2 -translate-x-1/2 w-36 h-36 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+
+            <!-- visual -->
+            <div class="absolute inset-0 flex items-center justify-center mb-16 pointer-events-none">
+              <div class="relative w-[180px] h-[140px] flex items-center justify-center">
+                <!-- outer rings -->
+                <div class="absolute w-28 h-28 rounded-full border border-white/[0.06]"></div>
+                <div class="absolute w-20 h-20 rounded-full border border-white/[0.05]"></div>
+
+                <!-- connection lines -->
+                <svg viewBox="0 0 180 140" class="absolute inset-0 w-full h-full opacity-80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M90 70 L48 42" stroke="rgba(255,255,255,0.10)" stroke-width="1"></path>
+                  <path d="M90 70 L132 42" stroke="rgba(255,255,255,0.10)" stroke-width="1"></path>
+                  <path d="M90 70 L48 98" stroke="rgba(255,255,255,0.10)" stroke-width="1"></path>
+                  <path d="M90 70 L132 98" stroke="rgba(255,255,255,0.10)" stroke-width="1"></path>
+                </svg>
+
+                <!-- orbit nodes -->
+                <div class="absolute left-[34px] top-[32px] w-2.5 h-2.5 rounded-full bg-[#050505] border border-white/30"></div>
+                <div class="absolute right-[34px] top-[32px] w-2.5 h-2.5 rounded-full bg-[#050505] border border-cyan-300/60"></div>
+                <div class="absolute left-[34px] bottom-[30px] w-2.5 h-2.5 rounded-full bg-[#050505] border border-white/20"></div>
+                <div class="absolute right-[34px] bottom-[30px] w-2.5 h-2.5 rounded-full bg-blue-500 border border-cyan-200/60 shadow-[0_0_12px_rgba(59,130,246,0.75)]"></div>
+
+                <!-- center platform -->
+                <div class="absolute bottom-[24px] w-24 h-6 rounded-[999px] border border-white/10 bg-white/[0.03] backdrop-blur-md"></div>
+
+                <!-- center badge -->
+                <div class="relative w-16 h-16 flex items-center justify-center">
+                  <div class="absolute inset-0 bg-blue-500/20 blur-[24px] rounded-full"></div>
+                  <div class="absolute inset-0 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md"></div>
+
+                  <svg viewBox="0 0 100 100" class="relative w-10 h-10 drop-shadow-[0_0_18px_rgba(59,130,246,0.45)]">
+                    <defs>
+                      <linearGradient id="logoGradAeroNetV2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#60a5fa"></stop>
+                        <stop offset="100%" stop-color="#22d3ee"></stop>
+                      </linearGradient>
+                    </defs>
+
+                    <!-- cleaner node-like symbol -->
+                    <path d="M28 68 L28 34 L50 54 L72 34 L72 68" fill="none" stroke="url(#logoGradAeroNetV2)" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+
+                <!-- status pill -->
+                <div class="absolute -bottom-1 px-3 py-1 rounded-full border border-blue-400/20 bg-blue-500/10 backdrop-blur-md">
+                  <span class="text-[10px] tracking-[0.14em] uppercase text-blue-200 font-geist">
+                    Multi-node
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- text -->
+            <div class="relative z-10">
+              <h3 class="text-sm font-normal text-zinc-100 mb-2 font-geist">
+                Node-agent ready
+              </h3>
+              <p class="text-xs font-light text-zinc-500 leading-relaxed max-w-[85%] font-geist">
+                Deploy lightweight agents on cloud, bare metal, or edge hardware
+                with minimal configuration.
+              </p>
+            </div>
+          </div>
+
+          <div class="border-r border-b border-white/10 p-8 h-72 relative flex flex-col items-center justify-center cursor-pointer group overflow-hidden reveal-item" style="background: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(255, 255, 255, 0.016) 8px, rgba(255, 255, 255, 0.016) 16px)">
+            <div class="absolute -top-[2px] -left-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <div class="absolute -bottom-[2px] -right-[2px] w-[3px] h-[3px] bg-[#050505] border border-zinc-600 z-20 box-content"></div>
+            <div class="flex items-center gap-3 bg-[#050505] px-6 py-3 rounded-full border border-white/10">
+              <span class="text-sm font-normal text-zinc-100 font-geist">
+                Deploy AeroNet Core
+              </span>
+              <div class="flex gap-[2px]">
+                <div class="w-1 h-1 bg-blue-500 rounded-full"></div>
+                <div class="w-1 h-1 bg-blue-500/70 rounded-full"></div>
+                <div class="w-1 h-1 bg-blue-500/40 rounded-full"></div>
+                <div class="w-1 h-1 bg-blue-500/20 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-7xl mr-auto ml-auto relative">
+        <div class="section-header flex flex-col gap-6 md:flex-row md:items-end md:justify-between reveal-item">
+          <div class="max-w-2xl">
+            <div class="section-kicker rounded-full">
+              <iconify-icon icon="solar:radar-2-linear" stroke-width="1.5" class="text-base text-gray-300"></iconify-icon>
+              <span class="text-xs font-light text-gray-400 font-geist">
+                Operations layer
+              </span>
+            </div>
+            <h2 class="text-4xl md:text-5xl text-white leading-tight tracking-tighter font-geist font-light">
+              Everything needed to operate a planetary relay layer.
+            </h2>
+          </div>
+          <p class="max-w-md text-sm md:text-base font-light leading-7 text-gray-400 font-geist">
+            AeroNet Core brings mapping, observability, policy routing, and node
+            lifecycle tools into one glass interface built for high-density
+            infrastructure teams.
+          </p>
+        </div>
+
+        <div class="grid gap-3 md:grid-cols-3">
+          <div class="group rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl transition-colors hover:bg-white/[0.05] reveal-item">
+            <div class="rounded-2xl border border-zinc-800 bg-black/50 p-5">
+              <div class="mb-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80">
+                <iconify-icon icon="solar:map-arrow-square-linear" stroke-width="1.5" class="text-2xl text-white"></iconify-icon>
+              </div>
+              <h3 class="text-lg font-light text-white font-geist">
+                Adaptive route mapping
+              </h3>
+              <p class="mt-3 text-sm font-light leading-6 text-gray-400 font-geist">
+                Continuously traces the lowest-friction path across edge
+                regions, private nodes, and regional gateways.
+              </p>
+            </div>
+          </div>
+
+          <div class="group rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl transition-colors hover:bg-white/[0.05] reveal-item">
+            <div class="rounded-2xl border border-zinc-800 bg-black/50 p-5">
+              <div class="mb-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80">
+                <iconify-icon icon="solar:shield-network-linear" stroke-width="1.5" class="text-2xl text-white"></iconify-icon>
+              </div>
+              <h3 class="text-lg font-light text-white font-geist">
+                Encrypted relay fabric
+              </h3>
+              <p class="mt-3 text-sm font-light leading-6 text-gray-400 font-geist">
+                Mutual authentication and ephemeral keys protect every exchange
+                while preserving fast session handoff.
+              </p>
+            </div>
+          </div>
+
+          <div class="group rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl transition-colors hover:bg-white/[0.05] reveal-item">
+            <div class="rounded-2xl border border-zinc-800 bg-black/50 p-5">
+              <div class="mb-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80">
+                <iconify-icon icon="solar:chart-2-linear" stroke-width="1.5" class="text-2xl text-white"></iconify-icon>
+              </div>
+              <h3 class="text-lg font-light text-white font-geist">
+                Live capacity telemetry
+              </h3>
+              <p class="mt-3 text-sm font-light leading-6 text-gray-400 font-geist">
+                Observe throughput, saturation, packet health, and availability
+                signals with second-level clarity.
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl md:col-span-2 reveal-item">
+            <div class="min-h-72 overflow-hidden bg-black/60 border-zinc-800 border rounded-2xl pt-5 pr-5 pb-5 pl-5 relative">
+              <div class="relative z-10 flex items-center justify-between">
+                <div class="">
+                  <h3 class="text-lg font-light text-white font-geist">
+                    Regional orchestration
+                  </h3>
+                  <p class="mt-2 max-w-sm text-sm font-light leading-6 text-gray-400 font-geist">
+                    Group nodes by compliance zone, latency profile, or customer
+                    traffic class.
+                  </p>
+                </div>
+                <div class="hidden rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1.5 backdrop-blur-md sm:flex">
+                  <span class="mr-2 h-1.5 w-1.5 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(147,197,253,0.9)]"></span>
+                  <span class="text-xs font-light text-blue-200 font-geist">
+                    43 regions active
+                  </span>
+                </div>
+              </div>
+              <div class="relative z-10 mt-10 grid gap-3 sm:grid-cols-3">
+                <div class="rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-md reveal-item">
+                  <div class="text-3xl text-white tracking-tighter font-geist font-light">
+                    4.8ms
+                  </div>
+                  <div class="mt-2 text-xs font-light text-gray-500 font-geist">
+                    Median hop delay
+                  </div>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-md reveal-item">
+                  <div class="text-3xl text-white tracking-tighter font-geist font-light">
+                    12.7k
+                  </div>
+                  <div class="mt-2 text-xs font-light text-gray-500 font-geist">
+                    Sessions shifted
+                  </div>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-md reveal-item">
+                  <div class="text-3xl text-white tracking-tighter font-geist font-light">
+                    0.02%
+                  </div>
+                  <div class="mt-2 text-xs font-light text-gray-500 font-geist">
+                    Packet variance
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl reveal-item">
+            <div class="rounded-2xl border border-zinc-800 bg-black/50 p-5">
+              <h3 class="text-lg font-light text-white font-geist">
+                Policy automation
+              </h3>
+              <p class="mt-3 text-sm font-light leading-6 text-gray-400 font-geist">
+                Create rules that reroute around outages, enforce residency, and
+                isolate sensitive traffic.
+              </p>
+              <div class="mt-8 space-y-3">
+                <div class="flex items-center justify-between rounded-full border border-white/10 bg-zinc-950 px-3 py-2">
+                  <span class="text-xs font-light text-gray-400 font-geist">
+                    Latency guard
+                  </span>
+                  <span class="text-xs font-light text-white font-geist">
+                    On
+                  </span>
+                </div>
+                <div class="flex items-center justify-between rounded-full border border-white/10 bg-zinc-950 px-3 py-2">
+                  <span class="text-xs font-light text-gray-400 font-geist">
+                    Geo fence
+                  </span>
+                  <span class="text-xs font-light text-white font-geist">
+                    EU
+                  </span>
+                </div>
+                <div class="flex items-center justify-between rounded-full border border-white/10 bg-zinc-950 px-3 py-2">
+                  <span class="text-xs font-light text-gray-400 font-geist">
+                    Failover
+                  </span>
+                  <span class="text-xs font-light text-white font-geist">
+                    Auto
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="relative border-t border-white/10 bg-black px-6 py-24 md:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div class="lg:sticky lg:top-8 reveal-item">
+            <div class="section-kicker rounded-full">
+              <iconify-icon icon="solar:routing-2-linear" stroke-width="1.5" class="text-base text-gray-300"></iconify-icon>
+              <span class="text-xs font-light text-gray-400 font-geist">
+                How it works
+              </span>
+            </div>
+            <h2 class="text-4xl md:text-5xl text-white leading-tight tracking-tighter font-geist font-light">
+              From bare node to resilient global path in minutes.
+            </h2>
+            <p class="mt-5 max-w-md text-sm md:text-base font-light leading-7 text-gray-400 font-geist">
+              Connect capacity anywhere. AeroNet Core verifies, profiles, and
+              places each node into the optimal relay mesh without manual
+              topology design.
+            </p>
+          </div>
+
+          <div class="space-y-3 reveal-item">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+              <div class="flex flex-col gap-6 rounded-2xl border border-zinc-800 bg-black/50 p-5 sm:flex-row sm:items-center">
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80 text-lg font-light text-white font-geist">
+                  01
+                </div>
+                <div>
+                  <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                    Install the lightweight agent
+                  </h3>
+                  <p class="mt-2 text-sm font-light leading-6 text-gray-400 font-geist">
+                    Run the agent on cloud, bare metal, or edge hardware. It
+                    fingerprints compute, network interfaces, and regional
+                    constraints.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+              <div class="flex flex-col gap-6 rounded-2xl border border-zinc-800 bg-black/50 p-5 sm:flex-row sm:items-center">
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80 text-lg font-light text-white font-geist">
+                  02
+                </div>
+                <div>
+                  <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                    Verify trust and capacity
+                  </h3>
+                  <p class="mt-2 text-sm font-light leading-6 text-gray-400 font-geist">
+                    AeroNet Core benchmarks throughput, validates identity, and
+                    scores node stability before accepting production traffic.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+              <div class="flex flex-col gap-6 rounded-2xl border border-zinc-800 bg-black/50 p-5 sm:flex-row sm:items-center">
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80 text-lg font-light text-white font-geist">
+                  03
+                </div>
+                <div>
+                  <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                    Attach traffic policies
+                  </h3>
+                  <p class="mt-2 text-sm font-light leading-6 text-gray-400 font-geist">
+                    Define residency, performance, budget, and isolation rules.
+                    The mesh applies them in real time to every route decision.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+              <div class="flex flex-col gap-6 rounded-2xl border border-zinc-800 bg-black/50 p-5 sm:flex-row sm:items-center">
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80 text-lg font-light text-white font-geist">
+                  04
+                </div>
+                <div class="">
+                  <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                    Observe and rebalance
+                  </h3>
+                  <p class="mt-2 text-sm font-light leading-6 text-gray-400 font-geist">
+                    Live telemetry reveals pressure before customers feel it,
+                    while automated balancing keeps sessions healthy.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative border-t border-white/10 bg-black px-6 py-24 md:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+          <div class="grid gap-3 rounded-2xl border border-zinc-800 bg-black/60 p-3 md:grid-cols-4">
+            <div class="rounded-2xl border border-white/10 bg-zinc-950/80 p-5 reveal-item">
+              <div class="text-4xl md:text-5xl text-white tracking-tighter font-geist font-light">
+                8,294
+              </div>
+              <div class="mt-3 text-sm font-light text-gray-500 font-geist">
+                Verified relay nodes
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-zinc-950/80 p-5 reveal-item">
+              <div class="text-4xl md:text-5xl text-white tracking-tighter font-geist font-light">
+                137
+              </div>
+              <div class="mt-3 text-sm font-light text-gray-500 font-geist">
+                Connected metros
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-zinc-950/80 p-5 reveal-item">
+              <div class="text-4xl md:text-5xl text-white tracking-tighter font-geist font-light">
+                2.41
+              </div>
+              <div class="mt-3 text-sm font-light text-gray-500 font-geist">
+                PB/s routed peak
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-zinc-950/80 p-5 reveal-item">
+              <div class="text-4xl md:text-5xl text-white tracking-tighter font-geist font-light">
+                99.99
+              </div>
+              <div class="mt-3 text-sm font-light text-gray-500 font-geist">
+                Availability target
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative border-t border-white/10 bg-black px-6 py-24 md:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="section-header max-w-2xl reveal-item">
+          <div class="section-kicker rounded-full">
+            <iconify-icon icon="solar:chat-round-like-linear" stroke-width="1.5" class="text-base text-gray-300"></iconify-icon>
+            <span class="text-xs font-light text-gray-400 font-geist">
+              AeroNet Core signal
+            </span>
+          </div>
+          <h2 class="text-4xl md:text-5xl text-white leading-tight tracking-tighter font-geist font-light">
+            Built for teams who cannot afford dark routes.
+          </h2>
+        </div>
+
+        <div class="grid gap-3 lg:grid-cols-3">
+          <div class="testimonial-window reveal-item">
+            <div class="testimonial-track testimonial-up">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+                <div class="flex min-h-[260px] flex-col justify-between rounded-2xl border border-zinc-800 bg-black/50 p-5">
+                  <p class="text-base font-light leading-7 text-gray-300 font-geist">
+                    “AeroNet Core gave our operations team a single living view
+                    of routing pressure. Failovers that used to take twenty
+                    minutes are now policy events.”
+                  </p>
+                  <div class="mt-8 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/120?img=32" alt="Sofia avatar" class="h-10 w-10 rounded-full object-cover grayscale opacity-80">
+                    <div>
+                      <div class="text-sm font-light text-white font-geist">
+                        Sofia Ito
+                      </div>
+                      <div class="text-xs font-light text-gray-500 font-geist">
+                        VP Infrastructure, Orbis Compute
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+                <div class="flex min-h-[260px] flex-col justify-between rounded-2xl border border-zinc-800 bg-black/50 p-5">
+                  <p class="text-base font-light leading-7 text-gray-300 font-geist">
+                    “The route map finally made our edge capacity
+                    understandable. We can spot pressure, isolate noisy regions,
+                    and rebalance before customers open a ticket.”
+                  </p>
+                  <div class="mt-8 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/120?img=45" alt="Mira avatar" class="h-10 w-10 rounded-full object-cover grayscale opacity-80">
+                    <div>
+                      <div class="text-sm font-light text-white font-geist">
+                        Mira Coleman
+                      </div>
+                      <div class="text-xs font-light text-gray-500 font-geist">
+                        Network Director, HelioStack
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-window lg:translate-y-8 reveal-item">
+            <div class="testimonial-track testimonial-down">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+                <div class="flex min-h-[260px] flex-col justify-between rounded-2xl border border-zinc-800 bg-black/50 p-5">
+                  <p class="text-base font-light leading-7 text-gray-300 font-geist">
+                    “The mesh respects compliance boundaries while still chasing
+                    latency aggressively. It feels like a control plane designed
+                    by people who operate networks.”
+                  </p>
+                  <div class="mt-8 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/120?img=12" alt="Nadia avatar" class="h-10 w-10 rounded-full object-cover grayscale opacity-80">
+                    <div>
+                      <div class="text-sm font-light text-white font-geist">
+                        Nadia Alvarez
+                      </div>
+                      <div class="text-xs font-light text-gray-500 font-geist">
+                        Security Architect, Northstar Labs
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+                <div class="flex min-h-[260px] flex-col justify-between rounded-2xl border border-zinc-800 bg-black/50 p-5">
+                  <p class="text-base font-light leading-7 text-gray-300 font-geist">
+                    “AeroNet Core let us keep residency rules strict without
+                    turning operations into manual routing work. The policy
+                    layer absorbed the complexity.”
+                  </p>
+                  <div class="mt-8 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/120?img=21" alt="Ilya avatar" class="h-10 w-10 rounded-full object-cover grayscale opacity-80">
+                    <div>
+                      <div class="text-sm font-light text-white font-geist">
+                        Ilya Morgan
+                      </div>
+                      <div class="text-xs font-light text-gray-500 font-geist">
+                        Cloud Governance Lead, Axion Grid
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-window reveal-item">
+            <div class="testimonial-track testimonial-up">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+                <div class="flex min-h-[260px] flex-col justify-between rounded-2xl border border-zinc-800 bg-black/50 p-5">
+                  <p class="leading-7 text-base font-light text-gray-300 font-geist">
+                    “We deployed private relays in three continents and watched
+                    AeroNet Core absorb them into production without a migration
+                    window.”
+                  </p>
+                  <div class="mt-8 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/120?img=59" alt="Theo avatar" class="h-10 w-10 rounded-full object-cover grayscale opacity-80">
+                    <div>
+                      <div class="text-sm font-light text-white font-geist">
+                        Theo Bennett
+                      </div>
+                      <div class="text-xs font-light text-gray-500 font-geist">
+                        Platform Lead, Meridian AI
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+                <div class="flex min-h-[260px] flex-col justify-between rounded-2xl border border-zinc-800 bg-black/50 p-5">
+                  <p class="text-base font-light leading-7 text-gray-300 font-geist">
+                    “The availability view changed our incident calls. Instead
+                    of guessing where traffic moved, we see every route decision
+                    as it happens.”
+                  </p>
+                  <div class="mt-8 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/120?img=68" alt="Kenji avatar" class="h-10 w-10 rounded-full object-cover grayscale opacity-80">
+                    <div>
+                      <div class="text-sm font-light text-white font-geist">
+                        Kenji Park
+                      </div>
+                      <div class="text-xs font-light text-gray-500 font-geist">
+                        Reliability Manager, VantaMesh
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="relative border-t border-white/10 bg-black px-6 py-24 md:px-8">
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.08), transparent 34%);"></div>
+      <div class="relative mx-auto max-w-7xl">
+        <div class="section-header mx-auto max-w-2xl text-center reveal-item">
+          <div class="section-kicker rounded-full">
+            <iconify-icon icon="solar:wallet-money-linear" stroke-width="1.5" class="text-base text-gray-300"></iconify-icon>
+            <span class="text-xs font-light text-gray-400 font-geist">
+              AeroNet Core plans
+            </span>
+          </div>
+          <h2 class="text-4xl md:text-5xl text-white leading-tight tracking-tighter font-geist font-light">
+            Scale the relay fabric at your own pace.
+          </h2>
+          <p class="mx-auto mt-5 max-w-lg text-sm md:text-base font-light leading-7 text-gray-400 font-geist">
+            Start with observability, expand into policy automation, then move
+            mission-critical traffic onto dedicated capacity.
+          </p>
+        </div>
+
+        <div class="grid gap-3 lg:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl reveal-item">
+            <div class="rounded-2xl border border-zinc-800 bg-black/50 p-5">
+              <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                Mapper
+              </h3>
+              <p class="mt-2 text-sm font-light leading-6 text-gray-400 font-geist">
+                For teams visualizing network health and regional capacity.
+              </p>
+              <div class="mt-8 flex items-end gap-1">
+                <span class="text-5xl text-white tracking-tighter font-geist font-light">
+                  $49
+                </span>
+                <span class="mb-2 text-sm font-light text-gray-500 font-geist">
+                  / node
+                </span>
+              </div>
+              <a href="#" class="mt-8 flex w-full items-center justify-center rounded-full border border-white/10 bg-white text-sm font-light text-black px-4 py-2 hover:bg-gray-200 transition-colors font-geist">
+                Start mapping
+              </a>
+              <div class="mt-8 space-y-3">
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Live topology view
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Regional health metrics
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Seven-day telemetry retention
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/20 bg-white/[0.06] p-3 backdrop-blur-md shadow-2xl reveal-item">
+            <div class="relative overflow-hidden rounded-2xl border border-zinc-700 bg-black/70 p-5">
+              <div class="absolute right-5 top-5 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-light text-gray-200 font-geist">
+                Most used
+              </div>
+              <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                Orchestrator
+              </h3>
+              <p class="mt-2 max-w-xs text-sm font-light leading-6 text-gray-400 font-geist">
+                For production traffic requiring automated balancing and policy
+                routing.
+              </p>
+              <div class="mt-8 flex items-end gap-1">
+                <span class="text-5xl text-white tracking-tighter font-geist font-light">
+                  $129
+                </span>
+                <span class="mb-2 text-sm font-light text-gray-500 font-geist">
+                  / node
+                </span>
+              </div>
+              <a href="#" class="mt-8 flex w-full items-center justify-center rounded-full border border-white/10 bg-white text-sm font-light text-black px-4 py-2 hover:bg-gray-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.2)] font-geist">
+                Deploy AeroNet Core
+              </a>
+              <div class="mt-8 space-y-3">
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Everything in Mapper
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Automated failover policies
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Thirty-day telemetry retention
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Private Slack incident bridge
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl reveal-item">
+            <div class="rounded-2xl border border-zinc-800 bg-black/50 p-5">
+              <h3 class="text-xl text-white tracking-tighter font-geist font-light">
+                Sovereign
+              </h3>
+              <p class="mt-2 text-sm font-light leading-6 text-gray-400 font-geist">
+                For dedicated regions, compliance controls, and private relay
+                capacity.
+              </p>
+              <div class="mt-8 flex items-end gap-1">
+                <span class="text-5xl text-white tracking-tighter font-geist font-light">
+                  Custom
+                </span>
+              </div>
+              <a href="#" class="mt-8 flex w-full items-center justify-center rounded-full border border-white/10 bg-zinc-950 text-sm font-light text-gray-200 px-4 py-2 hover:text-white transition-colors font-geist">
+                Contact team
+              </a>
+              <div class="mt-8 space-y-3">
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Dedicated relay pools
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Custom residency framework
+                </div>
+                <div class="flex gap-3 text-sm font-light text-gray-300 font-geist">
+                  <iconify-icon icon="solar:check-circle-linear" stroke-width="1.5" class="mt-0.5 text-base text-white"></iconify-icon>
+                  Executive uptime reviews
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="relative border-t border-white/10 bg-black px-6 py-24 md:px-8">
+      <div class="mx-auto max-w-4xl">
+        <div class="section-header text-center reveal-item">
+          <div class="section-kicker rounded-full">
+            <iconify-icon icon="solar:question-circle-linear" stroke-width="1.5" class="text-base text-gray-300"></iconify-icon>
+            <span class="text-xs font-light text-gray-400 font-geist">FAQ</span>
+          </div>
+          <h2 class="text-4xl md:text-5xl text-white leading-tight tracking-tighter font-geist font-light">
+            AeroNet Core questions.
+          </h2>
+        </div>
+
+        <div class="space-y-3">
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md shadow-2xl reveal-item" open="">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-light text-white font-geist">
+              How quickly can we deploy a new region?
+              <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="text-xl text-gray-400 transition-transform group-open:rotate-180"></iconify-icon>
+            </summary>
+            <p class="mt-4 text-sm font-light leading-6 text-gray-400 font-geist">
+              Most teams connect their first region in under fifteen minutes.
+              Full production rollout depends on compliance review, node count,
+              and traffic policy complexity.
+            </p>
+          </details>
+
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md shadow-2xl reveal-item">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-light text-white font-geist">
+              Can AeroNet Core run on private infrastructure?
+              <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="text-xl text-gray-400 transition-transform group-open:rotate-180"></iconify-icon>
+            </summary>
+            <p class="mt-4 text-sm font-light leading-6 text-gray-400 font-geist">
+              Yes. Nodes can run in your cloud accounts, private data centers,
+              edge facilities, or hybrid environments with dedicated relay
+              pools.
+            </p>
+          </details>
+
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md shadow-2xl reveal-item">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-light text-white font-geist">
+              What happens when a relay degrades?
+              <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="text-xl text-gray-400 transition-transform group-open:rotate-180"></iconify-icon>
+            </summary>
+            <p class="mt-4 text-sm font-light leading-6 text-gray-400 font-geist">
+              AeroNet Core scores node health continuously. When latency, packet
+              loss, or availability drifts outside policy, sessions are moved to
+              healthier paths automatically.
+            </p>
+          </details>
+
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md shadow-2xl reveal-item">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-light text-white font-geist">
+              Does the platform support compliance boundaries?
+              <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5" class="text-xl text-gray-400 transition-transform group-open:rotate-180"></iconify-icon>
+            </summary>
+            <p class="mt-4 text-sm font-light leading-6 text-gray-400 font-geist">
+              Traffic can be restricted by region, provider, node label,
+              customer segment, or custom policy. Sovereign plans include deeper
+              residency workflows.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative border-t border-white/10 bg-black px-6 py-24 md:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur-md shadow-2xl">
+          <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12), transparent 36%);"></div>
+          <div class="relative rounded-2xl border border-zinc-800 bg-black/70 px-6 py-16 text-center md:px-10">
+            <div class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-zinc-900/80">
+              <iconify-icon icon="solar:rocket-linear" stroke-width="1.5" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <h2 class="mx-auto max-w-3xl text-4xl md:text-6xl text-white leading-tight tracking-tighter font-geist font-light">
+              Build with AeroNet Core.
+            </h2>
+            <p class="mx-auto mt-5 max-w-xl text-sm md:text-base font-light leading-7 text-gray-400 font-geist">
+              Deploy nodes, map routes, and automate recovery with AeroNet Core
+              across the infrastructure your customers depend on.
+            </p>
+            <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a href="#" class="w-full rounded-full bg-white px-5 py-3 text-center text-sm font-light text-black hover:bg-gray-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.2)] sm:w-auto font-geist">
+                Deploy AeroNet Core
+              </a>
+              <a href="#features" class="w-full rounded-full border border-white/10 bg-black/40 px-5 py-3 text-center text-sm font-light text-gray-300 backdrop-blur-md hover:text-white transition-colors sm:w-auto font-geist">
+                View framework
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="border-t border-white/10 bg-black px-6 py-10 md:px-8">
+      <div class="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-center md:justify-between reveal-item">
+        <div>
+          <a href="#top" class="flex items-center gap-2">
+            <iconify-icon icon="solar:globus-linear" stroke-width="1.5" class="text-2xl text-white"></iconify-icon>
+            <span class="text-base tracking-tight font-light text-white font-geist">
+              AeroNet
+            </span>
+          </a>
+          <p class="mt-3 max-w-sm text-xs font-light leading-5 text-gray-500 font-geist">
+            A planetary relay control plane for adaptive routing, resilient edge
+            capacity, and real-time infrastructure visibility.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+          <div class="space-y-3">
+            <div class="text-xs font-light text-white font-geist">Product</div>
+            <a href="#features" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              Mapping
+            </a>
+            <a href="#how" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              Framework
+            </a>
+          </div>
+          <div class="space-y-3">
+            <div class="text-xs font-light text-white font-geist">Company</div>
+            <a href="#" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              About
+            </a>
+            <a href="#" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              Careers
+            </a>
+          </div>
+          <div class="space-y-3">
+            <div class="text-xs font-light text-white font-geist">
+              Resources
+            </div>
+            <a href="#" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              Docs
+            </a>
+            <a href="#faq" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              FAQ
+            </a>
+          </div>
+          <div class="space-y-3">
+            <div class="text-xs font-light text-white font-geist">Legal</div>
+            <a href="#" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              Privacy
+            </a>
+            <a href="#" class="block text-xs font-light text-gray-500 hover:text-white transition-colors font-geist">
+              Terms
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="mx-auto mt-10 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between reveal-item">
+        <p class="text-xs font-light text-gray-600 font-geist">
+          © 2026 AeroNet Systems. All rights reserved.
+        </p>
+        <div class="flex items-center gap-4">
+          <a href="#" class="text-xs font-light text-gray-600 hover:text-white transition-colors font-geist">
+            Status
+          </a>
+          <a href="#" class="text-xs font-light text-gray-600 hover:text-white transition-colors font-geist">
+            Security
+          </a>
+          <a href="#" class="text-xs font-light text-gray-600 hover:text-white transition-colors font-geist">
+            Contact
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const canvas = document.getElementById('animationCanvas');
+      const ctx = canvas.getContext('2d');
+      const floaters = document.querySelectorAll('[data-float]');
+      const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const lowPowerHero = window.innerWidth < 768 || reduceMotionQuery.matches;
+
+      let width, height;
+      let time = 0;
+      let animationFrameId = null;
+      let lastFrameTime = 0;
+      let isHeroVisible = true;
+
+      const targetFrameInterval = lowPowerHero ? 1000 / 20 : 1000 / 30;
+      const numNodes = lowPowerHero ? 72 : 112;
+      const nodes = [];
+      const surfaceDots = [];
+      const atmosphereParticles = [];
+      const DEG = Math.PI / 180;
+
+      function seededNoise(a, b) {
+          return Math.abs(Math.sin(a * 12.9898 + b * 78.233) * 43758.5453) % 1;
+      }
+
+      function lonDistance(a, b) {
+          let diff = Math.abs(a - b) % 360;
+          return diff > 180 ? 360 - diff : diff;
+      }
+
+      function blobScore(lat, lon, cLat, cLon, latRadius, lonRadius) {
+          const y = (lat - cLat) / latRadius;
+          const x = lonDistance(lon, cLon) / lonRadius;
+          return Math.max(0, 1 - (x * x + y * y));
+      }
+
+      function landScore(lat, lon) {
+          const blobs = [
+              blobScore(lat, lon, 46, -102, 30, 48),
+              blobScore(lat, lon, 20, -96, 14, 22),
+              blobScore(lat, lon, -18, -61, 34, 24),
+              blobScore(lat, lon, 52, 13, 18, 30),
+              blobScore(lat, lon, 6, 22, 39, 29),
+              blobScore(lat, lon, 28, 48, 17, 24),
+              blobScore(lat, lon, 36, 89, 30, 58),
+              blobScore(lat, lon, 58, 112, 20, 44),
+              blobScore(lat, lon, -25, 134, 16, 25),
+              blobScore(lat, lon, 72, -42, 10, 18)
+          ];
+          return Math.max(...blobs);
+      }
+
+      for (let i = 0; i < numNodes; i++) {
+          let phi = Math.acos(-1 + (2 * i) / numNodes);
+          let theta = Math.sqrt(numNodes * Math.PI) * phi;
+          nodes.push({
+              x: Math.cos(theta) * Math.sin(phi),
+              y: Math.sin(theta) * Math.sin(phi),
+              z: Math.cos(phi),
+              baseSize: Math.random() * 1.5 + 0.5,
+              pulseSpeed: Math.random() * 0.03 + 0.01,
+              pulseOffset: Math.random() * Math.PI * 2
+          });
+      }
+
+      const surfaceStep = lowPowerHero ? 2.9 : 2.25;
+      for (let lat = -58; lat <= 76; lat += surfaceStep) {
+          for (let lon = -178; lon <= 180; lon += surfaceStep) {
+              const score = landScore(lat, lon);
+              const grain = seededNoise(lat, lon);
+              const edgeBreakup = seededNoise(lat * 0.73, lon * 1.17);
+              const isLand = score > 0.16 && (score + grain * 0.42 + edgeBreakup * 0.16) > 0.48;
+              const isOceanSpark = !isLand && grain > 0.992;
+
+              if (!isLand && !isOceanSpark) continue;
+
+              const jitterLat = lat + (seededNoise(lat + 3.1, lon) - 0.5) * 0.75;
+              const jitterLon = lon + (seededNoise(lat, lon + 5.7) - 0.5) * 0.75;
+              const visualLon = (jitterLon + 70) * DEG;
+              const visualLat = jitterLat * DEG;
+              const x = Math.cos(visualLat) * Math.cos(visualLon);
+              const y = Math.sin(visualLat);
+              const z = Math.cos(visualLat) * Math.sin(visualLon);
+
+              surfaceDots.push({
+                  x,
+                  y,
+                  z,
+                  kind: isLand ? 'land' : 'spark',
+                  weight: isLand ? Math.min(1, 0.42 + score * 0.72 + grain * 0.14) : 0.28,
+                  size: isLand ? 0.72 + grain * 0.35 : 0.45
+              });
+          }
+      }
+
+      const atmosphereCount = lowPowerHero ? 80 : 140;
+      for (let i = 0; i < atmosphereCount; i++) {
+          const noise = seededNoise(i, i * 2.7);
+          atmosphereParticles.push({
+              angle: noise * Math.PI * 2,
+              radius: 1.05 + seededNoise(i * 3.2, i) * 0.34,
+              yScale: (seededNoise(i * 4.1, i * 1.9) - 0.5) * 1.8,
+              size: 0.45 + seededNoise(i * 1.4, i * 5.1) * 1.2,
+              speed: 0.00005 + seededNoise(i * 2.1, i * 3.9) * 0.00014,
+              alpha: 0.08 + seededNoise(i * 1.7, i * 2.3) * 0.22
+          });
+      }
+
+      function resize() {
+          const hero = canvas.closest('section');
+          width = hero.offsetWidth;
+          height = hero.offsetHeight;
+          canvas.width = width;
+          canvas.height = height;
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      function queueNetworkFrame() {
+          if (animationFrameId === null) {
+              animationFrameId = requestAnimationFrame(drawNetwork);
+          }
+      }
+
+      function drawNetwork(frameTime = 0) {
+          animationFrameId = null;
+
+          if (document.hidden || !isHeroVisible) {
+              lastFrameTime = frameTime;
+              return;
+          }
+
+          if (frameTime - lastFrameTime < targetFrameInterval) {
+              queueNetworkFrame();
+              return;
+          }
+
+          const delta = lastFrameTime ? Math.min(frameTime - lastFrameTime, 48) : 16;
+          lastFrameTime = frameTime;
+          ctx.clearRect(0, 0, width, height);
+
+          const centerX = width > 768 ? width * 0.69 : width * 0.5;
+          const centerY = width > 768 ? height * 0.57 : height * 0.67;
+          const R = width > 768 ? Math.min(width * 0.23, height * 0.4) : Math.min(width, height) * 0.34;
+
+          let angleY = time * 0.0004;
+          let angleX = 0.22;
+
+          const project = point => {
+              let y1 = point.y * Math.cos(angleX) - point.z * Math.sin(angleX);
+              let z1 = point.y * Math.sin(angleX) + point.z * Math.cos(angleX);
+              let x2 = point.x * Math.cos(angleY) + z1 * Math.sin(angleY);
+              let z2 = -point.x * Math.sin(angleY) + z1 * Math.cos(angleY);
+
+              return {
+                  x: centerX + x2 * R,
+                  y: centerY + y1 * R,
+                  zNorm: z2
+              };
+          };
+
+          ctx.save();
+          ctx.globalAlpha = 0.78;
+          ctx.shadowColor = 'rgba(37, 99, 235, 0.95)';
+          ctx.shadowBlur = 52;
+          ctx.strokeStyle = 'rgba(37, 99, 235, 0.34)';
+          ctx.lineWidth = 18;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, R * 1.01, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.shadowBlur = 28;
+          ctx.strokeStyle = 'rgba(96, 165, 250, 0.5)';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, R * 1.006, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          const bodyGlow = ctx.createRadialGradient(centerX - R * 0.18, centerY - R * 0.16, R * 0.08, centerX, centerY, R);
+          bodyGlow.addColorStop(0, 'rgba(3, 7, 18, 0.9)');
+          bodyGlow.addColorStop(0.58, 'rgba(2, 6, 23, 0.9)');
+          bodyGlow.addColorStop(0.86, 'rgba(3, 18, 44, 0.8)');
+          bodyGlow.addColorStop(0.98, 'rgba(14, 76, 170, 0.38)');
+          bodyGlow.addColorStop(1, 'rgba(59, 130, 246, 0.18)');
+          ctx.fillStyle = bodyGlow;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, R, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          atmosphereParticles.forEach(p => {
+              const angle = p.angle + time * p.speed;
+              const x = centerX + Math.cos(angle) * R * p.radius;
+              const y = centerY + Math.sin(angle) * R * p.radius * 0.72 + p.yScale * R * 0.18;
+              const edgeDistance = Math.hypot((x - centerX) / R, (y - centerY) / R);
+              if (edgeDistance < 1.01 || edgeDistance > 1.42) return;
+              const twinkle = 0.55 + Math.sin(time * 0.002 + p.angle * 3) * 0.45;
+              ctx.fillStyle = `rgba(37, 99, 235, ${p.alpha * twinkle})`;
+              ctx.beginPath();
+              ctx.arc(x, y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+          });
+          ctx.restore();
+
+          function drawGreatCircle(axis, offset, alpha) {
+              let previous = null;
+              ctx.beginPath();
+              const segments = lowPowerHero ? 54 : 80;
+              for (let i = 0; i <= segments; i++) {
+                  const t = (i / segments) * Math.PI * 2;
+                  let point;
+                  if (axis === 'lat') {
+                      const radius = Math.cos(offset);
+                      point = { x: Math.cos(t) * radius, y: Math.sin(offset), z: Math.sin(t) * radius };
+                  } else {
+                      point = { x: Math.cos(t) * Math.cos(offset), y: Math.sin(t), z: Math.cos(t) * Math.sin(offset) };
+                  }
+                  const projected = project(point);
+                  if (projected.zNorm < -0.18) {
+                      previous = null;
+                      continue;
+                  }
+                  if (!previous) ctx.moveTo(projected.x, projected.y);
+                  else ctx.lineTo(projected.x, projected.y);
+                  previous = projected;
+              }
+              ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+              ctx.lineWidth = 0.65;
+              ctx.stroke();
+          }
+
+          ctx.save();
+          ctx.shadowColor = 'rgba(37, 99, 235, 0.48)';
+          ctx.shadowBlur = 8;
+          [-0.72, -0.38, 0, 0.38, 0.72].forEach(lat => drawGreatCircle('lat', lat, 0.15));
+          [-1.05, -0.52, 0, 0.52, 1.05].forEach(lon => drawGreatCircle('lon', lon, 0.12));
+          ctx.restore();
+
+          const projectedDots = surfaceDots.map(dot => ({ ...project(dot), weight: dot.weight, kind: dot.kind, size: dot.size }));
+          projectedDots.forEach(dot => {
+              if (dot.zNorm < -0.12) return;
+              const depth = Math.min(1, (dot.zNorm + 0.2) * 1.35);
+              const alpha = dot.kind === 'land'
+                  ? Math.min(0.9, depth * 0.82) * dot.weight
+                  : Math.min(0.28, depth * 0.22) * dot.weight;
+              ctx.fillStyle = dot.kind === 'land'
+                  ? `rgba(56, 189, 248, ${alpha})`
+                  : `rgba(147, 197, 253, ${alpha})`;
+              ctx.beginPath();
+              ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+              ctx.fill();
+          });
+
+          let projectedNodes = nodes.map(n => ({ ...project(n), orig: n }));
+
+          ctx.lineWidth = 0.75;
+          for (let i = 0; i < projectedNodes.length; i++) {
+              let p1 = projectedNodes[i];
+
+              if (p1.zNorm < -0.22) continue;
+
+              for (let j = i + 1; j < projectedNodes.length; j++) {
+                  let p2 = projectedNodes[j];
+                  if (p2.zNorm < -0.22) continue;
+
+                  let dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+
+                  const threshold = R * 0.34;
+                  if (dist < threshold) {
+                      let distAlpha = (1 - dist / threshold) * 0.42;
+                      let depthAlpha = Math.min(1, (p1.zNorm + 0.25) * 1.6) * Math.min(1, (p2.zNorm + 0.25) * 1.6);
+
+                      ctx.strokeStyle = `rgba(37, 99, 235, ${distAlpha * depthAlpha})`;
+                      ctx.beginPath();
+                      ctx.moveTo(p1.x, p1.y);
+                      ctx.lineTo(p2.x, p2.y);
+                      ctx.stroke();
+                  }
+              }
+          }
+
+          projectedNodes.forEach(p => {
+              if (p.zNorm < -0.25) return;
+
+              let alpha = Math.min(1, (p.zNorm + 0.35) * 1.8);
+              let size = p.orig.baseSize + (p.zNorm > 0 ? p.zNorm * 1.05 : 0);
+              let pulse = (Math.sin((time * p.orig.pulseSpeed) + p.orig.pulseOffset) + 1) / 2;
+
+              const flare = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 7);
+              flare.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.52})`);
+              flare.addColorStop(0.24, `rgba(96, 165, 250, ${alpha * 0.24})`);
+              flare.addColorStop(1, 'rgba(37, 99, 235, 0)');
+              ctx.fillStyle = flare;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, size * 7, 0, Math.PI * 2);
+              ctx.fill();
+
+              ctx.fillStyle = `rgba(191, 219, 254, ${alpha * 0.94})`;
+              ctx.shadowColor = 'rgba(59, 130, 246, 0.9)';
+              ctx.shadowBlur = p.zNorm > 0 ? 11 : 2;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.shadowBlur = 0;
+
+              if (p.zNorm > 0 && pulse > 0.3) {
+                  ctx.fillStyle = `rgba(96, 165, 250, ${alpha * 0.2 * pulse})`;
+                  ctx.beginPath();
+                  ctx.arc(p.x, p.y, size * (1 + pulse * 3), 0, Math.PI * 2);
+                  ctx.fill();
+              }
+
+              if (p.zNorm > 0.35 && (p.orig.baseSize > 1.55 || pulse > 0.88)) {
+                  ctx.save();
+                  ctx.globalCompositeOperation = 'lighter';
+                  ctx.strokeStyle = `rgba(147, 197, 253, ${alpha * 0.56})`;
+                  ctx.lineWidth = 0.7;
+                  ctx.shadowColor = 'rgba(59, 130, 246, 0.95)';
+                  ctx.shadowBlur = 10;
+                  ctx.beginPath();
+                  ctx.moveTo(p.x - size * 5.2, p.y);
+                  ctx.lineTo(p.x + size * 5.2, p.y);
+                  ctx.moveTo(p.x, p.y - size * 5.2);
+                  ctx.lineTo(p.x, p.y + size * 5.2);
+                  ctx.stroke();
+                  ctx.restore();
+              }
+          });
+
+          ctx.save();
+          ctx.strokeStyle = 'rgba(125, 211, 252, 0.9)';
+          ctx.lineWidth = 1.65;
+          ctx.shadowColor = 'rgba(59, 130, 246, 1)';
+          ctx.shadowBlur = 30;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, R, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.lineWidth = 0.75;
+          ctx.strokeStyle = 'rgba(147, 197, 253, 0.58)';
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, R * 1.018, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          const groundGlow = ctx.createRadialGradient(centerX, centerY + R * 1.02, 0, centerX, centerY + R * 1.02, R * 0.34);
+          groundGlow.addColorStop(0, 'rgba(125, 211, 252, 0.78)');
+          groundGlow.addColorStop(0.22, 'rgba(59, 130, 246, 0.42)');
+          groundGlow.addColorStop(0.56, 'rgba(37, 99, 235, 0.16)');
+          groundGlow.addColorStop(1, 'rgba(37, 99, 235, 0)');
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.scale(1, 0.18);
+          ctx.fillStyle = groundGlow;
+          ctx.beginPath();
+          ctx.arc(centerX, (centerY + R * 1.02) / 0.18, R * 0.72, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          floaters.forEach(el => {
+              const offset = Number(el.getAttribute('data-float-offset'));
+              const floatStrength = el.querySelector('.globe-float') ? 1 : 0.7;
+              const y = Math.sin((time * 0.0019) + offset) * 34 * floatStrength;
+              const x = Math.cos((time * 0.00145) + offset * 1.37) * 22 * floatStrength;
+              const tilt = Math.sin((time * 0.00115) + offset * 1.8) * 4.5 * floatStrength;
+              el.style.setProperty('--float-y', `${y}px`);
+              el.style.setProperty('--drift-x', `${x}px`);
+              el.style.setProperty('--tilt', `${tilt}deg`);
+          });
+
+          time += delta;
+          queueNetworkFrame();
+      }
+
+      const heroVisibilityObserver = new IntersectionObserver(entries => {
+          isHeroVisible = entries.some(entry => entry.isIntersecting);
+          if (isHeroVisible && !document.hidden) queueNetworkFrame();
+      }, { threshold: 0.01 });
+      heroVisibilityObserver.observe(canvas.closest('section'));
+
+      document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+              lastFrameTime = 0;
+              queueNetworkFrame();
+          }
+      });
+
+      function setupRevealAnimations() {
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const sequenceSelectors = [
+              '.floating-nav > *',
+              '.hero-copy > *',
+              '#top [data-float]',
+              'section:not(#top) .section-header',
+              '#features > div:first-of-type .grid > div',
+              '#features > .max-w-7xl .grid > div',
+              'section:not(#top) .grid > div',
+              'section:not(#top) details',
+              'footer > div'
+          ];
+          const heroSelectors = [
+              '.floating-nav > *',
+              '.hero-copy > *',
+              '#top [data-float]'
+          ];
+
+          const elements = [];
+          sequenceSelectors.forEach(selector => {
+              document.querySelectorAll(selector).forEach(el => {
+                  if (!elements.includes(el)) elements.push(el);
+              });
+          });
+
+          elements.forEach(el => {
+              el.classList.add('reveal-item');
+              el.classList.remove('reveal-in');
+              el.style.removeProperty('--reveal-delay');
+          });
+
+          if (reduceMotion) {
+              elements.forEach(el => el.classList.add('reveal-in'));
+              return;
+          }
+
+          const observer = new IntersectionObserver(entries => {
+              const visibleEntries = entries
+                  .filter(entry => entry.isIntersecting && !entry.target.classList.contains('reveal-in'))
+                  .sort((a, b) => {
+                      const position = a.target.compareDocumentPosition(b.target);
+                      return position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+                  });
+
+              visibleEntries.forEach((entry, index) => {
+                  entry.target.style.setProperty('--reveal-delay', `${Math.min(index * 95, 570)}ms`);
+                  entry.target.classList.add('reveal-in');
+                  observer.unobserve(entry.target);
+              });
+          }, {
+              threshold: 0.18,
+              rootMargin: '0px 0px -8% 0px'
+          });
+
+          elements.forEach(el => observer.observe(el));
+
+          requestAnimationFrame(() => {
+              const heroItems = [];
+              heroSelectors.forEach(selector => {
+                  document.querySelectorAll(selector).forEach(el => {
+                      if (elements.includes(el) && !heroItems.includes(el)) heroItems.push(el);
+                  });
+              });
+              heroItems.forEach((el, index) => {
+                  el.style.setProperty('--reveal-delay', `${index * 95}ms`);
+                  el.classList.add('reveal-in');
+                  observer.unobserve(el);
+              });
+          });
+      }
+
+      setupRevealAnimations();
+      queueNetworkFrame();
+    </script>
+  
+</body></html>

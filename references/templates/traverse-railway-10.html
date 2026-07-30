@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ember — Premium Single Malt Whisky</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+--bg: #080604;
+--bg-1: #0E0B07;
+--bg-2: #141008;
+--surface: #1A1510;
+--accent: #C97D3C;
+--accent-light: #E8C87A;
+--accent-dark: #8B5A2B;
+--cream: #F0E6D6;
+--muted: #7A7068;
+--border: rgba(201, 125, 60, 0.12);
+--border-s: rgba(201, 125, 60, 0.06);
+--glass: rgba(26, 21, 16, 0.7);
+--font-serif: 'Playfair Display', Georgia, serif;
+--font-sans: 'Inter', -apple-system, sans-serif;
+}
+html { scroll-behavior: smooth; }
+body {
+background: var(--bg);
+color: var(--cream);
+font-family: var(--font-sans);
+font-weight: 300;
+line-height: 1.7;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+}
+/* Noise overlay */
+body::before {
+content: '';
+position: fixed;
+inset: 0;
+z-index: 9999;
+pointer-events: none;
+opacity: 0.04;
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+background-repeat: repeat;
+background-size: 256px;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+/* ── Reveal animations ── */
+.reveal {
+opacity: 0;
+transform: translateY(32px);
+transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+opacity: 1;
+transform: none;
+}
+.reveal-left {
+opacity: 0;
+transform: translateX(-40px);
+transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.visible {
+opacity: 1;
+transform: none;
+}
+.stagger-up .reveal-child {
+opacity: 0;
+transform: translateY(24px);
+transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stagger-up.visible .reveal-child {
+opacity: 1;
+transform: none;
+}
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+.reveal, .reveal-left, .stagger-up .reveal-child {
+opacity: 1;
+transform: none;
+transition: none;
+}
+}
+/* ── Scroll progress bar ── */
+.scroll-progress {
+position: fixed;
+top: 0;
+left: 0;
+width: 0%;
+height: 2px;
+background: linear-gradient(90deg, var(--accent-dark), var(--accent), var(--accent-light));
+z-index: 10001;
+transition: width 0.1s linear;
+}
+/* ── Navigation ── */
+.nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 10000;
+padding: 0 48px;
+height: 72px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+background: rgba(8, 6, 4, 0.6);
+border-bottom: 1px solid var(--border-s);
+transition: background 0.3s;
+}
+.nav-logo {
+font-family: var(--font-serif);
+font-size: 1.4rem;
+font-weight: 500;
+letter-spacing: 0.08em;
+color: var(--cream);
+}
+.nav-logo span {
+color: var(--accent);
+}
+.nav-links {
+display: flex;
+gap: 32px;
+list-style: none;
+align-items: center;
+}
+.nav-links a {
+font-size: 0.78rem;
+font-weight: 400;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+color: var(--muted);
+transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--cream); }
+.nav-cta {
+padding: 10px 24px;
+background: transparent;
+border: 1px solid var(--accent);
+color: var(--accent) !important;
+border-radius: 2px;
+font-size: 0.72rem !important;
+letter-spacing: 0.1em !important;
+transition: all 0.3s !important;
+position: relative;
+overflow: hidden;
+}
+.nav-cta::before {
+content: '';
+position: absolute;
+inset: 0;
+background: var(--accent);
+transform: translateX(-101%);
+transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-cta:hover {
+color: var(--bg) !important;
+}
+.nav-cta:hover::before {
+transform: translateX(0);
+}
+.nav-cta span {
+position: relative;
+z-index: 1;
+}
+/* Hamburger */
+.hamburger {
+display: none;
+flex-direction: column;
+gap: 5px;
+cursor: pointer;
+background: none;
+border: none;
+padding: 4px;
+}
+.hamburger span {
+display: block;
+width: 24px;
+height: 1.5px;
+background: var(--cream);
+transition: all 0.3s;
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+.mobile-menu {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 9999;
+background: rgba(8, 6, 4, 0.96);
+backdrop-filter: blur(24px);
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 32px;
+}
+.mobile-menu.active { display: flex; }
+.mobile-menu a {
+font-family: var(--font-serif);
+font-size: 1.8rem;
+color: var(--cream);
+opacity: 0.7;
+transition: opacity 0.3s;
+}
+.mobile-menu a:hover { opacity: 1; }
+/* ── Hero ── */
+.hero {
+position: relative;
+height: 100vh;
+display: flex;
+align-items: flex-end;
+padding: 0 48px 80px;
+overflow: hidden;
+}
+.hero-bg {
+position: absolute;
+inset: 0;
+z-index: 0;
+}
+.hero-bg img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+.hero-bg::after {
+content: '';
+position: absolute;
+inset: 0;
+background:
+linear-gradient(to top, var(--bg) 0%, rgba(8,6,4,0.7) 40%, rgba(8,6,4,0.2) 70%, rgba(8,6,4,0.4) 100%);
+}
+.hero-content {
+position: relative;
+z-index: 2;
+max-width: 720px;
+}
+.hero-eyebrow {
+font-size: 0.68rem;
+font-weight: 400;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--accent);
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.hero-eyebrow::before {
+content: '';
+display: block;
+width: 40px;
+height: 1px;
+background: var(--accent);
+}
+.hero h1 {
+font-family: var(--font-serif);
+font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+font-weight: 400;
+line-height: 1.1;
+letter-spacing: -0.02em;
+color: var(--cream);
+margin-bottom: 24px;
+}
+.hero h1 em {
+font-style: italic;
+color: var(--accent-light);
+}
+.hero-sub {
+font-size: 0.88rem;
+color: var(--muted);
+max-width: 480px;
+line-height: 1.7;
+margin-bottom: 40px;
+}
+.hero-cta {
+display: inline-flex;
+align-items: center;
+gap: 12px;
+padding: 16px 36px;
+background: transparent;
+border: 1px solid var(--accent);
+color: var(--cream);
+font-family: var(--font-sans);
+font-size: 0.76rem;
+font-weight: 400;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+transition: color 0.4s;
+}
+.hero-cta::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(135deg, var(--accent), var(--accent-light));
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+z-index: 0;
+}
+.hero-cta:hover::before { transform: scaleX(1); }
+.hero-cta:hover { color: var(--bg); }
+.hero-cta span, .hero-cta .iconify { position: relative; z-index: 1; }
+/* Floating heritage badge */
+.hero-badge {
+position: absolute;
+right: 48px;
+bottom: 80px;
+z-index: 2;
+width: 140px;
+height: 140px;
+border-radius: 50%;
+border: 1px solid var(--border);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: rgba(8, 6, 4, 0.6);
+backdrop-filter: blur(16px);
+animation: slowRotate 20s linear infinite;
+}
+.hero-badge-inner {
+text-align: center;
+animation: slowRotateReverse 20s linear infinite;
+}
+.hero-badge-year {
+font-family: var(--font-serif);
+font-size: 1.6rem;
+font-weight: 500;
+color: var(--accent-light);
+line-height: 1;
+}
+.hero-badge-text {
+font-size: 0.56rem;
+text-transform: uppercase;
+letter-spacing: 0.15em;
+color: var(--muted);
+margin-top: 4px;
+}
+@keyframes slowRotate { to { transform: rotate(360deg); } }
+@keyframes slowRotateReverse { to { transform: rotate(-360deg); } }
+/* ── Section shared ── */
+.section-label {
+font-size: 0.68rem;
+font-weight: 400;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--accent);
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 16px;
+}
+.section-label::before {
+content: '';
+display: block;
+width: 32px;
+height: 1px;
+background: var(--accent);
+}
+.section-title {
+font-family: var(--font-serif);
+font-size: clamp(1.8rem, 3vw, 2.4rem);
+font-weight: 400;
+line-height: 1.2;
+letter-spacing: -0.02em;
+margin-bottom: 20px;
+}
+.section-title em {
+font-style: italic;
+background: linear-gradient(135deg, var(--accent), var(--accent-light));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.section-sep {
+display: block;
+width: 100%;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+border: none;
+}
+/* ── Heritage section ── */
+.heritage {
+padding: 120px 48px;
+background: var(--bg-1);
+position: relative;
+overflow: hidden;
+}
+.heritage::before {
+content: '';
+position: absolute;
+top: -100px;
+right: -200px;
+width: 600px;
+height: 600px;
+background: radial-gradient(circle, rgba(201, 125, 60, 0.06), transparent 70%);
+pointer-events: none;
+}
+.heritage-grid {
+max-width: 1200px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 80px;
+align-items: center;
+}
+.heritage-text .desc {
+font-size: 0.84rem;
+color: var(--muted);
+line-height: 1.8;
+margin-bottom: 32px;
+}
+.heritage-stats {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 24px;
+margin-top: 40px;
+}
+.heritage-stat {
+text-align: center;
+padding: 20px 0;
+border-top: 1px solid var(--border);
+}
+.heritage-stat .val {
+font-family: var(--font-serif);
+font-size: 1.8rem;
+font-weight: 500;
+color: var(--accent-light);
+line-height: 1;
+}
+.heritage-stat .label {
+font-size: 0.64rem;
+text-transform: uppercase;
+letter-spacing: 0.12em;
+color: var(--muted);
+margin-top: 6px;
+}
+.heritage-image {
+position: relative;
+border-radius: 4px;
+overflow: hidden;
+}
+.heritage-image img {
+width: 100%;
+height: 500px;
+object-fit: cover;
+}
+.heritage-image::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 40%;
+background: linear-gradient(to top, var(--bg-1), transparent);
+pointer-events: none;
+}
+/* ── Collection — horizontal scroll ── */
+.collection {
+padding: 120px 0 120px;
+background: var(--bg);
+position: relative;
+}
+.collection::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.collection-header {
+padding: 0 48px;
+max-width: 1200px;
+margin: 0 auto 60px;
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+}
+.collection-header .section-title { margin-bottom: 0; }
+.collection-scroll-hint {
+font-size: 0.72rem;
+color: var(--muted);
+display: flex;
+align-items: center;
+gap: 8px;
+flex-shrink: 0;
+}
+.collection-track {
+display: flex;
+gap: 32px;
+padding: 0 48px;
+overflow-x: auto;
+scroll-snap-type: x mandatory;
+scrollbar-width: none;
+-ms-overflow-style: none;
+cursor: grab;
+}
+.collection-track::-webkit-scrollbar { display: none; }
+.collection-track:active { cursor: grabbing; }
+.collection-card {
+flex-shrink: 0;
+width: 340px;
+scroll-snap-align: start;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 4px;
+overflow: hidden;
+transition: border-color 0.3s, transform 0.4s;
+position: relative;
+}
+.collection-card:hover {
+border-color: rgba(201, 125, 60, 0.3);
+transform: translateY(-4px);
+}
+.collection-card-img {
+position: relative;
+height: 380px;
+overflow: hidden;
+}
+.collection-card-img img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.collection-card:hover .collection-card-img img {
+transform: scale(1.04);
+}
+.collection-card-img::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 50%;
+background: linear-gradient(to top, var(--surface), transparent);
+pointer-events: none;
+}
+.collection-card-body {
+padding: 24px;
+}
+.collection-card-age {
+font-size: 0.62rem;
+text-transform: uppercase;
+letter-spacing: 0.15em;
+color: var(--accent);
+margin-bottom: 6px;
+}
+.collection-card-name {
+font-family: var(--font-serif);
+font-size: 1.3rem;
+font-weight: 500;
+margin-bottom: 8px;
+}
+.collection-card-notes {
+font-size: 0.76rem;
+color: var(--muted);
+line-height: 1.6;
+margin-bottom: 16px;
+}
+.collection-card-meta {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-top: 16px;
+border-top: 1px solid var(--border);
+}
+.collection-card-abv {
+font-size: 0.72rem;
+color: var(--muted);
+}
+.collection-card-abv strong {
+color: var(--cream);
+font-weight: 500;
+}
+.collection-card-price {
+font-family: var(--font-serif);
+font-size: 1.1rem;
+color: var(--accent-light);
+}
+/* ── Process — sticky scroll ── */
+.process {
+position: relative;
+background: var(--bg-1);
+}
+.process::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.process-container {
+max-width: 1200px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: 1fr 1fr;
+min-height: 100vh;
+}
+.process-sticky {
+position: sticky;
+top: 0;
+height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 0 48px 0 48px;
+}
+.process-image-container {
+position: relative;
+width: 100%;
+aspect-ratio: 4/3;
+border-radius: 4px;
+overflow: hidden;
+margin-top: 40px;
+}
+.process-image-container img {
+position: absolute;
+inset: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+opacity: 0;
+transition: opacity 0.6s ease;
+}
+.process-image-container img.active { opacity: 1; }
+.process-image-container::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 30%;
+background: linear-gradient(to top, var(--bg-1), transparent);
+pointer-events: none;
+}
+.process-steps {
+padding: 120px 48px 120px 40px;
+}
+.process-step {
+min-height: 70vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 40px 0;
+opacity: 0.25;
+transition: opacity 0.5s;
+}
+.process-step.active { opacity: 1; }
+.process-step-num {
+font-family: var(--font-serif);
+font-size: 3rem;
+font-weight: 400;
+color: var(--accent);
+opacity: 0.3;
+line-height: 1;
+margin-bottom: 16px;
+}
+.process-step h3 {
+font-family: var(--font-serif);
+font-size: 1.5rem;
+font-weight: 400;
+margin-bottom: 12px;
+}
+.process-step p {
+font-size: 0.84rem;
+color: var(--muted);
+line-height: 1.8;
+max-width: 400px;
+}
+.process-step-detail {
+display: flex;
+gap: 24px;
+margin-top: 20px;
+}
+.process-step-detail .chip {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+padding: 6px 14px;
+background: rgba(201, 125, 60, 0.08);
+border: 1px solid var(--border);
+border-radius: 999px;
+font-size: 0.68rem;
+color: var(--accent-light);
+}
+/* ── Tasting notes — bento grid ── */
+.tasting {
+padding: 120px 48px;
+background: var(--bg);
+position: relative;
+}
+.tasting::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.tasting-header {
+max-width: 1200px;
+margin: 0 auto 60px;
+}
+.tasting-grid {
+max-width: 1200px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: auto auto;
+gap: 24px;
+}
+.tasting-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 32px;
+position: relative;
+overflow: hidden;
+transition: border-color 0.3s, transform 0.3s;
+}
+.tasting-card:hover {
+border-color: rgba(201, 125, 60, 0.25);
+transform: translateY(-2px);
+}
+.tasting-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+opacity: 0;
+transition: opacity 0.3s;
+}
+.tasting-card:hover::before { opacity: 1; }
+.tasting-card.featured {
+grid-column: span 2;
+grid-row: span 2;
+padding: 40px;
+display: flex;
+flex-direction: column;
+}
+.tasting-card.featured .tasting-card-image {
+flex: 1;
+margin-top: 24px;
+border-radius: 4px;
+overflow: hidden;
+position: relative;
+min-height: 300px;
+}
+.tasting-card.featured .tasting-card-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+position: absolute;
+inset: 0;
+}
+.tasting-card.featured .tasting-card-image::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 40%;
+background: linear-gradient(to top, var(--surface), transparent);
+pointer-events: none;
+}
+.tasting-card-icon {
+width: 44px;
+height: 44px;
+border-radius: 10px;
+background: rgba(201, 125, 60, 0.1);
+border: 1px solid var(--border);
+display: flex;
+align-items: center;
+justify-content: center;
+margin-bottom: 20px;
+color: var(--accent);
+}
+.tasting-card h3 {
+font-family: var(--font-serif);
+font-size: 1.1rem;
+font-weight: 500;
+margin-bottom: 8px;
+}
+.tasting-card p {
+font-size: 0.78rem;
+color: var(--muted);
+line-height: 1.7;
+}
+.tasting-flavor-bar {
+margin-top: 16px;
+}
+.tasting-flavor-bar .bar-label {
+display: flex;
+justify-content: space-between;
+font-size: 0.68rem;
+margin-bottom: 6px;
+color: var(--muted);
+}
+.tasting-flavor-bar .bar-track {
+height: 3px;
+background: rgba(201, 125, 60, 0.1);
+border-radius: 2px;
+overflow: hidden;
+}
+.tasting-flavor-bar .bar-fill {
+height: 100%;
+background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+border-radius: 2px;
+width: 0%;
+transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tasting-card.visible .bar-fill {
+width: var(--fill);
+}
+/* ── Estate / distillery ── */
+.estate {
+position: relative;
+padding: 0;
+background: var(--bg-1);
+}
+.estate::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+z-index: 2;
+}
+.estate-image {
+width: 100%;
+height: 70vh;
+position: relative;
+overflow: hidden;
+}
+.estate-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+.estate-image::after {
+content: '';
+position: absolute;
+inset: 0;
+background:
+linear-gradient(to top, var(--bg-1) 0%, transparent 40%),
+linear-gradient(to bottom, var(--bg-1) 0%, transparent 20%);
+pointer-events: none;
+}
+.estate-content {
+max-width: 1200px;
+margin: -120px auto 0;
+padding: 0 48px 120px;
+position: relative;
+z-index: 2;
+}
+.estate-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 60px;
+align-items: start;
+}
+.estate-text .desc {
+font-size: 0.84rem;
+color: var(--muted);
+line-height: 1.8;
+margin-bottom: 32px;
+}
+.estate-features {
+display: flex;
+flex-direction: column;
+gap: 20px;
+}
+.estate-feature {
+display: flex;
+gap: 16px;
+align-items: flex-start;
+}
+.estate-feature-icon {
+width: 36px;
+height: 36px;
+border-radius: 8px;
+background: rgba(201, 125, 60, 0.1);
+border: 1px solid var(--border);
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+color: var(--accent);
+font-size: 1rem;
+}
+.estate-feature h4 {
+font-family: var(--font-serif);
+font-size: 0.92rem;
+font-weight: 500;
+margin-bottom: 4px;
+}
+.estate-feature p {
+font-size: 0.76rem;
+color: var(--muted);
+line-height: 1.6;
+}
+/* ── Awards marquee ── */
+.awards {
+padding: 60px 0;
+background: var(--bg);
+position: relative;
+overflow: hidden;
+}
+.awards::before, .awards::after {
+content: '';
+position: absolute;
+top: 0;
+bottom: 0;
+width: 120px;
+z-index: 2;
+pointer-events: none;
+}
+.awards::before {
+left: 0;
+background: linear-gradient(to right, var(--bg), transparent);
+}
+.awards::after {
+right: 0;
+background: linear-gradient(to left, var(--bg), transparent);
+}
+.awards-sep {
+display: block;
+width: 100%;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+border: none;
+margin-bottom: 60px;
+}
+.awards-track {
+display: flex;
+gap: 80px;
+animation: marquee 30s linear infinite;
+width: max-content;
+}
+.awards-track:hover { animation-play-state: paused; }
+.awards-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 8px;
+flex-shrink: 0;
+opacity: 0.5;
+transition: opacity 0.3s;
+}
+.awards-item:hover { opacity: 1; }
+.awards-item-icon {
+font-size: 1.6rem;
+color: var(--accent);
+}
+.awards-item-name {
+font-family: var(--font-serif);
+font-size: 0.88rem;
+white-space: nowrap;
+}
+.awards-item-year {
+font-size: 0.62rem;
+color: var(--muted);
+letter-spacing: 0.1em;
+}
+@keyframes marquee {
+to { transform: translateX(-50%); }
+}
+/* ── Visit / CTA ── */
+.visit {
+padding: 120px 48px;
+background: var(--bg-1);
+position: relative;
+text-align: center;
+overflow: hidden;
+}
+.visit::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.visit::after {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 600px;
+height: 600px;
+background: radial-gradient(circle, rgba(201, 125, 60, 0.06), transparent 60%);
+pointer-events: none;
+}
+.visit-inner {
+max-width: 640px;
+margin: 0 auto;
+position: relative;
+z-index: 2;
+}
+.visit .section-label {
+justify-content: center;
+}
+.visit .section-label::before { display: none; }
+.visit .section-title {
+font-size: clamp(2rem, 4vw, 3rem);
+}
+.visit .desc {
+font-size: 0.84rem;
+color: var(--muted);
+line-height: 1.8;
+margin-bottom: 40px;
+}
+.visit-cta {
+display: inline-flex;
+align-items: center;
+gap: 12px;
+padding: 18px 48px;
+background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+border: none;
+color: var(--bg);
+font-family: var(--font-sans);
+font-size: 0.76rem;
+font-weight: 500;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+cursor: pointer;
+border-radius: 2px;
+position: relative;
+overflow: hidden;
+transition: transform 0.3s, box-shadow 0.3s;
+}
+.visit-cta:hover {
+transform: translateY(-2px);
+box-shadow: 0 12px 40px rgba(201, 125, 60, 0.3);
+}
+.visit-cta::after {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+animation: shimmer 3s ease infinite;
+}
+@keyframes shimmer {
+0% { left: -100%; }
+100% { left: 100%; }
+}
+.visit-details {
+display: flex;
+justify-content: center;
+gap: 48px;
+margin-top: 48px;
+}
+.visit-detail {
+text-align: center;
+}
+.visit-detail .label {
+font-size: 0.62rem;
+text-transform: uppercase;
+letter-spacing: 0.15em;
+color: var(--muted);
+margin-bottom: 4px;
+}
+.visit-detail .val {
+font-family: var(--font-serif);
+font-size: 0.92rem;
+color: var(--cream);
+}
+/* ── Footer ── */
+.footer {
+padding: 60px 48px 40px;
+background: var(--bg);
+border-top: 1px solid var(--border-s);
+}
+.footer-inner {
+max-width: 1200px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: 2fr 1fr 1fr 1fr;
+gap: 48px;
+}
+.footer-brand .footer-logo {
+font-family: var(--font-serif);
+font-size: 1.2rem;
+font-weight: 500;
+letter-spacing: 0.08em;
+margin-bottom: 12px;
+}
+.footer-brand .footer-logo span {
+color: var(--accent);
+}
+.footer-brand p {
+font-size: 0.76rem;
+color: var(--muted);
+line-height: 1.7;
+max-width: 280px;
+}
+.footer-col h4 {
+font-family: var(--font-serif);
+font-size: 0.82rem;
+font-weight: 500;
+margin-bottom: 16px;
+color: var(--cream);
+}
+.footer-col ul {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+.footer-col ul a {
+font-size: 0.76rem;
+color: var(--muted);
+transition: color 0.2s;
+}
+.footer-col ul a:hover { color: var(--cream); }
+.footer-bottom {
+max-width: 1200px;
+margin: 40px auto 0;
+padding-top: 24px;
+border-top: 1px solid var(--border-s);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.footer-bottom p {
+font-size: 0.68rem;
+color: var(--muted);
+}
+.footer-legal {
+display: flex;
+gap: 24px;
+}
+.footer-legal a {
+font-size: 0.68rem;
+color: var(--muted);
+transition: color 0.2s;
+}
+.footer-legal a:hover { color: var(--cream); }
+.footer-age {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+padding: 4px 12px;
+border: 1px solid var(--border);
+border-radius: 999px;
+font-size: 0.62rem;
+color: var(--muted);
+margin-top: 20px;
+}
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+.heritage-grid { grid-template-columns: 1fr; gap: 48px; }
+.heritage-image { order: -1; }
+.heritage-image img { height: 360px; }
+.process-container { grid-template-columns: 1fr; }
+.process-sticky { display: none; }
+.process-steps { padding: 80px 48px; }
+.process-step { min-height: auto; padding: 32px 0; opacity: 1; }
+.tasting-grid { grid-template-columns: 1fr 1fr; }
+.tasting-card.featured { grid-column: span 2; grid-row: span 1; }
+.tasting-card.featured .tasting-card-image { min-height: 200px; }
+.estate-grid { grid-template-columns: 1fr; }
+.footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+.nav { padding: 0 24px; }
+.nav-links { display: none; }
+.hamburger { display: flex; }
+.hero { padding: 0 24px 60px; }
+.hero h1 { font-size: 2.2rem; }
+.hero-badge { display: none; }
+.heritage { padding: 80px 24px; }
+.heritage-stats { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.collection-header { padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
+.collection-track { padding: 0 24px; gap: 20px; }
+.collection-card { width: 280px; }
+.collection-card-img { height: 300px; }
+.process-steps { padding: 60px 24px; }
+.tasting { padding: 80px 24px; }
+.tasting-grid { grid-template-columns: 1fr; }
+.tasting-card.featured { grid-column: span 1; }
+.estate-content { padding: 0 24px 80px; }
+.visit { padding: 80px 24px; }
+.visit-details { flex-direction: column; gap: 24px; }
+.footer { padding: 48px 24px 32px; }
+.footer-inner { grid-template-columns: 1fr; gap: 32px; }
+.footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+<script src="https://cdn.tailwindcss.com"></script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="">
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress" style="width: 100.005%;"></div>
+
+<!-- Navigation -->
+<nav class="nav">
+  <a href="#" class="nav-logo">E<span class="">MBER</span></a>
+  <ul class="nav-links">
+    <li class=""><a href="#heritage" class="">Heritage</a></li>
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#tasting">Tasting</a></li>
+    <li><a href="#estate">Estate</a></li>
+    <li class=""><a href="#visit" class="nav-cta inline-block"><span class="">Book a Visit</span></a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#heritage" onclick="closeMobile()">Heritage</a>
+  <a href="#collection" onclick="closeMobile()">Collection</a>
+  <a href="#process" onclick="closeMobile()">Process</a>
+  <a href="#tasting" onclick="closeMobile()">Tasting</a>
+  <a href="#estate" onclick="closeMobile()" class="">Estate</a>
+  <a href="#visit" onclick="closeMobile()" class="">Book a Visit</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/bc09d3e6-d12a-4d30-9a8a-6ce7eebc8397/3840w.png" alt="Scottish Highlands landscape at dusk" loading="eager">
+  </div>
+  <div class="hero-content reveal visible">
+    <div class="hero-eyebrow">Est. 1847 · Highland Single Malt</div>
+    <h1 class="">Crafted by Time,<br>Defined by <em>Character</em></h1>
+    <p class="hero-sub">For nearly two centuries, Ember has drawn its spirit from the Highland landscape — patient maturation in seasoned oak, yielding whisky of rare depth and warmth.</p>
+    <button class="hero-cta" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
+      <span class="">Explore the Collection</span>
+      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" data-icon="lucide:arrow-right" data-width="16" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7l-7 7"></path></svg>
+    </button>
+  </div>
+  <div class="hero-badge">
+    <div class="hero-badge-inner">
+      <div class="hero-badge-year">1847</div>
+      <div class="hero-badge-text">Founded</div>
+    </div>
+  </div>
+</section>
+
+<!-- Heritage -->
+<section class="heritage" id="heritage">
+  <div class="heritage-grid">
+    <div class="heritage-text">
+      <div class="section-label reveal">Our Heritage</div>
+      <h2 class="section-title reveal">A Legacy Written<br>in <em>Oak &amp; Time</em></h2>
+      <p class="desc reveal">Nestled in the heart of the Scottish Highlands, the Ember distillery has stood since 1847. Founded by Alistair Drummond, a man of uncommon patience, our approach remains unchanged: source the purest water from the Cairngorm springs, select only the finest malted barley, and above all — never rush the whisky.</p>
+      <p class="desc reveal">Each cask rests in our stone-walled warehouses, breathing the Highland air, slowly developing the complex character that defines an Ember dram. What emerges is not merely whisky, but a conversation between craft and nature, time and place.</p>
+      <div class="heritage-stats stagger-up">
+        <div class="heritage-stat reveal-child" style="transition-delay: 0s;">
+          <div class="val" data-count="178">0</div>
+          <div class="label">Years of Craft</div>
+        </div>
+        <div class="heritage-stat reveal-child" style="transition-delay: 0.1s;">
+          <div class="val" data-count="12">0</div>
+          <div class="label">Expressions</div>
+        </div>
+        <div class="heritage-stat reveal-child" style="transition-delay: 0.2s;">
+          <div class="val" data-count="40">0</div>
+          <div class="label">Countries</div>
+        </div>
+      </div>
+    </div>
+    <div class="heritage-image reveal">
+      <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1600&q=80" alt="Oak barrel aging warehouse with warm amber lighting" loading="lazy" class="">
+    </div>
+  </div>
+</section>
+
+<!-- Collection -->
+<section class="collection" id="collection">
+  <div class="collection-header">
+    <div>
+      <div class="section-label reveal">The Collection</div>
+      <h2 class="section-title reveal">Our <em>Expressions</em></h2>
+    </div>
+    <div class="collection-scroll-hint reveal">
+      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" data-icon="lucide:move-horizontal" data-width="16" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 8l4 4l-4 4M2 12h20M6 8l-4 4l4 4"></path></svg>
+      Drag to explore
+    </div>
+  </div>
+  <div class="collection-track" id="collectionTrack">
+    <div class="collection-card reveal-child">
+      <div class="collection-card-img">
+        <img src="https://images.unsplash.com/photo-1674469296044-26e5b312cf5c?w=800&q=80" alt="Ember 12 Year Old Highland Single Malt" loading="lazy">
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-card-age">12 Year Old</div>
+        <h3 class="collection-card-name">The Foundation</h3>
+        <p class="collection-card-notes">Honey, vanilla, and gentle oak. Our signature expression — the purest articulation of the Ember house style.</p>
+        <div class="collection-card-meta">
+          <span class="collection-card-abv">ABV <strong>43%</strong></span>
+          <span class="collection-card-price">£65</span>
+        </div>
+      </div>
+    </div>
+    <div class="collection-card reveal-child">
+      <div class="collection-card-img">
+        <img src="https://images.unsplash.com/photo-1514361526511-a1ecd83f89d1?w=800&q=80" alt="Ember 18 Year Old Highland Single Malt" loading="lazy">
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-card-age">18 Year Old</div>
+        <h3 class="collection-card-name">The Meridian</h3>
+        <p class="collection-card-notes">Rich dried fruit, dark chocolate, and smoked almond. Extended sherry cask maturation brings extraordinary depth.</p>
+        <div class="collection-card-meta">
+          <span class="collection-card-abv">ABV <strong>46%</strong></span>
+          <span class="collection-card-price">£145</span>
+        </div>
+      </div>
+    </div>
+    <div class="collection-card reveal-child">
+      <div class="collection-card-img">
+        <img src="https://images.unsplash.com/photo-1622657550916-ad48a22427d9?w=800&q=80" alt="Ember 25 Year Old Highland Single Malt" loading="lazy" class="">
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-card-age">25 Year Old</div>
+        <h3 class="collection-card-name">The Antiquary</h3>
+        <p class="collection-card-notes">Burnished leather, aged mahogany, and winter spice. A quarter-century of patience rewarded in every sip.</p>
+        <div class="collection-card-meta">
+          <span class="collection-card-abv">ABV <strong>48%</strong></span>
+          <span class="collection-card-price">£340</span>
+        </div>
+      </div>
+    </div>
+    <div class="collection-card reveal-child">
+      <div class="collection-card-img">
+        <img src="https://images.unsplash.com/photo-1537567563737-dc995720616f?w=800&q=80" alt="Ember Cask Strength Highland Single Malt" loading="lazy">
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-card-age">Cask Strength</div>
+        <h3 class="collection-card-name">The Crucible</h3>
+        <p class="collection-card-notes">Unbridled intensity — raw honeycomb, charred oak, and campfire smoke. Bottled directly from the cask, unfiltered.</p>
+        <div class="collection-card-meta">
+          <span class="collection-card-abv">ABV <strong>58.4%</strong></span>
+          <span class="collection-card-price">£95</span>
+        </div>
+      </div>
+    </div>
+    <div class="collection-card reveal-child">
+      <div class="collection-card-img">
+        <img src="https://images.unsplash.com/photo-1633836899617-8a3afd5fe931?w=800&q=80" alt="Ember Limited Edition Highland Single Malt" loading="lazy">
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-card-age">Limited Release</div>
+        <h3 class="collection-card-name">The Solstice</h3>
+        <p class="collection-card-notes">Finished in port wine pipes. Candied orange, fig jam, and clove. Only 2,400 bottles released annually.</p>
+        <div class="collection-card-meta">
+          <span class="collection-card-abv">ABV <strong>50%</strong></span>
+          <span class="collection-card-price">£210</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Process — Sticky Scroll -->
+<section class="process" id="process">
+  <div class="process-container">
+    <div class="process-sticky">
+      <div class="section-label">Our Process</div>
+      <h2 class="section-title">From Grain<br>to <em>Glass</em></h2>
+      <div class="process-image-container">
+        <img src="https://images.unsplash.com/photo-1677503543803-0b82584b304a?w=1600&q=80" alt="Malting floor" class="" data-step="0">
+        <img src="https://images.unsplash.com/photo-1686723342906-22961ce61fa5?w=1600&q=80" alt="Copper stills" data-step="1">
+        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1600&q=80" alt="Fermentation" data-step="2">
+        <img src="https://images.unsplash.com/photo-1543479679-2ad5736490b6?w=1600&q=80" alt="Barrel aging" data-step="3">
+        <img src="https://images.unsplash.com/photo-1557765086-a73d2dc3059e?w=1600&q=80" alt="Bottling" data-step="4">
+      </div>
+    </div>
+    <div class="process-steps">
+      <div class="process-step" data-step="0">
+        <div class="process-step-num">01</div>
+        <h3 class="">Malting</h3>
+        <p class="">Our barley is sourced exclusively from Highland farms within forty miles of the distillery. Floor-malted by hand over five days, the grain develops its full starch potential before kiln-drying over peat and beechwood smoke.</p>
+        <div class="process-step-detail">
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:wheat" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2 22L16 8M3.47 12.53L5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94m4-4L9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94m4-4L13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4"></path><path d="M11.47 17.47L13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0m4-4L17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0m4-4L21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0"></path></g></svg> Scottish Barley</span>
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:timer" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 2h4m-2 12l3-3"></path><circle cx="12" cy="14" r="8"></circle></g></svg> 5 Day Malt</span>
+        </div>
+      </div>
+      <div class="process-step" data-step="1">
+        <div class="process-step-num">02</div>
+        <h3>Distillation</h3>
+        <p class="">Double-distilled in our original copper pot stills — the same vessels that have shaped Ember's character since the 1920s. The tall, narrow necks force only the lightest, purest vapors through, giving our spirit its hallmark elegance.</p>
+        <div class="process-step-detail">
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:flame" data-width="14" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0a5 5 0 0 1 1-3a1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"></path></svg> Copper Pot Stills</span>
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:repeat" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m17 2l4 4l-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4l4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></g></svg> Double Distilled</span>
+        </div>
+      </div>
+      <div class="process-step" data-step="2">
+        <div class="process-step-num">03</div>
+        <h3 class="">Fermentation</h3>
+        <p class="">Extended fermentation of 72 hours in Oregon pine washbacks develops a complexity that shorter ferments cannot achieve. This patient approach yields a wash rich in fruity esters — the precursors to Ember's signature stone-fruit character.</p>
+        <div class="process-step-detail">
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:clock" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></g></svg> 72 Hour Ferment</span>
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:trees" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0m-3 6v6m6-3v3"></path><path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5"></path></g></svg> Oregon Pine</span>
+        </div>
+      </div>
+      <div class="process-step" data-step="3">
+        <div class="process-step-num">04</div>
+        <h3 class="">Maturation</h3>
+        <p class="">Our whisky sleeps in a carefully curated selection of ex-bourbon, ex-sherry, and virgin oak casks. The stone warehouses, built into the hillside, maintain a constant temperature and humidity — nature's own climate control.</p>
+        <div class="process-step-detail">
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:package" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73zm1 .27V12"></path><path d="M3.29 7L12 12l8.71-5M7.5 4.27l9 5.15"></path></g></svg> Oak Casks</span>
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:mountain" data-width="14" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 3l4 8l5-5l5 15H2z"></path></svg> Stone Warehouses</span>
+        </div>
+      </div>
+      <div class="process-step" data-step="4">
+        <div class="process-step-num">05</div>
+        <h3>Bottling</h3>
+        <p class="">When our master distiller determines a cask has reached its peak, it is bottled at the distillery — non-chill-filtered and at natural colour. Nothing is added, nothing taken away. What you taste is the unvarnished truth of time and oak.</p>
+        <div class="process-step-detail">
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:droplets" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 16.3c2.2 0 4-1.83 4-4.05c0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05"></path><path d="M12.56 6.6A11 11 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"></path></g></svg> Non-Chill Filtered</span>
+          <span class="chip"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="14" height="14" viewBox="0 0 24 24" data-icon="lucide:palette" data-width="14" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 22a1 1 0 0 1 0-20a10 9 0 0 1 10 9a5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"></path><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle></g></svg> Natural Colour</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tasting Notes — Bento Grid -->
+<section class="tasting" id="tasting">
+  <div class="tasting-header">
+    <div class="section-label reveal">Tasting Notes</div>
+    <h2 class="section-title reveal">The Character<br>of <em>Ember</em></h2>
+  </div>
+  <div class="tasting-grid stagger-up !grid !grid-cols-1 md:!grid-cols-2 lg:!grid-cols-6">
+    <!-- Featured card with image -->
+    <div class="tasting-card featured reveal-child !col-span-1 md:!col-span-2 lg:!col-span-4 lg:!row-span-2" style="transition-delay: 0s;">
+      <div class="tasting-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="22" height="22" viewBox="0 0 24 24" data-icon="lucide:wine" data-width="22" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 22h8M7 10h10m-5 5v7m0-7a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5"></path></svg>
+      </div>
+      <h3 class="">The Signature Dram</h3>
+      <p class="">Our 12-year expression is the gateway to the Ember world. Best enjoyed neat or with a few drops of water to open the bouquet. The warmth builds slowly — honey, toasted grain, and a whisper of Highland heather on the finish.</p>
+      <div class="tasting-card-image">
+        <img src="https://images.unsplash.com/photo-1694643665936-dedebb90b8f8?w=1600&q=80" alt="Whisky being poured into crystal glass" loading="lazy" class="">
+      </div>
+    </div>
+    <!-- Flavor cards -->
+    <div class="tasting-card reveal-child !col-span-1 lg:!col-span-2" style="transition-delay: 0.1s;">
+      <div class="tasting-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="22" height="22" viewBox="0 0 24 24" data-icon="lucide:flower-2" data-width="22" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1"></path><circle cx="12" cy="8" r="2"></circle><path d="M12 10v12m0 0c4.2 0 7-1.667 7-5c-4.2 0-7 1.667-7 5m0 0c-4.2 0-7-1.667-7-5c4.2 0 7 1.667 7 5"></path></g></svg>
+      </div>
+      <h3 class="">Nose</h3>
+      <p class="">Heather honey, baked apple, and gentle woodsmoke. A current of vanilla cream beneath.</p>
+      <div class="tasting-flavor-bar">
+        <div class="bar-label"><span class="">Intensity</span><span>Rich</span></div>
+        <div class="bar-track"><div class="bar-fill" style="--fill: 72%"></div></div>
+      </div>
+    </div>
+    <div class="tasting-card reveal-child !col-span-1 lg:!col-span-2" style="transition-delay: 0.2s;">
+      <div class="tasting-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="22" height="22" viewBox="0 0 24 24" data-icon="lucide:droplet" data-width="22" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7"></path></svg>
+      </div>
+      <h3 class="">Palate</h3>
+      <p class="">Silky mouthfeel. Toffee, dried apricot, and toasted almond, balanced by a gentle spice.</p>
+      <div class="tasting-flavor-bar">
+        <div class="bar-label"><span>Sweetness</span><span>Balanced</span></div>
+        <div class="bar-track"><div class="bar-fill" style="--fill: 65%"></div></div>
+      </div>
+    </div>
+    <div class="tasting-card reveal-child !col-span-1 lg:!col-span-3" style="transition-delay: 0.3s;">
+      <div class="tasting-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="22" height="22" viewBox="0 0 24 24" data-icon="lucide:flame" data-width="22" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0a5 5 0 0 1 1-3a1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"></path></svg>
+      </div>
+      <h3>Finish</h3>
+      <p>Long and warming. Cinnamon bark, dark honey, and a final note of toasted oak.</p>
+      <div class="tasting-flavor-bar">
+        <div class="bar-label"><span>Length</span><span>Lingering</span></div>
+        <div class="bar-track"><div class="bar-fill" style="--fill: 82%"></div></div>
+      </div>
+    </div>
+    <div class="tasting-card reveal-child !col-span-1 lg:!col-span-3" style="transition-delay: 0.4s;">
+      <div class="tasting-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="22" height="22" viewBox="0 0 24 24" data-icon="lucide:mountain-snow" data-width="22" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m8 3l4 8l5-5l5 15H2z"></path><path d="M4.14 15.08q3.93-2.355 7.86.42c2.74 1.94 5.49 2 8.23.19"></path></g></svg>
+      </div>
+      <h3 class="">Character</h3>
+      <p class="">Highland terroir — clean spring water, peat-kissed barley, and the breath of the Cairngorms running through every sip.</p>
+      <div class="tasting-flavor-bar">
+        <div class="bar-label"><span>Smokiness</span><span>Subtle</span></div>
+        <div class="bar-track"><div class="bar-fill" style="--fill: 38%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Estate -->
+<section class="estate" id="estate">
+  <div class="estate-image">
+    <img src="https://images.unsplash.com/photo-1760627317288-8cc2b44efb2d?w=2560&q=80" alt="Ember Distillery estate at golden hour" loading="lazy" class="">
+  </div>
+  <div class="estate-content">
+    <div class="estate-grid">
+      <div class="estate-text">
+        <div class="section-label reveal">The Estate</div>
+        <h2 class="section-title reveal">Where Land<br>Becomes <em>Spirit</em></h2>
+        <p class="desc reveal">Set on 240 acres of Highland moorland, the Ember estate encompasses the original 1847 distillery buildings, our barrel-ageing warehouses carved into the hillside, and the Drummond House — a restored Georgian manor now home to our visitor experience.</p>
+        <p class="desc reveal">The estate's natural spring, fed by snowmelt from the Cairngorm plateau, has never ceased flowing. This water — remarkably soft and mineral-rich — is the foundation of every Ember expression.</p>
+      </div>
+      <div class="estate-features stagger-up">
+        <div class="estate-feature reveal-child" style="transition-delay: 0s;">
+          <div class="estate-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:home" data-width="18" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></g></svg>
+          </div>
+          <div class="">
+            <h4 class="">Drummond House</h4>
+            <p class="">Our Georgian visitor centre offers guided tastings, private cask experiences, and a whisky library spanning 150 years of Ember history.</p>
+          </div>
+        </div>
+        <div class="estate-feature reveal-child" style="transition-delay: 0.1s;">
+          <div class="estate-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:mountain" data-width="18" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 3l4 8l5-5l5 15H2z"></path></svg>
+          </div>
+          <div class="">
+            <h4 class="">The Warehouses</h4>
+            <p class="">Five stone-walled warehouses hold over 18,000 casks in various stages of maturation, from 3 to 40 years old.</p>
+          </div>
+        </div>
+        <div class="estate-feature reveal-child" style="transition-delay: 0.2s;">
+          <div class="estate-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:utensils" data-width="18" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20m14-7V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2zm0 0v7"></path></svg>
+          </div>
+          <div class="">
+            <h4 class="">The Hearth Restaurant</h4>
+            <p class="">Seasonal Highland cuisine paired with Ember expressions. Open Thursday through Sunday, reservations recommended.</p>
+          </div>
+        </div>
+        <div class="estate-feature reveal-child" style="transition-delay: 0.3s;">
+          <div class="estate-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18" viewBox="0 0 24 24" data-icon="lucide:bed" data-width="18" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path></svg>
+          </div>
+          <div class="">
+            <h4 class="">Estate Lodges</h4>
+            <p class="">Four luxury lodges on the estate grounds for overnight stays. Wake to Highland mist and the scent of peat smoke.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Awards Marquee -->
+<section class="awards">
+  <hr class="awards-sep">
+  <div class="awards-track" id="awardsTrack">
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:trophy" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978m7-7.318v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978M18 9h1.5a1 1 0 0 0 0-5H18M4 22h16"></path><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm0 0H4.5a1 1 0 0 1 0-5H6"></path></g></svg></div>
+      <div class="awards-item-name">World Whiskies Awards</div>
+      <div class="awards-item-year">Gold · 2025</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:award" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m15.477 12.89l1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></g></svg></div>
+      <div class="awards-item-name">International Spirits Challenge</div>
+      <div class="awards-item-year">Master · 2024</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:star" data-width="24" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"></path></svg></div>
+      <div class="awards-item-name">San Francisco Spirits Competition</div>
+      <div class="awards-item-year">Double Gold · 2025</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:medal" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7.21 15L2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15M11 12L5.12 2.2M13 12l5.88-9.8M8 7h8"></path><circle cx="12" cy="17" r="5"></circle><path d="M12 18v-2h-.5"></path></g></svg></div>
+      <div class="awards-item-name">Scotch Whisky Masters</div>
+      <div class="awards-item-year">Best Highland · 2024</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:crown" data-width="24" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294zM5 21h14"></path></svg></div>
+      <div class="awards-item-name">Icons of Whisky</div>
+      <div class="awards-item-year">Distillery of the Year · 2023</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:gem" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10.5 3L8 9l4 13l4-13l-2.5-6"></path><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3zM2 9h20"></path></g></svg></div>
+      <div class="awards-item-name">The Whisky Exchange</div>
+      <div class="awards-item-year">Top 50 · 2025</div>
+    </div>
+    <!-- Duplicate for seamless loop -->
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:trophy" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978m7-7.318v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978M18 9h1.5a1 1 0 0 0 0-5H18M4 22h16"></path><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm0 0H4.5a1 1 0 0 1 0-5H6"></path></g></svg></div>
+      <div class="awards-item-name">World Whiskies Awards</div>
+      <div class="awards-item-year">Gold · 2025</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:award" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m15.477 12.89l1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></g></svg></div>
+      <div class="awards-item-name">International Spirits Challenge</div>
+      <div class="awards-item-year">Master · 2024</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:star" data-width="24" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"></path></svg></div>
+      <div class="awards-item-name">San Francisco Spirits Competition</div>
+      <div class="awards-item-year">Double Gold · 2025</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:medal" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7.21 15L2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15M11 12L5.12 2.2M13 12l5.88-9.8M8 7h8"></path><circle cx="12" cy="17" r="5"></circle><path d="M12 18v-2h-.5"></path></g></svg></div>
+      <div class="awards-item-name">Scotch Whisky Masters</div>
+      <div class="awards-item-year">Best Highland · 2024</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:crown" data-width="24" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294zM5 21h14"></path></svg></div>
+      <div class="awards-item-name">Icons of Whisky</div>
+      <div class="awards-item-year">Distillery of the Year · 2023</div>
+    </div>
+    <div class="awards-item">
+      <div class="awards-item-icon"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" data-icon="lucide:gem" data-width="24" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10.5 3L8 9l4 13l4-13l-2.5-6"></path><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3zM2 9h20"></path></g></svg></div>
+      <div class="awards-item-name">The Whisky Exchange</div>
+      <div class="awards-item-year">Top 50 · 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- Visit CTA -->
+<section class="visit" id="visit">
+  <div class="visit-inner">
+    <div class="section-label reveal">Visit Us</div>
+    <h2 class="section-title reveal">Experience Ember<br><em>In Person</em></h2>
+    <p class="desc reveal">Join us at the distillery for a guided tour, private tasting, or simply to walk the Highland grounds. Every visit begins with a dram and ends with a deeper understanding of what makes Ember singular.</p>
+    <button class="visit-cta reveal" onclick="document.getElementById('heritage').scrollIntoView({behavior:'smooth'})">
+      <span>Reserve Your Experience</span>
+      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="16" height="16" viewBox="0 0 24 24" data-icon="lucide:arrow-right" data-width="16" class="iconify iconify--lucide"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7l-7 7"></path></svg>
+    </button>
+    <div class="visit-details stagger-up">
+      <div class="visit-detail reveal-child" style="transition-delay: 0s;">
+        <div class="label">Open</div>
+        <div class="val">Thursday – Sunday</div>
+      </div>
+      <div class="visit-detail reveal-child" style="transition-delay: 0.1s;">
+        <div class="label">Tastings</div>
+        <div class="val">10am, 2pm, 5pm</div>
+      </div>
+      <div class="visit-detail reveal-child" style="transition-delay: 0.2s;">
+        <div class="label">Location</div>
+        <div class="val">Speyside, Scotland</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">E<span>MBER</span></div>
+      <p>Highland single malt whisky, crafted with patience since 1847. Distilled, matured, and bottled at the Ember Estate, Speyside.</p>
+      <div class="footer-age">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="12" height="12" viewBox="0 0 24 24" data-icon="lucide:alert-circle" data-width="12" class="iconify iconify--lucide"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class=""><circle cx="12" cy="12" r="10" class=""></circle><path d="M12 8v4m0 4h.01"></path></g></svg>
+        Please drink responsibly. 18+
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="">Whisky</h4>
+      <ul class="">
+        <li><a href="#">The Foundation</a></li>
+        <li><a href="#">The Meridian</a></li>
+        <li><a href="#">The Antiquary</a></li>
+        <li class=""><a href="#">The Crucible</a></li>
+        <li class=""><a href="#" class="">The Solstice</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="">Visit</h4>
+      <ul class="">
+        <li class=""><a href="#" class="">Distillery Tours</a></li>
+        <li class=""><a href="#" class="">Private Tastings</a></li>
+        <li class=""><a href="#" class="">The Hearth Restaurant</a></li>
+        <li class=""><a href="#">Estate Lodges</a></li>
+        <li><a href="#">Gift Shop</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Press &amp; Media</a></li>
+        <li><a href="#">Trade Enquiries</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="">© 2026 Ember Distillery. All rights reserved.</p>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Settings</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Scroll progress bar ──
+const scrollProgress = document.getElementById('scrollProgress');
+function updateScroll() {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = (window.scrollY / h) * 100;
+  scrollProgress.style.width = pct + '%';
+}
+window.addEventListener('scroll', updateScroll, { passive: true });
+
+// ── Mobile menu ──
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+function closeMobile() {
+  hamburger.classList.remove('active');
+  mobileMenu.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ── IntersectionObserver for reveals ──
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .stagger-up');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Stagger children
+      if (entry.target.classList.contains('stagger-up')) {
+        const children = entry.target.querySelectorAll('.reveal-child');
+        children.forEach((child, i) => {
+          child.style.transitionDelay = (i * 0.1) + 's';
+          setTimeout(() => child.classList.add('visible'), 10);
+        });
+      }
+      revealObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+// Also observe tasting cards individually for flavor bars
+const tastingCards = document.querySelectorAll('.tasting-card');
+const tastingObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      tastingObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+tastingCards.forEach(c => tastingObs.observe(c));
+
+// ── Counter animation ──
+const counters = document.querySelectorAll('[data-count]');
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.getAttribute('data-count'));
+      let current = 0;
+      const step = Math.max(1, Math.floor(target / 60));
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(interval);
+        }
+        el.textContent = current;
+      }, 25);
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObs.observe(c));
+
+// ── Sticky process scroll ──
+const processSteps = document.querySelectorAll('.process-step');
+const processImages = document.querySelectorAll('.process-image-container img');
+
+if (processSteps.length && processImages.length) {
+  const processObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const stepIndex = parseInt(entry.target.getAttribute('data-step'));
+        // Activate step
+        processSteps.forEach(s => s.classList.remove('active'));
+        entry.target.classList.add('active');
+        // Switch image
+        processImages.forEach(img => img.classList.remove('active'));
+        if (processImages[stepIndex]) {
+          processImages[stepIndex].classList.add('active');
+        }
+      }
+    });
+  }, { threshold: 0.5, rootMargin: '-30% 0px -30% 0px' });
+  processSteps.forEach(s => processObs.observe(s));
+}
+
+// ── Collection drag scroll ──
+const track = document.getElementById('collectionTrack');
+let isDown = false, startX, scrollLeft;
+track.addEventListener('mousedown', e => {
+  isDown = true;
+  startX = e.pageX - track.offsetLeft;
+  scrollLeft = track.scrollLeft;
+});
+track.addEventListener('mouseleave', () => isDown = false);
+track.addEventListener('mouseup', () => isDown = false);
+track.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - track.offsetLeft;
+  track.scrollLeft = scrollLeft - (x - startX) * 1.5;
+});
+
+// ── Parallax on hero image ──
+const heroBg = document.querySelector('.hero-bg img');
+if (heroBg) {
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y < window.innerHeight) {
+      heroBg.style.transform = 'scale(1.08) translateY(' + (y * 0.15) + 'px)';
+    }
+  }, { passive: true });
+}
+</script>
+
+
+</body></html>

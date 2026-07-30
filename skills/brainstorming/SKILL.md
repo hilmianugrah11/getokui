@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: Brainstorm a UI by picking design references from the getokui taste library. Invoked whenever the user asks to build/develop/design a NEW UI via getokui — a landing page in any vertical (SaaS/AI, fintech, real-estate, portfolio, e-commerce, restaurant, wellness, gaming, agency, architecture), e.g. "getokui, build a SaaS landing page", "getokui brainstorm a fintech landing", "getokui design a portfolio in react". This skill reads the local index.json, filters & ranks candidates, then presents the 5 BEST CANDIDATES (name + description + thumbnail) and STOPS to wait for the user to choose (may pick more than one, may reject all). This skill ONLY brainstorms & picks — it does NOT write code or generate UI (that's the build skill). Do not start building UI for any getokui "make something new" request before going through this skill. (For improving an existing UI file, use the review + glowup skills instead.)
+description: Brainstorm a UI by picking design references from the getokui taste library (213 curated landing pages). Invoked whenever the user asks to build/develop/design a NEW UI via getokui — a landing page in any vertical (AI/SaaS, fintech, crypto/web3, dev-tools, real-estate, architecture, portfolio, restaurant, wellness, luxury, travel, music, cinematic, gaming, agency), e.g. "getokui, build a SaaS landing page", "getokui brainstorm a fintech landing", "getokui design a portfolio in react". This skill reads the local index.json, filters & ranks candidates, then presents the 5 BEST CANDIDATES (name + description + thumbnail) and STOPS to wait for the user to choose (may pick more than one, may reject all). This skill ONLY brainstorms & picks — it does NOT write code or generate UI (that's the build skill). Do not start building UI for any getokui "make something new" request before going through this skill. (For improving an existing UI file, use the review + glowup skills instead.)
 ---
 
 # getokui brainstorming — Suggest References & Checkpoint
@@ -31,9 +31,10 @@ clone). Sanity-check that `${CLAUDE_PLUGIN_ROOT}/references/index.json` exists:
 ### 1. Parse the user's request
 From the user's sentence, determine:
 - **Primary category** — match against the `category` field in the index. The
-  library is all **landing pages across verticals**: `landing` (SaaS/AI),
-  `fintech`, `real-estate`, `portfolio`, `ecommerce`, `restaurant`, `wellness`,
-  `gaming`, `agency`, `architecture`.
+  library is **213 landing pages across verticals**. Categories present:
+  `ai-saas`, `saas`, `fintech`, `crypto-web3`, `dev-tools`, `real-estate`,
+  `architecture`, `portfolio`, `restaurant`, `wellness`, `luxury`, `travel`,
+  `music`, `cinematic`, `gaming`, `agency`, and `tech` (generic/fallback).
 - **Tags/mood** mentioned (e.g. "dark", "minimal", "saas", "fintech",
   "gradient") — match against `tags`, `description`, `colors`.
 - **Output format** if mentioned (`html` default, `react`, `next`). Save this

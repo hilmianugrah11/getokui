@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildr - API Infrastructure Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg-main:#F4F6F8;
+--bg-surface:#EDEFF2;
+--bg-card:#FFFFFF;
+--bg-card-hover:#F9FAFB;
+--border:#D9DEE3;
+--shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.06);
+--text:#0F172A;
+--text-muted:#475569;
+--text-subtle:#64748B;
+/* Accent Option A — Electric Blue */
+--accent:#2563EB;
+--accent-hover:#1D4ED8;
+--accent-soft:#EFF6FF;
+}
+body{
+font-family:'Inter',sans-serif;
+background-color:var(--bg-main);
+color:var(--text-muted);
+overflow-x:hidden;
+}
+.font-display{font-family:'Oswald',sans-serif;}
+.noise-overlay{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:50;
+opacity:.02;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--accent);color:#ffffff;}
+.section{position:relative;overflow:hidden;}
+.section--main{background-color:var(--bg-main);}
+.section--surface{background-color:var(--bg-surface);}
+/* Reduce default divider dominance so seams can be the primary transition where used */
+.section-divider{border-top:1px solid rgba(217,222,227,0.55);}
+/* Premium surface seam (only inserted at specific boundaries) */
+.surface-seam{
+position:absolute;
+left:0;
+right:0;
+bottom:-1px;
+height:22px;
+pointer-events:none;
+z-index:2;
+background:linear-gradient(to bottom,
+rgba(15,23,42,0.035) 0%,
+rgba(15,23,42,0.018) 18%,
+rgba(15,23,42,0.008) 45%,
+rgba(15,23,42,0.0) 78%
+);
+}
+.surface-seam::before{
+content:"";
+position:absolute;
+left:0;
+right:0;
+top:0;
+height:1px;
+background:rgba(255,255,255,0.55);
+opacity:0.5;
+}
+.spotlight{
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:400px;
+background:radial-gradient(700px circle at top center, rgba(37,99,235,0.08), transparent 65%);
+pointer-events:none;
+opacity:0;
+z-index:0;
+}
+.section-content{position:relative;z-index:10;}
+.stack-container{perspective:1000px;transform-style:preserve-3d;}
+.stack-layer{
+transition:all .6s cubic-bezier(.25,1,.5,1);
+transform-origin:center center;
+box-shadow:0 0 0 1px var(--border), inset 0 0 20px rgba(15,23,42,0.04);
+}
+.stack-layer.active{
+background:linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.02));
+border-color:var(--accent);
+box-shadow:0 0 0 1px rgba(37,99,235,0.25), var(--shadow), inset 0 0 20px rgba(37,99,235,0.06);
+z-index:20;
+}
+.pipeline-btn.active h3{color:var(--text);}
+.pipeline-btn.active p{color:var(--text-muted);}
+.pipeline-btn:not(.active) h3{color:var(--text-subtle);}
+.pipeline-btn:not(.active) p{color:var(--text-subtle);}
+.pipeline-btn:hover h3{color:var(--text);}
+</style></head>
+  <body class="antialiased overflow-x-hidden">
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-40 bg-[color:var(--bg-card)]/90 backdrop-blur-md border-b border-[color:var(--border)]">
+      <div class="sm:px-6 flex h-16 max-w-7xl mr-auto ml-auto pr-4 pl-4 items-center justify-between">
+        <div class="flex items-center flex-shrink-0 md:mr-4">
+          <span class="text-[color:var(--text)] font-display text-lg sm:text-xl uppercase tracking-tighter cursor-default">
+            Buildr
+          </span>
+        </div>
+        <div class="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
+          <a href="#" class="group relative px-1 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors tracking-tight">
+            Infrastructure
+          </a>
+          <a href="#" class="px-1 py-2 text-[13px] font-normal text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors tracking-tight">
+            Solutions
+          </a>
+          <a href="#" class="px-1 py-2 text-[13px] font-normal text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors tracking-tight">
+            Docs
+          </a>
+          <a href="#" class="px-1 py-2 text-[13px] font-normal text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors tracking-tight">
+            Pricing
+          </a>
+        </div>
+        <div class="flex items-center gap-3 sm:gap-6">
+          <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded border border-[color:var(--border)] bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:ring-offset-2 focus:ring-offset-[color:var(--bg-card)]">
+            <iconify-icon icon="solar:hamburger-menu-linear" class="text-[color:var(--text)] text-lg"></iconify-icon>
+          </button>
+          <a href="#" class="hidden sm:block text-[13px] font-normal text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors">
+            Sign in
+          </a>
+          <a href="#" class="text-xs px-5 py-2.5 bg-[color:var(--accent)] text-white font-semibold rounded tracking-tight transition-all duration-300 hover:bg-[color:var(--accent-hover)] shadow-[var(--shadow)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/25 focus:ring-offset-2 focus:ring-offset-[color:var(--bg-card)]">
+            Request Access
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="section section--main overflow-hidden min-h-screen flex flex-col sm:px-6 sm:pt-36 sm:pb-24 z-10 pt-36 pr-4 pb-24 pl-4 relative">
+      <div class="absolute inset-0" data-container-bg="true">
+        <div class="spline-container absolute top-0 left-0 w-full h-full -z-10">
+          <iframe src="https://my.spline.design/crystalball-de222de54d6fc4752fa850b54fb654de/" frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+      </div>
+
+      <div class="mx-auto text-center relative max-w-7xl flex-1 flex flex-col items-center">
+        <div class="absolute -top-20 sm:-top-32 left-1/2 -translate-x-1/2 w-[90vw] sm:w-[600px] h-[200px] sm:h-[300px] blur-[80px] sm:blur-[100px] rounded-full pointer-events-none bg-[color:var(--accent)]/10"></div>
+
+        <div class="relative z-10 flex flex-col items-center w-full max-w-5xl">
+          <div class="hero-eyebrow flex items-center gap-3 mb-6">
+            <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+            <span class="text-[10px] sm:text-[11px] font-mono font-medium uppercase tracking-[0.2em] text-[color:var(--text-subtle)]">
+              API Infrastructure for Modern SaaS
+            </span>
+            <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+          </div>
+
+          <h1 class="hero-title sm:text-6xl md:text-7xl uppercase leading-[0.95] text-4xl font-medium text-[color:var(--text)] tracking-tighter font-display mb-3 drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]">
+            The Infrastructure
+            <br>
+            <span class="text-[color:var(--accent)] font-semibold">
+              for Modern APIs.
+            </span>
+          </h1>
+          <p class="hero-subtitle text-[color:var(--text)] text-lg sm:text-xl font-normal tracking-tight mb-8 leading-tight bg-[color:var(--bg-card)]/70 backdrop-blur-sm rounded-lg px-4 py-3 shadow-[var(--shadow)]">
+            Design, secure, and deploy scalable API endpoints — without exposing
+            your core logic.
+          </p>
+
+          <p class="hero-context text-sm sm:text-base text-[color:var(--text)] max-w-xl mx-auto mb-10 leading-relaxed font-light text-center bg-[color:var(--bg-card)]/70 backdrop-blur-sm rounded-lg px-3 py-3 shadow-[var(--shadow)]">
+            Buildr is the control layer behind modern SaaS platforms. It
+            validates requests, enforces policies, and governs deployment —
+            turning fragile endpoints into production-grade infrastructure.
+          </p>
+
+          <div class="hero-actions flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-4 mb-16">
+            <button class="w-full sm:w-auto px-8 py-3 bg-[color:var(--accent)] text-white text-sm font-semibold rounded tracking-tight transition-all duration-300 hover:bg-[color:var(--accent-hover)] shadow-[var(--shadow)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/25 focus:ring-offset-2 focus:ring-offset-[color:var(--bg-main)]">
+              Request Access
+            </button>
+            <button class="w-full sm:w-auto px-6 py-3 bg-[color:var(--bg-card)] text-[color:var(--text)] border border-[color:var(--border)] hover:bg-[color:var(--bg-card-hover)] text-sm font-medium rounded transition-all flex items-center justify-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:ring-offset-2 focus:ring-offset-[color:var(--bg-main)]">
+              View Documentation
+            </button>
+          </div>
+
+          <div class="hero-panel w-full max-w-4xl mx-auto rounded-lg border border-[color:var(--border)] bg-[color:var(--bg-card)] shadow-[var(--shadow)] overflow-hidden relative" style="filter: none;">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-[color:var(--border)] bg-[color:var(--bg-card)]/70 backdrop-blur-sm">
+              <div class="flex items-center gap-3">
+                <div class="flex gap-1.5">
+                  <div class="w-2 h-2 rounded-full bg-[color:var(--bg-surface)] border border-[color:var(--border)]"></div>
+                  <div class="w-2 h-2 rounded-full bg-[color:var(--bg-surface)] border border-[color:var(--border)]"></div>
+                  <div class="w-2 h-2 rounded-full bg-[color:var(--bg-surface)] border border-[color:var(--border)]"></div>
+                </div>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] ml-2">
+                  Endpoint_Preview::v1
+                </span>
+              </div>
+              <div class="flex bg-[color:var(--bg-surface)] rounded p-1 border border-[color:var(--border)]">
+                <button onclick="toggleHeroPanel('input')" id="btn-input" class="px-4 py-1 text-[10px] font-mono uppercase tracking-wider font-medium rounded bg-[color:var(--bg-card)] text-[color:var(--text)] border border-[color:var(--border)] shadow-[var(--shadow)] transition-all focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/20">
+                  Request
+                </button>
+                <button onclick="toggleHeroPanel('output')" id="btn-output" class="px-4 py-1 text-[10px] font-mono uppercase tracking-wider font-medium rounded text-[color:var(--text-subtle)] hover:text-[color:var(--text)] border border-transparent transition-all focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/20">
+                  Response
+                </button>
+              </div>
+            </div>
+
+            <div class="relative h-[340px] bg-[color:var(--bg-card)] group">
+              <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(17,24,39,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(17,24,39,0.06)_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-60 pointer-events-none"></div>
+
+              <div id="panel-input" class="absolute inset-0 p-6 sm:p-10 transition-all duration-500 opacity-100 translate-y-0 z-10 flex flex-col justify-center">
+                <div class="font-mono text-xs sm:text-sm leading-loose text-[color:var(--text-muted)]">
+                  <div class="flex gap-3">
+                    <span class="text-[color:var(--accent)]">const</span>
+                    <span class="text-[color:var(--text)]">request</span>
+                    = {
+                  </div>
+                  <div class="pl-6">
+                    <span class="text-[color:var(--text)]">endpoint</span>
+                    :
+                    <span class="text-[color:var(--text-subtle)]">
+                      '/payments'
+                    </span>
+                    ,
+                  </div>
+                  <div class="pl-6">
+                    <span class="text-[color:var(--text)]">method</span>
+                    :
+                    <span class="text-[color:var(--accent)]">"POST"</span>
+                    ,
+                  </div>
+                  <div class="pl-6">
+                    <span class="text-[color:var(--text)]">auth</span>
+                    :
+                    <span class="text-[color:var(--text-subtle)]">
+                      "Bearer key_xxx"
+                    </span>
+                    ,
+                  </div>
+                  <div class="pl-6">
+                    <span class="text-[color:var(--text)]">payload</span>
+                    : {
+                  </div>
+                  <div class="pl-12">
+                    <span class="text-[color:var(--text)]">amount</span>
+                    :
+                    <span class="text-[color:var(--accent)]">2400</span>
+                    ,
+                  </div>
+                  <div class="pl-12">
+                    <span class="text-[color:var(--text)]">currency</span>
+                    :
+                    <span class="text-[color:var(--text-subtle)]">"USD"</span>
+                  </div>
+                  <div class="pl-6">}</div>
+                  <div>};</div>
+                </div>
+                <div class="absolute bottom-6 right-6 flex items-center gap-2 opacity-100">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[color:var(--accent)] animate-pulse"></span>
+                  <span class="text-[10px] font-mono text-[color:var(--text-subtle)] uppercase tracking-widest">
+                    Infrastructure Active
+                  </span>
+                </div>
+              </div>
+
+              <div id="panel-output" class="absolute inset-0 transition-all duration-500 opacity-0 translate-y-4 z-0 flex items-center justify-center">
+                <div class="w-full max-w-sm bg-[color:var(--bg-card)] border border-[color:var(--border)] rounded-lg p-6 shadow-[var(--shadow)] relative overflow-hidden transform transition-all duration-500 scale-95" id="output-card">
+                  <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[color:var(--accent)]/60 to-transparent"></div>
+                  <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded bg-[color:var(--bg-surface)] flex items-center justify-center border border-[color:var(--border)]">
+                        <iconify-icon icon="solar:server-square-bold" class="text-[color:var(--text)] text-sm"></iconify-icon>
+                      </div>
+                      <div>
+                        <h4 class="text-xs font-semibold text-[color:var(--text)] uppercase tracking-wide">
+                          Payment Status
+                        </h4>
+                        <p class="text-[10px] text-[color:var(--text-subtle)]">
+                          Transaction ID: #tx_9982
+                        </p>
+                      </div>
+                    </div>
+                    <span class="text-[9px] font-mono text-[#10b981] bg-[#10b981]/10 px-2 py-1 rounded border border-[#10b981]/20">
+                      200 OK
+                    </span>
+                  </div>
+                  <div class="space-y-3 mb-6 font-mono text-[10px]">
+                    <div class="flex justify-between items-center py-2 border-b border-[color:var(--border)]">
+                      <span class="text-[color:var(--text-subtle)]">
+                        Status
+                      </span>
+                      <span class="text-[color:var(--text)]">Processed</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-[color:var(--border)]">
+                      <span class="text-[color:var(--text-subtle)]">
+                        Latency
+                      </span>
+                      <span class="text-[color:var(--text)]">34ms</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-[color:var(--border)]">
+                      <span class="text-[color:var(--text-subtle)]">
+                        Policies
+                      </span>
+                      <span class="text-[color:var(--text)] flex items-center gap-1">
+                        <iconify-icon icon="solar:shield-check-bold" class="text-[color:var(--accent)]"></iconify-icon>
+                        Enforced
+                      </span>
+                    </div>
+                  </div>
+                  <button class="w-full py-2 bg-[color:var(--bg-surface)] text-[color:var(--text)] text-[10px] font-semibold uppercase tracking-widest rounded hover:bg-[color:var(--border)] transition-colors focus:outline-none border border-[color:var(--border)]">
+                    View Logs
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="surface-seam" aria-hidden="true"></div>
+    </main>
+
+    <!-- 1. Deployment Pipeline -->
+    <section class="section section--surface section-divider py-24 md:py-32">
+      <div class="spotlight"></div>
+      <div class="section-content max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div class="relative z-10 animate-on-scroll">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--accent)] mb-3 block">
+              Workflow v2.0
+            </span>
+            <h2 class="text-3xl md:text-5xl font-display text-[color:var(--text)] uppercase tracking-tighter leading-none mb-4 font-medium">
+              REQUEST
+              <br>
+              <span class="font-semibold text-[color:var(--accent)]">
+                →
+                <span class="font-semibold">PRODUCTION</span>
+              </span>
+            </h2>
+            <p class="text-[color:var(--text-muted)] text-sm font-light leading-relaxed mb-12 max-w-md">
+              Buildr converts raw requests into governed, production-ready
+              actions—without exposing your infrastructure.
+            </p>
+
+            <div class="relative flex flex-col gap-0" id="pipeline-controls">
+              <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-[color:var(--border)]"></div>
+              <div id="active-line" class="absolute left-0 top-0 w-[2px] bg-[color:var(--accent)] h-[33.33%] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"></div>
+
+              <button onclick="switchPipeline(0)" class="pipeline-btn active group text-left pl-8 py-6 relative transition-all duration-300 outline-none focus:outline-none">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-lg font-semibold text-[color:var(--text)] transition-colors">
+                    REQUEST INGESTION
+                  </h3>
+                  <span class="font-mono text-[9px] text-[color:var(--accent)] bg-[color:var(--accent-soft)] border border-[color:var(--border)] px-1.5 py-0.5 rounded opacity-100 transition-all tag-label">
+                    INGEST
+                  </span>
+                </div>
+                <p class="text-sm font-light text-[color:var(--text-muted)] leading-relaxed max-w-sm">
+                  Validate structure, authentication, and schema compliance.
+                </p>
+              </button>
+
+              <button onclick="switchPipeline(1)" class="pipeline-btn group text-left pl-8 py-6 relative transition-all duration-300 outline-none focus:outline-none">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-lg font-semibold text-[color:var(--text-subtle)] group-hover:text-[color:var(--text)] transition-colors">
+                    POLICY &amp; GOVERNANCE
+                  </h3>
+                  <span class="font-mono text-[9px] text-[color:var(--text-subtle)] bg-[color:var(--bg-card)] border border-[color:var(--border)] px-1.5 py-0.5 rounded opacity-100 transition-all tag-label">
+                    GOVERN
+                  </span>
+                </div>
+                <p class="text-sm font-light text-[color:var(--text-subtle)] group-hover:text-[color:var(--text-muted)] leading-relaxed max-w-sm transition-colors">
+                  Rate limiting, access control, and usage metering.
+                </p>
+              </button>
+
+              <button onclick="switchPipeline(2)" class="pipeline-btn group text-left pl-8 py-6 relative transition-all duration-300 outline-none focus:outline-none">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-lg font-semibold text-[color:var(--text-subtle)] group-hover:text-[color:var(--text)] transition-colors">
+                    PRODUCTION DEPLOYMENT
+                  </h3>
+                  <span class="font-mono text-[9px] text-[color:var(--text-subtle)] bg-[color:var(--bg-card)] border border-[color:var(--border)] px-1.5 py-0.5 rounded opacity-100 transition-all tag-label">
+                    DEPLOY
+                  </span>
+                </div>
+                <p class="text-sm font-light text-[color:var(--text-subtle)] group-hover:text-[color:var(--text-muted)] leading-relaxed max-w-sm transition-colors">
+                  Expose as REST endpoint, webhook, or internal service.
+                </p>
+              </button>
+            </div>
+          </div>
+
+          <div class="relative w-full aspect-square md:aspect-[4/3] lg:aspect-square bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border)] overflow-hidden shadow-[var(--shadow)] flex flex-col group animate-on-scroll">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-[color:var(--border)] bg-[color:var(--bg-card)]/70 backdrop-blur-md z-20">
+              <div class="flex gap-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-[color:var(--bg-surface)] border border-[color:var(--border)]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[color:var(--bg-surface)] border border-[color:var(--border)]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[color:var(--bg-surface)] border border-[color:var(--border)]"></div>
+              </div>
+              <span class="text-[10px] font-mono text-[color:var(--text-subtle)] uppercase tracking-widest">
+                SYSTEM STATE :: API_GATEWAY
+              </span>
+              <div id="pipeline-header-tag" class="text-[9px] font-mono font-semibold text-[color:var(--accent)] bg-[color:var(--accent-soft)] px-2 py-1 rounded border border-[color:var(--border)] transition-all duration-300">
+                INGEST::ACTIVE
+              </div>
+            </div>
+
+            <div class="relative flex-1 w-full bg-[color:var(--bg-card)]">
+              <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(17,24,39,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(17,24,39,0.06)_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-60 pointer-events-none"></div>
+
+              <div id="pipeline-visual-0" class="pipeline-visual absolute inset-0 p-8 flex flex-col transition-all duration-500 opacity-100 translate-x-0 z-10">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-[color:var(--border)]">
+                  <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-[color:var(--accent)] animate-pulse"></div>
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text)]">
+                      Request Parsing
+                    </span>
+                  </div>
+                  <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+                    01 / 03
+                  </span>
+                </div>
+
+                <div class="flex-1 grid grid-cols-2 gap-6 min-h-0">
+                  <div class="flex flex-col gap-2">
+                    <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-1">
+                      Header Validation
+                    </span>
+                    <div class="px-3 py-2 rounded border border-[color:var(--border)] bg-[color:var(--bg-card)] text-[10px] text-[color:var(--text-muted)] font-mono border-l-2 border-l-[color:var(--accent)] shadow-[var(--shadow)]">
+                      Authorization
+                    </div>
+                    <div class="px-3 py-2 rounded border border-[color:var(--border)] bg-[color:var(--bg-card)] text-[10px] text-[color:var(--text-muted)] font-mono">
+                      Content-Type
+                    </div>
+                    <div class="px-3 py-2 rounded border border-[color:var(--border)] bg-[color:var(--bg-card)] text-[10px] text-[color:var(--text-muted)] font-mono">
+                      Origin
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-3 relative pl-4 border-l border-[color:var(--border)] border-dashed">
+                    <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-1">
+                      Processing
+                    </span>
+                    <div class="flex items-center gap-2">
+                      <div class="w-4 h-4 rounded-full bg-[color:var(--bg-surface)] text-[9px] flex items-center justify-center text-[color:var(--text)] border border-[color:var(--border)]">
+                        1
+                      </div>
+                      <span class="text-[10px] text-[color:var(--text)]">
+                        Payload Decoded
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <div class="w-4 h-4 rounded-full bg-[color:var(--bg-surface)] text-[9px] flex items-center justify-center text-[color:var(--text)] border border-[color:var(--border)]">
+                        2
+                      </div>
+                      <span class="text-[10px] text-[color:var(--text)]">
+                        Schema Verified
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <div class="w-4 h-4 rounded-full bg-[color:var(--bg-surface)] text-[9px] flex items-center justify-center text-[color:var(--text)] border border-[color:var(--border)]">
+                        3
+                      </div>
+                      <span class="text-[10px] text-[color:var(--text)]">
+                        Context Injected
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-[color:var(--border)]">
+                  <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-2 block">
+                    Status
+                  </span>
+                  <div class="flex gap-2">
+                    <span class="px-2 py-1 rounded bg-[color:var(--accent-soft)] border border-[color:var(--border)] text-[9px] text-[color:var(--accent)] font-mono flex items-center gap-1.5">
+                      <iconify-icon icon="solar:check-circle-bold" class="text-xs"></iconify-icon>
+                      Authenticated
+                    </span>
+                    <span class="px-2 py-1 rounded bg-[color:var(--bg-surface)] border border-[color:var(--border)] text-[9px] text-[color:var(--text-muted)] font-mono flex items-center gap-1.5">
+                      <iconify-icon icon="solar:check-circle-bold" class="text-[color:var(--text-subtle)] text-xs"></iconify-icon>
+                      Valid JSON
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div id="pipeline-visual-1" class="pipeline-visual absolute inset-0 p-8 flex flex-col transition-all duration-500 opacity-0 scale-95 pointer-events-none z-0">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-[color:var(--border)]">
+                  <div class="flex items-center gap-2">
+                    <iconify-icon icon="solar:shield-check-bold" class="text-[color:var(--text)]"></iconify-icon>
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text)]">
+                      Policy Enforcement
+                    </span>
+                  </div>
+                  <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+                    02 / 03
+                  </span>
+                </div>
+
+                <div class="flex-1 flex flex-col items-center justify-center relative my-2">
+                  <div class="w-full bg-[color:var(--bg-card)] border border-[color:var(--border)] rounded-xl p-5 relative z-10 shadow-[var(--shadow)] flex flex-col gap-3 group">
+                    <div class="absolute inset-0 bg-[color:var(--accent-soft)] rounded-xl pointer-events-none opacity-60"></div>
+                    <div class="flex items-center justify-between border-b border-[color:var(--border)] pb-2 mb-1">
+                      <span class="text-[9px] uppercase tracking-wider text-[color:var(--accent)]">
+                        Governance Engine
+                      </span>
+                      <iconify-icon icon="solar:lock-bold" class="text-[color:var(--accent)] text-xs"></iconify-icon>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-[color:var(--text)]">
+                      <iconify-icon icon="solar:server-square-linear" class="text-[color:var(--text-subtle)]"></iconify-icon>
+                      Rate limit check: 45/60 reqs
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-[color:var(--text)]">
+                      <iconify-icon icon="solar:eye-closed-linear" class="text-[color:var(--text-subtle)]"></iconify-icon>
+                      Endpoint authorization: Scoped
+                    </div>
+                  </div>
+
+                  <div class="absolute -left-2 top-1/2 -translate-y-1/2 -translate-x-full w-20 text-right pr-3">
+                    <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] block mb-1">
+                      Rules
+                    </span>
+                    <div class="text-[9px] text-[color:var(--text-muted)] leading-tight">
+                      Token buckets
+                    </div>
+                    <div class="text-[9px] text-[color:var(--text-muted)] leading-tight mt-1">
+                      ACL Checks
+                    </div>
+                  </div>
+                  <div class="absolute -right-2 top-1/2 -translate-y-1/2 translate-x-full w-20 text-left pl-3">
+                    <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] block mb-1">
+                      Audit
+                    </span>
+                    <div class="text-[9px] text-[color:var(--text-muted)] leading-tight">
+                      Access Logs
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-[color:var(--border)] flex items-center justify-between">
+                  <div class="flex gap-1">
+                    <div class="h-1 w-6 rounded-full bg-[color:var(--accent)] opacity-70"></div>
+                    <div class="h-1 w-6 rounded-full bg-[color:var(--accent)] opacity-70"></div>
+                  </div>
+                  <div class="text-[9px] font-mono text-[color:var(--accent)] uppercase tracking-wide flex items-center gap-2">
+                    <span>Approved</span>
+                    <span class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></span>
+                    <span>Policies Active</span>
+                  </div>
+                </div>
+              </div>
+
+              <div id="pipeline-visual-2" class="pipeline-visual absolute inset-0 p-8 flex flex-col transition-all duration-500 opacity-0 translate-y-8 pointer-events-none z-0">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-[color:var(--border)]">
+                  <div class="flex items-center gap-2">
+                    <iconify-icon icon="solar:rocket-bold-duotone" class="text-[color:var(--text)]"></iconify-icon>
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text)]">
+                      Production
+                    </span>
+                  </div>
+                  <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+                    03 / 03
+                  </span>
+                </div>
+
+                <div class="flex-1 flex flex-col gap-5">
+                  <div>
+                    <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-2 block">
+                      Target
+                    </span>
+                    <div class="flex gap-2">
+                      <div class="flex-1 bg-[color:var(--accent-soft)] border border-[color:var(--border)] p-2.5 rounded text-center shadow-[var(--shadow)]">
+                        <iconify-icon icon="solar:laptop-minimalistic-linear" class="text-[color:var(--text)] text-sm mb-1"></iconify-icon>
+                        <span class="text-[10px] text-[color:var(--text)] font-semibold block">
+                          REST API
+                        </span>
+                      </div>
+                      <div class="flex-1 bg-[color:var(--bg-card)] border border-[color:var(--border)] p-2.5 rounded text-center opacity-80">
+                        <iconify-icon icon="solar:code-circle-linear" class="text-[color:var(--text-muted)] text-sm mb-1"></iconify-icon>
+                        <span class="text-[10px] text-[color:var(--text-muted)] block">
+                          Webhook
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span class="text-[9px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-2 block">
+                      Response Config
+                    </span>
+                    <div class="space-y-2.5 bg-[color:var(--bg-card)] p-3 rounded border border-[color:var(--border)] shadow-[0_1px_0_rgba(15,23,42,0.03)]">
+                      <div class="flex items-center gap-2 text-[10px] text-[color:var(--text-muted)]">
+                        <iconify-icon icon="solar:check-square-bold" class="text-[color:var(--accent)]"></iconify-icon>
+                        JSON Serialized
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-[color:var(--text-muted)]">
+                        <iconify-icon icon="solar:check-square-bold" class="text-[color:var(--accent)]"></iconify-icon>
+                        Headers Signed
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-[color:var(--text-muted)]">
+                        <iconify-icon icon="solar:check-square-bold" class="text-[color:var(--accent)]"></iconify-icon>
+                        Latency Tracked
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-[color:var(--border)]">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-semibold text-[color:var(--text)] uppercase tracking-wide">
+                      Uptime
+                    </span>
+                    <span class="flex items-center gap-1 text-[9px] text-[color:var(--text)] bg-[#10b981]/10 px-1.5 py-0.5 rounded border border-[#10b981]/20">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
+                      99.99%
+                    </span>
+                  </div>
+                  <div class="h-1 w-full bg-[color:var(--bg-surface)] rounded-full overflow-hidden border border-[color:var(--border)]">
+                    <div class="h-full bg-[color:var(--accent)] w-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="surface-seam" aria-hidden="true"></div>
+    </section>
+
+    <!-- 3. Use Cases -->
+    <section class="section section--main section-divider py-28 md:py-36">
+      <div class="spotlight"></div>
+      <div class="section-content max-w-7xl mx-auto px-6">
+        <div class="max-w-4xl mx-auto text-center mb-16 md:mb-20 animate-on-scroll">
+          <div class="flex items-center justify-center gap-3 mb-6">
+            <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+            <span class="text-[11px] font-medium font-mono uppercase tracking-[0.2em] text-[color:var(--text-subtle)]">
+              Target Architectures
+            </span>
+            <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+          </div>
+          <h2 class="text-4xl md:text-6xl font-display text-[color:var(--text)] uppercase tracking-tighter leading-[0.95] mb-6 font-medium">
+            Built For
+            <span class="text-[color:var(--accent)] font-semibold">
+              → Platforms
+            </span>
+          </h2>
+          <p class="text-base text-[color:var(--text-muted)] leading-relaxed font-light mb-8 max-w-2xl mx-auto">
+            Buildr isn't a simple gateway; it's an operating system designed for
+            scale. Whether you're building SaaS, fintech, or marketplaces, our
+            infrastructure ensures reliability.
+          </p>
+          <div class="flex flex-col items-center gap-6">
+            <p class="text-xs text-[color:var(--text-subtle)] font-medium tracking-widest uppercase">
+              Infrastructure for builders who ship systems.
+            </p>
+            <div class="flex flex-wrap justify-center gap-2">
+              <span class="px-2.5 py-1 rounded border border-[color:var(--border)] bg-[color:var(--bg-surface)] text-[10px] text-[color:var(--text-subtle)] font-mono uppercase tracking-wide">
+                Scalable Endpoints
+              </span>
+              <span class="px-2.5 py-1 rounded border border-[color:var(--border)] bg-[color:var(--bg-surface)] text-[10px] text-[color:var(--text-subtle)] font-mono uppercase tracking-wide">
+                Secure Validation
+              </span>
+              <span class="px-2.5 py-1 rounded border border-[color:var(--border)] bg-[color:var(--bg-surface)] text-[10px] text-[color:var(--text-subtle)] font-mono uppercase tracking-wide">
+                Managed Compliance
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 md:mb-20">
+          <div class="group relative flex flex-col p-8 rounded-2xl bg-[color:var(--bg-card)] border border-[color:var(--border)] shadow-[var(--shadow)] hover:bg-[color:var(--bg-card-hover)] transition-all duration-300 h-full overflow-hidden animate-on-scroll transform hover:scale-105 hover:shadow-[0_20px_40px_rgba(15,23,42,0.12)]">
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--accent)]/40 to-transparent opacity-60"></div>
+            <div class="flex justify-between items-start mb-6">
+              <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-[color:var(--text)] border-b border-[color:var(--accent)]/30 pb-0.5">
+                SaaS Platforms
+              </span>
+              <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+                01
+              </span>
+            </div>
+            <h3 class="text-xl text-[color:var(--text)] font-display uppercase tracking-tight mb-3">
+              Public API Access
+            </h3>
+            <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8 flex-1">
+              Secure public APIs without exposing backend logic. Manage tenant
+              keys and usage quotas effortlessly.
+            </p>
+            <div class="mt-auto">
+              <a href="#" class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-[color:var(--accent)] hover:underline transition-colors">
+                View Blueprint
+                <iconify-icon icon="solar:arrow-right-linear" class="text-sm"></iconify-icon>
+              </a>
+            </div>
+          </div>
+
+          <div class="group relative flex flex-col p-8 rounded-2xl bg-[color:var(--bg-card)] border border-[color:var(--border)] shadow-[var(--shadow)] hover:bg-[color:var(--bg-card-hover)] transition-all duration-300 h-full overflow-hidden animate-on-scroll transform hover:scale-105 hover:shadow-[0_20px_40px_rgba(15,23,42,0.12)]">
+            <div class="flex justify-between items-start mb-6">
+              <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-[color:var(--text-subtle)] group-hover:text-[color:var(--text)] transition-colors">
+                Fintech
+              </span>
+              <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+                02
+              </span>
+            </div>
+            <h3 class="text-xl text-[color:var(--text)] font-display uppercase tracking-tight mb-3">
+              Transaction Safety
+            </h3>
+            <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8 flex-1">
+              Enforce strict validation and policy control on financial
+              transactions. Guarantee immutability.
+            </p>
+            <div class="mt-auto">
+              <a href="#" class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-[color:var(--accent)] hover:underline transition-colors">
+                See Configuration
+                <iconify-icon icon="solar:arrow-right-linear" class="text-sm"></iconify-icon>
+              </a>
+            </div>
+          </div>
+
+          <div class="group relative flex flex-col p-8 rounded-2xl bg-[color:var(--bg-card)] border border-[color:var(--border)] shadow-[var(--shadow)] hover:bg-[color:var(--bg-card-hover)] transition-all duration-300 h-full overflow-hidden animate-on-scroll transform hover:scale-105 hover:shadow-[0_20px_40px_rgba(15,23,42,0.12)]">
+            <div class="flex justify-between items-start mb-6">
+              <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-[color:var(--text-subtle)] group-hover:text-[color:var(--text)] transition-colors">
+                Marketplaces
+              </span>
+              <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+                03
+              </span>
+            </div>
+            <h3 class="text-xl text-[color:var(--text)] font-display uppercase tracking-tight mb-3">
+              Tenant Governance
+            </h3>
+            <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8 flex-1">
+              Govern multi-tenant endpoints with access segmentation. Isolate
+              data and performance per user.
+            </p>
+            <div class="mt-auto">
+              <a href="#" class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-[color:var(--accent)] hover:underline transition-colors">
+                View Output
+                <iconify-icon icon="solar:arrow-right-linear" class="text-sm"></iconify-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-y border-[color:var(--border)] bg-[color:var(--bg-surface)]/50 mb-20 animate-on-scroll">
+          <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-12">
+            <div class="flex gap-4 items-start">
+              <span class="font-mono text-[10px] text-[color:var(--text-subtle)] border border-[color:var(--border)] bg-[color:var(--bg-card)] px-1.5 py-0.5 rounded">
+                01
+              </span>
+              <div>
+                <h4 class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--text)] mb-1">
+                  Structured Ingest
+                </h4>
+                <p class="text-[11px] text-[color:var(--text-muted)] font-light">
+                  Strict schema enforcement
+                </p>
+              </div>
+            </div>
+            <div class="hidden md:block w-px h-8 bg-[color:var(--border)]"></div>
+            <div class="flex gap-4 items-start">
+              <span class="font-mono text-[10px] text-[color:var(--text-subtle)] border border-[color:var(--border)] bg-[color:var(--bg-card)] px-1.5 py-0.5 rounded">
+                02
+              </span>
+              <div>
+                <h4 class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--text)] mb-1">
+                  Protected Core
+                </h4>
+                <p class="text-[11px] text-[color:var(--text-muted)] font-light">
+                  Logic stays server-side
+                </p>
+              </div>
+            </div>
+            <div class="hidden md:block w-px h-8 bg-[color:var(--border)]"></div>
+            <div class="flex gap-4 items-start">
+              <span class="font-mono text-[10px] text-[color:var(--text-subtle)] border border-[color:var(--border)] bg-[color:var(--bg-card)] px-1.5 py-0.5 rounded">
+                03
+              </span>
+              <div>
+                <h4 class="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--text)] mb-1">
+                  Governed Ship
+                </h4>
+                <p class="text-[11px] text-[color:var(--text-muted)] font-light">
+                  Endpoints scale instantly
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mb-12">
+          <p class="text-xs font-mono text-[color:var(--text-subtle)] uppercase tracking-widest">
+            Two perspectives: The builder's config vs. The consumer's
+            experience.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[color:var(--border)] rounded-2xl overflow-hidden bg-[color:var(--bg-card)] shadow-[var(--shadow)] animate-on-scroll">
+          <div class="p-8 lg:p-12 relative flex flex-col justify-between group border-b lg:border-b-0 lg:border-r border-[color:var(--border)]">
+            <div class="absolute top-6 left-6 z-10">
+              <span class="text-[10px] font-semibold uppercase tracking-widest text-[color:var(--accent)] border border-[color:var(--border)] px-2 py-1 rounded bg-[color:var(--accent-soft)]">
+                Developer View
+              </span>
+            </div>
+            <div class="mt-12 space-y-4 opacity-80 group-hover:opacity-100 transition-opacity duration-500 mb-16">
+              <div class="font-mono text-xs text-[color:var(--text-subtle)] leading-loose">
+                <div class="flex gap-4">
+                  <span class="text-[color:var(--accent)]">const</span>
+                  <span class="text-[color:var(--text)]">endpoint</span>
+                  = {
+                </div>
+                <div class="flex gap-4 pl-4">
+                  <span class="text-[color:var(--text)]">path</span>
+                  :
+                  <span class="text-[color:var(--text-subtle)]">
+                    '/v1/charge'
+                  </span>
+                  ,
+                </div>
+                <div class="flex gap-4 pl-4">
+                  <span class="text-[color:var(--text)]">method</span>
+                  :
+                  <span class="text-[color:var(--accent)]">'POST'</span>
+                  ,
+                </div>
+                <div class="flex gap-4 pl-4">
+                  <span class="text-[color:var(--text)]">rate_limit</span>
+                  :
+                  <span class="text-[color:var(--text-subtle)]">
+                    '1000/min'
+                  </span>
+                  ,
+                </div>
+                <div class="flex gap-4 pl-4">
+                  <span class="text-[color:var(--text)]">schema</span>
+                  :
+                  <span class="text-[color:var(--accent)]">Schema.Payment</span>
+                </div>
+                <div class="flex gap-4">};</div>
+              </div>
+            </div>
+            <div class="">
+              <h3 class="text-xl text-[color:var(--text)] font-display uppercase tracking-tight mb-2">
+                Total Control
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] leading-relaxed max-w-sm">
+                You define the validation rules, methods, and schemas. The
+                complexity is managed by the infrastructure.
+              </p>
+            </div>
+          </div>
+          <div class="p-8 lg:p-12 relative bg-[color:var(--bg-surface)] flex flex-col justify-between group">
+            <div class="absolute top-6 left-6 z-10">
+              <span class="text-[10px] font-semibold uppercase tracking-widest text-[color:var(--text-subtle)] border border-[color:var(--border)] px-2 py-1 rounded bg-[color:var(--bg-card)]">
+                Consumer View
+              </span>
+            </div>
+            <div class="mt-12 mb-16 relative flex justify-center items-center">
+              <div class="bg-[color:var(--bg-card)] border border-[color:var(--border)] rounded-lg shadow-[var(--shadow)] transform group-hover:-translate-y-1 transition-transform duration-500 w-full max-w-xs overflow-hidden">
+                <div class="h-8 bg-[color:var(--bg-surface)] border-b border-[color:var(--border)] flex items-center px-3 justify-between">
+                  <div class="flex gap-1.5">
+                    <div class="w-1.5 h-1.5 rounded-full bg-[color:var(--border)]"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-[color:var(--border)]"></div>
+                  </div>
+                  <div class="h-1 w-8 bg-[color:var(--border)] rounded-full"></div>
+                </div>
+                <div class="p-5 space-y-3">
+                  <div class="font-mono text-[9px] text-[color:var(--text)] leading-relaxed">
+                    <span class="text-[#10b981]">{</span>
+                    <br>
+                    &nbsp;&nbsp;"status": "success",
+                    <br>
+                    &nbsp;&nbsp;"id": "ch_329482",
+                    <br>
+                    &nbsp;&nbsp;"amount": 2400,
+                    <br>
+                    &nbsp;&nbsp;"captured": true
+                    <br>
+                    <span class="text-[#10b981]">}</span>
+                  </div>
+                  <div class="w-full h-px bg-[color:var(--border)]"></div>
+                  <div class="flex justify-between items-center text-[9px]">
+                    <span class="text-[color:var(--text-subtle)]">
+                      Latency: 42ms
+                    </span>
+                    <span class="text-[#10b981] font-semibold">200 OK</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl text-[color:var(--text)] font-display uppercase tracking-tight mb-2">
+                Predictable Response
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] leading-relaxed max-w-sm">
+                Your consumers interact with a clean, fast, and documented API
+                endpoint that just works.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-16 text-center">
+          <p class="text-[10px] font-mono text-[color:var(--text-subtle)] uppercase tracking-[0.2em] opacity-90">
+            One platform. End-to-end API lifecycle management.
+          </p>
+        </div>
+      </div>
+      <div class="surface-seam" aria-hidden="true"></div>
+    </section>
+
+    <!-- 4. Outcomes -->
+    <section class="section section--surface section-divider py-24 md:py-32">
+      <div class="spotlight"></div>
+      <div class="section-content max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div class="max-w-2xl">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-3 block">
+              // Benefits
+            </span>
+            <h2 class="text-3xl md:text-5xl font-display font-medium text-[color:var(--text)] uppercase tracking-tighter leading-none mb-4">
+              API
+              <br>
+              <span class="text-[color:var(--accent)] font-semibold">
+                → OUTCOMES
+              </span>
+            </h2>
+            <p class="text-sm text-[color:var(--text-muted)] leading-relaxed font-light">
+              Shift from fragile scripts to durable infrastructure. Buildr
+              transforms raw backend logic into scalable, secure assets.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 overflow-hidden bg-[color:var(--border)] border border-[color:var(--border)] rounded-[2rem] shadow-[var(--shadow)] gap-px">
+          <div class="group bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors p-8 flex flex-col justify-between h-full relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-[color:var(--accent-soft)] to-transparent opacity-70 pointer-events-none"></div>
+            <div class="absolute inset-0 border border-transparent group-hover:border-[color:var(--accent)]/15 transition-colors pointer-events-none"></div>
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--accent)]/45 to-transparent opacity-70"></div>
+            <div class="relative z-10">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--accent)] mb-4 block">
+                // REVENUE
+              </span>
+              <h3 class="text-lg font-semibold text-[color:var(--text)] mb-2 tracking-tight">
+                Monetized Endpoints
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8">
+                Turn your backend into a business. Charge per request, not per
+                hour.
+              </p>
+            </div>
+            <div class="text-[10px] font-mono text-[color:var(--text-subtle)] group-hover:text-[color:var(--accent)] transition-colors flex items-center gap-2 relative z-10">
+              Logic → Revenue
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors p-8 flex flex-col justify-between h-full relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-[color:var(--accent-soft)] to-transparent opacity-70 pointer-events-none"></div>
+            <div class="absolute inset-0 border border-transparent group-hover:border-[color:var(--accent)]/15 transition-colors pointer-events-none"></div>
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--accent)]/45 to-transparent opacity-70"></div>
+            <div class="relative z-10">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--accent)] mb-4 block">
+                // CONTROL
+              </span>
+              <h3 class="text-lg font-semibold text-[color:var(--text)] mb-2 tracking-tight">
+                Enforced Rate Limits
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8">
+                Prevent abuse with granular rate limiting per user, IP, or
+                token.
+              </p>
+            </div>
+            <div class="text-[10px] font-mono text-[color:var(--text-subtle)] group-hover:text-[color:var(--accent)] transition-colors flex items-center gap-2 relative z-10">
+              Chaos → Order
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors p-8 flex flex-col justify-between h-full relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-[color:var(--accent-soft)] to-transparent opacity-70 pointer-events-none"></div>
+            <div class="absolute inset-0 border border-transparent group-hover:border-[color:var(--accent)]/15 transition-colors pointer-events-none"></div>
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--accent)]/45 to-transparent opacity-70"></div>
+            <div class="relative z-10">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--accent)] mb-4 block">
+                // SECURITY
+              </span>
+              <h3 class="text-lg font-semibold text-[color:var(--text)] mb-2 tracking-tight">
+                Tokenized Access
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8">
+                Issue and revoke API keys instantly. Manage scopes and
+                permissions centrally.
+              </p>
+            </div>
+            <div class="text-[10px] font-mono text-[color:var(--text-subtle)] group-hover:text-[color:var(--accent)] transition-colors flex items-center gap-2 relative z-10">
+              Open → Secured
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors p-8 flex flex-col justify-between h-full relative">
+            <div class="absolute inset-0 border border-transparent group-hover:border-[color:var(--accent)]/15 transition-colors pointer-events-none"></div>
+            <div>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-4 block">
+                // OBSERVABILITY
+              </span>
+              <h3 class="text-lg font-semibold text-[color:var(--text)] mb-2 tracking-tight">
+                Centralized Logging
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8">
+                Full visibility into every request, latency metrics, and error
+                rate.
+              </p>
+            </div>
+            <div class="text-[10px] font-mono text-[color:var(--text-subtle)] transition-colors">
+              Blind → Visible
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors p-8 flex flex-col justify-between h-full relative">
+            <div class="absolute inset-0 border border-transparent group-hover:border-[color:var(--accent)]/15 transition-colors pointer-events-none"></div>
+            <div>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-4 block">
+                // DEVOPS
+              </span>
+              <h3 class="text-lg font-semibold text-[color:var(--text)] mb-2 tracking-tight">
+                Multi-Environment
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8">
+                Deploy to staging, prod, and dev environments with a single
+                configuration.
+              </p>
+            </div>
+            <div class="text-[10px] font-mono text-[color:var(--text-subtle)] transition-colors">
+              Manual → CI/CD
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] hover:bg-[color:var(--bg-card-hover)] transition-colors p-8 flex flex-col justify-between h-full relative">
+            <div class="absolute inset-0 border border-transparent group-hover:border-[color:var(--accent)]/15 transition-colors pointer-events-none"></div>
+            <div>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[color:var(--text-subtle)] mb-4 block">
+                // GOVERNANCE
+              </span>
+              <h3 class="text-lg font-semibold text-[color:var(--text)] mb-2 tracking-tight">
+                Policy-Driven Execution
+              </h3>
+              <p class="text-sm text-[color:var(--text-muted)] font-light leading-relaxed mb-8">
+                Define execution policies that apply globally across all your
+                endpoints.
+              </p>
+            </div>
+            <div class="text-[10px] font-mono text-[color:var(--text-subtle)] transition-colors">
+              Ad-hoc → Standardized
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-16 text-center">
+          <p class="text-[11px] font-mono text-[color:var(--text-subtle)] tracking-widest uppercase opacity-90">
+            Infrastructure grade. Enterprise ready.
+          </p>
+        </div>
+      </div>
+      <div class="surface-seam" aria-hidden="true"></div>
+    </section>
+
+    <!-- 5. Method -->
+    <section class="section section--main section-divider py-32">
+      <div class="spotlight"></div>
+      <div class="section-content max-w-7xl mx-auto px-6">
+        <div class="mb-20 max-w-4xl mx-auto text-center">
+          <div class="flex items-center gap-3 mb-6 justify-center animate-on-scroll">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)]">
+              Architecture :: Core
+            </span>
+            <div class="h-px w-8 bg-[color:var(--border)]"></div>
+            <span class="text-[10px] font-mono text-[color:var(--text-subtle)]">
+              System Guarantees
+            </span>
+          </div>
+
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-medium text-[color:var(--text)] uppercase tracking-tighter leading-[0.9] mb-6 animate-on-scroll">
+            Immutable Infrastructure.
+            <br>
+            <span class="text-[color:var(--accent)] font-semibold">
+              Infinite Scale.
+            </span>
+          </h2>
+
+          <p class="text-base text-[color:var(--text-muted)] font-light leading-relaxed mb-10 max-w-2xl mx-auto animate-on-scroll">
+            Outcomes compound because the architecture is stable. Buildr
+            provides a single layer that validates inputs, protects logic, and
+            governs execution across every API you ship.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-8 border-t border-[color:var(--border)] pt-6 justify-center animate-on-scroll">
+            <div>
+              <div class="text-lg font-semibold text-[color:var(--text)] tracking-tight">
+                100%
+              </div>
+              <div class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] mt-1">
+                Schema Validation
+              </div>
+            </div>
+            <div class="w-px h-8 bg-[color:var(--border)]"></div>
+            <div>
+              <div class="text-lg font-semibold text-[color:var(--text)] tracking-tight">
+                AES-256
+              </div>
+              <div class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] mt-1">
+                Encryption
+              </div>
+            </div>
+            <div class="w-px h-8 bg-[color:var(--border)]"></div>
+            <div>
+              <div class="text-lg font-semibold text-[color:var(--text)] tracking-tight">
+                &lt;50ms
+              </div>
+              <div class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] mt-1">
+                Overhead
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-on-scroll">
+          <div class="group bg-[color:var(--bg-card)] border border-[color:var(--border)] p-6 rounded-2xl relative overflow-hidden hover:bg-[color:var(--bg-card-hover)] transition-all duration-300 shadow-[var(--shadow)]">
+            <div class="absolute top-0 right-0 p-5 opacity-20 group-hover:opacity-35 transition-opacity">
+              <iconify-icon icon="solar:hashtag-square-bold" class="text-3xl text-[color:var(--text-subtle)]"></iconify-icon>
+            </div>
+            <span class="text-[9px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] block mb-4 border-b border-[color:var(--border)] pb-2 w-max">
+              Layer: Structure
+            </span>
+            <h3 class="text-base font-semibold text-[color:var(--text)] mb-2">
+              Schema Enforcement
+            </h3>
+            <p class="text-xs text-[color:var(--text-muted)] leading-relaxed mb-8 font-light">
+              Every input is typed and validated against strict definitions
+              before processing.
+            </p>
+            <div class="mt-auto flex justify-between items-end">
+              <span class="text-[9px] font-mono text-[color:var(--text-subtle)] bg-[color:var(--bg-surface)] px-1.5 py-0.5 rounded border border-[color:var(--border)]">
+                Ad-hoc → Defined
+              </span>
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] border border-[color:var(--border)] p-6 rounded-2xl relative overflow-hidden shadow-[var(--shadow)] hover:bg-[color:var(--bg-card-hover)] transition-all duration-300">
+            <div class="absolute inset-0 bg-gradient-to-b from-[color:var(--accent-soft)] to-transparent opacity-70 pointer-events-none"></div>
+            <div class="absolute top-0 right-0 p-5 opacity-100">
+              <iconify-icon icon="solar:lock-keyhole-bold" class="text-3xl text-[color:var(--accent)]"></iconify-icon>
+            </div>
+            <span class="text-[9px] font-mono uppercase tracking-widest text-[color:var(--accent)] block mb-4 border-b border-[color:var(--border)] pb-2 w-max relative z-10">
+              Layer: Encapsulation
+            </span>
+            <h3 class="text-base font-semibold text-[color:var(--text)] mb-2 relative z-10">
+              Logic Encapsulation
+            </h3>
+            <p class="text-xs text-[color:var(--text-muted)] leading-relaxed mb-8 font-light relative z-10">
+              Business logic is isolated. Backend complexity is never exposed to
+              the client.
+            </p>
+            <div class="mt-auto flex justify-between items-end relative z-10">
+              <span class="text-[9px] font-mono text-[color:var(--text-muted)] bg-[color:var(--bg-surface)] px-1.5 py-0.5 rounded border border-[color:var(--border)]">
+                Exposed → Secured
+              </span>
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] border border-[color:var(--border)] p-6 rounded-2xl relative overflow-hidden hover:bg-[color:var(--bg-card-hover)] transition-all duration-300 shadow-[var(--shadow)]">
+            <div class="absolute top-0 right-0 p-5 opacity-20 group-hover:opacity-35 transition-opacity">
+              <iconify-icon icon="solar:settings-bold" class="text-3xl text-[color:var(--text-subtle)]"></iconify-icon>
+            </div>
+            <span class="text-[9px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] block mb-4 border-b border-[color:var(--border)] pb-2 w-max">
+              Layer: Governance
+            </span>
+            <h3 class="text-base font-semibold text-[color:var(--text)] mb-2">
+              Centralized Policy
+            </h3>
+            <p class="text-xs text-[color:var(--text-muted)] leading-relaxed mb-8 font-light">
+              Centralized constraints on cost, rate limits, and safety for every
+              request.
+            </p>
+            <div class="mt-auto flex justify-between items-end">
+              <span class="text-[9px] font-mono text-[color:var(--text-subtle)] bg-[color:var(--bg-surface)] px-1.5 py-0.5 rounded border border-[color:var(--border)]">
+                Variance → Predictable
+              </span>
+            </div>
+          </div>
+
+          <div class="group bg-[color:var(--bg-card)] border border-[color:var(--border)] p-6 rounded-2xl relative overflow-hidden shadow-[var(--shadow)] hover:bg-[color:var(--bg-card-hover)] transition-all duration-300">
+            <div class="absolute inset-0 bg-gradient-to-b from-[color:var(--accent-soft)] to-transparent opacity-70 pointer-events-none"></div>
+            <div class="absolute top-0 right-0 p-5 opacity-100">
+              <iconify-icon icon="solar:rocket-bold" class="text-3xl text-[color:var(--accent)]"></iconify-icon>
+            </div>
+            <span class="text-[9px] font-mono uppercase tracking-widest text-[color:var(--accent)] block mb-4 border-b border-[color:var(--border)] pb-2 w-max relative z-10">
+              Layer: Deployment
+            </span>
+            <h3 class="text-base font-semibold text-[color:var(--text)] mb-2 relative z-10">
+              Unified Deployment
+            </h3>
+            <p class="text-xs text-[color:var(--text-muted)] leading-relaxed mb-8 font-light relative z-10">
+              One core serves REST APIs, webhooks, and internal services
+              simultaneously.
+            </p>
+            <div class="mt-auto flex justify-between items-end relative z-10">
+              <span class="text-[9px] font-mono text-[color:var(--text-muted)] bg-[color:var(--bg-surface)] px-1.5 py-0.5 rounded border border-[color:var(--border)]">
+                Fragmented → Unified
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-20 border-t border-[color:var(--border)] pt-8 text-center animate-on-scroll">
+          <p class="text-[10px] font-mono text-[color:var(--text-subtle)] uppercase tracking-[0.2em]">
+            This is the infrastructure that makes every request reliable.
+          </p>
+        </div>
+      </div>
+      <div class="surface-seam" aria-hidden="true"></div>
+    </section>
+
+    <!-- 6. Conversion -->
+    <section class="section section--surface section-divider py-32">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--accent),_transparent_90%)] opacity-[0.04] pointer-events-none z-0"></div>
+      <div class="spotlight absolute top-[-20%] left-0 right-0 h-[600px] bg-[radial-gradient(800px_circle_at_top,_rgba(37,99,235,0.12),_transparent_70%)] pointer-events-none z-0"></div>
+      <div class="section-content max-w-3xl mx-auto px-6 relative z-10">
+        <div class="relative rounded-3xl border border-[color:var(--accent)]/10 bg-[color:var(--bg-card)]/90 backdrop-blur-xl p-8 md:p-14 text-center overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1),_inset_0_1px_0_rgba(255,255,255,0.7)] ring-1 ring-[color:var(--border)] group">
+          <div class="absolute top-0 left-0 w-80 h-80 bg-[radial-gradient(circle_at_top_left,_var(--accent),_transparent_70%)] opacity-[0.04] pointer-events-none"></div>
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--accent)]/60 to-transparent shadow-[0_1px_6px_rgba(37,99,235,0.4)]"></div>
+
+          <h2 class="text-4xl md:text-6xl font-display text-[color:var(--text)] mb-6 uppercase tracking-tighter leading-[0.95] font-medium relative z-10">
+            Ship APIs
+            <br>
+            <span class="text-[color:var(--accent)] font-semibold">
+              with Confidence.
+            </span>
+          </h2>
+
+          <p class="text-sm md:text-base text-[color:var(--text)]/80 mb-10 max-w-lg mx-auto leading-relaxed font-normal relative z-10">
+            Deploy governed, production-ready endpoints in minutes.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-10">
+            <div class="flex items-center gap-2">
+              <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+              <span class="text-[11px] text-[color:var(--text)] font-mono tracking-wide">
+                Protected Logic
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+              <span class="text-[11px] text-[color:var(--text)] font-mono tracking-wide">
+                Deploy as API
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-1 h-1 rounded-full bg-[color:var(--accent)]"></div>
+              <span class="text-[11px] text-[color:var(--text)] font-mono tracking-wide">
+                Governed Policies
+              </span>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <input type="email" placeholder="Enter work email" class="w-full sm:w-72 bg-[color:var(--bg-surface)] border border-[color:var(--border)] rounded-lg px-4 py-3.5 text-sm text-[color:var(--text)] placeholder-[color:var(--text-subtle)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:border-[color:var(--accent)] transition-all shadow-inner">
+            <button class="w-full sm:w-auto px-10 py-3.5 bg-[color:var(--accent)] text-white text-sm font-semibold rounded-lg tracking-tight shadow-[0_4px_14px_rgba(37,99,235,0.3)] hover:bg-[color:var(--accent-hover)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)] hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/25 focus:ring-offset-2 focus:ring-offset-[color:var(--bg-card)]">
+              Request Access
+            </button>
+          </div>
+
+          <div class="mb-10">
+            <a href="#" class="inline-flex items-center gap-1.5 text-[11px] text-[color:var(--accent)] hover:underline transition-colors group pb-0.5">
+              Explore Documentation
+              <iconify-icon icon="solar:arrow-right-linear" class="text-xs text-[color:var(--accent)] transition-colors"></iconify-icon>
+            </a>
+          </div>
+
+          <div class="flex flex-col items-center gap-8 mt-6 relative z-10">
+            <div class="w-full max-w-[340px] flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] select-none">
+              <div class="flex flex-col items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-[color:var(--accent)] shadow-[0_0_8px_rgba(37,99,235,0.4)]"></div>
+                <span class="text-[color:var(--text)] font-semibold">
+                  Email Received
+                </span>
+              </div>
+              <div class="h-px flex-1 bg-[color:var(--border)] mx-3 mb-4"></div>
+              <div class="flex flex-col items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-[color:var(--border)]"></div>
+                <span class="opacity-70">Key Issued</span>
+              </div>
+              <div class="h-px flex-1 bg-[color:var(--border)] mx-3 mb-4"></div>
+              <div class="flex flex-col items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-[color:var(--border)]"></div>
+                <span class="opacity-70">Webhook Active</span>
+              </div>
+            </div>
+            <div class="text-center space-y-1.5">
+              <p class="text-[10px] text-[color:var(--text-muted)] font-medium">
+                Start shipping production-grade endpoints today.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[color:var(--bg-card)] border-t border-[color:var(--border)] pt-8 pb-6">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-10 w-full">
+          <div class="flex flex-col items-center md:items-start gap-4">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] opacity-70">
+              Connect
+            </span>
+            <div class="flex flex-col gap-2.5 text-center md:text-left">
+              <a href="#" class="group flex items-center gap-2.5 text-xs text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors justify-center md:justify-start">
+                <iconify-icon icon="ri:twitter-x-line" class="text-sm text-[color:var(--text-subtle)] group-hover:text-[color:var(--accent)] transition-colors"></iconify-icon>
+                <span>Twitter / X</span>
+              </a>
+              <a href="#" class="group flex items-center gap-2.5 text-xs text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors justify-center md:justify-start">
+                <iconify-icon icon="ri:github-line" class="text-sm text-[color:var(--text-subtle)] group-hover:text-[color:var(--accent)] transition-colors"></iconify-icon>
+                <span>GitHub</span>
+              </a>
+              <a href="#" class="group flex items-center gap-2.5 text-xs text-[color:var(--text-muted)] hover:text-[color:var(--text)] transition-colors justify-center md:justify-start">
+                <iconify-icon icon="ri:linkedin-line" class="text-sm text-[color:var(--text-subtle)] group-hover:text-[color:var(--accent)] transition-colors"></iconify-icon>
+                <span>LinkedIn</span>
+              </a>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-2.5 mt-2 md:mt-0">
+            <div class="flex items-center gap-2">
+              <span class="relative flex h-1.5 w-1.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[color:var(--accent)] opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[color:var(--accent)]"></span>
+              </span>
+              <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text)]">
+                Infrastructure Active
+              </span>
+            </div>
+            <div class="flex gap-3 text-[9px] font-mono text-[color:var(--text-subtle)] uppercase tracking-widest opacity-80">
+              <span>API::v2.4</span>
+              <span class="text-[color:var(--border)]">|</span>
+              <span>All Systems Operational</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center md:items-end gap-4">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-subtle)] opacity-70">
+              Platform
+            </span>
+            <div class="flex flex-col gap-2.5 text-center md:text-right">
+              <a href="#" class="text-xs text-[color:var(--text-muted)] hover:text-[color:var(--accent)] transition-colors">
+                Infrastructure
+              </a>
+              <a href="#" class="text-xs text-[color:var(--text-muted)] hover:text-[color:var(--accent)] transition-colors">
+                Solutions
+              </a>
+              <a href="#" class="text-xs text-[color:var(--text-muted)] hover:text-[color:var(--accent)] transition-colors">
+                API Docs
+              </a>
+              <a href="#" class="text-xs text-[color:var(--text-muted)] hover:text-[color:var(--accent)] transition-colors">
+                Pricing
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-[color:var(--border)] flex flex-col sm:flex-row justify-between items-center gap-4">
+          <span class="text-[10px] font-mono text-[color:var(--text-subtle)] uppercase tracking-widest">
+            © 2026 Buildr Infrastructure
+          </span>
+          <div class="flex gap-6">
+            <a href="#" class="text-[10px] font-mono text-[color:var(--text-subtle)] hover:text-[color:var(--text)] uppercase tracking-widest transition-colors">
+              Privacy
+            </a>
+            <a href="#" class="text-[10px] font-mono text-[color:var(--text-subtle)] hover:text-[color:var(--text)] uppercase tracking-widest transition-colors">
+              Terms
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (prefersReducedMotion) {
+          gsap.set(".hero-eyebrow, .hero-title, .hero-subtitle, .hero-context, .hero-actions, .hero-panel, .section-content, .spotlight, .animate-on-scroll", { opacity: 1, y: 0, visibility: "visible" });
+          return;
+        }
+
+        const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        heroTl
+          .from(".hero-eyebrow", { y: 20, opacity: 0, duration: 0.8, delay: 0.2 })
+          .from(".hero-title", { y: 30, opacity: 0, duration: 1, skewY: 1 }, "-=0.6")
+          .from(".hero-subtitle", { y: 20, opacity: 0, duration: 0.8 }, "-=0.7")
+          .from(".hero-context", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
+          .from(".hero-actions", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
+          .from(".hero-panel", { y: 40, opacity: 0, duration: 1.2, filter: "blur(10px)" }, "-=0.6");
+
+        const sections = gsap.utils.toArray(".section");
+
+        sections.forEach((section) => {
+          if (section.querySelector('.hero-title')) return;
+
+          const spotlight = section.querySelector(".spotlight");
+          const content = section.querySelector(".section-content");
+          const children = section.querySelectorAll(".animate-on-scroll");
+
+          const stTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
+            }
+          });
+
+          if (spotlight) {
+            stTl.from(spotlight, { opacity: 0, duration: 1.2 });
+          }
+
+          if (content) {
+            stTl.from(content, { y: 30, opacity: 0, duration: 0.8 }, "<+=0.1");
+          }
+
+          if (children.length > 0) {
+            stTl.from(children, {
+              y: 20,
+              opacity: 0,
+              duration: 0.6,
+              stagger: 0.08,
+              clearProps: "all"
+            }, "-=0.5");
+          }
+        });
+
+        ScrollTrigger.refresh();
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('mobile-menu-button');
+      });
+    </script>
+
+    <script>
+      function switchPipeline(index) {
+        const btns = document.querySelectorAll('.pipeline-btn');
+        const line = document.getElementById('active-line');
+
+        btns.forEach((btn, i) => {
+          const tag = btn.querySelector('.tag-label');
+          const title = btn.querySelector('h3');
+          const desc = btn.querySelector('p');
+
+          if (i === index) {
+            btn.classList.add('active');
+            if(tag) {
+               tag.classList.remove('text-[color:var(--text-subtle)]', 'border-[color:var(--border)]', 'bg-[color:var(--bg-card)]');
+               tag.classList.add('text-[color:var(--accent)]', 'bg-[color:var(--accent-soft)]', 'border-[color:var(--border)]');
+            }
+            if(title) {
+              title.classList.remove('text-[color:var(--text-subtle)]');
+              title.classList.add('text-[color:var(--text)]');
+            }
+             if(desc) {
+              desc.classList.remove('text-[color:var(--text-subtle)]');
+              desc.classList.add('text-[color:var(--text-muted)]');
+            }
+          } else {
+            btn.classList.remove('active');
+            if(tag) {
+               tag.classList.remove('text-[color:var(--accent)]', 'bg-[color:var(--accent-soft)]');
+               tag.classList.add('text-[color:var(--text-subtle)]', 'bg-[color:var(--bg-card)]', 'border-[color:var(--border)]');
+            }
+            if(title) {
+              title.classList.remove('text-[color:var(--text)]');
+              title.classList.add('text-[color:var(--text-subtle)]');
+            }
+             if(desc) {
+              desc.classList.remove('text-[color:var(--text-muted)]');
+              desc.classList.add('text-[color:var(--text-subtle)]');
+            }
+          }
+        });
+
+        if (line) line.style.top = (index * 33.33) + '%';
+
+        const visuals = document.querySelectorAll('.pipeline-visual');
+        const tagLabel = document.getElementById('pipeline-header-tag');
+
+        const tags = ['INGEST::ACTIVE', 'GOVERN::ACTIVE', 'DEPLOY::ACTIVE'];
+        if(tagLabel) tagLabel.textContent = tags[index];
+
+        const anims = [
+          { active: ['opacity-100', 'translate-x-0', 'z-10'], inactive: ['opacity-0', '-translate-x-4', 'pointer-events-none', 'z-0'] },
+          { active: ['opacity-100', 'scale-100', 'z-10'], inactive: ['opacity-0', 'scale-95', 'pointer-events-none', 'z-0'] },
+          { active: ['opacity-100', 'translate-y-0', 'z-10'], inactive: ['opacity-0', 'translate-y-8', 'pointer-events-none', 'z-0'] }
+        ];
+
+        visuals.forEach((vis, i) => {
+          const conf = anims[i];
+          if (i === index) {
+            vis.classList.remove(...conf.inactive);
+            vis.classList.add(...conf.active);
+          } else {
+            vis.classList.remove(...conf.active);
+            vis.classList.add(...conf.inactive);
+          }
+        });
+      }
+    </script>
+
+    <script>
+      window.toggleHeroPanel = function(state) {
+        const inputPanel = document.getElementById('panel-input');
+        const outputPanel = document.getElementById('panel-output');
+        const outputCard = document.getElementById('output-card');
+        const btnInput = document.getElementById('btn-input');
+        const btnOutput = document.getElementById('btn-output');
+
+        if (state === 'input') {
+          inputPanel.classList.remove('opacity-0', 'translate-y-4', 'z-0');
+          inputPanel.classList.add('opacity-100', 'translate-y-0', 'z-10');
+
+          outputPanel.classList.remove('opacity-100', 'translate-y-0', 'z-10');
+          outputPanel.classList.add('opacity-0', 'translate-y-4', 'z-0');
+
+          outputCard.classList.remove('scale-100');
+          outputCard.classList.add('scale-95');
+
+          btnInput.classList.remove('text-[color:var(--text-subtle)]', 'border-transparent');
+          btnInput.classList.add('bg-[color:var(--bg-card)]', 'text-[color:var(--text)]', 'border-[color:var(--border)]');
+
+          btnOutput.classList.remove('bg-[color:var(--bg-card)]', 'text-[color:var(--text)]', 'border-[color:var(--border)]');
+          btnOutput.classList.add('text-[color:var(--text-subtle)]', 'border-transparent', 'hover:text-[color:var(--text)]');
+        } else {
+          inputPanel.classList.remove('opacity-100', 'translate-y-0', 'z-10');
+          inputPanel.classList.add('opacity-0', 'translate-y-4', 'z-0');
+
+          outputPanel.classList.remove('opacity-0', 'translate-y-4', 'z-0');
+          outputPanel.classList.add('opacity-100', 'translate-y-0', 'z-10');
+
+          setTimeout(() => {
+            outputCard.classList.remove('scale-95');
+            outputCard.classList.add('scale-100');
+          }, 50);
+
+          btnOutput.classList.remove('text-[color:var(--text-subtle)]', 'border-transparent');
+          btnOutput.classList.add('bg-[color:var(--bg-card)]', 'text-[color:var(--text)]', 'border-[color:var(--border)]');
+
+          btnInput.classList.remove('bg-[color:var(--bg-card)]', 'text-[color:var(--text)]', 'border-[color:var(--border)]');
+          btnInput.classList.add('text-[color:var(--text-subtle)]', 'border-transparent', 'hover:text-[color:var(--text)]');
+        }
+      };
+    </script>
+  
+</body></html>

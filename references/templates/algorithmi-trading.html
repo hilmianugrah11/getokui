@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head>
+<script>
+try{if(window.parent&&window.parent!==window){window.parent.promotekit_referral="1fd2949a-d22c-431b-92bf-02d4ad04ee24";window.parent.document.cookie="promotekit_referral=1fd2949a-d22c-431b-92bf-02d4ad04ee24;path=/;domain=.aura.build;max-age=31536000"}}catch(e){}
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUANTCORE — Algorithmic Intelligence</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Manrope', sans-serif;
+background-color: #02040a;
+color: #e2e8f0;
+overflow-x: hidden;
+}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #02040a; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+/* Typography selections */
+::selection { background: rgba(56, 189, 248, 0.2); color: #fff; }
+/* Floating Animations */
+@keyframes float {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+50% { transform: translateY(-20px) rotate(1deg); }
+}
+@keyframes float-reverse {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+50% { transform: translateY(20px) rotate(-1deg); }
+}
+.anim-float { animation: float 8s ease-in-out infinite; }
+.anim-float-rev { animation: float-reverse 10s ease-in-out infinite; }
+/* Marquee Animation */
+@keyframes marquee {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+.anim-marquee { animation: marquee 35s linear infinite; }
+/* Scroll Reveal */
+.reveal-item {
+opacity: 0;
+transform: translateY(40px);
+transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-item.is-revealed {
+opacity: 1;
+transform: translateY(0);
+}
+/* Spotlight */
+.spotlight-wrapper { position: relative; }
+.spotlight-wrapper::before {
+content: "";
+position: absolute;
+inset: -1px;
+background: radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(56, 189, 248, 0.15), transparent 40%);
+opacity: 0;
+transition: opacity 0.3s ease;
+z-index: 1;
+pointer-events: none;
+border-radius: inherit;
+}
+.spotlight-wrapper:hover::before { opacity: 1; }
+/* Accordion Hover */
+.pricing-row {
+transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+grid-template-rows: 0fr;
+}
+.pricing-container:hover .pricing-row {
+grid-template-rows: 1fr;
+}
+.pricing-content { overflow: hidden; }
+/* Pulsing Rings */
+@keyframes ping-slow {
+0% { transform: scale(1); opacity: 0.6; }
+100% { transform: scale(2.2); opacity: 0; }
+}
+/* Utilities */
+.text-gradient {
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+/* Header Scrolled State */
+.header-scrolled {
+height: 4rem !important; /* h-16 */
+background-color: rgba(2, 4, 10, 0.8) !important;
+backdrop-filter: blur(24px) !important;
+border-bottom-color: rgba(56, 189, 248, 0.3) !important;
+box-shadow: 0 1px 20px rgba(56, 189, 248, 0.15) !important;
+}
+</style>
+<style id="hero-brand-styles">
+@keyframes brand-glow {
+0%, 100% { text-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+50% { text-shadow: 0 0 40px rgba(56, 189, 248, 0.4); }
+}
+.brand-text-glow:hover {
+animation: brand-glow 2s ease-in-out infinite;
+}
+@keyframes energy-wave {
+0% { transform: translateY(100%) scaleY(1); opacity: 0; }
+50% { opacity: 0.3; }
+100% { transform: translateY(-100%) scaleY(1.5); opacity: 0; }
+}
+@keyframes particle-rise {
+0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+10% { opacity: 0.8; }
+90% { opacity: 0.8; }
+100% { transform: translateY(-20vh) translateX(20px); opacity: 0; }
+}
+@keyframes scan-light {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(200%); }
+}
+@keyframes pulse-bar { 0%, 100% { height: 20%; } 50% { height: 80%; } }
+@keyframes pulse-bar-2 { 0%, 100% { height: 50%; } 50% { height: 90%; } }
+@keyframes pulse-bar-3 { 0%, 100% { height: 30%; } 50% { height: 70%; } }
+@keyframes typing { from { width: 0 } to { width: 100% } }
+@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: rgba(56, 189, 248, 1); } }
+.typewriter-text {
+overflow: hidden;
+border-right: .15em solid rgba(56, 189, 248, 1);
+white-space: nowrap;
+margin: 0;
+animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+.glass-panel-brand {
+background: rgba(56, 189, 248, 0.02);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+border: 1px solid rgba(56, 189, 248, 0.15);
+box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.03), 0 10px 30px rgba(0,0,0,0.6);
+}
+.hero-spotlight { position: relative; overflow: hidden; }
+.hero-spotlight::before {
+content: "";
+position: absolute;
+inset: -1px;
+background: radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(56, 189, 248, 0.1), transparent 40%);
+opacity: 0;
+transition: opacity 0.3s ease;
+z-index: 1;
+pointer-events: none;
+border-radius: inherit;
+}
+.hero-spotlight:hover::before { opacity: 1; }
+.btn-scan { position: relative; overflow: hidden; }
+.btn-scan::after {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 50%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+animation: scan-light 3s linear infinite;
+pointer-events: none;
+}
+.btn-ripple { position: relative; overflow: hidden; }
+.btn-ripple:hover::after {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 50%);
+transform: translate(-50%, -50%) scale(0);
+animation: ripple 1s ease-out forwards;
+pointer-events: none;
+}
+@keyframes ripple { to { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+@keyframes scroll-probe {
+0%, 100% { transform: translateY(-100%); opacity: 0; }
+50% { opacity: 1; }
+100% { transform: translateY(200%); opacity: 0; }
+}
+.parallax-container { perspective: 1000px; transform-style: preserve-3d; }
+.parallax-panel { transition: transform 0.2s ease-out; will-change: transform; }
+/* Architecture animated line */
+.arch-line { stroke: rgba(56,189,248,0.2); stroke-width: 1.5; stroke-dasharray: 4 6; }
+.arch-dot { fill: #38bdf8; filter: drop-shadow(0 0 6px rgba(56,189,248,0.8)); }
+@keyframes flow-horizontal { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+.testimonial-wall-stage {
+perspective: 1800px;
+perspective-origin: center 35%;
+}
+.testimonial-wall-3d {
+transform-style: preserve-3d;
+transform: rotateX(10deg) rotateY(-6deg) scale(0.98);
+transform-origin: center top;
+}
+.testimonial-wall-column {
+transform-style: preserve-3d;
+will-change: transform;
+}
+.testimonial-wall-column:nth-child(1) {
+transform: translateY(30px) rotateZ(-5deg) rotateY(8deg);
+}
+.testimonial-wall-column:nth-child(2) {
+transform: translateY(-10px) rotateZ(-2deg) rotateY(4deg);
+}
+.testimonial-wall-column:nth-child(3) {
+transform: translateY(10px) rotateZ(2deg) rotateY(-4deg);
+}
+.testimonial-wall-column:nth-child(4) {
+transform: translateY(35px) rotateZ(5deg) rotateY(-8deg);
+}
+.testimonial-wall-card {
+position: relative;
+overflow: hidden;
+border-radius: 28px;
+border: 1px solid rgba(255,255,255,0.08);
+background: rgba(255,255,255,0.02);
+box-shadow:
+0 30px 80px rgba(0,0,0,0.45),
+0 8px 24px rgba(0,0,0,0.28),
+inset 0 1px 0 rgba(255,255,255,0.04);
+transform: translateZ(0);
+transition:
+transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+border-color 0.4s ease;
+}
+.testimonial-wall-card:hover {
+transform: translateY(-8px) translateZ(22px) rotateZ(0deg) !important;
+box-shadow:
+0 40px 100px rgba(0,0,0,0.55),
+0 0 40px rgba(56,189,248,0.12),
+inset 0 1px 0 rgba(255,255,255,0.06);
+border-color: rgba(255,255,255,0.14);
+z-index: 20;
+}
+.testimonial-wall-track {
+display: flex;
+flex-direction: column;
+gap: 20px;
+will-change: transform;
+}
+.testimonial-wall-column:hover .testimonial-wall-track {
+animation-play-state: paused;
+}
+@media (max-width: 1023px) {
+.testimonial-wall-3d {
+transform: none;
+}
+.testimonial-wall-column:nth-child(1),
+.testimonial-wall-column:nth-child(2),
+.testimonial-wall-column:nth-child(3),
+.testimonial-wall-column:nth-child(4) {
+transform: none;
+}
+}
+</style>  <style>
+/* 3D Transform utilities */
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script><!-- aura-ga4-start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6V79H761"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2M6V79H761');
+</script>
+<!-- aura-ga4-end -->
+</head>
+<body class="antialiased selection:bg-[#38bdf8]/20 selection:text-white relative font-light text-slate-300">
+
+    <div class="fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_at_top,rgba(30,58,138,0.15),transparent_50%)] pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 transition-all duration-500 border-b border-transparent bg-[#02040a]/30 backdrop-blur-sm h-20 flex items-center" id="navbar">
+      <div class="max-w-7xl mx-auto px-6 w-full flex items-center justify-between relative z-10">
+        
+        <!-- Left: Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-6 h-6 rounded border border-[#38bdf8]/40 bg-[#38bdf8]/10 flex items-center justify-center shadow-[0_0_10px_rgba(56,189,248,0.2)]">
+            <div class="w-2 h-2 rounded-full bg-[#38bdf8] animate-pulse"></div>
+          </div>
+          <span class="text-sm font-normal tracking-widest text-white uppercase">
+            QUANTCORE
+          </span>
+        </div>
+
+        <!-- Center: Navigation -->
+        <nav class="hidden md:flex items-center gap-8 text-xs font-normal text-slate-400">
+          <a href="#" class="hover:text-[#38bdf8] hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300">Platform</a>
+          <a href="#" class="hover:text-[#38bdf8] hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300">Strategies</a>
+          <a href="#" class="hover:text-[#38bdf8] hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300">Markets</a>
+          <a href="#" class="hover:text-[#38bdf8] hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300">Research</a>
+          <a href="#" class="hover:text-[#38bdf8] hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300">Pricing</a>
+          <a href="#" class="hover:text-[#38bdf8] hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.6)] transition-all duration-300">Docs</a>
+        </nav>
+
+        <!-- Right: Actions -->
+        <div class="hidden md:flex items-center gap-4">
+          <a href="#" class="px-5 py-2 rounded border border-white/10 text-white text-xs font-normal hover:bg-white/5 transition-colors">
+            Portal
+          </a>
+          <a href="#" class="px-5 py-2 rounded bg-gradient-to-r from-[#4f46e5]/80 to-[#38bdf8]/80 text-white text-xs font-normal hover:from-[#4f46e5] hover:to-[#38bdf8] transition-all duration-300 shadow-[0_0_20px_rgba(56,189,248,0.3)] border border-[#38bdf8]/50 flex items-center gap-2">
+            <iconify-icon icon="solar:rocket-linear" class="text-sm"></iconify-icon>
+            Deploy
+          </a>
+        </div>
+
+      </div>
+    </header>
+
+    <main class="">
+      <!-- 1. Hero Section -->
+      <section class="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden" id="hero-section">
+        
+        <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.05)_0%,transparent_60%)] blur-[80px]"></div>
+
+          <!-- Vertical Data Streams -->
+          <div class="absolute inset-0 opacity-30">
+            <div class="absolute left-[20%] w-32 h-[150%] bg-gradient-to-t from-transparent via-[#4f46e5]/10 to-transparent blur-[40px] animate-[energy-wave_8s_ease-in-out_infinite]"></div>
+            <div class="absolute left-[50%] w-48 h-[150%] bg-gradient-to-t from-transparent via-[#38bdf8]/5 to-transparent blur-[50px] animate-[energy-wave_12s_ease-in-out_infinite_2s]"></div>
+            <div class="absolute right-[20%] w-24 h-[150%] bg-gradient-to-t from-transparent via-[#4f46e5]/10 to-transparent blur-[30px] animate-[energy-wave_10s_ease-in-out_infinite_4s]"></div>
+          </div>
+
+          <!-- Tick Particles -->
+          <div class="absolute inset-0">
+            <div class="absolute left-[25%] w-[1px] h-8 bg-gradient-to-t from-transparent to-[#38bdf8] rounded-full blur-[1px] animate-[particle-rise_5s_linear_infinite]"></div>
+            <div class="absolute left-[45%] w-[1px] h-12 bg-gradient-to-t from-transparent to-[#4f46e5] rounded-full blur-[2px] animate-[particle-rise_7s_linear_infinite_1s]"></div>
+            <div class="absolute left-[65%] w-[1px] h-6 bg-gradient-to-t from-transparent to-[#38bdf8] rounded-full blur-[1px] animate-[particle-rise_6s_linear_infinite_2s]"></div>
+            <div class="absolute left-[85%] w-[1px] h-10 bg-gradient-to-t from-transparent to-[#4f46e5] rounded-full blur-[1px] animate-[particle-rise_8s_linear_infinite_3s]"></div>
+          </div>
+
+          <!-- The Nexus Ring -->
+          <div class="absolute top-1/2 right-[5%] md:right-[15%] -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full border border-[#38bdf8]/10 shadow-[0_0_100px_rgba(56,189,248,0.08),inset_0_0_60px_rgba(79,70,229,0.05)] flex items-center justify-center">
+            <div class="absolute w-[70%] h-[70%] rounded-full border border-[#4f46e5]/20 shadow-[0_0_50px_rgba(79,70,229,0.1)] animate-[ping-slow_6s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+            <div class="absolute w-[50%] h-[50%] rounded-full border border-[#38bdf8]/20 shadow-[0_0_30px_rgba(56,189,248,0.15)] animate-[ping-slow_6s_cubic-bezier(0,0,0.2,1)_infinite_3s]"></div>
+
+            <div class="absolute w-[90%] h-[90%] rounded-full animate-[spin_20s_linear_infinite]">
+              <div class="absolute top-0 left-1/2 w-1 h-1 bg-[#38bdf8] rounded-full shadow-[0_0_10px_#38bdf8] -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+            <div class="absolute w-[110%] h-[110%] rounded-full border border-white/5 animate-[spin_30s_linear_infinite_reverse]">
+              <div class="absolute bottom-0 left-1/2 w-1 h-1 bg-[#4f46e5]/80 rounded-full shadow-[0_0_8px_#4f46e5] -translate-x-1/2 translate-y-1/2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 lg:gap-6 w-full max-w-7xl z-10 mr-auto ml-auto pr-6 pl-6 relative gap-x-12 gap-y-12 items-center">
+          
+          <div class="lg:col-span-6 flex flex-col justify-center relative z-20 pointer-events-none">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-[#38bdf8]/30 bg-[#38bdf8]/10 backdrop-blur-md text-[#38bdf8] text-xs font-normal uppercase tracking-widest mb-8 w-max shadow-[0_0_15px_rgba(56,189,248,0.1)] pointer-events-auto">
+              <div class="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse shadow-[0_0_5px_#38bdf8]"></div>
+              Core V.9 Active
+            </div>
+
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-white mb-6 leading-[1.05] brand-text-glow transition-all duration-500 pointer-events-auto">
+              Algorithmic
+              <br>
+              <span class="text-gradient bg-gradient-to-r from-white via-sky-200 to-[#38bdf8] drop-shadow-[0_0_20px_rgba(56,189,248,0.2)]">
+                Supremacy.
+              </span>
+            </h1>
+
+            <p class="text-base md:text-lg text-slate-400 mb-10 max-w-md font-light leading-relaxed pointer-events-auto">
+              The apex predictive market matrix. Synthesize real-time data, execute high-frequency strategies, and dictate alpha generation within a unified quantitative interface.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-start pointer-events-auto">
+              <button class="btn-scan px-8 py-3.5 rounded bg-[#e2e8f0] text-[#02040a] text-xs font-normal hover:scale-[1.02] transition-transform duration-300 shadow-[0_0_25px_rgba(255,255,255,0.15)] flex items-center gap-2 border border-white">
+                Initialize Sequence
+                <iconify-icon icon="solar:arrow-right-linear" class="text-sm"></iconify-icon>
+              </button>
+              <button class="btn-ripple px-8 py-3.5 rounded border border-[#38bdf8]/30 bg-[#38bdf8]/5 backdrop-blur-md text-white text-xs font-normal hover:bg-[#38bdf8]/10 hover:border-[#38bdf8]/50 transition-all duration-300 flex items-center gap-2">
+                <iconify-icon icon="solar:graph-up-linear" class="text-sm text-[#38bdf8]"></iconify-icon>
+                View Backtests
+              </button>
+            </div>
+          </div>
+
+          <!-- Parallax Panels -->
+          <div class="lg:col-span-6 md:h-[600px] hidden sm:block parallax-container z-10 w-full h-[500px] relative" id="hero-parallax">
+
+  <style>
+    @keyframes confidenceRingSpin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes confidenceGlowPulse {
+
+      0%,
+      100% {
+        box-shadow:
+          0 22px 45px rgba(0, 0, 0, 0.55),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04),
+          inset 0 0 30px rgba(255, 255, 255, 0.02);
+      }
+
+      50% {
+        box-shadow:
+          0 28px 60px rgba(0, 0, 0, 0.65),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          inset 0 0 40px rgba(255, 255, 255, 0.03);
+      }
+    }
+
+    @keyframes panelFloat {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes metricsBar1 {
+
+      0%,
+      100% {
+        height: 24px;
+      }
+
+      50% {
+        height: 56px;
+      }
+    }
+
+    @keyframes metricsBar2 {
+
+      0%,
+      100% {
+        height: 48px;
+      }
+
+      50% {
+        height: 72px;
+      }
+    }
+
+    @keyframes metricsBar3 {
+
+      0%,
+      100% {
+        height: 62px;
+      }
+
+      50% {
+        height: 40px;
+      }
+    }
+
+    @keyframes metricsBar4 {
+
+      0%,
+      100% {
+        height: 36px;
+      }
+
+      50% {
+        height: 64px;
+      }
+    }
+
+    @keyframes metricsBar5 {
+
+      0%,
+      100% {
+        height: 58px;
+      }
+
+      50% {
+        height: 78px;
+      }
+    }
+
+    @keyframes progressSweep {
+      0% {
+        transform: translateX(-120%);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: translateX(220%);
+        opacity: 0;
+      }
+    }
+
+    .confidence-ring-spin {
+      animation: confidenceRingSpin 20s linear infinite;
+      transform-origin: center;
+    }
+
+    .confidence-shell {
+      animation: confidenceGlowPulse 5s ease-in-out infinite;
+    }
+
+    .hero-unified-panel {
+      animation: panelFloat 7s ease-in-out infinite;
+    }
+
+    .metrics-bar-1 {
+      animation: metricsBar1 2.6s ease-in-out infinite;
+    }
+
+    .metrics-bar-2 {
+      animation: metricsBar2 3s ease-in-out infinite;
+    }
+
+    .metrics-bar-3 {
+      animation: metricsBar3 2.4s ease-in-out infinite;
+    }
+
+    .metrics-bar-4 {
+      animation: metricsBar4 2.8s ease-in-out infinite;
+    }
+
+    .metrics-bar-5 {
+      animation: metricsBar5 3.2s ease-in-out infinite;
+    }
+
+    .progress-sweep {
+      animation: progressSweep 2.8s linear infinite;
+    }
+  </style>
+
+  <!-- unified main product UI -->
+  <div class="parallax-panel hero-unified-panel absolute top-[8%] left-[12%] w-[430px] rounded-[28px] border border-[#38bdf8]/15 bg-[linear-gradient(180deg,rgba(5,12,24,0.94),rgba(3,8,18,0.92))] shadow-[0_40px_80px_rgba(0,0,0,0.72)] overflow-hidden z-20 backdrop-blur-xl" data-depth="0.22">
+
+    <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(56,189,248,0.04),transparent_30%),linear-gradient(140deg,rgba(255,255,255,0.03),transparent_35%,transparent_70%,rgba(255,255,255,0.02))]"></div>
+
+    <div class="absolute inset-0 opacity-[0.10] pointer-events-none bg-[radial-gradient(rgba(255,255,255,0.65)_0.6px,transparent_0.6px)] [background-size:14px_14px]"></div>
+
+    <div class="absolute inset-[1px] rounded-[27px] border border-white/[0.03] pointer-events-none"></div>
+
+    <div class="relative z-10 p-7">
+      <!-- top header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl border border-[#38bdf8]/20 bg-[#38bdf8]/10 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.10)]">
+            <iconify-icon icon="solar:cpu-bolt-linear" class="text-[#38bdf8] text-lg"></iconify-icon>
+          </div>
+          <div>
+            <p class="text-[11px] text-[#38bdf8] uppercase tracking-[0.32em] font-mono">QUANTCORE NODE</p>
+            <p class="text-[11px] text-slate-500 tracking-[0.24em] uppercase font-mono mt-1">LIVE SYSTEM FEED</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 opacity-80">
+          <div class="w-2 h-2 rounded-full bg-[#38bdf8]/55"></div>
+          <div class="w-2 h-2 rounded-full bg-[#38bdf8]/30"></div>
+          <div class="w-2 h-2 rounded-full bg-[#38bdf8]/15"></div>
+        </div>
+      </div>
+
+      <!-- vertical modules -->
+      <div class="flex flex-col gap-5">
+        <!-- metrics module -->
+        <div class="relative rounded-[22px] border border-[#38bdf8]/15 bg-[linear-gradient(180deg,rgba(8,18,34,0.9),rgba(4,10,22,0.82))] p-5 overflow-hidden min-h-[220px]">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(56,189,248,0.08),transparent_30%)] pointer-events-none"></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-5 opacity-85">
+              <div class="flex items-center gap-2">
+                <iconify-icon icon="solar:chart-square-linear" class="text-[#38bdf8] text-lg"></iconify-icon>
+                <span class="text-[11px] text-[#38bdf8] uppercase tracking-[0.28em] font-mono">
+                  SYS.METRICS
+                </span>
+              </div>
+              <div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full shadow-[0_0_6px_#38bdf8] animate-pulse"></div>
+            </div>
+
+            <div class="h-[92px] flex items-end gap-2 border-b border-[#38bdf8]/10 pb-2">
+              <div class="metrics-bar-1 w-full min-h-[18px] rounded-t-md bg-gradient-to-t from-[#4338ca]/35 to-[#38bdf8]/80 shadow-[0_0_10px_rgba(56,189,248,0.10)]">
+              </div>
+              <div class="metrics-bar-2 w-full min-h-[18px] rounded-t-md bg-gradient-to-t from-[#4338ca]/30 to-[#38bdf8]/70 shadow-[0_0_10px_rgba(56,189,248,0.10)]">
+              </div>
+              <div class="metrics-bar-3 w-full min-h-[18px] rounded-t-md bg-gradient-to-t from-[#4338ca]/45 to-[#38bdf8] shadow-[0_0_14px_rgba(56,189,248,0.22)]">
+              </div>
+              <div class="metrics-bar-4 w-full min-h-[18px] rounded-t-md bg-gradient-to-t from-[#4338ca]/30 to-[#38bdf8]/72 shadow-[0_0_10px_rgba(56,189,248,0.10)]">
+              </div>
+              <div class="metrics-bar-5 w-full min-h-[18px] rounded-t-md bg-gradient-to-t from-[#4338ca]/25 to-[#38bdf8]/60 shadow-[0_0_10px_rgba(56,189,248,0.10)]">
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-4 text-[10px] uppercase tracking-[0.24em] font-mono text-slate-500">
+              <span class="">Signal Flow</span>
+              <span class="text-[#38bdf8]/80">+18.2%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- execution module -->
+        <div class="relative rounded-[22px] border border-[#38bdf8]/15 bg-[linear-gradient(180deg,rgba(8,18,34,0.9),rgba(4,10,22,0.82))] p-5 overflow-hidden min-h-[220px]">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(56,189,248,0.07),transparent_28%)] pointer-events-none"></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-5 opacity-85">
+              <div class="flex items-center gap-2">
+                <iconify-icon icon="solar:code-square-linear" class="text-[#38bdf8] text-lg"></iconify-icon>
+                <span class="text-[11px] text-[#38bdf8] uppercase tracking-[0.28em] font-mono">
+                  EXECUTION STREAM
+                </span>
+              </div>
+              <div class="w-1.5 h-1.5 bg-[#38bdf8] rounded-full shadow-[0_0_6px_#38bdf8] animate-pulse"></div>
+            </div>
+
+            <p class="text-[10px] text-slate-500 uppercase tracking-[0.24em] font-mono mb-3">
+              Routing Strategy
+            </p>
+
+            <div class="text-[16px] text-white font-normal tracking-tight leading-snug h-[56px]">
+              <span class="typewriter-text inline-block">
+                Processing liquidity routing...
+              </span>
+            </div>
+
+            <div class="w-full h-[6px] mt-5 rounded-full bg-[#38bdf8]/10 overflow-hidden relative">
+              <div class="absolute inset-y-0 left-0 w-[76%] rounded-full bg-gradient-to-r from-[#4338ca]/55 via-[#38bdf8] to-[#dff7ff]/90 shadow-[0_0_16px_rgba(56,189,248,0.22)]">
+              </div>
+              <div class="progress-sweep absolute top-0 bottom-0 w-10 bg-gradient-to-r from-transparent via-white/90 to-transparent blur-[1px]">
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-4 text-[10px] uppercase tracking-[0.24em] font-mono text-slate-500">
+              <span>Latency 1.2ms</span>
+              <span class="text-[#38bdf8]/80">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- bottom system strip -->
+      
+    </div>
+  </div>
+
+  <!-- confidence circle -->
+  <div class="parallax-panel z-40 flex anim-float absolute left-[63%] top-[69%] w-[210px] h-[210px] aspect-square rounded-full items-center justify-center overflow-visible" data-depth="0.25">
+
+    <svg class="absolute inset-0 w-full h-full confidence-ring-spin pointer-events-none" viewBox="0 0 240 240" fill="none">
+      <defs>
+        <path id="confidenceTextCircle" d="M 120,120 m -104,0 a 104,104 0 1,1 208,0 a 104,104 0 1,1 -208,0"></path>
+      </defs>
+
+      <text fill="rgba(255,255,255,0.16)" font-size="8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" letter-spacing="1.8">
+        <textPath href="#confidenceTextCircle" startOffset="0%">
+          PERFORMANCE • PERFORMANCE • PERFORMANCE • PERFORMANCE •
+        </textPath>
+      </text>
+    </svg>
+
+    <svg class="absolute inset-[16px] w-[178px] h-[178px] pointer-events-none" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="88" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="1 4" stroke-linecap="round"></circle>
+    </svg>
+
+    <div class="confidence-shell relative z-10 w-[158px] h-[158px] rounded-full overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_30%_28%,rgba(255,255,255,0.07),transparent_28%),radial-gradient(circle_at_68%_25%,rgba(255,255,255,0.05),transparent_26%),radial-gradient(circle_at_50%_120%,rgba(56,189,248,0.08),transparent_58%),linear-gradient(180deg,rgba(16,22,38,0.96),rgba(5,8,17,0.98))] backdrop-blur-xl">
+      <div class="absolute inset-0 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_22%,transparent_40%,transparent_65%,rgba(255,255,255,0.03)_100%)]">
+      </div>
+      <div class="absolute top-[12%] left-1/2 -translate-x-1/2 w-[62%] h-[24%] rounded-full bg-white/5 blur-xl"></div>
+      <div class="absolute inset-[8px] rounded-full border border-white/[0.06]"></div>
+      <div class="absolute inset-[18px] rounded-full border border-white/[0.04]"></div>
+
+      <div class="relative z-10 w-full h-full flex flex-col items-center justify-center text-center px-4">
+        <div class="flex items-center justify-center mb-3 opacity-90">
+          <iconify-icon icon="solar:shield-check-linear" class="text-[#38bdf8] text-[22px]"></iconify-icon>
+        </div>
+
+        <div class="flex items-start justify-center leading-none mb-2">
+          <span class="counter-up text-[72px] font-medium text-white tracking-[-0.05em]" data-target="98">0</span>
+        </div>
+
+        <div class="text-[10px] text-slate-300/80 uppercase tracking-[0.38em] font-mono">
+          CONFIDENCE
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
+          <span class="text-xs text-[#38bdf8] uppercase tracking-widest font-mono">
+            Descend
+          </span>
+          <div class="w-px h-10 bg-gradient-to-b from-[#38bdf8]/30 to-transparent relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-4 bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] animate-[scroll-probe_1.5s_ease-in-out_infinite]"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Trusted Infrastructure (Section 1) -->
+      <section class="py-12 border-y border-white/5 bg-[#020308] overflow-hidden relative">
+        <div class="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#020308] to-transparent z-10"></div>
+        <div class="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#020308] to-transparent z-10"></div>
+        
+        <div class="text-center mb-8">
+            <span class="text-xs font-normal text-slate-500 uppercase tracking-widest">
+              Trusted by quantitative teams worldwide
+            </span>
+        </div>
+
+        <div class="flex items-center gap-16 whitespace-nowrap anim-marquee opacity-60 hover:opacity-100 transition-opacity duration-500">
+          <div class="flex items-center gap-16">
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:infinity-line-duotone" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Apex Capital</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:chart-line-duotone" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Quantum Edge</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:graph-new-linear" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Nexus Funds</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:network-bold-duotone" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Stratos Trading</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:diagram-down-linear" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Vanguard Quant</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:square-academic-linear" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Ohm Securities</span></div>
+          </div>
+          <div class="flex items-center gap-16 ml-16">
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:infinity-line-duotone" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Apex Capital</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:chart-line-duotone" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Quantum Edge</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:graph-new-linear" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Nexus Funds</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:network-bold-duotone" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Stratos Trading</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:diagram-down-linear" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Vanguard Quant</span></div>
+            <div class="flex items-center gap-2"><iconify-icon icon="solar:square-academic-linear" class="text-2xl text-slate-400"></iconify-icon><span class="text-lg font-light text-slate-400 tracking-tight">Ohm Securities</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Core Platform Capabilities (Section 2) -->
+      <section class="overflow-hidden bg-[#050505] pt-24 pb-32 relative">
+  <!-- Clean Background -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 64px 64px;"></div>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 relative z-10">
+    <!-- Header -->
+    <div class="mb-32 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-xs uppercase tracking-widest text-slate-400 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-white/50"></span>
+        Interface Architecture
+      </div>
+
+      <h2 class="text-4xl md:text-5xl font-light tracking-tight text-white mb-5">
+        Minimalist Design System
+      </h2>
+
+      <p class="text-slate-400 text-base md:text-lg font-extralight leading-relaxed max-w-2xl mx-auto">
+        A unified, monochrome component library focused on clarity, data density, and precise geometric layouts.
+      </p>
+    </div>
+
+    <!-- 3D Cascade Container -->
+    <div class="w-full flex justify-center items-center py-10 lg:py-20 [perspective:2000px] overflow-visible pointer-events-none">
+      
+      <!-- Rotated Wrapper matching the image stack -->
+      <div class="flex flex-row items-center justify-center -space-x-[180px] md:-space-x-[220px] [transform-style:preserve-3d] [transform:rotateX(25deg)_rotateY(-40deg)_rotateZ(15deg)] pointer-events-auto">
+        
+        <!-- Card 1: Metrics -->
+        <div class="group relative w-[280px] md:w-[340px] h-[380px] md:h-[440px] shrink-0 rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[-30px_20px_40px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:-translate-y-6 hover:border-white/20 p-6 flex flex-col z-10">
+          <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+            <span class="text-sm font-medium text-slate-200">Overview</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+          </div>
+          <div class="space-y-4 flex-grow flex flex-col justify-between">
+            <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+              <div class="text-xs text-slate-500 mb-1 uppercase tracking-widest">Total Volume</div>
+              <div class="text-4xl font-light tracking-tight text-white">$2.4M</div>
+            </div>
+            <div class="flex gap-2 h-32 items-end pt-4 w-full">
+              <div class="flex-1 bg-white/10 rounded-t-sm h-[30%] transition-all group-hover:bg-white/20"></div>
+              <div class="flex-1 bg-white/10 rounded-t-sm h-[50%] transition-all group-hover:bg-white/20"></div>
+              <div class="flex-1 bg-white/20 rounded-t-sm h-[80%] transition-all group-hover:bg-white/30"></div>
+              <div class="flex-1 bg-white/10 rounded-t-sm h-[40%] transition-all group-hover:bg-white/20"></div>
+              <div class="flex-1 bg-white/30 rounded-t-sm h-[100%] transition-all group-hover:bg-white/40"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Settings -->
+        <div class="group relative w-[280px] md:w-[340px] h-[380px] md:h-[440px] shrink-0 rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[-30px_20px_40px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:-translate-y-6 hover:border-white/20 p-6 flex flex-col z-20">
+          <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+            <span class="text-sm font-medium text-slate-200">Preferences</span>
+            <svg xmlns="http" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><line x1="21" x2="14" y1="4" y2="4"></line><line x1="10" x2="3" y1="4" y2="4"></line><line x1="21" x2="12" y1="12" y2="12"></line><line x1="8" x2="3" y1="12" y2="12"></line><line x1="21" x2="16" y1="20" y2="20"></line><line x1="12" x2="3" y1="20" y2="20"></line><line x1="14" x2="14" y1="2" y2="6"></line><line x1="8" x2="8" y1="10" y2="14"></line><line x1="16" x2="16" y1="18" y2="22"></line></svg>
+          </div>
+          <div class="space-y-8">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-slate-200">Strict Mode</div>
+                <div class="text-xs text-slate-500">Enforce type safety</div>
+              </div>
+              <div class="w-10 h-5 rounded-full bg-white/20 relative">
+                <div class="absolute right-1 top-1 w-3 h-3 rounded-full bg-white shadow-sm transition-all group-hover:scale-110"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-slate-200">Telemetry</div>
+                <div class="text-xs text-slate-500">Anonymous usage</div>
+              </div>
+              <div class="w-10 h-5 rounded-full bg-white/5 relative border border-white/10">
+                <div class="absolute left-1 top-1 w-3 h-3 rounded-full bg-slate-500 transition-all"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-slate-200">Auto Deploy</div>
+                <div class="text-xs text-slate-500">On main branch push</div>
+              </div>
+              <div class="w-10 h-5 rounded-full bg-white/20 relative">
+                <div class="absolute right-1 top-1 w-3 h-3 rounded-full bg-white shadow-sm transition-all group-hover:scale-110"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Users -->
+        <div class="group relative w-[280px] md:w-[340px] h-[380px] md:h-[440px] shrink-0 rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[-30px_20px_40px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:-translate-y-6 hover:border-white/20 p-6 flex flex-col z-30">
+          <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+            <span class="text-sm font-medium text-slate-200">Access Control</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <div class="space-y-6">
+            <div class="flex items-center gap-4 p-2 rounded-lg hover:bg-white/[0.02] transition-colors -mx-2">
+              <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium text-slate-300">JD</div>
+              <div>
+                <div class="text-sm text-slate-200">John Doe</div>
+                <div class="text-xs text-slate-500">Admin</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 p-2 rounded-lg hover:bg-white/[0.02] transition-colors -mx-2">
+              <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium text-slate-300">AS</div>
+              <div>
+                <div class="text-sm text-slate-200">Alice Smith</div>
+                <div class="text-xs text-slate-500">Editor</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 p-2 rounded-lg hover:bg-white/[0.02] transition-colors -mx-2">
+              <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs text-slate-500 border-dashed">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+              </div>
+              <div>
+                <div class="text-sm text-slate-400">Invite Member</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Terminal -->
+        <div class="group relative w-[280px] md:w-[340px] h-[380px] md:h-[440px] shrink-0 rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[-30px_20px_40px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:-translate-y-6 hover:border-white/20 p-6 flex flex-col z-40">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+            <span class="text-sm font-medium text-slate-200">Console</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+          </div>
+          <div class="flex-grow bg-[#050505] rounded-xl p-4 border border-white/5 font-mono text-xs text-slate-400 space-y-3 shadow-inner">
+            <div class="flex gap-2"><span class="text-slate-600">~</span> <span class="text-white">git push origin main</span></div>
+            <div class="text-slate-500">Counting objects: 14, done.</div>
+            <div class="text-slate-500">Compressing objects: 100% (12/12)</div>
+            <div class="text-slate-500">Writing objects: 100% (14/14)</div>
+            <div class="text-slate-500">remote: Resolving deltas: 100%</div>
+            <div class="text-white mt-4 border-l-2 border-white/20 pl-2">✔ Build successful (2.4s)</div>
+            <div class="flex gap-2 items-center mt-2"><span class="text-slate-600">~</span> <span class="w-1.5 h-3 bg-white/50 animate-pulse"></span></div>
+          </div>
+        </div>
+
+        <!-- Card 5: Logs -->
+        <div class="group relative w-[280px] md:w-[340px] h-[380px] md:h-[440px] shrink-0 rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[-30px_20px_40px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:-translate-y-6 hover:border-white/20 p-6 flex flex-col z-50">
+          <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+            <span class="text-sm font-medium text-slate-200">System Logs</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>
+          </div>
+          <div class="space-y-4">
+            <div class="grid grid-cols-3 gap-2 text-[10px] uppercase tracking-widest text-slate-600 pb-2 border-b border-white/5">
+              <span>Event ID</span><span>Status</span><span class="text-right">Time</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs items-center p-2 rounded hover:bg-white/[0.02]">
+              <span class="text-slate-300 font-mono">#A902</span>
+              <span class="px-2 py-0.5 rounded-sm bg-white/10 text-white w-max text-[10px]">200 OK</span>
+              <span class="text-right text-slate-500 font-mono">12:42</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs items-center p-2 rounded hover:bg-white/[0.02]">
+              <span class="text-slate-300 font-mono">#A901</span>
+              <span class="px-2 py-0.5 rounded-sm bg-white/10 text-white w-max text-[10px]">200 OK</span>
+              <span class="text-right text-slate-500 font-mono">12:41</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs items-center p-2 rounded hover:bg-white/[0.02]">
+              <span class="text-slate-300 font-mono">#A900</span>
+              <span class="px-2 py-0.5 rounded-sm border border-white/20 text-slate-300 w-max text-[10px]">404 ERR</span>
+              <span class="text-right text-slate-500 font-mono">12:38</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs items-center p-2 rounded hover:bg-white/[0.02]">
+              <span class="text-slate-300 font-mono">#A899</span>
+              <span class="px-2 py-0.5 rounded-sm bg-white/10 text-white w-max text-[10px]">200 OK</span>
+              <span class="text-right text-slate-500 font-mono">12:30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Profile -->
+        <div class="group relative w-[280px] md:w-[340px] h-[380px] md:h-[440px] shrink-0 rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[-30px_20px_40px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:-translate-y-6 hover:border-white/20 p-6 flex flex-col z-60">
+          <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+            <span class="text-sm font-medium text-slate-200">Account</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+          <div class="space-y-6 flex-grow">
+            <div>
+              <label class="text-[10px] uppercase tracking-widest text-slate-500 block mb-2">Email Address</label>
+              <div class="w-full px-3 py-2.5 rounded-lg bg-[#050505] border border-white/5 text-sm text-slate-300 shadow-inner">
+                admin@system.io
+              </div>
+            </div>
+            <div>
+              <label class="text-[10px] uppercase tracking-widest text-slate-500 block mb-2">Environment</label>
+              <div class="w-full px-3 py-2.5 rounded-lg bg-[#050505] border border-white/5 text-sm text-slate-300 flex justify-between items-center shadow-inner cursor-pointer hover:border-white/10 transition-colors">
+                <span>Production</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+          </div>
+          <div class="pt-4 border-t border-white/5">
+            <button class="w-full py-3 rounded-lg bg-white text-black text-xs font-medium hover:bg-slate-200 transition-colors">
+              Save Configuration
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+      <!-- Strategy Workflow (Section 3) -->
+      <section class="overflow-hidden bg-[#020812] border-white/5 border-t pt-28 pb-44 relative">
+  <!-- Background base -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.06),transparent_42%)]"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_115%,rgba(56,189,248,0.30),transparent_30%)]"></div>
+  <div class="bg-center bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c66be9d4-d504-42e3-b028-2573e4293134_3840w.jpg)] bg-cover absolute top-0 right-0 bottom-0 left-0" style="mask-image: linear-gradient(90deg, transparent, black 55%, black 55%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 55%, black 55%, transparent);">
+  </div>
+
+  <!-- Top ambient glow -->
+  <div class="-translate-x-1/2 blur-[160px] bg-cyan-400/8 w-[900px] h-[420px] rounded-full absolute top-0 left-1/2">
+  </div>
+
+  <!-- Horizon glow -->
+  <div class="absolute left-1/2 bottom-[14%] h-[180px] w-[760px] -translate-x-1/2 rounded-full bg-cyan-300/25 blur-[100px]">
+  </div>
+  <div class="absolute left-1/2 bottom-[15%] h-[90px] w-[980px] -translate-x-1/2 rounded-full bg-cyan-300/12 blur-[40px]">
+  </div>
+
+  <!-- Floor / stage light -->
+  <div class="absolute left-1/2 bottom-[9%] h-[10px] w-[88%] -translate-x-1/2 rounded-full bg-cyan-300/80 blur-[8px] opacity-80">
+  </div>
+  <div class="absolute left-1/2 bottom-[8.5%] h-[2px] w-[92%] -translate-x-1/2 bg-gradient-to-r from-transparent via-cyan-200/80 to-transparent">
+  </div>
+
+  <!-- Perspective floor lines -->
+  <div class="absolute inset-x-0 bottom-0 h-[42%] overflow-hidden opacity-35">
+    <div class="absolute left-1/2 bottom-[-10%] h-[140%] w-[140%] -translate-x-1/2" style="background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(56,189,248,0.14) 0px,
+          rgba(56,189,248,0.14) 2px,
+          transparent 2px,
+          transparent 26px
+        );
+        clip-path: polygon(0 100%, 100% 100%, 65% 20%, 35% 20%);
+        filter: blur(0.4px);">
+    </div>
+  </div>
+
+  <!-- Side light beams -->
+  <div class="absolute left-0 bottom-[11%] h-[120px] w-[28%] bg-gradient-to-r from-cyan-300/35 to-transparent blur-[18px] opacity-60">
+  </div>
+  <div class="absolute right-0 bottom-[11%] h-[120px] w-[28%] bg-gradient-to-l from-cyan-300/35 to-transparent blur-[18px] opacity-60">
+  </div>
+
+  <!-- Optional subtle side pattern -->
+  <div class="absolute inset-0 pointer-events-none opacity-[0.06]" style="background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 80px 80px;">
+  </div>
+
+  <div class="z-10 max-w-[1280px] mr-auto ml-auto pr-6 pl-6 relative">
+    <!-- Header -->
+    <div class="text-center mb-20">
+      <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/15 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-cyan-200/80 backdrop-blur-xl">
+        <span class="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.9)]"></span>
+        Strategy Workflow
+      </div>
+
+      <h2 class="md:text-5xl text-3xl font-normal text-white tracking-tight mb-4">
+        Strategy Workflow.
+      </h2>
+
+      <p class="mx-auto max-w-2xl text-sm font-light leading-relaxed text-slate-400">
+        From raw data ingestion to automated market domination in four cohesive steps.
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="relative flex flex-wrap items-center justify-center gap-6 lg:gap-8">
+      <!-- Step 1 -->
+      <div class="group relative w-[220px] rounded-[28px] border border-white/6 bg-white/[0.03] px-6 py-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-all duration-500 hover:-translate-y-2 hover:border-cyan-300/20 hover:bg-white/[0.05] hover:shadow-[0_30px_80px_rgba(56,189,248,0.12)]">
+       <div class="absolute inset-0 rounded-[28px] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] opacity-60">
+</div>
+        <div class="absolute inset-x-[20%] top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent">
+        </div>
+
+        <div class="relative z-10">
+          <div class="mb-3 text-5xl font-semibold tracking-tight text-cyan-300 md:text-6xl">01</div>
+          <h4 class="mb-2 text-xl font-normal tracking-tight text-white">Ingest Data</h4>
+          <p class="text-sm font-light leading-relaxed text-slate-300">
+            Stream high-fidelity ticks, order books, and global market signals.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="group relative w-[220px] rounded-[28px] border border-white/6 bg-white/[0.03] px-6 py-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-all duration-500 hover:-translate-y-2 hover:border-cyan-300/20 hover:bg-white/[0.05] hover:shadow-[0_30px_80px_rgba(56,189,248,0.12)]">
+        <div class="absolute inset-0 rounded-[28px] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] opacity-80">
+        </div>
+        <div class="absolute inset-x-[20%] top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent">
+        </div>
+
+        <div class="relative z-10">
+          <div class="mb-3 text-5xl font-semibold tracking-tight text-cyan-300 md:text-6xl">02</div>
+          <h4 class="mb-2 text-xl font-normal tracking-tight text-white">Generate Models</h4>
+          <p class="text-sm font-light leading-relaxed text-slate-300">
+            Neural topologies detect hidden relationships and predictive structure.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="group relative w-[220px] rounded-[28px] border border-white/6 bg-white/[0.03] px-6 py-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-all duration-500 hover:-translate-y-2 hover:border-cyan-300/20 hover:bg-white/[0.05] hover:shadow-[0_30px_80px_rgba(56,189,248,0.12)]">
+        <div class="absolute inset-0 rounded-[28px] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] opacity-80">
+        </div>
+        <div class="absolute inset-x-[20%] top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent">
+        </div>
+
+        <div class="relative z-10">
+          <div class="mb-3 text-5xl font-semibold tracking-tight text-cyan-300 md:text-6xl">03</div>
+          <h4 class="mb-2 text-xl font-normal tracking-tight text-white">Simulate Backtests</h4>
+          <p class="text-sm font-light leading-relaxed text-slate-300">
+            Validate across historical volatility, liquidity shifts, and macro regimes.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="group relative w-[220px] rounded-[28px] border border-white/6 bg-white/[0.03] px-6 py-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-all duration-500 hover:-translate-y-2 hover:border-cyan-300/20 hover:bg-white/[0.05] hover:shadow-[0_30px_80px_rgba(56,189,248,0.12)]">
+        <div class="absolute inset-0 rounded-[28px] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] opacity-80">
+        </div>
+        <div class="absolute inset-x-[20%] top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent">
+        </div>
+
+        <div class="relative z-10">
+          <div class="mb-3 text-5xl font-semibold tracking-tight text-cyan-300 md:text-6xl">04</div>
+          <h4 class="mb-2 text-xl font-normal tracking-tight text-white">Deploy Execution</h4>
+          <p class="text-sm font-light leading-relaxed text-slate-300">
+            Autonomous routing pushes latency bounds for precision capture.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+      <!-- Platform Telemetry (Section 4) -->
+      <section class="overflow-hidden bg-[#02040a] pt-32 pb-32 relative">
+        <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+          <div class="mb-16">
+            <h2 class="text-3xl md:text- &lt;p class=" text-slate-400="" text-sm="" font-light="" max-w-xl"="">
+              Real-time situational awareness. Monitor algorithmic operations, engine health, and latency bounds instantaneously.
+            <p></p>
+          </h2></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Global Routing Main Panel -->
+            <div class="md:col-span-2 flex flex-col overflow-hidden spotlight-wrapper group bg-[#040814] h-[324px] border-white/5 border rounded-xl pt-6 pr-6 pb-6 pl-6 relative" style="--mouse-x: 759px; --mouse-y: 169.75px;">
+<!-- top glow border -->
+  <div class="absolute top-0 left-0 w-full h-[2px] rounded-t-xl bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent opacity-80 blur-[1px]"></div>
+
+  <!-- subtle glow spread -->
+  <div class="absolute -top-[1px] left-1/2 -translate-x-1/2 w-3/4 h-[6px] bg-[#38bdf8]/40 blur-md pointer-events-none"></div>
+  <!-- Globe ambient background -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(56,189,248,0.05)_0%,transparent_48%)] opacity-70 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none animate-[pulse_6s_ease-in-out_infinite_alternate] z-0">
+  </div>
+
+  <!-- Canvas -->
+  <canvas id="globe-canvas-telemetry" class="absolute inset-0 w-full h-full z-[1] block pointer-events-none" width="1520" height="648"></canvas>
+
+  <!-- Top Info -->
+  <div class="flex justify-between items-center mb-6 relative z-10">
+    <span class="text-xs text-slate-400 uppercase tracking-widest font-mono">Global Execution Topology</span>
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] animate-pulse"></span>
+      <span class="text-xs text-[#38bdf8] font-mono">LIVE</span>
+    </div>
+  </div>
+
+  <!-- Content overlay -->
+  <div class="mt-auto max-w-sm relative z-10 pointer-events-none">
+    <div class="w-10 h-10 border border-white/10 bg-[#0f172a]/80 rounded flex items-center justify-center mb-6 text-slate-300 group-hover:border-[#38bdf8]/50 transition-colors backdrop-blur-sm shadow-[0_0_15px_rgba(56,189,248,0.1)]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+        <path d="M2 12h20"></path>
+      </svg>
+    </div>
+    <h3 class="text-2xl font-normal tracking-tight mb-2 text-white">
+      Routing Intelligence
+    </h3>
+    <p class="text-slate-400 text-sm font-light leading-relaxed">
+      Real-time visualization of cross-border liquidity capture and predictive order routing across dark pools.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+                  const canvas = document.getElementById('globe-canvas-telemetry');
+                  if (!canvas) return;
+                  const ctx = canvas.getContext('2d');
+                  if (!ctx) return;
+
+                  let width = 0, height = 0, cx = 0, cy = 0, radius = 0, dpr = window.devicePixelRatio || 1;
+                  const dots = [];
+                  const numPoints = 1400;
+                  const phi = Math.PI * (3 - Math.sqrt(5));
+
+                  for (let i = 0; i < numPoints; i++) {
+                    const y = 1 - (i / (numPoints - 1)) * 2;
+                    const r = Math.sqrt(1 - y * y);
+                    const theta = phi * i;
+                    const x = Math.cos(theta) * r;
+                    const z = Math.sin(theta) * r;
+                    const n1 = Math.sin(x * 3.4) * Math.cos(y * 3.2) + Math.sin(z * 3.5);
+                    const n2 = Math.sin(x * 6.2) * Math.cos(y * 6.4) + Math.sin(z * 6.0);
+                    if (n1 + n2 * 0.42 > 0.28) {
+                      dots.push({ x, y, z, phase: Math.random() * Math.PI * 2, baseSize: 0.7 + Math.random() * 0.65 });
+                    }
+                  }
+
+                  function resize() {
+                    const rect = canvas.parentElement.getBoundingClientRect();
+                    dpr = window.devicePixelRatio || 1;
+                    width = rect.width; height = rect.height;
+                    canvas.width = Math.floor(width * dpr); canvas.height = Math.floor(height * dpr);
+                    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(dpr, dpr);
+                    cx = width * 0.75; cy = height * 0.52; radius = Math.min(width, height) * 0.42;
+                  }
+                  window.addEventListener('resize', resize);
+                  resize();
+
+                  let time = 0;
+                  const tilt = 0.33;
+
+                  function project(x, y, z, rotY) {
+                    const rx = x * Math.cos(rotY) - z * Math.sin(rotY);
+                    const rz = x * Math.sin(rotY) + z * Math.cos(rotY);
+                    const ty = y * Math.cos(tilt) - rz * Math.sin(tilt);
+                    const tz = y * Math.sin(tilt) + rz * Math.cos(tilt);
+                    return { x: rx, y: ty, z: tz };
+                  }
+
+                  function drawGrid(rotation) {
+                    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.clip();
+                    ctx.strokeStyle = 'rgba(56,189,248,0.05)'; ctx.lineWidth = 1;
+
+                    for (let i = 0; i < 16; i++) {
+                      const lon = (i / 16) * Math.PI * 2; ctx.beginPath(); let started = false;
+                      for (let j = 0; j <= 50; j++) {
+                        const lat = Math.PI * (j / 50 - 0.5);
+                        const x = Math.cos(lat) * Math.cos(lon), y = Math.sin(lat), z = Math.cos(lat) * Math.sin(lon);
+                        const p = project(x, y, z, rotation);
+                        if (p.z < -0.02) { started = false; continue; }
+                        const px = cx + p.x * radius, py = cy - p.y * radius;
+                        if (!started) { ctx.moveTo(px, py); started = true; } else { ctx.lineTo(px, py); }
+                      }
+                      ctx.stroke();
+                    }
+                    ctx.restore();
+                  }
+
+                  function animate() {
+                    time += 0.0032; ctx.clearRect(0, 0, width, height);
+                    const glow = ctx.createRadialGradient(cx, cy, radius * 0.65, cx, cy, radius * 1.45);
+                    glow.addColorStop(0, 'rgba(56,189,248,0.08)'); glow.addColorStop(0.45, 'rgba(56,189,248,0.03)'); glow.addColorStop(1, 'rgba(56,189,248,0)');
+                    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, radius * 1.45, 0, Math.PI * 2); ctx.fill();
+
+                    const sphereFill = ctx.createRadialGradient(cx - radius * 0.28, cy - radius * 0.22, 0, cx, cy, radius);
+                    sphereFill.addColorStop(0, 'rgba(15,23,42,0.3)'); sphereFill.addColorStop(0.55, 'rgba(2,6,23,0.2)'); sphereFill.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = sphereFill; ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
+
+                    drawGrid(time);
+
+                    const projectedDots = dots.map(dot => {
+                      const p = project(dot.x, dot.y, dot.z, time);
+                      return { ...dot, px: cx + p.x * radius, py: cy - p.y * radius, pz: p.z };
+                    }).sort((a, b) => a.pz - b.pz);
+
+                    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.clip();
+
+                    projectedDots.forEach(dot => {
+                      const twinkle = 0.72 + 0.28 * Math.sin(time * 8 + dot.phase);
+                      if (dot.pz < 0) {
+                        ctx.fillStyle = `rgba(56,189,248,${0.03 + twinkle * 0.035})`;
+                        ctx.beginPath(); ctx.arc(dot.px, dot.py, dot.baseSize * 0.65, 0, Math.PI * 2); ctx.fill();
+                      } else {
+                        ctx.fillStyle = `rgba(56,189,248,${0.28 + twinkle * 0.38})`;
+                        ctx.beginPath(); ctx.arc(dot.px, dot.py, dot.baseSize + twinkle * 0.65, 0, Math.PI * 2); ctx.fill();
+                      }
+                    });
+                    ctx.restore();
+
+                    ctx.strokeStyle = 'rgba(56,189,248,0.15)'; ctx.lineWidth = 1.1;
+                    ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.stroke();
+                    requestAnimationFrame(animate);
+                  }
+                  animate();
+                })();
+  </script>
+</div>
+
+            <div class="flex flex-col gap-6 gap-x-6 gap-y-6">
+              <!-- Latency Panel -->
+              <div class="bg-[#060b18] border border-white/5 rounded-xl p-6 flex flex-col justify-between h-[150px] spotlight-wrapper reveal-item" style="--mouse-x: 107px; --mouse-y: 14.75px;">
+                <span class="text-xs text-slate-400 uppercase tracking-widest font-mono">Execution Latency</span>
+                <div class="">
+                  <div class="text-4xl font-light text-white tracking-tight flex items-baseline gap-1">
+                    24<span class="text-sm text-[#38bdf8]">ms</span>
+                  </div>
+                  <div class="w-full bg-white/5 h-1 rounded-full mt-3 overflow-hidden">
+                    <div class="bg-gradient-to-r from-[#4f46e5] to-[#38bdf8] w-1/4 h-full rounded-full shadow-[0_0_5px_#38bdf8]"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Confidence Panel -->
+              <div class="bg-[#060b18] border border-white/5 rounded-xl p-6 flex flex-col justify-between h-[150px] spotlight-wrapper reveal-item" style="--mouse-x: 7px; --mouse-y: 0.75px;">
+                <span class="text-xs text-slate-400 uppercase tracking-widest font-mono">Signal Confidence</span>
+                <div class="flex items-center justify-between">
+                  <div class="text-3xl font-light text-white tracking-tight flex items-baseline gap-1">
+                    96.4<span class="text-sm text-emerald-400">%</span>
+                  </div>
+                  <div class="relative w-12 h-12">
+                    <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]">
+                      <path class="text-white/10" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+                      <path class="text-emerald-400 shadow-[0_0_10px_#34d399]" stroke-dasharray="96.4, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- System Architecture Diagram (Section 5) -->
+      <section class="overflow-hidden border-y bg-[#02040a] border-white/5 pt-32 pb-32 relative">
+  <style>
+    @keyframes arch-flow-horizontal {
+      0% { left: 0%; transform: translateX(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 100%; transform: translateX(0); opacity: 0; }
+    }
+    @keyframes arch-flow-vertical {
+      0% { top: 0%; transform: translateY(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; transform: translateY(0); opacity: 0; }
+    }
+  </style>
+
+  <!-- Ambient glow -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.03),transparent_60%)] pointer-events-none"></div>
+  
+  <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+    <!-- Header -->
+    <div class="text-center mb-24 relative z-20">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-md text-[10px] font-medium uppercase tracking-[0.2em] text-slate-300 mb-6 shadow-[0_2px_8px_rgba(0,0,0,0.2)]">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8] animate-pulse"></span>
+        Infrastructure
+      </div>
+      <h2 class="text-3xl md:text-5xl font-normal tracking-tight text-white mb-5">
+        System Architecture.
+      </h2>
+      <p class="text-slate-400 text-sm md:text-[15px] font-light max-w-2xl mx-auto leading-relaxed">
+        A seamless, low-latency pipeline from raw data ingestion to sub-millisecond execution, powered by adaptive neural networks.
+      </p>
+    </div>
+
+    <!-- Desktop Architecture Diagram -->
+    <div class="hidden md:block bg-gradient-to-b from-[#0a101f]/90 to-[#02040a]/90 max-w-5xl border-white/5 border rounded-[2rem] mr-auto ml-auto pt-16 pr-12 pb-12 pl-12 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_30px_80px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+      
+      <!-- Grid Background inside panel -->
+      <div class="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none" style="mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);">
+        <div class="absolute inset-0" style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+          <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 24px 24px;"></div>
+        </div>
+      </div>
+
+      <!-- Animated Connection Line -->
+      <div class="absolute top-[80px] left-[10%] right-[10%] h-[1px] bg-white/10 z-0">
+        <div class="absolute top-1/2 -translate-y-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent shadow-[0_0_12px_#38bdf8]" style="animation: arch-flow-horizontal 3s ease-in-out infinite;"></div>
+        <div class="absolute top-1/2 -translate-y-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-[#4f46e5] to-transparent shadow-[0_0_12px_#4f46e5]" style="animation: arch-flow-horizontal 3s ease-in-out infinite 1.5s;"></div>
+      </div>
+
+      <div class="relative z-10 flex justify-between items-start">
+        
+        <!-- Node 1: Market Data -->
+        <div class="group relative w-32 flex flex-col items-center mt-[-24px]">
+          <div class="absolute top-0 w-16 h-16 rounded-2xl border border-white/0 group-hover:bg-white/5 blur-md transition-all duration-500 z-0"></div>
+          <div class="w-16 h-16 rounded-2xl border border-white/10 bg-[#060b18] shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-center mb-5 relative z-10 overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:-translate-y-1">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 group-hover:via-white/40 to-transparent"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-white transition-colors w-[22px] h-[22px]" data-icon-replaced="true" style="color: rgb(255, 255, 255); width: 22px; height: 22px;"><circle cx="12" cy="12" r="10" class=""></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" class=""></path><path d="M2 12h20"></path></svg>
+          </div>
+          <h3 class="text-[13px] font-medium text-white mb-1.5">Market Data</h3>
+          <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] text-center">Ingestion</p>
+        </div>
+
+        <!-- Node 2: AI Engine -->
+        <div class="group relative w-32 flex flex-col items-center mt-[-24px]">
+          <div class="absolute top-0 w-16 h-16 rounded-2xl bg-[#38bdf8]/10 blur-xl z-0 transition-opacity duration-500 group-hover:opacity-100 opacity-60"></div>
+          <div class="flex overflow-hidden transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_0_40px_rgba(56,189,248,0.2)] bg-[#0a101f] w-16 h-16 z-10 border-[#38bdf8]/30 border rounded-2xl mb-5 relative shadow-[0_0_30px_rgba(56,189,248,0.1)] items-center justify-center">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent"></div>
+            <div class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#38bdf8] shadow-[0_0_6px_#38bdf8] animate-pulse"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[#38bdf8]"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg>
+          </div>
+          <h3 class="text-[13px] font-medium text-white mb-1.5">AI Engine</h3>
+          <p class="text-[10px] text-[#38bdf8]/80 uppercase tracking-[0.2em] text-center">Processing</p>
+        </div>
+
+        <!-- Node 3: Strategy Layer -->
+        <div class="group flex flex-col w-32 mt-[-24px] relative items-center">
+          <div class="absolute top-0 w-16 h-16 rounded-2xl bg-[#4f46e5]/10 blur-xl z-0 transition-opacity duration-500 group-hover:opacity-100 opacity-60"></div>
+          <div class="flex z-10 overflow-hidden transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_0_40px_rgba(79,70,229,0.2)] bg-[#0a101f] w-16 h-16 border-[#38bdf8]/30 border rounded-2xl mb-5 relative shadow-[0_0_30px_rgba(79,70,229,0.1)] items-center justify-center">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#4f46e5] to-transparent"></div>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[22px] h-[22px] text-neutral-50" data-icon-replaced="true" style="width: 22px; height: 22px;"><polygon points="12 2 2 7 12 12 22 7 12 2" class=""></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          </div>
+          <h3 class="text-[13px] font-medium text-white mb-1.5">Strategy Layer</h3>
+          <p class="text-[10px] uppercase text-slate-500 tracking-[0.2em] text-center">Logic</p>
+        </div>
+
+        <!-- Node 4: Execution -->
+        <div class="group relative w-32 flex flex-col items-center mt-[-24px]">
+          <div class="absolute top-0 w-16 h-16 rounded-2xl border border-white/0 group-hover:bg-white/5 blur-md transition-all duration-500 z-0"></div>
+          <div class="w-16 h-16 rounded-2xl border border-white/10 bg-[#060b18] shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-center mb-5 relative z-10 overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:-translate-y-1">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient0 to-transparent"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-[#38bdf8] transition-colors"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <h3 class="text-[13px] font-medium text-white mb-1.5">Execution</h3>
+          <p class="text-[10px] uppercase text-slate-500 tracking-[0.2em] text-center">Routing</p>
+        </div>
+
+        <!-- Node 5: Analytics -->
+        <div class="group relative w-32 flex flex-col items-center mt-[-24px]">
+          <div class="absolute top-0 w-16 h-16 rounded-2xl border border-white/0 group-hover:bg-white/5 blur-md transition-all duration-500 z-0"></div>
+          <div class="w-16 h-16 rounded-2xl border border-white/10 bg-[#060b18] shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-center mb-5 relative z-10 overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:-translate-y-1">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 group-hover:via-white/40 to-transparent"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-white transition-colors"><path d="M3 3v18h18"></path><rect width="4" height="7" x="7" y="10" rx="1"></rect><rect width="4" height="12" x="15" y="5" rx="1"></rect></svg>
+          </div>
+          <h3 class="text-[13px] font-medium text-white mb-1.5">Analytics</h3>
+          <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] text-center">Reporting</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Architecture Diagram -->
+    <div class="md:hidden relative flex flex-col items-center gap-14 max-w-[280px] mx-auto py-8">
+      
+      <!-- Animated Connection Line -->
+      <div class="absolute top-[30px] bottom-[30px] left-1/2 w-[1px] bg-white/10 -translate-x-1/2 z-0">
+        <div class="absolute left-1/2 -translate-x-1/2 h-24 w-[2px] bg-gradient-to-b from-transparent via-[#38bdf8] to-transparent shadow-[0_0_12px_#38bdf8]" style="animation: arch-flow-vertical 3s ease-in-out infinite;"></div>
+        <div class="absolute left-1/2 -translate-x-1/2 h-24 w-[2px] bg-gradient-to-b from-transparent via-[#4f46e5] to-transparent shadow-[0_0_12px_#4f46e5]" style="animation: arch-flow-vertical 3s ease-in-out infinite 1.5s;"></div>
+      </div>
+
+      <!-- Node 1 -->
+      <div class="relative z-10 w-full flex items-center gap-6 group">
+        <div class="flex-1 text-right">
+          <h3 class="text-[13px] font-medium text-white mb-1 group-hover:text-white transition-colors">Market Data</h3>
+          <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em]">Ingestion</p>
+        </div>
+        <div class="w-14 h-14 shrink-0 rounded-2xl border border-white/10 bg-[#060b18] shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:border-white/20">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-white/40"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-white transition-colors"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+        </div>
+        <div class="flex-1"></div>
+      </div>
+
+      <!-- Node 2 (Active) -->
+      <div class="relative z-10 w-full flex items-center gap-6 group">
+        <div class="flex-1"></div>
+        <div class="w-14 h-14 shrink-0 rounded-2xl border border-[#38bdf8]/30 bg-[#0a101f] shadow-[0_0_30px_rgba(56,189,248,0.1)] flex items-center justify-center relative overflow-hidden transition-all duration-500">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[#38bdf8]"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <h3 class="text-[13px] font-medium text-white mb-1 group-hover:text-[#38bdf8] transition-colors">AI Engine</h3>
+          <p class="text-[10px] text-[#38bdf8]/80 uppercase tracking-[0.2em]">Processing</p>
+        </div>
+      </div>
+
+      <!-- Node 3 (Active) -->
+      <div class="relative z-10 w-full flex items-center gap-6 group">
+        <div class="flex-1 text-right">
+          <h3 class="text-[13px] font-medium text-white mb-1 group-hover:text-[#4f46e5] transition-colors">Strategy Layer</h3>
+          <p class="text-[10px] text-[#4f46e5]/80 uppercase tracking-[0.2em]">Logic</p>
+        </div>
+        <div class="w-14 h-14 shrink-0 rounded-2xl border border-[#4f46e5]/30 bg-[#0a101f] shadow-[0_0_30px_rgba(79,70,229,0.1)] flex items-center justify-center relative overflow-hidden transition-all duration-500">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#4f46e5] to-transparent"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[#4f46e5]"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </div>
+        <div class="flex-1"></div>
+      </div>
+
+      <!-- Node 4 -->
+      <div class="relative z-10 w-full flex items-center gap-6 group">
+        <div class="flex-1"></div>
+        <div class="w-14 h-14 shrink-0 rounded-2xl border border-white/10 bg-[#060b18] shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:border-white/20">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-[#38bdf8]/40"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-[#38bdf8] transition-colors"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <h3 class="text-[13px] font-medium text-white mb-1 group-hover:text-[#38bdf8] transition-colors">Execution</h3>
+          <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em]">Routing</p>
+        </div>
+      </div>
+
+      <!-- Node 5 -->
+      <div class="relative z-10 w-full flex items-center gap-6 group">
+        <div class="flex-1 text-right">
+          <h3 class="text-[13px] font-medium text-white mb-1 group-hover:text-white transition-colors">Analytics</h3>
+          <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em]">Reporting</p>
+        </div>
+        <div class="w-14 h-14 shrink-0 rounded-2xl border border-white/10 bg-[#060b18] shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:border-white/20">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-white/40"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-white transition-colors"><path d="M3 3v18h18"></path><rect width="4" height="7" x="7" y="10" rx="1"></rect><rect width="4" height="12" x="15" y="5" rx="1"></rect></svg>
+        </div>
+        <div class="flex-1"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+      <!-- Performance Metrics (Section 6) -->
+      <section class="py-24 bg-[#02040a]">
+        <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center">
+          <div class="reveal-item">
+            <div class="text-4xl md:text-5xl font-light text-white tracking-tight mb-2 flex items-baseline justify-center gap-1">
+              <span class="stat-counter" data-target="1.2">0.01</span><span class="text-[#38bdf8]">M</span>
+            </div>
+            <span class="text-xs text-slate-500 uppercase tracking-widest font-mono">Trades Executed</span>
+          </div>
+          <div class="reveal-item">
+            <div class="text-4xl md:text-5xl font-light text-white tracking-tight mb-2 flex items-baseline justify-center gap-1">
+              <span class="stat-counter" data-target="24">0</span><span class="text-[#38bdf8]">ms</span>
+            </div>
+            <span class="text-xs text-slate-500 uppercase tracking-widest font-mono">Avg Latency</span>
+          </div>
+          <div class="reveal-item">
+            <div class="text-4xl md:text-5xl font-light text-white tracking-tight mb-2 flex items-baseline justify-center gap-1">
+              <span class="stat-counter" data-target="99.98">0.80</span><span class="text-[#38bdf8]">%</span>
+            </div>
+            <span class="text-xs text-slate-500 uppercase tracking-widest font-mono">Accuracy</span>
+          </div>
+          <div class="reveal-item">
+            <div class="text-4xl md:text-5xl font-light text-white tracking-tight mb-2 flex items-baseline justify-center gap-1">
+              <span class="stat-counter" data-target="340">2</span><span class="text-[#38bdf8]">+</span>
+            </div>
+            <span class="text-xs text-slate-500 uppercase tracking-widest font-mono">Institutions</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials (Section 7) -->
+      <section class="overflow-hidden bg-[#030508] border-white/5 border-t pt-28 pb-28 relative" id="testimonials">
+  <style>
+    @keyframes wallScrollUp {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+
+    @keyframes wallScrollDown {
+      0% {
+        transform: translateY(-50%);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    .testimonial-wall-track {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      will-change: transform;
+    }
+
+    .wall-up {
+      animation: wallScrollUp 26s linear infinite;
+    }
+
+    .wall-down {
+      animation: wallScrollDown 26s linear infinite;
+    }
+
+    .testimonial-wall-column:hover .testimonial-wall-track {
+      animation-play-state: paused;
+    }
+
+    .testimonial-wall-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      isolation: isolate;
+    }
+
+    .testimonial-wall-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(3, 6, 10, 0.92) 0%,
+        rgba(3, 6, 10, 0.68) 28%,
+        rgba(3, 6, 10, 0.18) 55%,
+        rgba(3, 6, 10, 0.02) 78%
+      );
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      z-index: 1;
+    }
+
+    .testimonial-wall-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.14), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .testimonial-wall-card:hover::before,
+    .testimonial-wall-card:hover::after {
+      opacity: 1;
+    }
+
+    .testimonial-wall-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.01);
+      transition: transform 0.7s ease, filter 0.7s ease;
+    }
+
+    .testimonial-wall-card:hover .testimonial-wall-image {
+      transform: scale(1.06);
+      filter: brightness(0.88) saturate(1.05);
+    }
+
+    .testimonial-wall-content {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 22px 20px 20px;
+      transform: translateY(18px);
+      opacity: 0;
+      transition: transform 0.45s ease, opacity 0.45s ease;
+    }
+
+    .testimonial-wall-card:hover .testimonial-wall-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .testimonial-wall-quote {
+      color: rgba(255,255,255,0.92);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      font-weight: 300;
+      margin-bottom: 14px;
+      text-wrap: balance;
+    }
+
+    .testimonial-wall-name {
+      color: #fff;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+
+    .testimonial-wall-role {
+      color: rgba(148,163,184,0.9);
+      font-size: 0.7rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 1023px) {
+      .wall-up,
+      .wall-down {
+        animation-duration: 34s;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .testimonial-wall-mobile-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 6px;
+      }
+
+      .testimonial-wall-mobile-scroll::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .testimonial-wall-mobile-scroll::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.12);
+        border-radius: 999px;
+      }
+    }
+  </style>
+
+  <!-- Background -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.08),transparent_35%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(96,165,250,0.06),transparent_24%)]"></div>
+    <div class="absolute inset-0 opacity-[0.05]" style="background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 72px 72px;">
+    </div>
+    <div class="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[360px] bg-cyan-400/10 blur-[140px] rounded-full"></div>
+  </div>
+
+  <div class="z-10 max-w-[1400px] mr-auto ml-auto pr-6 pl-6 relative">
+    <!-- Header -->
+    <div class="max-w-3xl mx-auto text-center mb-20">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] text-[11px] uppercase tracking-[0.24em] text-cyan-200/80 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.9)]"></span>
+        Client Signals
+      </div>
+
+      <h2 class="text-3xl md:text-5xl font-normal tracking-tight text-white mb-4">
+        Trusted by teams operating at
+        <span class="bg-gradient-to-r from-white via-sky-200 to-cyan-300 bg-clip-text text-transparent">execution speed</span>
+      </h2>
+
+      <p class="text-slate-400 text-sm md:text-[15px] font-light leading-relaxed max-w-2xl mx-auto">
+        A moving wall of operator stories, infrastructure wins, and institutional confidence across the QuantCore stack.
+      </p>
+    </div>
+
+    <!-- Desktop wall -->
+    <div class="hidden md:block testimonial-wall-stage" style="mask-image: linear-gradient(180deg, transparent, black 40%, black 60%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 40%, black 60%, transparent);">
+      <div class="testimonial-wall-3d grid grid-cols-2 lg:grid-cols-4 gap-5 overflow-hidden h-[820px] gap-x-5 gap-y-5 items-start">
+      <!-- Column 1 -->
+      <div class="testimonial-wall-column relative h-full overflow-hidden">
+        <div class="testimonial-wall-track wall-up">
+          <article class="testimonial-wall-card h-[320px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/7e5a48f3-c2f2-4588-8f22-259764a5d0fb/800w.png" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">QuantCore gave our desk a unified execution layer that immediately improved routing visibility and reduced slippage.</p>
+              <div class="testimonial-wall-name">Adrian Miller</div>
+              <div class="testimonial-wall-role">Head of Quant, Stratos</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[440px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d5bad979-757c-4a50-a02f-e1b70af32c2c_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Backtesting multi-factor models across years of tick data became dramatically faster and more reliable.</p>
+              <div class="testimonial-wall-name">Nina Duarte</div>
+              <div class="testimonial-wall-role">Portfolio Research Lead</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[360px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/18a4a3b5-e82c-475e-9be2-8960b80fb6a8_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">The predictive layer gave us a stronger structural view of short-term market dislocations.</p>
+              <div class="testimonial-wall-name">Marcus Chen</div>
+              <div class="testimonial-wall-role">Chief Risk Officer</div>
+            </div>
+          </article>
+
+          <!-- duplicate -->
+          <article class="testimonial-wall-card h-[320px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ce5a380c-785b-4ec0-9cd9-486d09b03a12_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">QuantCore gave our desk a unified execution layer that immediately improved routing visibility and reduced slippage.</p>
+              <div class="testimonial-wall-name">Adrian Miller</div>
+              <div class="testimonial-wall-role">Head of Quant, Stratos</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[440px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/625b8e29-f18c-4bdd-916e-966a1e5909a5_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Backtesting multi-factor models across years of tick data became dramatically faster and more reliable.</p>
+              <div class="testimonial-wall-name">Nina Duarte</div>
+              <div class="testimonial-wall-role">Portfolio Research Lead</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[360px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5d55a6bf-f23c-48c2-8d71-e76bc0290c4e_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">The predictive layer gave us a stronger structural view of short-term market dislocations.</p>
+              <div class="testimonial-wall-name">Marcus Chen</div>
+              <div class="testimonial-wall-role">Chief Risk Officer</div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="testimonial-wall-column relative h-full overflow-hidden">
+        <div class="testimonial-wall-track wall-down">
+          <article class="testimonial-wall-card h-[420px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/35d9814c-db55-45ef-94e8-d1c084c689da_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Our team now validates strategy behavior across multiple historical regimes before deployment.</p>
+              <div class="testimonial-wall-name">Elena Rostova</div>
+              <div class="testimonial-wall-role">Execution Trader</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[300px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b202409f-816e-4451-8ac9-bd0b04439d1b_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Risk enforcement happens fast enough that it never slows our execution edge.</p>
+              <div class="testimonial-wall-name">David Althaus</div>
+              <div class="testimonial-wall-role">Chief Technology Officer</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[460px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/236b2702-7ee2-4ad6-84a1-1795f9fdb7c6_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">The infrastructure handled institutional-scale operations without forcing us to rebuild internal workflows.</p>
+              <div class="testimonial-wall-name">Sofia Laurent</div>
+              <div class="testimonial-wall-role">Systems Director</div>
+            </div>
+          </article>
+
+          <!-- duplicate -->
+          <article class="testimonial-wall-card h-[420px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4a77e6b3-efc2-47ae-a304-9e97bf3ebee3_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Our team now validates strategy behavior across multiple historical regimes before deployment.</p>
+              <div class="testimonial-wall-name">Elena Rostova</div>
+              <div class="testimonial-wall-role">Execution Trader</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[300px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/39e15168-9f77-4837-9a4b-89c74b8bc38b_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Risk enforcement happens fast enough that it never slows our execution edge.</p>
+              <div class="testimonial-wall-name">David Althaus</div>
+              <div class="testimonial-wall-role">Chief Technology Officer</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[460px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/62ff4a44-3758-431b-8901-3a99c8c9a00c_1600w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">The infrastructure handled institutional-scale operations without forcing us to rebuild internal workflows.</p>
+              <div class="testimonial-wall-name">Sofia Laurent</div>
+              <div class="testimonial-wall-role">Systems Director</div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Column 3 -->
+      <div class="testimonial-wall-column relative h-full overflow-hidden">
+        <div class="testimonial-wall-track wall-up">
+          <article class="testimonial-wall-card h-[360px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/25df7579-09f7-4c8c-bb39-18a974a980d0_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Venue-aware order routing significantly reduced market impact during high-volume sessions.</p>
+              <div class="testimonial-wall-name">Claire Morgan</div>
+              <div class="testimonial-wall-role">Head of Execution</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[430px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dea337d3-cbb6-43c3-b9ef-4edee697391d_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">What stood out most was the consistency between data normalization, simulation, and live deployment.</p>
+              <div class="testimonial-wall-name">Julian Park</div>
+              <div class="testimonial-wall-role">Quant Systems Lead</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[320px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/eae5dceb-fa80-4934-b110-86decb2f64ac_800w.webp" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">We gained a clearer signal path from ingestion to execution with much less engineering overhead.</p>
+              <div class="testimonial-wall-name">Theo Ramirez</div>
+              <div class="testimonial-wall-role">Infrastructure Architect</div>
+            </div>
+          </article>
+
+          <!-- duplicate -->
+          <article class="testimonial-wall-card h-[360px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/21428aa7-0968-48fc-8d33-048fa6a25fd2_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">Venue-aware order routing significantly reduced market impact during high-volume sessions.</p>
+              <div class="testimonial-wall-name">Claire Morgan</div>
+              <div class="testimonial-wall-role">Head of Execution</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[430px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/439a0ad0-c69f-44bb-bdb2-33b68ecd7341_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">What stood out most was the consistency between data normalization, simulation, and live deployment.</p>
+              <div class="testimonial-wall-name">Julian Park</div>
+              <div class="testimonial-wall-role">Quant Systems Lead</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[320px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/fc7c172c-5e3b-48a7-b126-f6d746772b2e_1600w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">We gained a clearer signal path from ingestion to execution with much less engineering overhead.</p>
+              <div class="testimonial-wall-name">Theo Ramirez</div>
+              <div class="testimonial-wall-role">Infrastructure Architect</div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Column 4 -->
+      <div class="testimonial-wall-column relative h-full overflow-hidden">
+        <div class="testimonial-wall-track wall-down">
+          <article class="testimonial-wall-card h-[460px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ea777f21-df8c-431d-956a-57390ff9e591_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">QuantCore became the layer that connected predictive research with production-grade routing.</p>
+              <div class="testimonial-wall-name">Amelia Voss</div>
+              <div class="testimonial-wall-role">Research Operations</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[300px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/eca707cc-a5b7-439a-b4fd-247f6106c2e1_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">The latency profile stayed stable even as execution complexity increased.</p>
+              <div class="testimonial-wall-name">Daniel Sato</div>
+              <div class="testimonial-wall-role">Platform Engineering</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[370px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5e1c1b8c-f44b-4a81-abaf-0241f388c8ff_800w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">From ingestion to signal validation, the system feels coherent, fast, and institutionally ready.</p>
+              <div class="testimonial-wall-name">Lina Moreau</div>
+              <div class="testimonial-wall-role">Strategy Director</div>
+            </div>
+          </article>
+
+          <!-- duplicate -->
+          <article class="testimonial-wall-card h-[460px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/be34e0e0-bfda-49c7-b231-b353206dd7a2_1600w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">QuantCore became the layer that connected predictive research with production-grade routing.</p>
+              <div class="testimonial-wall-name">Amelia Voss</div>
+              <div class="testimonial-wall-role">Research Operations</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[300px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7a2dc7c2-23b6-422f-a823-9f6546bcaa1e_1600w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">The latency profile stayed stable even as execution complexity increased.</p>
+              <div class="testimonial-wall-name">Daniel Sato</div>
+              <div class="testimonial-wall-role">Platform Engineering</div>
+            </div>
+          </article>
+
+          <article class="testimonial-wall-card h-[370px]">
+            <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6fcc9190-059e-4d8a-ad6b-7aba17a126fa_1600w.jpg" alt="">
+            <div class="testimonial-wall-content">
+              <p class="testimonial-wall-quote">From ingestion to signal validation, the system feels coherent, fast, and institutionally ready.</p>
+              <div class="testimonial-wall-name">Lina Moreau</div>
+              <div class="testimonial-wall-role">Strategy Director</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <div class="md:hidden testimonial-wall-mobile-scroll">
+      <div class="flex gap-4 w-max">
+        <article class="testimonial-wall-card w-[260px] h-[360px] shrink-0">
+          <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/43c637c3-edbc-4479-b649-e83cbe83f6ed_3840w.jpg" alt="">
+          <div class="testimonial-wall-content !opacity-100 !translate-y-0">
+            <p class="testimonial-wall-quote">QuantCore gave our desk a unified execution layer that immediately improved routing visibility and reduced slippage.</p>
+            <div class="testimonial-wall-name">Adrian Miller</div>
+            <div class="testimonial-wall-role">Head of Quant, Stratos</div>
+          </div>
+        </article>
+
+        <article class="testimonial-wall-card w-[260px] h-[360px] shrink-0">
+          <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a89e1be2-35b4-4f2a-9623-cc571a632323_3840w.jpg" alt="">
+          <div class="testimonial-wall-content !opacity-100 !translate-y-0">
+            <p class="testimonial-wall-quote">Our team now validates strategy behavior across multiple historical regimes before deployment.</p>
+            <div class="testimonial-wall-name">Elena Rostova</div>
+            <div class="testimonial-wall-role">Execution Trader</div>
+          </div>
+        </article>
+
+        <article class="testimonial-wall-card w-[260px] h-[360px] shrink-0">
+          <img class="testimonial-wall-image object-cover w-full h-auto" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a91c1566-41b6-46c6-9605-e4fbe4ed2f39_3840w.jpg" alt="">
+          <div class="testimonial-wall-content !opacity-100 !translate-y-0">
+            <p class="testimonial-wall-quote">QuantCore became the layer that connected predictive research with production-grade routing.</p>
+            <div class="testimonial-wall-name">Amelia Voss</div>
+            <div class="testimonial-wall-role">Research Operations</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+      <!-- Pricing (Section 8) -->
+      <section class="py-32 relative overflow-hidden bg-[#02040a]">
+        <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-normal tracking-tight text-white mb-4">
+              Access Tiers.
+            </h2>
+            <p class="text-slate-400 text-sm font-light max-w-xl mx-auto">
+              Select the appropriate execution matrix for your capital scale.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 gap-x-6 gap-y-6">
+            <!-- Starter -->
+            <div class="bg-[#060b18] border border-white/5 rounded-xl p-8 flex flex-col hover:border-white/20 transition-all hover:-translate-y-1 duration-300">
+              <h3 class="text-xl font-normal text-white tracking-tight mb-2">Starter</h3>
+              <p class="text-xs text-slate-500 font-light mb-8">For independent algorithmic traders.</p>
+              <div class="mb-8">
+                <span class="text-4xl font-light text-white tracking-tight">$99</span>
+                <span class="text-xs text-slate-500 uppercase tracking-widest">/mo</span>
+              </div>
+              <ul class="space-y-4 mb-8 flex-grow">
+                <li class="flex items-center gap-3 text-sm text-slate-400 font-light">
+                  <iconify-icon icon="solar:check-circle-linear" class="text-slate-500"></iconify-icon> 1M Operations / mo
+                </li>
+                <li class="flex items-center gap-3 text-sm text-slate-400 font-light">
+                  <iconify-icon icon="solar:check-circle-linear" class="text-slate-500"></iconify-icon> Standard Tick Data
+                </li>
+              </ul>
+              <button class="w-full py-3 rounded border border-white/10 text-white text-xs font-normal hover:bg-white/5 transition-colors">Select Plan</button>
+            </div>
+
+            <!-- Professional -->
+            <div class="flex flex-col hover:-translate-y-1 transition-all duration-300 bg-gradient-to-b from-[#0a101f] to-[#060b18] border-[#38bdf8]/40 border rounded-xl pt-8 pr-8 pb-8 pl-8 relative shadow-[0_0_30px_rgba(56,189,248,0.1)]">
+  <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent"></div>
+  <div class="inline-flex items-center self-start gap-2 px-2 py-1 rounded bg-[#38bdf8]/20 text-[#38bdf8] text-[0.6rem] font-medium uppercase tracking-widest mb-4">
+    Recommended</div>
+  <h3 class="text-xl font-normal text-white tracking-tight mb-2">Professional</h3>
+  <p class="text-xs text-slate-400 font-light mb-8">For proprietary trading teams.</p>
+  <div class="mb-8">
+    <span class="text-4xl font-light text-white tracking-tight">$499</span>
+    <span class="text-xs text-slate-400 uppercase tracking-widest">/mo</span>
+  </div>
+  <ul class="space-y-4 mb-8 flex-grow">
+    <li class="flex items-center gap-3 text-sm text-white font-light">
+      <iconify-icon icon="solar:check-circle-linear" class="text-[#38bdf8]"></iconify-icon> 10M Operations / mo
+    </li>
+    <li class="flex items-center gap-3 text-sm text-white font-light">
+      <iconify-icon icon="solar:check-circle-linear" class="text-[#38bdf8]"></iconify-icon> Level 2 Order Book Data
+    </li>
+
+  </ul>
+  <button class="w-full py-3 rounded bg-white text-[#02040a] text-xs font-normal hover:bg-slate-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)]">Deploy Pro</button>
+</div>
+
+            <!-- Institution -->
+            <div class="bg-[#060b18] border border-white/5 rounded-xl p-8 flex flex-col hover:border-white/20 transition-all hover:-translate-y-1 duration-300">
+              <h3 class="text-xl font-normal text-white tracking-tight mb-2">Institution</h3>
+              <p class="text-xs text-slate-500 font-light mb-8">Unlimited access for enterprise.</p>
+              <div class="mb-8">
+                <span class="text-4xl font-light text-white tracking-tight">Custom</span>
+              </div>
+              <ul class="space-y-4 mb-8 flex-grow">
+                <li class="flex items-center gap-3 text-sm text-slate-400 font-light">
+                  <iconify-icon icon="solar:check-circle-linear" class="text-slate-500"></iconify-icon> Unlimited Operations
+                </li>
+                <li class="flex items-center gap-3 text-sm text-slate-400 font-light">
+                  <iconify-icon icon="solar:check-circle-linear" class="text-slate-500"></iconify-icon> Colocation Integration
+                </li>
+                
+              </ul>
+              <button class="w-full py-3 rounded border border-white/10 bg-transparent text-white text-xs font-normal hover:bg-white/5 transition-colors">Contact Sales</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final Call to Action (Section 9) -->
+      <section class="py-32 relative overflow-hidden bg-[#060b18] border-t border-white/5">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.08),transparent_50%)] pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <h2 class="text-4xl md:text-6xl font-normal tracking-tight text-white mb-8">
+            Build the next generation of algorithmic trading infrastructure.
+          </h2>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button class="px-8 py-4 rounded bg-white text-[#02040a] text-sm font-normal hover:scale-[1.02] transition-transform duration-300 shadow-[0_0_25px_rgba(255,255,255,0.2)]">
+              Deploy Platform
+            </button>
+            <button class="px-8 py-4 rounded border border-white/20 bg-transparent text-white text-sm font-normal hover:bg-white/5 transition-colors">
+              Request Demo
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#020308] pt-32 pb-10 border-t border-white/5 relative overflow-hidden">
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80vw] h-[400px] bg-[#38bdf8]/5 rounded-[100%] blur-[120px] pointer-events-none"></div>
+
+      <div class="z-10 max-w-7xl mr-auto ml-auto pr-6 pl-6 relative">
+        <div class="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-6 mb-32 border-b border-white/10 pb-20">
+          <div class="col-span-2 md:col-span-4 flex flex-col justify-between">
+            <div class="">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-4 h-4 rounded border border-[#38bdf8]/40 bg-[#38bdf8]/10 flex items-center justify-center">
+                  <div class="w-1.5 h-1.5 rounded-full bg-[#38bdf8]"></div>
+                </div>
+                <span class="text-sm font-normal tracking-widest text-white uppercase">
+                  QUANTCORE
+                </span>
+              </div>
+              <p class="text-sm font-light text-slate-500 max-w-xs">
+                Algorithmic Intelligence Matrix.
+                <br> Built for institutional performance.
+              </p>
+            </div>
+            <button class="mt-12 w-max px-6 py-2.5 rounded border border-white/10 bg-transparent text-white text-xs font-normal hover:bg-white/5 transition-colors flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse"></div>
+              Engine Status: Operational
+            </button>
+          </div>
+
+          <div class="col-span-1 md:col-span-2 md:col-start-7">
+            <h4 class="text-xs uppercase tracking-widest text-slate-600 mb-6 font-normal">Platform</h4>
+            <ul class="space-y-4">
+              <li><a href="#" class="text-sm font-light text-slate-400 hover:text-white transition-colors">Predictive Models</a></li>
+              <li><a href="#" class="text-sm font-light text-slate-400 hover:text-white transition-colors">Dark Pool Routing</a></li>
+            </ul>
+          </div>
+
+          <div class="col-span-1 md:col-span-2">
+            <h4 class="text-xs uppercase tracking-widest text-slate-600 mb-6 font-normal">Ecosystem</h4>
+            <ul class="space-y-4">
+              <li><a href="#" class="text-sm font-light text-slate-400 hover:text-white transition-colors">API Docs</a></li>
+              <li><a href="#" class="text-sm font-light text-slate-400 hover:text-white transition-colors">Colocation</a></li>
+            </ul>
+          </div>
+
+          <div class="col-span-2 md:col-span-2">
+            <h4 class="text-xs uppercase tracking-widest text-slate-600 mb-6 font-normal">Connect</h4>
+            <ul class="space-y-4">
+              <li><a href="#" class="text-sm font-light text-slate-400 hover:text-white transition-colors flex items-center gap-2">Terminal Access</a></li>
+              <li><a href="#" class="text-sm font-light text-slate-400 hover:text-white transition-colors flex items-center gap-2">Contact Sales</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="overflow-hidden flex select-none pointer-events-none w-full mb-10 items-center justify-center" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 15%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 15%, transparent);">
+          <h1 class="text-[12vw] leading-none bg-clip-text uppercase font-normal text-transparent tracking-tighter text-center bg-gradient-to-b from-white to-white/10 opacity-10 w-full z-10">
+            QUANTCORE
+          </h1>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600 font-normal uppercase tracking-widest">
+          <p>© 2024 QuantCore Inc. All rights reserved.</p>
+          <div class="flex gap-6">
+            <a href="#" class="hover:text-slate-400 transition-colors">Privacy Policy</a>
+            <a href="#" class="hover:text-slate-400 transition-colors">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+      (function() {
+          // Sticky Header Effect
+          const header = document.getElementById('navbar');
+          window.addEventListener('scroll', () => {
+              if (window.scrollY > 20) {
+                  header.classList.add('header-scrolled');
+              } else {
+                  header.classList.remove('header-scrolled');
+              }
+          });
+
+          // Hero Parallax & Counter
+          const heroSection = document.getElementById('hero-section');
+          const panels = heroSection ? heroSection.querySelectorAll('.parallax-panel') : [];
+
+          if(heroSection && panels.length > 0) {
+              heroSection.addEventListener('mousemove', (e) => {
+                  const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                  const y = (e.clientY / window.innerHeight - 0.5) * 2;
+                  panels.forEach(panel => {
+                      const depth = parseFloat(panel.getAttribute('data-depth')) || 0.2;
+                      panel.style.transform = `translate3d(${x * 40 * depth}px, ${y * 40 * depth}px, 0) rotateX(${-y * 8 * depth}deg) rotateY(${x * 8 * depth}deg)`;
+                  });
+              });
+              heroSection.addEventListener('mouseleave', () => {
+                  panels.forEach(panel => panel.style.transform = `translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg)`);
+              });
+          }
+
+          const spotlights = document.querySelectorAll('.spotlight-wrapper');
+          spotlights.forEach(spotlight => {
+              spotlight.addEventListener('mousemove', (e) => {
+                  const rect = spotlight.getBoundingClientRect();
+                  spotlight.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                  spotlight.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+              });
+          });
+
+          // Stat Counters On Scroll
+          const counters = document.querySelectorAll('.stat-counter, .counter-up');
+          const observerOpts = { threshold: 0.5 };
+          const statObserver = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                      const counter = entry.target;
+                      const target = parseFloat(counter.getAttribute('data-target'));
+                      const duration = 2000;
+                      let start = 0;
+                      const increment = target / (duration / 16);
+                      const isFloat = target % 1 !== 0;
+
+                      const updateCounter = () => {
+                          start += increment;
+                          if (start < target) {
+                              counter.innerText = isFloat ? start.toFixed(2) : Math.floor(start);
+                              requestAnimationFrame(updateCounter);
+                          } else {
+                              counter.innerText = target;
+                          }
+                      };
+                      updateCounter();
+                      observer.unobserve(counter); // only animate once
+                  }
+              });
+          }, observerOpts);
+
+          counters.forEach(counter => statObserver.observe(counter));
+
+          // Workflow Timeline Scroll
+          const workflowSection = document.getElementById('workflow-steps');
+          const progressLine = document.getElementById('workflow-progress');
+          if (workflowSection && progressLine) {
+              window.addEventListener('scroll', () => {
+                  const rect = workflowSection.getBoundingClientRect();
+                  const windowHeight = window.innerHeight;
+                  // Calculate how far we scrolled past the center of the viewport
+                  let progress = 0;
+                  if (rect.top < windowHeight * 0.75) {
+                      progress = ((windowHeight * 0.75 - rect.top) / rect.height) * 100;
+                  }
+                  progress = Math.min(Math.max(progress, 0), 100);
+                  progressLine.style.width = `${progress}%`;
+              });
+          }
+
+          // General Reveal Animation
+          const reveals = document.querySelectorAll('.reveal-item');
+          const revealObs = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                  if(entry.isIntersecting) {
+                      entry.target.classList.add('is-revealed');
+                      observer.unobserve(entry.target);
+                  }
+              });
+          }, { threshold: 0.2 });
+          reveals.forEach(el => revealObs.observe(el));
+
+      })();
+    </script>
+</body></html>
