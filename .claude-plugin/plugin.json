@@ -1,7 +1,7 @@
 {
   "name": "getokui",
   "description": "A taste library for Claude: a curated collection of HTML design references (local, offline) so AI-generated UIs stop looking template-y. Two flows — create from scratch (brainstorming → build: suggests 5 candidates, you pick at a checkpoint, then it adapts into HTML/React/Next.js), and improve what you have (review → glowup: critiques an existing UI against the references, then applies the fixes). Prevents AI slop by giving real examples to reference, not just text advice.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "hilmianugrah11",
     "url": "https://github.com/hilmianugrah11"
