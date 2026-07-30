@@ -4,14 +4,20 @@ A Claude Code plugin that gives Claude a **taste library** — a curated
 collection of HTML design references (local, offline) — so AI-generated UIs
 stop looking *template-y*.
 
-When you ask it to build a UI, Claude **doesn't make things up from scratch**:
-it reads a reference index, suggests the 5 best-matching candidates, you pick
-(you can pick more than one), then Claude adapts them into your own UI — in
-**HTML** (default), **React 19**, or **Next.js 15**.
+getokui gives you **two flows**, both anchored to the taste library:
+
+- **Create from scratch** — *brainstorming → build.* Claude reads the reference
+  index, suggests the 5 best-matching candidates, you pick (you can pick more
+  than one), then Claude adapts them into your own UI — in **HTML** (default),
+  **React 19**, or **Next.js 15**.
+- **Improve what you already have** — *review → glowup.* Point Claude at an
+  existing UI file; it critiques the design **against the curated references**
+  (spacing, color, typography, hierarchy), then glows it up — restyling your UI
+  while keeping your content.
 
 Different from a plain design-advice plugin: getokui has **real examples** to
-reference + an agent that picks & adapts, not just text that says "make it look
-good".
+reference + an agent that picks, adapts, reviews & improves — not just text that
+says "make it look good".
 
 ---
 
@@ -19,7 +25,7 @@ good".
 
 | Part | Contents | Size |
 |---|---|---|
-| Plugin | manifest + 3 skills (`setup`, `pick`, `build`) | Small |
+| Plugin | manifest + 5 skills (`setup`, `brainstorming`, `build`, `review`, `glowup`) | Small |
 | `references/` (bundled) | Library: `index.json`, `templates/*.html`, `thumbs/*.webp` | ~2MB |
 
 The library **ships inside the plugin** under `references/`, so a single
@@ -50,22 +56,24 @@ Run in **order** — don't jump to `/plugin install` before
 > are invoked **automatically** by Claude based on natural language, NOT via a
 > manual slash command. So `/getokui` → "No commands match" is **normal**, not
 > a sign of a failed install. The correct test: type a normal brief, e.g.
-> *"getokui, build a SaaS landing page"*, and see whether the `pick` skill triggers.
+> *"getokui, build a SaaS landing page"*, and see whether the `brainstorming` skill triggers.
 
 ---
 
 ## How to use
 
 The reference library is bundled with the plugin, so there's **nothing to set
-up** — just start building right after install.
+up** — just start right after install. Two flows:
 
-1. **Start building UI** — type a natural brief, e.g.:
+### A. Create from scratch — *brainstorming → build*
+
+1. **Type a natural brief**, e.g.:
    > "getokui, build a SaaS landing page"
    > "getokui, build a dark fintech landing in react"
    > "getokui, build a restaurant landing in next"
 
 2. **Follow the flow:**
-   - The `pick` skill presents **5 candidates** (name + description +
+   - The `brainstorming` skill presents **5 candidates** (name + description +
      thumbnail).
    - You **choose** — one, several (e.g. "layout #2, colors from #4"), or
      "search again" if none fit. **The agent stops here to wait for you** —
@@ -73,9 +81,24 @@ up** — just start building right after install.
    - The `build` skill mixes your picks → adapts → writes the file in your
      requested format.
 
-3. **Optional** — say *"setup getokui"* any time to confirm the library is
-   present and see the template count. To get newer templates, update the plugin
-   (see *Updating the plugin* below).
+### B. Improve what you have — *review → glowup*
+
+1. **Point at a file**, e.g.:
+   > "getokui, review index.html"
+   > "getokui, cek design komponen Hero.tsx"
+
+2. **Follow the flow:**
+   - The `review` skill critiques the design **against the taste library** and
+     presents ranked findings. **The agent stops here to wait for you** — this
+     is the checkpoint.
+   - You say **"glowup"** (or pick which findings) → the `glowup` skill applies
+     the fixes to your file, keeping your content, and reports what changed.
+   - You can also jump straight to *"getokui, glowup index.html"* to improve
+     without a separate review first.
+
+**Optional** — say *"setup getokui"* any time to confirm the library is present
+and see the template count. To get newer templates, update the plugin (see
+*Updating the plugin* below).
 
 ---
 
@@ -90,10 +113,16 @@ references/              ← bundled library (ships with the plugin)
   ├── templates/*.html   ← 20 curated templates
   └── thumbs/*.webp      ← preview thumbnail per template
 skills/
-  ├── setup/SKILL.md      ← verify the bundled library + report template count
-  ├── pick/SKILL.md       ← read index → rank 5 candidates → checkpoint (hard stop)
-  └── build/SKILL.md      ← mix → adapt (style, not content) → convert format → output
+  ├── setup/SKILL.md          ← verify the bundled library + report template count
+  ├── brainstorming/SKILL.md  ← read index → rank 5 candidates → checkpoint (hard stop)
+  ├── build/SKILL.md          ← mix → adapt (style, not content) → convert format → output
+  ├── review/SKILL.md         ← critique an existing UI vs the library → ranked findings (hard stop)
+  └── glowup/SKILL.md         ← apply the fixes to your file (style, keep content) → report
 ```
+
+**Two flows:** `brainstorming → build` (create new) and `review → glowup`
+(improve existing). `setup` is a silent utility that just verifies the bundled
+library.
 
 ---
 

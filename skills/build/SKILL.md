@@ -1,6 +1,6 @@
 ---
 name: build
-description: Adapt the getokui reference(s) the user picked into the user's own UI, in the requested format (HTML default, React 19, or Next.js 15). Invoked after the pick skill once the user has chosen one or more candidates. This skill reads the chosen template file(s) from the local library, TAKES the visual style & structure (NOT the template's original text content), mixes when there are several picks (first pick = base layout, the rest = style sources), converts to the target format, then writes the output file. Do not invoke this skill before the user has chosen via pick.
+description: Adapt the getokui reference(s) the user picked into the user's own UI, in the requested format (HTML default, React 19, or Next.js 15). Invoked after the brainstorming skill once the user has chosen one or more candidates. This skill reads the chosen template file(s) from the local library, TAKES the visual style & structure (NOT the template's original text content), mixes when there are several picks (first pick = base layout, the rest = style sources), converts to the target format, then writes the output file. Do not invoke this skill before the user has chosen via brainstorming.
 ---
 
 # getokui build — Adapt into the User's Own UI
@@ -9,10 +9,10 @@ This skill's job: turn the chosen reference(s) into real UI code that belongs to
 the user — not a raw copy. Take the **style & structure**, fill with the
 **user's content** (or clear placeholders), then emit in the requested format.
 
-Prerequisite: the user already chose candidates via the `pick` skill. If not,
-go back to `pick` first.
+Prerequisite: the user already chose candidates via the `brainstorming` skill.
+If not, go back to `brainstorming` first.
 
-## Input carried over from `pick`
+## Input carried over from `brainstorming`
 - List of chosen slugs, **in order** (first pick = base, the rest = style
   sources).
 - Output format: `html` (default) / `react` / `next`.
@@ -26,8 +26,8 @@ For each slug, read its HTML file from
 `${CLAUDE_PLUGIN_ROOT}/references/index.json` (to know `colors`, `fonts`,
 `sections`).
 
-If an HTML file is missing → tell the user, offer to go back to `pick` to choose
-another. Don't proceed on a guess.
+If an HTML file is missing → tell the user, offer to go back to `brainstorming`
+to choose another. Don't proceed on a guess.
 
 ### 2. If multi-pick: plan the mix
 - **First pick = base layout.** Page structure & section ordering follow this.
@@ -112,4 +112,4 @@ placeholder or ask the user.
   template.
 - Downgrade framework versions without a reason (default is always latest).
 - Write output into the bundled library folder `${CLAUDE_PLUGIN_ROOT}/references/`.
-- Build before the user has chosen via `pick`.
+- Build before the user has chosen via `brainstorming`.

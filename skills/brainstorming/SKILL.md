@@ -1,14 +1,17 @@
 ---
-name: pick
-description: Pick a design reference from the getokui library. Invoked whenever the user asks to build/develop a UI via getokui — a landing page in any vertical (SaaS/AI, fintech, real-estate, portfolio, e-commerce, restaurant, wellness, gaming, agency, architecture), e.g. "getokui, build a SaaS landing page", "getokui build a fintech landing in react". This skill reads the local index.json, filters & ranks candidates, then presents the 5 BEST CANDIDATES (name + description + thumbnail) and STOPS to wait for the user to choose (may pick more than one, may reject all). This skill ONLY picks — it does NOT write code or generate UI (that's the build skill). Do not start building UI for any getokui request before going through this skill.
+name: brainstorming
+description: Brainstorm a UI by picking design references from the getokui taste library. Invoked whenever the user asks to build/develop/design a NEW UI via getokui — a landing page in any vertical (SaaS/AI, fintech, real-estate, portfolio, e-commerce, restaurant, wellness, gaming, agency, architecture), e.g. "getokui, build a SaaS landing page", "getokui brainstorm a fintech landing", "getokui design a portfolio in react". This skill reads the local index.json, filters & ranks candidates, then presents the 5 BEST CANDIDATES (name + description + thumbnail) and STOPS to wait for the user to choose (may pick more than one, may reject all). This skill ONLY brainstorms & picks — it does NOT write code or generate UI (that's the build skill). Do not start building UI for any getokui "make something new" request before going through this skill. (For improving an existing UI file, use the review + glowup skills instead.)
 ---
 
-# getokui pick — Suggest References & Checkpoint
+# getokui brainstorming — Suggest References & Checkpoint
 
 This skill's job: turn the user's request into the **5 most relevant reference
-candidates** from the local library, present them, then **stop** and let the
-user decide. This is getokui's agentic checkpoint — there's reasoning (ranking),
-but the user stays in control.
+candidates** from the local taste library, present them, then **stop** and let
+the user decide. This is getokui's agentic checkpoint — there's reasoning
+(ranking + a little ideation on direction), but the user stays in control.
+
+This is the **create-from-scratch** entry point. (To improve a UI file that
+already exists, use `review` → `glowup` instead.)
 
 This skill does **not** write code. Only after the user picks do you continue to
 the `build` skill.
@@ -101,3 +104,4 @@ chosen slugs (in order) + the requested output format.
 - Force 5 candidates when fewer are relevant.
 - Claim "perfect fit" when the match is weak — be honest about match quality.
 - Guess the category when the request has no signal at all — ask first.
+- Handle "improve/fix my existing UI" requests — that's `review` + `glowup`.

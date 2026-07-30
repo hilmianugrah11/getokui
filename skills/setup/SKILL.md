@@ -9,7 +9,7 @@ This skill has exactly one job: confirm the getokui reference library is
 available. Unlike the old two-repo design, the library now **ships inside the
 plugin** — it's already on disk the moment the plugin is installed. There is
 **no clone and no internet needed**. This skill does **not** pick templates and
-does **not** generate UI — those are the jobs of `pick` and `build`.
+does **not** generate UI — those are the jobs of `brainstorming` and `build`.
 
 Bundled library location: `${CLAUDE_PLUGIN_ROOT}/references/`
 
@@ -43,7 +43,7 @@ Test-Path "$env:CLAUDE_PLUGIN_ROOT\references\index.json"
   /plugin install getokui@getokui-marketplace
   /reload-plugins
   ```
-  Don't proceed to `pick` until the library is present.
+  Don't proceed to `brainstorming` until the library is present.
 
 ### 3. "Update getokui references"
 There is no separate library repo to `git pull` anymore — the library is part of
@@ -61,7 +61,7 @@ Explain this to the user rather than trying to clone or pull anything.
 
 ## What this skill must NOT do
 - Clone or `git pull` anything — the library is bundled, not fetched.
-- Pick / rank templates — that's `pick`'s job.
+- Pick / rank templates — that's `brainstorming`'s job.
 - Generate or write UI files — that's `build`'s job.
-- Auto-continue to `pick` — confirm the library is ready first, and let the
+- Auto-continue to `brainstorming` — confirm the library is ready first, and let the
   user start the next brief.

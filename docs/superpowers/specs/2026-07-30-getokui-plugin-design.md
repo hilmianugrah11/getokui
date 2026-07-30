@@ -10,11 +10,17 @@
 ## 1. Summary
 
 **getokui** is a Claude Code plugin that gives Claude a *"taste library"*: a
-curated collection of HTML design references. When a user asks to build a UI,
-the agent **doesn't invent from scratch** — it reads a local reference index,
-suggests the 5 best-matching candidates, the user picks (can pick more than
-one), then the agent adapts them into the user's own UI in the requested format
-(HTML / React / Next.js).
+curated collection of HTML design references. It offers **two flows**, both
+anchored to that library:
+
+- **Create from scratch (`brainstorming → build`)** — the agent
+  **doesn't invent from scratch**: it reads a local reference index, suggests
+  the 5 best-matching candidates, the user picks (can pick more than one), then
+  the agent adapts them into the user's own UI in the requested format
+  (HTML / React / Next.js).
+- **Improve what exists (`review → glowup`)** — the user points at an existing
+  UI file; the agent critiques its design **against the curated references**,
+  then glows it up (restyle, keep the user's content).
 
 Problem it solves: AI-generated UIs often look *template-y* (plain, generic)
 because the AI guesses from scratch. Tools like Lovable/v0 are good because they
@@ -26,7 +32,7 @@ local and curated.
 ## 2. Architecture: One Bundled Repo
 
 The reference library ships **inside the plugin** under `references/`. A single
-`/plugin install` pulls the manifest, the three skills, and the whole library
+`/plugin install` pulls the manifest, the five skills, and the whole library
 together — one repo, one install step, works offline immediately. The library is
 only ~2MB, so bundling keeps install trivially fast while removing the separate
 clone that could fail during a live demo.
@@ -43,9 +49,11 @@ getokui/
 │   └── thumbs/
 │       └── <slug>.webp      # self-screenshotted, WebP, compressed
 └── skills/
-    ├── setup/SKILL.md       # verify the bundled library + report count
-    ├── pick/SKILL.md        # read index → rank 5 candidates → checkpoint
-    └── build/SKILL.md       # mix → adapt → convert format → output file
+    ├── setup/SKILL.md          # verify the bundled library + report count
+    ├── brainstorming/SKILL.md  # read index → rank 5 candidates → checkpoint
+    ├── build/SKILL.md          # mix → adapt → convert format → output file
+    ├── review/SKILL.md         # critique an existing UI vs the library → checkpoint
+    └── glowup/SKILL.md         # apply fixes to the user's file (style, keep content)
 ```
 
 Skills read the bundled files via the `${CLAUDE_PLUGIN_ROOT}/references/` path
@@ -67,16 +75,25 @@ folder.
 
 ## 3. Skill Pipeline (adapted from `design-agent`)
 
-Instead of one big `SKILL.md`, getokui uses a **three-skill pipeline** — each
-skill with one clear job, with a **checkpoint = hard stop** between selection
-and build. This pattern is adapted from the `ajisss/design-agent` plugin
-(`init → inspo → select → spec → build`), simplified for the hackathon scope.
+Instead of one big `SKILL.md`, getokui uses a **five-skill pipeline** across
+**two flows** — each skill with one clear job, with a **checkpoint = hard stop**
+before any action. This pattern is adapted from the `ajisss/design-agent` plugin
+(`init → inspo → select → spec → build`), reshaped for the hackathon scope.
+
+**Flow A — create from scratch (`brainstorming → build`):**
 
 | Skill | Job | Checkpoint |
 |---|---|---|
-| **setup** | Verify the bundled library at `${CLAUDE_PLUGIN_ROOT}/references/` + report the template count. "update references" → update the plugin. | — |
-| **pick** | Parse request → filter `index.json` → present **5 ranked candidates** (name+description+thumbnail). | **HARD STOP** — wait for the user to choose. Won't continue to build on its own. |
+| **setup** | Verify the bundled library at `${CLAUDE_PLUGIN_ROOT}/references/` + report the template count. "update references" → update the plugin. | — (silent utility) |
+| **brainstorming** | Parse request → filter `index.json` → present **5 ranked candidates** (name+description+thumbnail). | **HARD STOP** — wait for the user to choose. Won't continue to build on its own. |
 | **build** | Mix picks → adapt (style, not content) → convert format → write file. | Confirm format if ambiguous. |
+
+**Flow B — improve what exists (`review → glowup`):**
+
+| Skill | Job | Checkpoint |
+|---|---|---|
+| **review** | Read the file the user points at → critique its design **against the library** (spacing/color/type/hierarchy/polish/consistency) → present **ranked findings**. Reads only. | **HARD STOP** — wait for the user to approve fixes (all / some / none). |
+| **glowup** | Apply the approved fixes to the user's file — pull **style** from 1–3 refs, **keep the user's content** → edit in place (or a `.glowup.` copy) → report changes. | Can run directly ("glow this up") with a quick internal review first. |
 
 **Checkpoint principle (from design-agent):** a skill with a checkpoint MUST
 fully stop and wait for the user's explicit answer in the next message. Don't
@@ -203,6 +220,32 @@ fit, the agent says so plainly ("nothing's a perfect fit for X, these are the
 closest") and offers to search again — it doesn't force a weak candidate as if
 it fit.
 
+**Flow B — improve what exists (`review → glowup`):**
+
+```
+1. User points at a file   "getokui, review index.html"
+        │
+2. Read the target         parse markup/JSX + styling (Tailwind/CSS/tokens)
+        │
+3. Pick 1-3 refs           choose comparison references from index.json
+        │
+4. Evaluate                spacing · color · typography · hierarchy ·
+                           component polish · consistency — vs the refs
+        │
+5. Present ranked findings each: element/line — what's weak → the fix
+   ══ HARD STOP ══         (ref: <slug> does this well)
+        │                  agent STOPS, waits for the user's go
+        │
+6. glowup (on approval)    apply the approved fixes — pull STYLE from the refs,
+                           KEEP the user's content
+        │
+7. Edit in place           (or a `.glowup.` copy) → report what changed
+```
+
+Review reads only; it never edits. glowup can also run directly ("glow this up")
+with a quick internal review first. Neither writes into the bundled
+`${CLAUDE_PLUGIN_ROOT}/references/` — output always goes to the user's file.
+
 ---
 
 ## 7. Curation & Thumbnail Pipeline
@@ -291,8 +334,10 @@ Before the presentation, test **3 end-to-end scenarios**:
 3. `"getokui, build a restaurant landing in next"` → valid **Next.js 15** output.
 
 Passes if: all three produce correctly-formatted files, look clearly better than
-plain AI output, and the pick flow works (5 candidates appear, hard stop,
-multi-pick, mix).
+plain AI output, and the brainstorming flow works (5 candidates appear, hard
+stop, multi-pick, mix). Flow B check: `"getokui, review index.html"` returns
+ranked findings anchored to named refs and stops; `"glowup"` then restyles the
+file while keeping its content.
 
 ---
 
@@ -308,6 +353,9 @@ Given the command `"getokui, build a SaaS landing page"`, the agent can:
    to disk.
 4. Detect the format if the user asks for React/Next.js, output the correct
    latest-version stack.
+5. On `"getokui, review <file>"`, critique the file **against named library
+   refs**, present ranked findings, and **stop** — then, on approval, `glowup`
+   applies the fixes in place while keeping the user's content.
 
 **Passing criteria:** all four steps run without crashing, the resulting UI is
 clearly more *polished* than reference-less AI output, the checkpoint flow works
@@ -322,8 +370,8 @@ For transparency (we learned from a plugin that already works):
 
 | design-agent pattern | Used in getokui? | Note |
 |---|---|---|
-| Multi-skill pipeline (`init→inspo→select→spec→build`) | ✅ Yes (simplified → `setup→pick→build`) | 3 skills are enough for the hackathon scope. |
-| Checkpoint = hard stop | ✅ Yes | Between `pick` and `build`. |
+| Multi-skill pipeline (`init→inspo→select→spec→build`) | ✅ Yes (reshaped → two flows: `setup→brainstorming→build` + `review→glowup`) | 5 skills across create + improve. |
+| Checkpoint = hard stop | ✅ Yes | Between `brainstorming` and `build`, and between `review` and `glowup`. |
 | Separate style vs content | ✅ Yes | §9. |
 | Battle-tested marketplace install instructions | ✅ Yes | §4, including the "don't test via slash command" note. |
 | Honest about uncertainty (confidence) | ✅ Partly | Applied as "honest about match quality" (§6), without a full confidence-marker system. |
