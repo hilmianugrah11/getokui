@@ -37,6 +37,10 @@ the load-bearing parts are:
 - **§7 proof-of-extraction gate** — show the "Design DNA I'm using" block (the
   tokens you're pulling in) alongside the fixes, before you edit.
 - **§8 self-check** — run it before you save.
+- **§9 respect the project structure** — glowup edits in place, so preserve the
+  file's location, framework, and styling system; if you add a companion file (a
+  split-out component, an icon import, a `.glowup` copy), place it to match the
+  project's real folders & naming — don't invent a new tree.
 
 ## Prerequisite
 
@@ -53,11 +57,17 @@ that `${CLAUDE_PLUGIN_ROOT}/references/index.json` exists:
 
 ## Steps
 
-### 1. Read the target file
+### 1. Read the target file — and its surrounding project (doctrine §9)
 Read the file the user pointed at. Understand its structure, framework
 (plain HTML / React / Next), and current styling approach (Tailwind classes,
 CSS, inline styles). Preserve that stack — a glowup improves the design, it does
 NOT rewrite the file into a different framework unless the user asks.
+
+Also glance at the **project around the file** (doctrine §9): where components
+live, the file-naming convention, the styling system in use, existing path
+aliases. You'll match these if the glowup adds any companion file (a split-out
+component, an icons module) or writes a non-destructive copy — don't invent a new
+folder or naming scheme; slot into what's already there.
 
 If the file is missing/unreadable → tell the user, ask for the correct path.
 Don't invent a file.
@@ -148,6 +158,9 @@ emoji, one radius + shadow token?), then tell the user like a collaborator:
 - **Leave or add emoji** — replace them with Lucide/Solar icons (§1).
 - **Glow up from memory** — use the DNA's real classes + `keyframes_css`; don't
   just nudge numbers you guessed (§2).
+- **Invent the project's structure (§9)** — if you add a companion file or a
+  non-destructive copy, place it to match the project's real folders / naming /
+  styling; don't spawn a new tree or reorganize the user's files.
 - Replace the user's real content with the template's text/copy — restyle only,
   keep their content.
 - Reproduce brand assets (logos, photos, illustrations) from the reference.

@@ -22,13 +22,15 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/shared/DOCTRINE.md` and follow it. For
 brainstorming the load-bearing parts are:
 - **§0 reasoning pre-flight** — restate the goal + mood before you rank, so the
   5 candidates are actually targeted, not a generic category dump.
+- **§2b web layer** — alongside the local candidates, do a quick current-year
+  design scan + name famous-brand benchmarks for the vertical (see Step 3.5).
 - **§4 communication** — present candidates as a warm human summary with clear
   numbered options and a real question; NO emoji anywhere.
 - **§5 checkpoint** — the HARD STOP is sacred; options + question, then wait.
 
-You don't build here, so §1/§2/§3 (icons/extraction/shadcn) mostly land in
-`build` — but if the user mentions an icon set, shadcn, or a specific animation
-they want, note it and carry it into the handoff so `build` honors it.
+You don't build here, so §1/§3 (icons/shadcn) mostly land in `build` — but if the
+user mentions an icon set, shadcn, a specific animation, or a brand they want the
+feel of, note it and carry it into the handoff so `build` honors it.
 
 ## Prerequisite
 
@@ -76,6 +78,25 @@ Order candidates by relevance. Ranking signals (strongest to weakest):
 Take **at most 5**. If only 3 are genuinely relevant, present just 3 — don't
 force in irrelevant ones to reach 5.
 
+### 3.5. Scan the web for current-year direction + brand benchmarks (doctrine §2b)
+The local library is frozen at bundle time — the web keeps the direction current.
+Before presenting, do a quick pass:
+- Read `${CLAUDE_PLUGIN_ROOT}/skills/shared/WEB-BENCHMARKS.md` for the famous
+  brands mapped to this vertical (Indonesian + global).
+- If web access is available, run 1–2 quick searches with the **current year** to
+  see what great looks like now — e.g. "fintech landing page design 2026",
+  `site:awwwards.com <vertical>`, `site:dribbble.com <vertical> 2026`, or a
+  specific brand's site (Awwwards, Dribbble, Behance, Godly all work). Judge with
+  getokui's eyes (composition, motion, component polish).
+- Pick **1–2 named benchmarks** to mention as the taste bar (e.g. "for a payment
+  vertical, we'd aim for the CTA/trust feel of **Xendit** and **Stripe**"; for
+  hajj/umrah, the trust + warmth of **Traveloka** + an umrah operator; for a
+  school, **Ruangguru**; for a gov/public service, the clarity of **GOV.UK**).
+
+This is direction only — you're not extracting assets, and you still don't build
+here. If offline or search fails, use `WEB-BENCHMARKS.md`'s named brands and move
+on — never block on the web.
+
 ### 4. Present candidates — then HARD STOP
 Show each candidate concisely and readably:
 - Order number (for easy selection) + name.
@@ -89,6 +110,11 @@ Show each candidate concisely and readably:
 Open with a one-line human summary of the direction you read from their brief
 (doctrine §4), e.g. "Buat AI SaaS yang dark + premium, ini 5 yang paling nyetel:"
 — then the numbered list. No emoji.
+
+After the list, add a one-line **web benchmark** note from Step 3.5 so the user
+sees the current-year taste bar, e.g. "Buat kualitas komponen & CTA-nya, kita
+patok ke **Xendit** + **Stripe** (2026) — pola-nya diadaptasi ke brand lo, bukan
+di-copy." Keep it short; it's context, not another menu.
 
 If the match is weak (nothing really fits), **be honest**:
 > "Nothing's a perfect fit for '<request>', these are the closest. Want me to
@@ -118,7 +144,8 @@ When the user replies:
 
 Once the choice is clear, hand off to the `build` skill: bring the list of
 chosen slugs (in order) + the requested output format + any icon-set / shadcn /
-animation preferences the user mentioned.
+animation preferences the user mentioned + the **web benchmark(s)** you named in
+Step 3.5 so `build` matches that component/CTA bar.
 
 ## What this skill must NOT do
 - Write code / generate UI / create files — that's `build`'s job.

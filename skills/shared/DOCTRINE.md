@@ -29,15 +29,21 @@ Work through, in order:
    ("hero layout from `aura-ai-landing`, gradient + glow from `signalis-saas-45`,
    card shape from `obsidian`"). Then **read its Design DNA file**
    (`${CLAUDE_PLUGIN_ROOT}/references/dna/<slug>.json`) — that's where the real
-   class strings, spacing, and keyframes already live. See §2.
+   class strings, spacing, and keyframes already live. See §2. **Also name 1–2
+   web benchmarks** (a current-year search + a famous brand from §2b /
+   `WEB-BENCHMARKS.md`) whose component/CTA quality you'll match.
 3. **List the sections/components you'll build**, in order, top to bottom.
 4. **Decide the icon set** (Lucide or Solar — see §1) and the reason.
 5. **Decide if any component needs a shadcn/ui pattern** (see §3).
 6. **Spot the risks.** What's the most likely way this comes out looking
    generic/AI-slop? Name it, and say how you'll avoid it (usually: pull harder
    from the reference instead of inventing).
+7. **Check where the files go.** Before writing, inspect the actual project
+   structure and name the real path(s) each file will land in — matching the
+   project's existing folders, naming, and styling convention. Never invent a
+   layout. See §9.
 
-Only after those six steps do you generate. This is the difference between
+Only after those steps do you generate. This is the difference between
 "template-y AI output" and something that looks designed. **Every step of this
 plan must trace back to a reference — if you're inventing from scratch, stop and
 go read a template.**
@@ -186,6 +192,43 @@ Extraction is about **visual style, structure, and motion** — NOT the template
 words, headlines, product names, testimonials, logos, or photos. Take the
 `@keyframes` and the card shape; leave the copy. (The per-skill SKILL.md repeats
 the exact content rules — follow them.)
+
+### 2b. The web layer — current-year trends + famous-brand benchmarks
+The local library is frozen at bundle time; the **web keeps getokui current**.
+For `brainstorming` and `build`, in addition to the local DNA, you SHOULD look
+to the web for two things:
+
+1. **Current-year best design.** Search with the year in the query (e.g.
+   "fintech landing page design 2026", `site:awwwards.com fintech`,
+   `site:godly.website`, `site:dribbble.com <vertical> 2026`). Galleries worth
+   hitting: Awwwards, **Dribbble** & Behance (concept/component ideas), Godly,
+   Land-book, SiteInspire, Mobbin/Refero (real product flows). This tells you
+   what great looks like *now*, so the output feels 2026, not 2021.
+2. **Famous-brand benchmarks.** Reference real, gold-standard sites for the
+   vertical — Indonesian brands the user cares about (Bank Jago, Jenius, Xendit,
+   Midtrans, DOKU, Flip, Gojek, Grab, Tokopedia, Traveloka, Niagahoster,
+   Telkomsel) plus other verticals the user builds for — travel & **hajj/umrah**
+   (Traveloka, Tiket, umrah operators), **education/schools** (Ruangguru, Zenius,
+   campus sites), **government/public sector** (JAKI, SatuSehat, GOV.UK as the
+   clarity bar) — and global bars (Stripe, Linear, Vercel, Ramp, Coinbase,
+   Airbnb). A full curated map lives in
+   `${CLAUDE_PLUGIN_ROOT}/skills/shared/WEB-BENCHMARKS.md` — read it. Use these
+   as the taste bar for **component & CTA quality**: "make the CTA feel like
+   Stripe's", "trust cards like Xendit's", "motion like Linear's".
+
+**The hard rule — pattern, not property.** You may adapt a benchmark's **design
+language, component pattern, CTA style, spacing, and motion**. You may NOT copy
+its **logo, brand name, copy, photos, illustrations, or other proprietary
+assets**. Take the *shape and feel* and **re-skin it to the user's palette and
+content**. "Designed like Gojek" = good; "a Gojek clone with their logo/copy" =
+not ok. Same style-not-content rule as the local library.
+
+**Roles:** the **local DNA is the extraction anchor** (real, legal-to-copy class
+strings + `@keyframes`); the **web is the trend + quality layer on top** (can't
+be pixel-rendered here, so use it for direction, patterns, and named benchmarks —
+not for lifting assets). Name your web benchmark(s) in the §7 proof block, as a
+pattern you're adapting. If offline / search fails, `WEB-BENCHMARKS.md` alone is
+enough — proceed with its named benchmarks, don't block.
 
 ---
 
@@ -346,6 +389,8 @@ per chosen slug — the concrete values you're about to reuse:
 > - Section rhythm: `pt-24` / `max-w-7xl`
 > - Motion: `@keyframes float-card-elements` (ambient) + `hover:` states
 > - Signature move: bento-grid + rotated card elements (from composition_techniques)
+> - Web benchmark: CTA feel like **Stripe**, trust cards like **Xendit** (pattern
+>   adapted to the palette — no logo/copy/assets copied)
 > - Icons: Lucide (fintech → clean/geometric)
 
 This block is not optional decoration — it's the checkpoint that makes skipping
@@ -375,9 +420,57 @@ Run this list every time — it's short on purpose:
 - [ ] Zero emoji in the output AND in my reply? Icons used instead?
 - [ ] Can I name the exact reference slug + the exact thing I pulled for each
       major section (styling, component shape, AND animation)?
+- [ ] Web layer (§2b): did I check current-year design + name a famous-brand
+      benchmark for component/CTA quality — adapting the pattern, NOT copying its
+      logo/brand/copy/assets?
 - [ ] If interactive components were needed: did I use shadcn (React/Next) or its
       pattern (HTML), re-skinned to the palette?
+- [ ] Project structure (§9): did I inspect the working directory FIRST and write
+      files into the project's real folders / naming / styling convention (not an
+      invented path), leaving its structure otherwise untouched?
 - [ ] Human summary + options/question in my reply, in the user's language?
 - [ ] If this skill has a HARD STOP, did I actually stop?
 
 If any box is unchecked, fix it before sending.
+
+---
+
+## 9. Respect the project's real structure — inspect BEFORE you write a file
+
+Before `build` or `glowup` creates or edits any file, you MUST first look at how
+the target project is actually organized. Never invent a path, a folder name, or
+a file convention from your own habit — read the project and match it. Guessing
+where files go is a top way a getokui output feels bolted-on instead of native.
+
+**Do this before writing (build) or editing (glowup):**
+
+1. **List the working directory** and look at its real shape — is it an empty
+   folder, a plain static site, a Vite/React app, a Next.js app, a monorepo?
+   Check for the tells: `package.json` (read it — scripts, deps, framework
+   version), `src/`, `app/`, `components/`, `pages/`, `public/`, `index.html`,
+   `vite.config.*`, `next.config.*`, `tailwind.config.*`, `tsconfig.json`.
+2. **Match the existing conventions**, don't impose yours:
+   - **Folder layout** — if components live in `src/components/`, put yours there;
+     if it's `app/components/`, use that. Don't create a second parallel tree.
+   - **File naming** — match the case already used (`PascalCase.tsx` vs
+     `kebab-case.tsx` vs `index.html`), and the extension in play (`.tsx`/`.jsx`
+     /`.js`/`.html`).
+   - **Styling system** — if the project already uses Tailwind, its config,
+     CSS-modules, or plain CSS, extend THAT; don't bolt on a different one.
+   - **Import/alias style** — reuse existing path aliases (`@/components/...`) and
+     import order rather than introducing a new pattern.
+3. **Fit in, don't reorganize.** Add your file where a sibling of the same kind
+   already lives. Do NOT restructure the user's folders, rename their files, or
+   "tidy" their tree as a side effect — that's not what was asked.
+4. **Only scaffold fresh when it's genuinely empty.** If the directory has no
+   project yet (bare folder / just an `index.html`), THEN create the standard
+   structure for the chosen format (per the build skill's format section). If a
+   project already exists, slot into it.
+5. **If the structure is ambiguous** (two plausible component folders, an unclear
+   framework, a mixed codebase), ask one short question (§4) — don't silently
+   pick and risk creating files in the wrong place.
+
+The rule in one line: **read the project first, write to where it actually keeps
+things, and leave its structure the way you found it (plus your additions).**
+Output still goes to the user's working directory — never into the bundled
+library `${CLAUDE_PLUGIN_ROOT}/references/` (read-only).
