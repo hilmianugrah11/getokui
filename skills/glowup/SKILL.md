@@ -16,6 +16,22 @@ This is the second half of the **improve-what-exists** flow (`review` →
 without a prior review — in that case do a quick internal review first, then
 apply.
 
+## READ FIRST — shared doctrine (mandatory)
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/shared/DOCTRINE.md` and follow it. For glowup
+the load-bearing parts are:
+- **§0 reasoning pre-flight** — decide refs + what you'll pull before editing.
+- **§1 icons** — replace ANY emoji you find (or would add) with Lucide/Solar
+  icons; never leave or introduce emoji.
+- **§2 reference extraction** — open the reference HTML and lift its real class
+  strings, component shapes, and especially its **animations/keyframes**; a
+  glowup that adds motion from a reference is far stronger than one that only
+  nudges spacing.
+- **§3 shadcn/ui** — for weak interactive components, upgrade to shadcn
+  (React/Next) or its pattern (HTML), re-skinned to the palette.
+- **§4 communication** — human summary + options + a next-step question.
+- **§6 self-check** — run it before you save.
+
 ## Prerequisite
 
 The taste library is bundled at `${CLAUDE_PLUGIN_ROOT}/references/`. Sanity-check
@@ -49,10 +65,17 @@ Don't invent a file.
 
 ### 3. Pull taste from the library — STYLE, not content — MANDATORY
 Pick 1–3 relevant references from `index.json` (same vertical/mood as the
-target). Read their HTML/`colors`/`fonts` as needed. From them, borrow **only**:
-- Visual style: color palette, spacing scale, radius, shadow, typography,
-  transitions.
+target). **Open their actual HTML** at
+`${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html` and extract concretely
+(doctrine §2) — don't glow up from memory. Borrow **only**:
+- Visual style: color palette, spacing scale, radius, shadow, typography — reuse
+  the reference's real Tailwind class strings, not made-up round numbers.
+- **Motion**: grep the reference for `@keyframes`, `animate-`, `transition`,
+  `hover:`, `group-hover:`, scroll observers — bring that motion into the user's
+  file (adapt colors). This is often the single biggest glow-up lever.
 - Component structure & shape: card/button/input shapes, section rhythm, grid.
+- **Icons**: if the user's file uses emoji, replace them with Lucide/Solar icons
+  (doctrine §1) as part of the glow-up.
 
 **DON'T** copy the reference's **content** into the user's file:
 - No headlines, body copy, product names, testimonials, feature text from the
@@ -68,6 +91,15 @@ Edit the file in place, keeping its framework and its content:
 - Adjust spacing to a consistent scale, fix contrast, strengthen the type
   hierarchy, unify radius/shadow/border tokens, tidy the layout/grid, polish
   component states.
+- **Add the motion you extracted** (doctrine §2) — paste the reference's
+  `@keyframes`/transitions and wire the triggers so the UI feels alive, not
+  static. For HTML add the icon-set CDN + `lucide.createIcons()` if you swapped
+  in icons; for React/Next add the icon import.
+- **Replace every emoji** with a Lucide/Solar icon, sized and colored to the
+  palette (doctrine §1).
+- For weak interactive components (a hand-rolled dialog/tabs/dropdown), upgrade
+  to shadcn/ui (React/Next) or its pattern in Tailwind (HTML), re-skinned to the
+  palette (doctrine §3) — only if the user's stack allows it without a big rewrite.
 - Make **surgical, coherent** edits — don't gut the file. The result should be
   recognizably the user's UI, leveled up.
 - Match the existing tooling: Tailwind classes if it uses Tailwind, its CSS
@@ -78,17 +110,22 @@ Edit the file in place, keeping its framework and its content:
 Write output to the **user's working directory / their file** — NEVER into the
 bundled library `${CLAUDE_PLUGIN_ROOT}/references/` (read-only for us).
 
-### 5. Report what changed
-Tell the user concisely:
+### 5. Report what changed (human language — doctrine §4)
+Run the doctrine §6 self-check, then tell the user like a collaborator:
+- A 1–2 sentence plain-language summary of how the UI leveled up.
 - The file path that was updated (or the new copy's path).
-- A short bullet list of the improvements made, grouped by dimension
-  (spacing / color / typography / hierarchy / polish), each noting which
-  reference inspired it where relevant.
+- A short bullet list of the improvements, grouped by dimension
+  (spacing / color / typography / hierarchy / motion / polish), each **naming
+  the reference** it came from where relevant (e.g. "added the card hover-lift
+  from `obsidian`", "swapped emoji for Lucide icons").
 - Anything left for the user (e.g. placeholders to fill, an image to swap).
-- How to preview: HTML → "open it in a browser"; React/Next → "run `npm run
-  dev`".
+- End with a next-step question / options — e.g. "Want me to push the motion
+  further, or glow up another section?" No emoji, no dead-stop dump.
 
 ## What this skill must NOT do
+- **Leave or add emoji** — replace them with Lucide/Solar icons (§1).
+- **Glow up from memory** — open the reference HTML and extract real classes +
+  motion; don't just nudge numbers you guessed (§2).
 - Replace the user's real content with the template's text/copy — restyle only,
   keep their content.
 - Reproduce brand assets (logos, photos, illustrations) from the reference.
@@ -96,3 +133,4 @@ Tell the user concisely:
 - Gut/replace the whole UI — glowup is an upgrade, not a from-scratch rebuild
   (that's `brainstorming` + `build`).
 - Write into the bundled library folder `${CLAUDE_PLUGIN_ROOT}/references/`.
+- Report as a bare file dump with no human summary / next-step question (§4).

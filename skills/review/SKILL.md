@@ -13,6 +13,21 @@ Applying the fixes is the `glowup` skill's job, and only after the user says go.
 This is the **improve-what-exists** entry point. (To create a new UI from
 scratch, use `brainstorming` → `build`.)
 
+## READ FIRST — shared doctrine (mandatory)
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/shared/DOCTRINE.md` and follow it. For review
+the load-bearing parts are:
+- **§0 reasoning pre-flight** — know the target's vertical/mood + which refs you
+  measure against before you critique.
+- **§1 icons** — flag emoji-in-UI as a finding (fix: swap to Lucide/Solar).
+- **§2 reference extraction** — anchor findings to what a real reference does
+  (its spacing, its motion), not generic advice.
+- **§3 shadcn/ui** — a valid finding can be "this hand-rolled dropdown should be
+  a shadcn component" (for React/Next targets).
+- **§4 communication** — human summary + ranked findings + a real question; NO
+  emoji.
+- **§5 checkpoint** — HARD STOP after findings; do not edit.
+
 ## Prerequisite
 
 The taste library is bundled at `${CLAUDE_PLUGIN_ROOT}/references/`. Sanity-check
@@ -62,14 +77,21 @@ Go through the target against these dimensions, comparing to the reference(s):
 - **Layout & hierarchy** — grid, visual hierarchy, focal point, the order and
   prominence of sections, responsive shape.
 - **Component polish** — radius/shadow/border consistency, button & input
-  states, card shapes, iconography.
+  states, card shapes.
+- **Iconography** — emoji used where an icon belongs (flag it: swap to
+  Lucide/Solar per doctrine §1); inconsistent or default-sized icons.
+- **Motion** — is the UI static where a reference would have tasteful animation
+  (hover states, entrance, gradient shift)? Naming the missing motion + the ref
+  that does it well is a high-value finding (doctrine §2).
+- **Interactive components** — hand-rolled dialogs/tabs/dropdowns that shadcn/ui
+  would do better (React/Next targets — doctrine §3).
 - **Consistency** — repeated tokens vs one-off values, spacing/colors that drift.
 
 For each real issue, note: **where** (line or element), **what's wrong**, **why
 it matters**, and **which reference does it better** (name it).
 
 ### 4. Present RANKED findings — then HARD STOP
-Present a short, readable review:
+Present a short, readable review in plain human language (doctrine §4), no emoji:
 - A 1–2 sentence overall impression (honest — if it's already good, say so).
 - Findings **ranked most-impactful first**, each as:
   `element/line — what's weak → the fix (ref: <slug> does this well)`.

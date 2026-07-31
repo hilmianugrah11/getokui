@@ -16,6 +16,20 @@ already exists, use `review` → `glowup` instead.)
 This skill does **not** write code. Only after the user picks do you continue to
 the `build` skill.
 
+## READ FIRST — shared doctrine (mandatory)
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/shared/DOCTRINE.md` and follow it. For
+brainstorming the load-bearing parts are:
+- **§0 reasoning pre-flight** — restate the goal + mood before you rank, so the
+  5 candidates are actually targeted, not a generic category dump.
+- **§4 communication** — present candidates as a warm human summary with clear
+  numbered options and a real question; NO emoji anywhere.
+- **§5 checkpoint** — the HARD STOP is sacred; options + question, then wait.
+
+You don't build here, so §1/§2/§3 (icons/extraction/shadcn) mostly land in
+`build` — but if the user mentions an icon set, shadcn, or a specific animation
+they want, note it and carry it into the handoff so `build` honors it.
+
 ## Prerequisite
 
 The library ships **inside this plugin** at `${CLAUDE_PLUGIN_ROOT}/references/`
@@ -72,6 +86,10 @@ Show each candidate concisely and readably:
   or can't be displayed, DON'T fail — just present the text (name +
   description) and note "(thumbnail unavailable)".
 
+Open with a one-line human summary of the direction you read from their brief
+(doctrine §4), e.g. "Buat AI SaaS yang dark + premium, ini 5 yang paling nyetel:"
+— then the numbered list. No emoji.
+
 If the match is weak (nothing really fits), **be honest**:
 > "Nothing's a perfect fit for '<request>', these are the closest. Want me to
 > search another category, or go ahead and adapt from one of these?"
@@ -79,6 +97,9 @@ If the match is weak (nothing really fits), **be honest**:
 Close with an explicit invitation to choose:
 > "Which one do you want to use? Pick one or combine several (e.g. '#2 for the
 > layout, take the colors from #4'). Or say 'none of these, search again'."
+
+If the user named an icon set (Lucide/Solar), shadcn, or a specific animation,
+acknowledge it here and remember it for the `build` handoff.
 
 **HARD STOP here.** Do NOT continue to `build`, do NOT start writing UI on your
 own assumption. Wait for the user's explicit answer in the next message — even
@@ -96,7 +117,8 @@ When the user replies:
   confirmation, don't guess.
 
 Once the choice is clear, hand off to the `build` skill: bring the list of
-chosen slugs (in order) + the requested output format.
+chosen slugs (in order) + the requested output format + any icon-set / shadcn /
+animation preferences the user mentioned.
 
 ## What this skill must NOT do
 - Write code / generate UI / create files — that's `build`'s job.

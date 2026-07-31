@@ -13,6 +13,9 @@ does **not** generate UI — those are the jobs of `brainstorming` and `build`.
 
 Bundled library location: `${CLAUDE_PLUGIN_ROOT}/references/`
 
+Communication: follow `${CLAUDE_PLUGIN_ROOT}/skills/shared/DOCTRINE.md` §4 —
+report in plain human language, no emoji, end with a clear next step.
+
 ## Steps
 
 ### 1. Verify the bundled library exists
