@@ -23,14 +23,18 @@ the load-bearing parts are:
 - **§0 reasoning pre-flight** — decide refs + what you'll pull before editing.
 - **§1 icons** — replace ANY emoji you find (or would add) with Lucide/Solar
   icons; never leave or introduce emoji.
-- **§2 reference extraction** — open the reference HTML and lift its real class
-  strings, component shapes, and especially its **animations/keyframes**; a
-  glowup that adds motion from a reference is far stronger than one that only
-  nudges spacing.
+- **§2 reference extraction** — read the pre-extracted **Design DNA file**
+  (`references/dna/<slug>.json`) FIRST for the real class strings, spacing, and
+  `@keyframes`, then open the HTML for anything it misses. A glowup that adds the
+  DNA's motion is far stronger than one that only nudges spacing.
 - **§3 shadcn/ui** — for weak interactive components, upgrade to shadcn
   (React/Next) or its pattern (HTML), re-skinned to the palette.
 - **§4 communication** — human summary + options + a next-step question.
-- **§6 self-check** — run it before you save.
+- **§6 hard floors** — bring the file UP to the minimums: `py-20`+ sections,
+  `text-5xl`+ hero, ≥2 real motions from the DNA, 0 emoji, one radius + shadow.
+- **§7 proof-of-extraction gate** — show the "Design DNA I'm using" block (the
+  tokens you're pulling in) alongside the fixes, before you edit.
+- **§8 self-check** — run it before you save.
 
 ## Prerequisite
 
@@ -63,16 +67,24 @@ Don't invent a file.
   polish, consistency) and pick the highest-impact improvements. Briefly tell
   the user what you're about to change before doing it if the scope is large.
 
-### 3. Pull taste from the library — STYLE, not content — MANDATORY
+### 3. Pull taste from the library — DNA first, STYLE not content — MANDATORY
 Pick 1–3 relevant references from `index.json` (same vertical/mood as the
-target). **Open their actual HTML** at
-`${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html` and extract concretely
-(doctrine §2) — don't glow up from memory. Borrow **only**:
+target). Then, for each:
+1. **Read its Design DNA** `${CLAUDE_PLUGIN_ROOT}/references/dna/<slug>.json`
+   FIRST (doctrine §2 "Start from the pre-extracted DNA") — it gives you the real
+   `hero.h1_classes`, `hero.cta_classes`, `spacing.*`, `radius`, `shadow`, and
+   `motion.keyframes_css` without guessing.
+2. **Open the HTML** `${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html` only
+   for what the DNA doesn't capture (fuller component structure, the observer
+   script). Don't glow up from memory.
+
+Then show the **proof-of-extraction block** (doctrine §7) — the DNA tokens you're
+about to pull in — alongside the fixes, before you edit. Borrow **only**:
 - Visual style: color palette, spacing scale, radius, shadow, typography — reuse
-  the reference's real Tailwind class strings, not made-up round numbers.
-- **Motion**: grep the reference for `@keyframes`, `animate-`, `transition`,
-  `hover:`, `group-hover:`, scroll observers — bring that motion into the user's
-  file (adapt colors). This is often the single biggest glow-up lever.
+  the DNA's real Tailwind class strings, not made-up round numbers.
+- **Motion**: paste the DNA's `motion.keyframes_css` verbatim and wire the
+  triggers (`hover:`, `group-hover:`, scroll observers) into the user's file
+  (adapt colors). This is often the single biggest glow-up lever.
 - Component structure & shape: card/button/input shapes, section rhythm, grid.
 - **Icons**: if the user's file uses emoji, replace them with Lucide/Solar icons
   (doctrine §1) as part of the glow-up.
@@ -111,7 +123,9 @@ Write output to the **user's working directory / their file** — NEVER into the
 bundled library `${CLAUDE_PLUGIN_ROOT}/references/` (read-only for us).
 
 ### 5. Report what changed (human language — doctrine §4)
-Run the doctrine §6 self-check, then tell the user like a collaborator:
+Run the doctrine §8 self-check (including the §6 hard floors — did the glowup
+bring the file up to `py-20`+ sections, `text-5xl`+ hero, ≥2 real motions, 0
+emoji, one radius + shadow token?), then tell the user like a collaborator:
 - A 1–2 sentence plain-language summary of how the UI leveled up.
 - The file path that was updated (or the new copy's path).
 - A short bullet list of the improvements, grouped by dimension
@@ -123,9 +137,13 @@ Run the doctrine §6 self-check, then tell the user like a collaborator:
   further, or glow up another section?" No emoji, no dead-stop dump.
 
 ## What this skill must NOT do
+- **Skip the DNA file** — read `references/dna/<slug>.json` first and show the §7
+  proof block before editing; don't glow up from memory.
+- **Leave the file under the hard floors (§6)** — if the hero is `text-3xl` or a
+  section is cramped or the page is static, the glowup must lift it to the floor.
 - **Leave or add emoji** — replace them with Lucide/Solar icons (§1).
-- **Glow up from memory** — open the reference HTML and extract real classes +
-  motion; don't just nudge numbers you guessed (§2).
+- **Glow up from memory** — use the DNA's real classes + `keyframes_css`; don't
+  just nudge numbers you guessed (§2).
 - Replace the user's real content with the template's text/copy — restyle only,
   keep their content.
 - Reproduce brand assets (logos, photos, illustrations) from the reference.

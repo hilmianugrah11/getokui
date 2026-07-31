@@ -20,13 +20,18 @@ the load-bearing parts are:
 - **§0 reasoning pre-flight** — know the target's vertical/mood + which refs you
   measure against before you critique.
 - **§1 icons** — flag emoji-in-UI as a finding (fix: swap to Lucide/Solar).
-- **§2 reference extraction** — anchor findings to what a real reference does
-  (its spacing, its motion), not generic advice.
+- **§2 reference extraction** — anchor findings to what a real reference does.
+  You can read a relevant reference's Design DNA
+  (`references/dna/<slug>.json`) to cite its exact spacing/motion in a finding,
+  e.g. "hero is `text-3xl`; `novapay` runs `text-6xl lg:text-7xl`".
 - **§3 shadcn/ui** — a valid finding can be "this hand-rolled dropdown should be
   a shadcn component" (for React/Next targets).
 - **§4 communication** — human summary + ranked findings + a real question; NO
   emoji.
 - **§5 checkpoint** — HARD STOP after findings; do not edit.
+- **§6 hard floors** — measure against the concrete minimums: a sub-`text-5xl`
+  hero, cramped sub-`py-20` sections, a fully-static page (no real motion), or
+  emoji-as-icons are each concrete, citable findings — not matters of taste.
 
 ## Prerequisite
 

@@ -27,7 +27,9 @@ Work through, in order:
 2. **Name the references you will actually pull from.** Not "some templates" —
    the exact slugs, and for EACH one, the specific thing you're taking from it
    ("hero layout from `aura-ai-landing`, gradient + glow from `signalis-saas-45`,
-   card shape from `obsidian`"). See §2.
+   card shape from `obsidian`"). Then **read its Design DNA file**
+   (`${CLAUDE_PLUGIN_ROOT}/references/dna/<slug>.json`) — that's where the real
+   class strings, spacing, and keyframes already live. See §2.
 3. **List the sections/components you'll build**, in order, top to bottom.
 4. **Decide the icon set** (Lucide or Solar — see §1) and the reason.
 5. **Decide if any component needs a shadcn/ui pattern** (see §3).
@@ -112,6 +114,32 @@ getokui exists so the UI is grounded in **real curated design**, not guessed
 from scratch. So for anything you build or restyle, you are REQUIRED to open the
 actual reference HTML and lift concrete things from it. "Being inspired by" is
 not enough — extract.
+
+### Start from the pre-extracted DNA (do this FIRST — it's the shortcut that keeps you honest)
+Every reference has a **Design DNA file** already extracted for you at
+`${CLAUDE_PLUGIN_ROOT}/references/dna/<slug>.json`. Read it FIRST — before the
+HTML. It hands you the real tokens on a plate so you have no excuse to invent:
+
+- `hero.h1_classes` — the reference's **actual** headline Tailwind class string.
+  Reuse this exact size/weight/tracking/leading for your headline (swap only the
+  color to the user's palette).
+- `hero.cta_classes` — the **actual** primary-button class string (padding,
+  radius, gradient, shadow, hover). Reuse it for your CTA.
+- `type_scale.h1` / `type_scale.h2` — the real heading sizes (e.g. `text-6xl`).
+- `spacing.section_padding` / `spacing.container_max` / `spacing.gap` — the real
+  vertical rhythm and container width. Use these, not round numbers you guessed.
+- `radius` / `shadow` — the dominant tokens. Pick one radius + one shadow and
+  stay consistent (see §6).
+- `motion.keyframes_css` — the reference's **verbatim `@keyframes` CSS**. Paste
+  it into your output and wire the trigger. This is the single biggest taste
+  lever and the one you must not skip.
+- `motion.animate_classes` / `motion.techniques` / `signature` — what makes this
+  template feel like itself (glass, gradient-text, scroll-reveal, etc.).
+
+The DNA is the map; the HTML is the territory. Read the DNA for every chosen
+slug, then open the HTML (below) only when you need a component's fuller
+structure. **If a DNA field is populated, there is no valid reason to substitute
+an invented value for it.**
 
 ### The rule
 For every build/glowup, open the chosen reference file(s) at
@@ -216,12 +244,79 @@ on an assumption.
 
 ---
 
-## 6. Quick self-check before you send / write
+## 6. Hard floors — non-negotiable minimums (numbers, not taste)
+
+Sonnet regresses to timid, safe defaults when left to judge "good spacing" on
+its own. So judgment is removed here and replaced with concrete floors. These
+are **minimums for any UI you generate** (build) or leave behind (glowup). Meet
+or exceed them — a reference's own values (from its DNA) override these upward,
+never downward.
+
+- **Section rhythm:** every top-level section has vertical padding of at least
+  `py-20` (desktop). Hero at least `pt-28`/`pb-24`. If the DNA's
+  `spacing.section_padding` is bigger (e.g. `pt-48`), use the bigger one. Cramped
+  sections are the #1 tell of AI slop.
+- **Headline scale:** the main hero headline is at least `text-5xl` (prefer
+  `text-6xl`/`text-7xl` when the DNA shows it). Don't ship a `text-3xl` hero.
+- **Type hierarchy:** at least 3 clearly distinct levels (hero headline → section
+  heading → body). Body text `text-base`/`text-lg` with relaxed leading; never
+  everything the same size.
+- **Motion — MANDATORY:** at least **2 real motions** taken from the reference
+  DNA: one continuous/ambient (a `@keyframes` from `motion.keyframes_css`, e.g. a
+  float/glow/sweep) AND one interaction (`hover:`/`group-hover:` state, or a
+  scroll-reveal). A fully static page does not pass. Paste the reference's actual
+  keyframes; don't approximate.
+- **Icons:** exactly **0 emoji**; every icon from ONE set (Lucide or Solar, §1),
+  each with an explicit size and a palette color.
+- **Consistency tokens:** pick **one** radius scale and **one** shadow token from
+  the DNA and reuse them everywhere. No mixing `rounded-md` + `rounded-3xl` on
+  sibling cards. One accent color used consistently for primary actions.
+- **Contrast:** body text must be readable on its background (no `text-gray-400`
+  on white for paragraphs). Check foreground/background pairs.
+
+If you cannot meet a floor because the user's brief forbids it, say so in your
+report — don't silently ship under the floor.
+
+---
+
+## 7. Proof-of-extraction gate — show the DNA before you code
+
+Because Sonnet tends to *claim* it pulled from a reference while actually
+generating from memory, you must **prove** the extraction before writing the UI.
+
+In `build` and `glowup`, immediately after reading the DNA and BEFORE writing any
+UI file, output a short **"Design DNA I'm using"** block to the user, listing —
+per chosen slug — the concrete values you're about to reuse:
+
+> **Design DNA — `novapay` (fintech):**
+> - Headline: `text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1]`
+> - CTA: `rounded-xl py-3 px-6 ... shadow-[inset_0_1px_1px_#fff,...]`
+> - Section rhythm: `pt-24` / `max-w-7xl`
+> - Motion: `@keyframes float-card-elements` (ambient) + `hover:` states
+> - Signature: glass, multi-stop gradient
+> - Icons: Lucide (fintech → clean/geometric)
+
+This block is not optional decoration — it's the checkpoint that makes skipping
+impossible. If you can't fill it from the DNA file, you haven't read the DNA;
+stop and read it. The values you list here MUST be the values that appear in the
+code you then write.
+
+(For `build`, present this as part of your plan; for `glowup`, present it with
+the fixes you're about to apply. It does not require a separate user approval
+unless the skill's own checkpoint calls for one — but it must be visible.)
+
+---
+
+## 8. Quick self-check before you send / write
 
 Run this list every time — it's short on purpose:
 
 - [ ] Did I do the §0 reasoning pre-flight (goal, refs, sections, icons, shadcn,
       risk)?
+- [ ] Did I READ the `references/dna/<slug>.json` for every chosen slug, and show
+      the §7 proof-of-extraction "Design DNA I'm using" block?
+- [ ] Do the hard floors (§6) all pass — `py-20`+ sections, `text-5xl`+ hero,
+      ≥2 real motions from the DNA, 0 emoji, one radius + one shadow token?
 - [ ] Zero emoji in the output AND in my reply? Icons used instead?
 - [ ] Can I name the exact reference slug + the exact thing I pulled for each
       major section (styling, component shape, AND animation)?

@@ -12,16 +12,21 @@ the user — not a raw copy. Take the **style, structure & motion**, fill with t
 ## READ FIRST — shared doctrine (mandatory)
 
 Before anything else, read `${CLAUDE_PLUGIN_ROOT}/skills/shared/DOCTRINE.md` and
-follow it. It governs the six things this skill depends on:
+follow it. It governs the things this skill depends on:
 - **§0 reasoning pre-flight** — do it before you generate a single line.
 - **§1 icons** — NO emoji, ever; use Lucide (tech/clean) or Solar (premium/soft).
-- **§2 reference extraction** — you MUST open the reference HTML and physically
-  lift its class strings, component shapes, AND animations/keyframes. Inventing
-  from scratch is the failure mode this whole plugin exists to prevent.
+- **§2 reference extraction** — read the pre-extracted **Design DNA file**
+  (`references/dna/<slug>.json`) FIRST, then the HTML. The DNA hands you the real
+  class strings, spacing, and `@keyframes` so you copy instead of invent.
+  Inventing from scratch is the failure mode this whole plugin exists to prevent.
 - **§3 shadcn/ui** — use real shadcn for React/Next interactive components,
   its patterns for HTML, always re-skinned to the reference palette.
 - **§4 communication** — human summary + options + a next-step question.
-- **§6 self-check** — run it before you write files.
+- **§6 hard floors** — `py-20`+ sections, `text-5xl`+ hero, ≥2 real motions from
+  the DNA, 0 emoji, one radius + one shadow token. Non-negotiable minimums.
+- **§7 proof-of-extraction gate** — show the "Design DNA I'm using" block BEFORE
+  you write any UI.
+- **§8 self-check** — run it before you write files.
 
 The steps below are the *what*; the doctrine is the *how*. Both are required.
 
@@ -50,25 +55,39 @@ This is what makes Sonnet's output look designed instead of templated. If the
 brief is missing something you need (format, mood, content), ask now (doctrine
 §4) — don't guess.
 
-### 1. Read the chosen template(s) — and EXTRACT, don't skim
-For each slug, read its HTML file from
-`${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html`. Also read its entry in
-`${CLAUDE_PLUGIN_ROOT}/references/index.json` (to know `colors`, `fonts`,
-`sections`).
+### 1. Read the Design DNA FIRST, then the template — and EXTRACT, don't skim
+For each chosen slug, in this order:
 
-You are not reading for vibes — you are **extracting concrete material** (doctrine
-§2). As you read, physically pull out:
-- The **exact Tailwind class strings** for the hero, nav, cards, buttons,
-  section wrappers (spacing scale, max-width, radius, shadow, gradient).
-- The **component shapes** — how a card/button/pricing tier is structured.
-- The **animations** — grep the file for `@keyframes`, `animate-`, `transition`,
-  `transform`, `hover:`, `group-hover:`, and any scroll/intersection observer
-  script. Copy the keyframes + their triggers into your output (adapt the
-  colors). Motion is the #1 thing that makes a reference feel premium and the #1
-  thing weak builds drop — do not drop it.
+1. **Read the DNA file** `${CLAUDE_PLUGIN_ROOT}/references/dna/<slug>.json`. This
+   is pre-extracted for you and is the fastest, most reliable source of the real
+   tokens (doctrine §2 "Start from the pre-extracted DNA"). Pull from it:
+   - `hero.h1_classes` → your headline's exact size/weight/tracking/leading.
+   - `hero.cta_classes` → your primary button's exact padding/radius/shadow/hover.
+   - `spacing.section_padding` / `container_max` / `gap` → your vertical rhythm.
+   - `radius` + `shadow` → pick one of each and reuse everywhere (doctrine §6).
+   - `motion.keyframes_css` → paste these `@keyframes` verbatim into your output.
+   - `motion.animate_classes` / `techniques` / `signature` → the feel to preserve.
+2. **Read the HTML** `${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html` for
+   anything the DNA doesn't capture — a component's fuller inner structure, the
+   exact scroll-observer script, the gradient stops. The DNA is the map; the HTML
+   is the territory.
+3. **Read the index entry** in `${CLAUDE_PLUGIN_ROOT}/references/index.json` for
+   `colors`, `fonts`, `sections`.
 
-If an HTML file is missing → tell the user, offer to go back to `brainstorming`
-to choose another. Don't proceed on a guess.
+You are not reading for vibes — you are **extracting concrete material**. The DNA
+already did the hard part; there is no valid reason to substitute an invented
+value for a populated DNA field.
+
+If the DNA or HTML file is missing → tell the user, offer to go back to
+`brainstorming` to choose another. Don't proceed on a guess.
+
+### 1.5. Proof-of-extraction gate (doctrine §7) — BEFORE writing any UI
+Output a short **"Design DNA I'm using"** block — per chosen slug, list the
+concrete values you just read (headline classes, CTA classes, section rhythm, the
+`@keyframes` names, signature, icon set). This proves the extraction is real, not
+claimed. The values you show here MUST be the values in the code you then write.
+Present it as part of your build plan; it doesn't need separate approval, but it
+must be visible before Step 4.
 
 ### 2. If multi-pick: plan the mix
 - **First pick = base layout.** Page structure & section ordering follow this.
@@ -159,8 +178,9 @@ placeholder or ask the user.
 > Tailwind v4). Don't downgrade without a reason.
 
 ### 5. Write the file & report (human language — doctrine §4)
-- Run the doctrine §6 self-check first (emoji-free? refs named? motion carried?
-  icons in? shadcn where needed?).
+- Run the doctrine §8 self-check first (emoji-free? DNA shown? hard floors §6 all
+  pass — `py-20`+ sections, `text-5xl`+ hero, ≥2 real motions? refs named? icons
+  in? shadcn where needed?).
 - Write the output file(s) to the user's working directory (NOT into the bundled
   library folder `${CLAUDE_PLUGIN_ROOT}/references/` — that's read-only for us).
 - Report like a collaborator, not a machine:
@@ -176,11 +196,15 @@ placeholder or ask the user.
     emoji.
 
 ## What this skill must NOT do
+- **Skip the DNA file** and build from memory — read `references/dna/<slug>.json`
+  first and show the §7 proof block before writing UI.
+- **Ship under the hard floors (§6)** — no `text-3xl` heroes, no cramped
+  sub-`py-20` sections, no fully-static page. Meet the numbers or say why not.
 - **Emit any emoji** in the UI or the report — use Lucide/Solar icons (§1).
 - **Invent from scratch** what a reference could ground — if you can't name the
   slug + the thing you pulled for a section, you're guessing (§2).
-- **Drop the reference's motion/animation** and ship a static clone — carry the
-  `@keyframes` and triggers over (§2).
+- **Drop the reference's motion/animation** and ship a static clone — paste the
+  DNA's `@keyframes` and wire the triggers over (§2, §6).
 - Copy / carry over the template's original content text into the output
   (headlines, copy, feature names) — the template is only a source of style,
   structure & motion.

@@ -1,0 +1,41 @@
+{
+  "slug": "meridian-travel-36",
+  "extraction": "partial",
+  "css_fallback": null,
+  "hero": {
+    "h1_classes": null,
+    "h1_sizes": [],
+    "cta_classes": null
+  },
+  "type_scale": {
+    "h1": null,
+    "h2": null
+  },
+  "spacing": {
+    "section_padding": [],
+    "container_max": [],
+    "gap": []
+  },
+  "radius": [],
+  "shadow": [],
+  "motion": {
+    "keyframe_names": [
+      "cue"
+    ],
+    "keyframes_css": [
+      "@keyframes cue{0%{transform:translateY(-110%)}60%,100%{transform:translateY(260%)}}"
+    ],
+    "animate_classes": [],
+    "has_scroll_reveal": false,
+    "techniques": [
+      "hover-states",
+      "transitions",
+      "mix-blend",
+      "custom-keyframes"
+    ]
+  },
+  "signature": [
+    "texture-grain",
+    "blend-modes"
+  ]
+}
