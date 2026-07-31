@@ -30,6 +30,16 @@
     "shadow-2xl",
     "shadow-lg"
   ],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "horizontal-scroll",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [],
     "keyframes_css": [],

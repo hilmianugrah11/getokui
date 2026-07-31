@@ -24,6 +24,14 @@
   "shadow": [
     "(custom box-shadow — see template CSS)"
   ],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [],
     "keyframes_css": [],

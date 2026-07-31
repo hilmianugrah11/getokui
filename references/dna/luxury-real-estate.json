@@ -35,6 +35,18 @@
   "shadow": [
     "shadow-sm"
   ],
+  "layout": {
+    "hero_layout": "split-centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "bento-grid",
+      "blend-modes",
+      "grain-texture",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "marquee"

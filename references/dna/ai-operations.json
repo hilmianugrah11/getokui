@@ -39,6 +39,17 @@
     "shadow-sm",
     "shadow-2xl"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "rotated-elements",
+      "bento-grid",
+      "blend-modes",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "animationIn"

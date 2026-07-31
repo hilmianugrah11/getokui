@@ -34,6 +34,16 @@
     "rounded-xl"
   ],
   "shadow": [],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "rotated-elements",
+      "bento-grid"
+    ]
+  },
   "motion": {
     "keyframe_names": [],
     "keyframes_css": [],

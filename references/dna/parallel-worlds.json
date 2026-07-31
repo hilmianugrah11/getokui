@@ -30,6 +30,17 @@
     "rounded-full"
   ],
   "shadow": [],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "rotated-elements",
+      "bento-grid",
+      "blend-modes",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [],
     "keyframes_css": [],

@@ -40,6 +40,18 @@
     "shadow-sm",
     "shadow-md"
   ],
+  "layout": {
+    "hero_layout": "split-centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "rotated-elements",
+      "bento-grid",
+      "blend-modes",
+      "grain-texture",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "dash",

@@ -35,6 +35,20 @@
     "shadow-sm",
     "shadow-lg"
   ],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "rotated-elements",
+      "horizontal-scroll",
+      "bento-grid",
+      "vertical-text",
+      "blend-modes",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "heroGlowShift",

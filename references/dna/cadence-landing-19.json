@@ -18,6 +18,15 @@
   },
   "radius": [],
   "shadow": [],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "bar-shimmer",

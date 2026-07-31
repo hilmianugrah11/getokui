@@ -40,6 +40,18 @@
     "shadow-lg",
     "shadow-inner"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "rotated-elements",
+      "bento-grid",
+      "blend-modes",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "aura-reveal",

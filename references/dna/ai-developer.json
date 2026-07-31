@@ -39,6 +39,18 @@
     "shadow-sm",
     "shadow-md"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "horizontal-scroll",
+      "bento-grid",
+      "grain-texture",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "active-content-reveal",

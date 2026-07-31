@@ -36,6 +36,19 @@
     "shadow-sm",
     "shadow-xl"
   ],
+  "layout": {
+    "hero_layout": "split-centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "rotated-elements",
+      "horizontal-scroll",
+      "bento-grid",
+      "blend-modes",
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "cms-shimmer",

@@ -39,6 +39,18 @@
     "shadow-2xl",
     "shadow-xl"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "sticky-sections",
+      "rotated-elements",
+      "blend-modes",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "cms-shimmer",

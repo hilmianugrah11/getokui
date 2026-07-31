@@ -30,8 +30,10 @@ the load-bearing parts are:
 - **§3 shadcn/ui** — for weak interactive components, upgrade to shadcn
   (React/Next) or its pattern (HTML), re-skinned to the palette.
 - **§4 communication** — human summary + options + a next-step question.
-- **§6 hard floors** — bring the file UP to the minimums: `py-20`+ sections,
-  `text-5xl`+ hero, ≥2 real motions from the DNA, 0 emoji, one radius + shadow.
+- **§6 hard floors + §6a anti-slop** — bring the file UP to the minimums:
+  `py-20`+ sections, `text-5xl`+ hero, ≥2 real motions, 0 emoji, one radius +
+  shadow; and if it's the generic centered-hero/3-card slop, push it toward the
+  reference's real composition + a signature move (don't just re-space the slop).
 - **§7 proof-of-extraction gate** — show the "Design DNA I'm using" block (the
   tokens you're pulling in) alongside the fixes, before you edit.
 - **§8 self-check** — run it before you save.
@@ -72,8 +74,10 @@ Pick 1–3 relevant references from `index.json` (same vertical/mood as the
 target). Then, for each:
 1. **Read its Design DNA** `${CLAUDE_PLUGIN_ROOT}/references/dna/<slug>.json`
    FIRST (doctrine §2 "Start from the pre-extracted DNA") — it gives you the real
-   `hero.h1_classes`, `hero.cta_classes`, `spacing.*`, `radius`, `shadow`, and
-   `motion.keyframes_css` without guessing.
+   `hero.h1_classes`, `hero.cta_classes`, `spacing.*`, `radius`, `shadow`,
+   `layout.hero_layout` + `layout.composition_techniques` (the composition +
+   signature move — doctrine §6a anti-slop), and `motion.keyframes_css` without
+   guessing.
 2. **Open the HTML** `${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html` only
    for what the DNA doesn't capture (fuller component structure, the observer
    script). Don't glow up from memory.

@@ -39,6 +39,19 @@
     "shadow-lg",
     "shadow-sm"
   ],
+  "layout": {
+    "hero_layout": "split-centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "rotated-elements",
+      "horizontal-scroll",
+      "bento-grid",
+      "blend-modes",
+      "grain-texture",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "cap-card-hover-loop",

@@ -29,6 +29,19 @@
   "shadow": [
     "shadow-2xl"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "sticky-sections",
+      "rotated-elements",
+      "bento-grid",
+      "vertical-text",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "marquee"

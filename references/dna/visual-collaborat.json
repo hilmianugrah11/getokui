@@ -35,6 +35,18 @@
     "shadow-2xl",
     "shadow-xl"
   ],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "rotated-elements",
+      "horizontal-scroll",
+      "bento-grid",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "allActive",

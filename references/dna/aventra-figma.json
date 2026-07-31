@@ -41,6 +41,17 @@
     "shadow-lg",
     "shadow-xl"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "marquee",
+      "rotated-elements",
+      "bento-grid",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "blob-bounce",

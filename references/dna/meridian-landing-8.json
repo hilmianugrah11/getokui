@@ -18,6 +18,16 @@
   },
   "radius": [],
   "shadow": [],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": false,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "marquee",
+      "sticky-sections",
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "alertPulse",

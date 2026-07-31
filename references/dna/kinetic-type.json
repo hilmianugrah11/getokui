@@ -33,6 +33,17 @@
     "shadow-sm",
     "shadow-lg"
   ],
+  "layout": {
+    "hero_layout": "split",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "rotated-elements",
+      "blend-modes",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "sweep-anim"

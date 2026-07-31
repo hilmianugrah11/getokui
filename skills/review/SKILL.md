@@ -29,9 +29,11 @@ the load-bearing parts are:
 - **§4 communication** — human summary + ranked findings + a real question; NO
   emoji.
 - **§5 checkpoint** — HARD STOP after findings; do not edit.
-- **§6 hard floors** — measure against the concrete minimums: a sub-`text-5xl`
-  hero, cramped sub-`py-20` sections, a fully-static page (no real motion), or
-  emoji-as-icons are each concrete, citable findings — not matters of taste.
+- **§6 hard floors + §6a anti-slop** — measure against the concrete minimums: a
+  sub-`text-5xl` hero, cramped sub-`py-20` sections, a fully-static page (no real
+  motion), or emoji-as-icons are each concrete, citable findings. So is the
+  **generic-AI composition** (centered-hero-of-doom + 3 symmetric cards + purple
+  blob) — call it out and point to a reference with a stronger layout.
 
 ## Prerequisite
 
@@ -81,6 +83,11 @@ Go through the target against these dimensions, comparing to the reference(s):
   line-length.
 - **Layout & hierarchy** — grid, visual hierarchy, focal point, the order and
   prominence of sections, responsive shape.
+- **Composition / AI-slop (doctrine §6a)** — is this the generic AI shape?
+  centered-hero + one subline + two buttons + purple blob, then 3 symmetric
+  feature cards, all center-aligned. If so, that's a top finding: point to a
+  reference with a stronger composition (`layout.hero_layout` = split/asymmetric,
+  a signature move like marquee/bento/oversized type) and name what to change.
 - **Component polish** — radius/shadow/border consistency, button & input
   states, card shapes.
 - **Iconography** — emoji used where an icon belongs (flag it: swap to

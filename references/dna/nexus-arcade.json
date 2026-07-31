@@ -26,6 +26,15 @@
     "rounded-full"
   ],
   "shadow": [],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "blend-modes",
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "nexusCoreMeter",

@@ -30,6 +30,16 @@
   "shadow": [
     "shadow-2xl"
   ],
+  "layout": {
+    "hero_layout": "split",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "sticky-sections",
+      "blend-modes",
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "fadeIn"

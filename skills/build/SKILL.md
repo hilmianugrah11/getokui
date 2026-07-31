@@ -22,8 +22,10 @@ follow it. It governs the things this skill depends on:
 - **§3 shadcn/ui** — use real shadcn for React/Next interactive components,
   its patterns for HTML, always re-skinned to the reference palette.
 - **§4 communication** — human summary + options + a next-step question.
-- **§6 hard floors** — `py-20`+ sections, `text-5xl`+ hero, ≥2 real motions from
-  the DNA, 0 emoji, one radius + one shadow token. Non-negotiable minimums.
+- **§6 hard floors + §6a anti-slop** — reproduce the reference's real
+  `layout.hero_layout` (NOT the generic centered-hero), land ≥1 signature move,
+  add asymmetry; plus `py-20`+ sections, `text-5xl`+ hero, ≥2 real motions,
+  0 emoji, one radius + one shadow token. Non-negotiable.
 - **§7 proof-of-extraction gate** — show the "Design DNA I'm using" block BEFORE
   you write any UI.
 - **§8 self-check** — run it before you write files.
@@ -65,6 +67,10 @@ For each chosen slug, in this order:
    - `hero.cta_classes` → your primary button's exact padding/radius/shadow/hover.
    - `spacing.section_padding` / `container_max` / `gap` → your vertical rhythm.
    - `radius` + `shadow` → pick one of each and reuse everywhere (doctrine §6).
+   - `layout.hero_layout` → build THIS composition (split / asymmetric /
+     centered), not your default centered hero (doctrine §6a — anti-slop).
+   - `layout.composition_techniques` → pull ≥1 through as your signature move
+     (marquee, bento, rotated/overlap, horizontal-scroll, grain, etc.).
    - `motion.keyframes_css` → paste these `@keyframes` verbatim into your output.
    - `motion.animate_classes` / `techniques` / `signature` → the feel to preserve.
 2. **Read the HTML** `${CLAUDE_PLUGIN_ROOT}/references/templates/<slug>.html` for
@@ -83,8 +89,9 @@ If the DNA or HTML file is missing → tell the user, offer to go back to
 
 ### 1.5. Proof-of-extraction gate (doctrine §7) — BEFORE writing any UI
 Output a short **"Design DNA I'm using"** block — per chosen slug, list the
-concrete values you just read (headline classes, CTA classes, section rhythm, the
-`@keyframes` names, signature, icon set). This proves the extraction is real, not
+concrete values you just read (hero layout, headline classes, CTA classes,
+section rhythm, the `@keyframes` names, the signature move from
+`composition_techniques`, icon set). This proves the extraction is real, not
 claimed. The values you show here MUST be the values in the code you then write.
 Present it as part of your build plan; it doesn't need separate approval, but it
 must be visible before Step 4.
@@ -198,6 +205,10 @@ placeholder or ask the user.
 ## What this skill must NOT do
 - **Skip the DNA file** and build from memory — read `references/dna/<slug>.json`
   first and show the §7 proof block before writing UI.
+- **Build the generic-AI layout (§6a)** — no centered-hero-of-doom + 3-card +
+  purple-blob by reflex. Reproduce the reference's real `layout.hero_layout` and
+  land ≥1 signature move; if you're centering a hero, the reference must be
+  `centered`.
 - **Ship under the hard floors (§6)** — no `text-3xl` heroes, no cramped
   sub-`py-20` sections, no fully-static page. Meet the numbers or say why not.
 - **Emit any emoji** in the UI or the report — use Lucide/Solar icons (§1).

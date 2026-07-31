@@ -34,6 +34,16 @@
   "shadow": [
     "shadow-sm"
   ],
+  "layout": {
+    "hero_layout": "centered",
+    "oversized_display_type": true,
+    "symmetry": "centered-symmetric",
+    "composition_techniques": [
+      "rotated-elements",
+      "bento-grid",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "aura-bubble-in",

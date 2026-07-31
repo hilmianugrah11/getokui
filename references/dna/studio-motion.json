@@ -37,6 +37,15 @@
   "shadow": [
     "shadow-sm"
   ],
+  "layout": {
+    "hero_layout": "split",
+    "oversized_display_type": false,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "rotated-elements",
+      "bento-grid"
+    ]
+  },
   "motion": {
     "keyframe_names": [],
     "keyframes_css": [],

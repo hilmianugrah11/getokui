@@ -135,6 +135,16 @@ HTML. It hands you the real tokens on a plate so you have no excuse to invent:
   lever and the one you must not skip.
 - `motion.animate_classes` / `motion.techniques` / `signature` — what makes this
   template feel like itself (glass, gradient-text, scroll-reveal, etc.).
+- `layout.hero_layout` — the reference's **composition**: `centered`, `split`,
+  `split-centered`, or `asymmetric`. **Reproduce this shape**, don't default to
+  centered. If it's `split`, build a two-column hero; if `asymmetric`, left-align
+  / offset it. This is the field that most fights "looks AI-generated" (see §6).
+- `layout.oversized_display_type` — if true, the hero type is huge (`text-7xl`+
+  / `clamp`); match that scale, don't shrink it to a safe `text-4xl`.
+- `layout.composition_techniques` — the structural moves that make it distinct
+  (`marquee`, `bento-grid`, `rotated-elements`, `horizontal-scroll`,
+  `overlap-offset`, `sticky-sections`, `grain-texture`, `blend-modes`,
+  `vertical-text`). Pull at least one through as your **signature move** (§6).
 
 The DNA is the map; the HTML is the territory. Read the DNA for every chosen
 slug, then open the HTML (below) only when you need a component's fuller
@@ -252,6 +262,47 @@ are **minimums for any UI you generate** (build) or leave behind (glowup). Meet
 or exceed them — a reference's own values (from its DNA) override these upward,
 never downward.
 
+### 6a. Anti-slop — kill the "looks AI-generated" tells FIRST
+
+Meeting the number floors below still isn't enough: a page can be roomy,
+animated, and big-type and *still* look AI-made if its **composition** is the
+generic one. The dead giveaway is not spacing — it's **sameness of layout**. So:
+
+**FORBIDDEN — the generic-AI defaults you must NOT reach for by reflex:**
+- The centered-hero-of-doom: headline centered, one subline, two buttons
+  (solid + ghost), a blurred purple/indigo radial blob behind. This is THE tell.
+  Only build a centered hero if the chosen reference's `layout.hero_layout` is
+  actually `centered` — otherwise don't.
+- The stock section conveyor: hero → grey logo strip → exactly 3 feature cards
+  (square icon + title + one line) → one testimonial → 3-tier pricing with a
+  "Most Popular" middle → FAQ accordion → gradient CTA band → 4-column footer.
+  Don't ship this skeleton by default.
+- Everything centered & symmetric, uniform `rounded-2xl` on every box, Inter +
+  indigo→purple gradient as the whole identity.
+
+**REQUIRED — do these instead, sourced from the reference's DNA:**
+- **Reproduce the reference's real composition.** Read `layout.hero_layout` and
+  build THAT shape (split / asymmetric / centered), not your default. A `split`
+  reference → two-column hero; an `asymmetric` one → left-aligned, offset,
+  editorial. Two getokui builds should look different because their references
+  were different — that difference lives in the composition.
+- **Land at least ONE signature move** from `layout.composition_techniques`
+  (marquee, bento grid, rotated/overlapping elements, horizontal scroll,
+  oversized/vertical type, grain texture, blend modes). One bold, reference-true
+  move is what separates "designed" from "generated".
+- **Introduce asymmetry / tension** somewhere — an off-center focal point, an
+  oversized element breaking the grid, an intentional overlap. Not everything on
+  the center line.
+- **Vary the section rhythm** — different section widths, some full-bleed, some
+  contained; alternate left/right emphasis. Don't stack identical centered bands.
+
+If the reference genuinely IS a clean centered SaaS layout, that's fine — build
+it well. The rule is: **the composition must trace to the reference, never to the
+generic default.** If you catch yourself building the centered-hero-of-doom
+without a reference that has it, stop and go read `layout.hero_layout`.
+
+### Number floors
+
 - **Section rhythm:** every top-level section has vertical padding of at least
   `py-20` (desktop). Hero at least `pt-28`/`pb-24`. If the DNA's
   `spacing.section_padding` is bigger (e.g. `pt-48`), use the bigger one. Cramped
@@ -289,11 +340,12 @@ UI file, output a short **"Design DNA I'm using"** block to the user, listing �
 per chosen slug — the concrete values you're about to reuse:
 
 > **Design DNA — `novapay` (fintech):**
+> - Layout: `split-centered` hero (two-column, not centered-of-doom)
 > - Headline: `text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1]`
 > - CTA: `rounded-xl py-3 px-6 ... shadow-[inset_0_1px_1px_#fff,...]`
 > - Section rhythm: `pt-24` / `max-w-7xl`
 > - Motion: `@keyframes float-card-elements` (ambient) + `hover:` states
-> - Signature: glass, multi-stop gradient
+> - Signature move: bento-grid + rotated card elements (from composition_techniques)
 > - Icons: Lucide (fintech → clean/geometric)
 
 This block is not optional decoration — it's the checkpoint that makes skipping
@@ -315,6 +367,9 @@ Run this list every time — it's short on purpose:
       risk)?
 - [ ] Did I READ the `references/dna/<slug>.json` for every chosen slug, and show
       the §7 proof-of-extraction "Design DNA I'm using" block?
+- [ ] Anti-slop (§6a): did I reproduce the reference's real `layout.hero_layout`
+      (NOT the centered-hero-of-doom by default), land ≥1 signature move from
+      `composition_techniques`, and introduce some asymmetry/tension?
 - [ ] Do the hard floors (§6) all pass — `py-20`+ sections, `text-5xl`+ hero,
       ≥2 real motions from the DNA, 0 emoji, one radius + one shadow token?
 - [ ] Zero emoji in the output AND in my reply? Icons used instead?

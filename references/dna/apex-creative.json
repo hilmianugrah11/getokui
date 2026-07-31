@@ -24,6 +24,17 @@
     "rounded-2xl"
   ],
   "shadow": [],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "marquee",
+      "sticky-sections",
+      "rotated-elements",
+      "overlap-offset"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "bob",

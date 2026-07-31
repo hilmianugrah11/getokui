@@ -32,6 +32,16 @@
   "shadow": [
     "shadow-2xl"
   ],
+  "layout": {
+    "hero_layout": "asymmetric",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "marquee",
+      "bento-grid",
+      "blend-modes"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "marquee"

@@ -34,6 +34,17 @@
     "rounded-2xl"
   ],
   "shadow": [],
+  "layout": {
+    "hero_layout": "split",
+    "oversized_display_type": true,
+    "symmetry": "asymmetric",
+    "composition_techniques": [
+      "marquee",
+      "sticky-sections",
+      "bento-grid",
+      "grain-texture"
+    ]
+  },
   "motion": {
     "keyframe_names": [
       "marquee",
