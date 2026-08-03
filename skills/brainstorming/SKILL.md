@@ -92,16 +92,37 @@ Before presenting, do a quick pass:
   vertical, we'd aim for the CTA/trust feel of **Xendit** and **Stripe**"; for
   hajj/umrah, the trust + warmth of **Traveloka** + an umrah operator; for a
   school, **Ruangguru**; for a gov/public service, the clarity of **GOV.UK**).
+- **Keep the source URLs.** As you scan, collect up to **5 "sources of truth"** —
+  the real gallery/brand pages you actually looked at (Awwwards entry, Dribbble
+  shot, a live brand site, etc.). Save each as a clickable `https://` link with a
+  one-line note on what's worth stealing from it. You'll present these alongside
+  the 5 local references in Step 4 so the user can open both.
 
 This is direction only — you're not extracting assets, and you still don't build
 here. If offline or search fails, use `WEB-BENCHMARKS.md`'s named brands and move
-on — never block on the web.
+on — never block on the web (present fewer than 5 sources, or none, rather than
+inventing URLs — never fabricate a link).
 
 ### 4. Present candidates — then HARD STOP
 Show each candidate concisely and readably:
 - Order number (for easy selection) + name.
 - One-sentence description.
 - Category + a few relevant tags.
+- **Preview link** (the full rendered page, not just the thumb): emit a
+  clickable `file://` URL to the actual reference HTML so the user can open it in
+  a browser. Build it from the resolved plugin root:
+  1. Resolve `${CLAUDE_PLUGIN_ROOT}` to its real absolute path (the same value you
+     already use for the thumbnail).
+  2. Convert backslashes to forward slashes (Windows) and prefix with `file:///`.
+  3. Point it at `references/templates/<slug>.html`.
+
+  So it renders as one line per candidate, e.g.:
+  `Preview: file:///C:/Users/user/.claude/plugins/.../references/templates/aero-studio.html`
+
+  Put the `Preview:` line directly above the thumbnail — the link is the new hero
+  of this step (full page), the thumbnail is the quick glance under it. If the
+  HTML file is missing or the path can't be resolved, DON'T fail — skip the
+  preview line for that candidate and note "(preview unavailable)".
 - Thumbnail: display it using the local path
   `${CLAUDE_PLUGIN_ROOT}/references/thumbs/<slug>.webp`. If the thumbnail file is missing
   or can't be displayed, DON'T fail — just present the text (name +
@@ -115,6 +136,18 @@ After the list, add a one-line **web benchmark** note from Step 3.5 so the user
 sees the current-year taste bar, e.g. "Buat kualitas komponen & CTA-nya, kita
 patok ke **Xendit** + **Stripe** (2026) — pola-nya diadaptasi ke brand lo, bukan
 di-copy." Keep it short; it's context, not another menu.
+
+Then, under a short header like **"Sources of truth (web):"**, list the up-to-5
+web sources you collected in Step 3.5 — each as a clickable `https://` link + a
+few words on what to steal from it. This mirrors the 5 references: local refs =
+previewable HTML you'll extract from, web sources = the current-year taste bar.
+Example:
+> Sources of truth (web):
+> 1. https://awwwards.com/... — hero motion + scroll reveal
+> 2. https://dribbble.com/... — bento pricing layout
+>
+> Skip this block entirely if you're offline / found nothing — don't pad it with
+> invented links.
 
 If the match is weak (nothing really fits), **be honest**:
 > "Nothing's a perfect fit for '<request>', these are the closest. Want me to
